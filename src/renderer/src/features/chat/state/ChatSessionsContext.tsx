@@ -20,6 +20,7 @@ import {
   persistChatActiveSession
 } from '@services/storage'
 
+import { t } from '@core/i18n'
 export interface ChatSession {
   id: string
   title: string
@@ -132,7 +133,7 @@ export function ChatsProvider({ children }: { children: ReactNode }) {
   const createSession = useCallback((): string => {
     const session: ChatSession = {
       id: crypto.randomUUID(),
-      title: 'Nuevo chat',
+      title: t('chat.nuevo.chat'),
       messages: [],
       createdAt: Date.now(),
       updatedAt: Date.now()

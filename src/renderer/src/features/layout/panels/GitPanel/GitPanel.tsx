@@ -105,7 +105,7 @@ function shortDate(iso: string): string {
 
 async function confirmDanger(title: string, confirmLabel: string): Promise<boolean> {
   const picked = await pickOption(title, [
-    { id: 'cancel', label: 'Cancelar' },
+    { id: 'cancel', label: t('git.cancelar') },
     { id: 'yes', label: confirmLabel, danger: true, separatorBefore: true }
   ])
   return picked === 'yes'
@@ -118,10 +118,10 @@ function copyText(text: string, label: string): void {
       clip
         .writeText(text)
         .then(() => notify({ title: label, severity: 'success' }))
-        .catch(() => notify({ title: label, message: 'No se pudo copiar', severity: 'error' }))
+        .catch(() => notify({ title: label, message: t('git.no.se.pudo.copiar'), severity: 'error' }))
     }
   } catch {
-    notify({ title: label, message: 'No se pudo copiar', severity: 'error' })
+    notify({ title: label, message: t('git.no.se.pudo.copiar'), severity: 'error' })
   }
 }
 
@@ -285,7 +285,7 @@ export function GitPanel(): JSX.Element {
       const root = activeRoot
       showContextMenu(event.clientX, event.clientY, [
         {
-          label: 'Copiar SHA',
+          label: t('git.copiar.sha'),
           onClick: () => copyText(branch.sha, 'SHA copiado')
         },
         {
@@ -854,11 +854,11 @@ export function GitPanel(): JSX.Element {
                 onClick={(event) => {
                               showContextMenu(event.clientX, event.clientY, [
                     {
-                      label: 'Apply',
+                      label: t('git.apply'),
                       onClick: () => withRoot((root) => stashApply(root, stash.index))
                     },
                     {
-                      label: 'Drop',
+                      label: t('git.drop'),
                       danger: true,
                       separatorBefore: true,
                       onClick: () =>
@@ -1531,9 +1531,9 @@ function PrSection(props: {
                       className={styles.mini}
                       onClick={(event) => {
                                           showContextMenu(event.clientX, event.clientY, [
-                          { label: 'Merge', onClick: () => props.onMerge(pr.number, 'merge') },
-                          { label: 'Squash', onClick: () => props.onMerge(pr.number, 'squash') },
-                          { label: 'Rebase', onClick: () => props.onMerge(pr.number, 'rebase') }
+                          { label: t('git.merge'), onClick: () => props.onMerge(pr.number, 'merge') },
+                          { label: t('git.squash'), onClick: () => props.onMerge(pr.number, 'squash') },
+                          { label: t('git.rebase'), onClick: () => props.onMerge(pr.number, 'rebase') }
                         ])
                       }}
                     >

@@ -11,8 +11,9 @@
 
 import type { GitApi, GitResult } from '@shared/git'
 
+import { t } from '@core/i18n'
 function noBridge<T>(): GitResult<T> {
-  return { ok: false, error: { code: 'failed', message: 'Puente nativo no disponible' } }
+  return { ok: false, error: { code: 'failed', message: t('services.puente.nativo.no.disponible') } }
 }
 
 function bridge(): GitApi | null {

@@ -15,6 +15,7 @@ import { commandRegistry } from '@services/commands'
 import { toggleHistoryView } from './panels/HistoryPanel/viewState'
 import { setSkillsViewOpen } from './panels/SkillsPanel/viewState'
 
+import { t } from '@core/i18n'
 interface ToggleDef {
   id: string
   title: string
@@ -24,8 +25,8 @@ interface ToggleDef {
 }
 
 const TOGGLES: ToggleDef[] = [
-  { id: 'layout.toggleChat', title: 'Mostrar/ocultar chat', slot: 'right', panelId: 'chat', keybinding: 'mod+j' },
-  { id: 'layout.toggleExplorer', title: 'Mostrar/ocultar explorador', slot: 'left', panelId: 'explorer', keybinding: 'mod+b' }
+  { id: 'layout.toggleChat', get title() { return t('layout.mostrar.ocultar.chat') }, slot: 'right', panelId: 'chat', keybinding: 'mod+j' },
+  { id: 'layout.toggleExplorer', get title() { return t('layout.mostrar.ocultar.explorador') }, slot: 'left', panelId: 'explorer', keybinding: 'mod+b' }
 ]
 
 export function LayoutCommandsBridge(): JSX.Element | null {
@@ -50,7 +51,7 @@ export function LayoutCommandsBridge(): JSX.Element | null {
   useEffect(() => {
     const unsub = commandRegistry.register({
       id: 'layout.toggleHistory',
-      title: 'Mostrar/ocultar historial de chats',
+      title: t('layout.mostrar.ocultar.historial.de.chats'),
       category: 'Paneles',
       keybinding: 'mod+alt+h',
       run: () => {

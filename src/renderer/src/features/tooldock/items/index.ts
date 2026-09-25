@@ -13,11 +13,12 @@ import OutlinePanel from './outline/OutlinePanel'
 import TimelinePanel from './timeline/TimelinePanel'
 import BookmarksPanel from './bookmarks/BookmarksPanel'
 
+import { t } from '@core/i18n'
 export function registerBuiltinToolDockItems(): void {
   registerToolDockItem({
     id: 'outline',
     kind: 'panel',
-    title: 'Esquema',
+    title: t('features.esquema'),
     icon: 'code',
     order: 10,
     hosts: ['explorer'],
@@ -27,7 +28,7 @@ export function registerBuiltinToolDockItems(): void {
   registerToolDockItem({
     id: 'timeline',
     kind: 'panel',
-    title: 'Línea de tiempo',
+    title: t('features.linea.de.tiempo'),
     icon: 'history',
     order: 20,
     hosts: ['explorer'],
@@ -37,7 +38,7 @@ export function registerBuiltinToolDockItems(): void {
   registerToolDockItem({
     id: 'bookmarks',
     kind: 'panel',
-    title: 'Marcadores',
+    title: t('features.marcadores'),
     icon: 'bookmark',
     order: 30,
     hosts: ['explorer'],

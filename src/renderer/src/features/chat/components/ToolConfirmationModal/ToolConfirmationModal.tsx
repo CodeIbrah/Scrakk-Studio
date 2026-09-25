@@ -95,7 +95,7 @@ export function ToolConfirmationModal(): JSX.Element | null {
       if (anchor) {
         showAnchoredModal({
           key: `tool-confirm:${request.id}`,
-          title: 'Confirmar acción',
+          title: t('chat.confirmar.accion'),
           anchor: { x: anchor.x, y: anchor.y, width: anchor.width, height: anchor.height },
           placement: 'above',
           align: 'center',
@@ -104,7 +104,7 @@ export function ToolConfirmationModal(): JSX.Element | null {
           onClose
         })
       } else {
-        showModal({ title: 'Confirmar acción', size: 'sm', render, onClose })
+        showModal({ title: t('chat.confirmar.accion'), size: 'sm', render, onClose })
       }
     })
   }, [])

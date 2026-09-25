@@ -47,7 +47,7 @@ export function HistoryPanel({ onPick }: { onPick?: () => void } = {}): JSX.Elem
     if (!session) return
     showContextMenu(event.clientX, event.clientY, [
       {
-        label: 'Exportar chat',
+        label: t('layout.exportar.chat'),
         icon: <ProductIcon id="download" size={13} />,
         onClick: () => {
           showModal({
@@ -57,7 +57,7 @@ export function HistoryPanel({ onPick }: { onPick?: () => void } = {}): JSX.Elem
         }
       },
       {
-        label: 'Eliminar',
+        label: t('layout.eliminar'),
         icon: <ProductIcon id="trash" size={13} />,
         danger: true,
         separatorBefore: true,

@@ -1,4 +1,5 @@
 {
+  "providers.abrir.proveedores": "Open providers",
   "providers.activo": "Active",
   "providers.api.key.de": "API key for",
   "providers.buscar.proveedores": "Search for suppliers",
@@ -10,6 +11,7 @@
   "providers.key.guardada.escribe.el.modelo": "Key saved. Enter the model you use below.",
   "providers.modelo.id.exacto": "Model (exact ID)",
   "providers.modo.de.pensamiento": "Way of thinking",
+  "providers.no.hay.modelos.todavia": "No models yet",
   "providers.no.se.encontraron.proveedores.para": "No providers were found for \"",
   "providers.obtienes.tu.key.en": "Get your key at:",
   "providers.proveedores": "Providers",

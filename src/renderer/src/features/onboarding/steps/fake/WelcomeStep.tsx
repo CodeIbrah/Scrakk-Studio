@@ -14,6 +14,7 @@
 import type { JSX } from 'react'
 import { CardGrid, Lead, OptionCard, SectionLabel, Stack } from '../kit'
 
+import { t } from '@core/i18n'
 /** Datos DEMO de este paso (maqueta). */
 const DEMO_SESSION = {
   greeting: 'Hola 👋',
@@ -22,26 +23,26 @@ const DEMO_SESSION = {
     {
       id: 'editor',
       icon: 'code',
-      title: 'Editor con Innerta',
-      description: 'Resaltado, minimapa y símbolos sobre el mismo motor.'
+      get title() { return t('onboarding.editor.con.innerta') },
+      get description() { return t('onboarding.resaltado.minimapa.y.simbolos.sobre') }
     },
     {
       id: 'terminal',
       icon: 'terminal',
-      title: 'Terminal real',
-      description: 'PTY nativo con sesiones persistentes y splits.'
+      get title() { return t('onboarding.terminal.real') },
+      get description() { return t('onboarding.pty.nativo.con.sesiones.persistentes') }
     },
     {
       id: 'extensions',
       icon: 'extensions',
-      title: 'Extensiones',
-      description: 'Temas, paneles y compatibilidad con extensiones de VS Code.'
+      get title() { return t('onboarding.extensiones') },
+      get description() { return t('onboarding.temas.paneles.y.compatibilidad.con') }
     },
     {
       id: 'workspaces',
       icon: 'layers',
-      title: 'Layout libre',
-      description: 'Cada panel se mueve, se divide y se guarda por workspace.'
+      get title() { return t('onboarding.layout.libre') },
+      get description() { return t('onboarding.cada.panel.se.mueve.se') }
     }
   ]
 } as const

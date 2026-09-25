@@ -8,6 +8,7 @@ import { ContextMenu, type ContextMenuItem } from '@ui'
 import { useProviders } from '../../state'
 import styles from './ModelPicker.module.css'
 
+import { t } from '@core/i18n'
 interface ModelOption {
   providerId: string
   providerName: string
@@ -38,9 +39,9 @@ export function useModelMenuItems(): ContextMenuItem[] {
 
   if (modelOptions.length === 0) {
     return [
-      { label: 'No hay modelos todavía', disabled: true },
+      { label: t('providers.no.hay.modelos.todavia'), disabled: true },
       {
-        label: 'Abrir proveedores',
+        label: t('providers.abrir.proveedores'),
         icon: <ProductIcon id="server" size={13} aria-hidden="true" />,
         onClick: () => openProvidersModal()
       }

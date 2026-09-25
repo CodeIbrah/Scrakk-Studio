@@ -307,8 +307,8 @@ export function PanelLayout(): JSX.Element {
                   actions={[
                     {
                       id: 'terminal-nodes',
-                      label: 'Vista de nodos',
-                      title: 'Ver terminales en lienzo',
+                      label: t('layout.vista.de.nodos'),
+                      title: t('layout.ver.terminales.en.lienzo'),
                       icon: <ProductIcon id="share" size={15} aria-hidden="true" />,
                       onClick: () => setShowTerminalNodes(true)
                     }

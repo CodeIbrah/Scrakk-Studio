@@ -19,6 +19,7 @@ import {
   subscribeToThemes
 } from '@services/extensions/types/themes/logic'
 
+import { t } from '@core/i18n'
 export type Theme = 'dark' | 'light'
 
 interface ThemeContextValue {
@@ -71,14 +72,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const unsubs = [
       commandRegistry.register({
         id: 'theme.cycle',
-        title: 'Cambiar tema claro/oscuro',
+        title: t('core.cambiar.tema.claro.oscuro'),
         category: 'Apariencia',
         keybinding: 'mod+alt+t',
         run: toggleTheme
       }),
       commandRegistry.register({
         id: 'theme.set.dark',
-        title: 'Tema oscuro',
+        title: t('core.tema.oscuro'),
         category: 'Apariencia',
         run: () => {
           activateTheme(DARK_THEME_ID)
@@ -86,7 +87,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }),
       commandRegistry.register({
         id: 'theme.set.light',
-        title: 'Tema claro',
+        title: t('core.tema.claro'),
         category: 'Apariencia',
         run: () => {
           activateTheme(LIGHT_THEME_ID)

@@ -10,42 +10,50 @@
  * `npm run i18n -- --sync` tras agregar o quitar un área.
  */
 
+import appEs from './es/app.json'
 import appearanceEs from './es/appearance.json'
 import chatEs from './es/chat.json'
 import commonEs from './es/common.json'
+import coreEs from './es/core.json'
 import explorerEs from './es/explorer.json'
 import extensionviewsEs from './es/extensionviews.json'
 import featuresEs from './es/features.json'
 import gitEs from './es/git.json'
+import greetingsEs from './es/greetings.json'
 import layoutEs from './es/layout.json'
 import miscEs from './es/misc.json'
 import onboardingEs from './es/onboarding.json'
 import paletteEs from './es/palette.json'
 import providersEs from './es/providers.json'
+import servicesEs from './es/services.json'
 import settingsEs from './es/settings.json'
 import socialEs from './es/social.json'
 import statusbarEs from './es/statusbar.json'
 import titlebarEs from './es/titlebar.json'
+import appEn from './en/app.json'
 import appearanceEn from './en/appearance.json'
 import chatEn from './en/chat.json'
 import commonEn from './en/common.json'
+import coreEn from './en/core.json'
 import explorerEn from './en/explorer.json'
 import extensionviewsEn from './en/extensionviews.json'
 import featuresEn from './en/features.json'
 import gitEn from './en/git.json'
+import greetingsEn from './en/greetings.json'
 import layoutEn from './en/layout.json'
 import miscEn from './en/misc.json'
 import onboardingEn from './en/onboarding.json'
 import paletteEn from './en/palette.json'
 import providersEn from './en/providers.json'
+import servicesEn from './en/services.json'
 import settingsEn from './en/settings.json'
 import socialEn from './en/social.json'
 import statusbarEn from './en/statusbar.json'
 import titlebarEn from './en/titlebar.json'
 
-export const esCatalog = { ...appearanceEs, ...chatEs, ...commonEs, ...explorerEs, ...extensionviewsEs, ...featuresEs, ...gitEs, ...layoutEs, ...miscEs, ...onboardingEs, ...paletteEs, ...providersEs, ...settingsEs, ...socialEs, ...statusbarEs, ...titlebarEs }
+export const esCatalog = { ...appEs, ...appearanceEs, ...chatEs, ...commonEs, ...coreEs, ...explorerEs, ...extensionviewsEs, ...featuresEs, ...gitEs, ...greetingsEs, ...layoutEs, ...miscEs, ...onboardingEs, ...paletteEs, ...providersEs, ...servicesEs, ...settingsEs, ...socialEs, ...statusbarEs, ...titlebarEs }
 
-export const enCatalog = { ...appearanceEn, ...chatEn, ...commonEn, ...explorerEn, ...extensionviewsEn, ...featuresEn, ...gitEn, ...layoutEn, ...miscEn, ...onboardingEn, ...paletteEn, ...providersEn, ...settingsEn, ...socialEn, ...statusbarEn, ...titlebarEn }
+export const enCatalog = { ...appEn, ...appearanceEn, ...chatEn, ...commonEn, ...coreEn, ...explorerEn, ...extensionviewsEn, ...featuresEn, ...gitEn, ...greetingsEn, ...layoutEn, ...miscEn, ...onboardingEn, ...paletteEn, ...providersEn, ...servicesEn, ...settingsEn, ...socialEn, ...statusbarEn, ...titlebarEn }
 
 export const catalogs = { es: esCatalog, en: enCatalog } as const
 

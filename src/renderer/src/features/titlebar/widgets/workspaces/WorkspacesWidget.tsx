@@ -69,7 +69,7 @@ export function WorkspacesWidget(): JSX.Element {
     }
     showAnchoredModal({
       key: WORKSPACES_POPOVER_KEY,
-      title: 'Workspaces',
+      title: t('titlebar.workspaces'),
       anchor,
       width: 300,
       placement: 'below',

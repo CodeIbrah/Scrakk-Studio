@@ -1,0 +1,15 @@
+{
+  "app.abrir.ajustes": "Abrir ajustes",
+  "app.abrir.carpeta": "Abrir carpeta…",
+  "app.abrir.proveedores.llm": "Abrir proveedores LLM",
+  "app.alternar.minimapa": "Alternar minimapa",
+  "app.capturar.el.editor.png": "Capturar el editor (PNG)",
+  "app.cerrar.archivo.activo": "Cerrar archivo activo",
+  "app.expandir.seleccion.objeto.de.texto": "Expandir selección (objeto de texto)",
+  "app.guardar.archivo": "Guardar archivo",
+  "app.ir.a.la.definicion": "Ir a la definición",
+  "app.language.servers": "Language Servers",
+  "app.paleta.de.comandos": "Paleta de comandos",
+  "app.refrescar.explorador": "Refrescar explorador",
+  "app.sin.definicion.en.el.cursor": "Sin definición en el cursor."
+}

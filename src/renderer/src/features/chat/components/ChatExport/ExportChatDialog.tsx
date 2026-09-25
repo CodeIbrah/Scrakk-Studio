@@ -33,9 +33,9 @@ interface ExportOption {
 }
 
 const EXPORT_OPTIONS: ExportOption[] = [
-  { id: 'txt', label: 'Exportar como .txt', hint: '.txt', icon: 'file-text' },
-  { id: 'md', label: 'Exportar como .md', hint: '.md', icon: 'file-text' },
-  { id: 'copy', label: 'Copiar al portapapeles', hint: 'clipboard', icon: 'copy' }
+  { id: 'txt', get label() { return t('chat.exportar.como.txt') }, hint: '.txt', icon: 'file-text' },
+  { id: 'md', get label() { return t('chat.exportar.como.md') }, hint: '.md', icon: 'file-text' },
+  { id: 'copy', get label() { return t('chat.copiar.al.portapapeles') }, hint: 'clipboard', icon: 'copy' }
 ]
 
 export function ExportChatDialog({

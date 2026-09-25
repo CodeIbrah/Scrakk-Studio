@@ -1,8 +1,11 @@
 {
   "common.algo.fallo": "Something went wrong",
   "common.cerrar": "Close",
+  "common.copiar": "Copy",
   "common.original": "Original",
+  "common.pegar": "Paste",
   "common.recargar": "Reload",
   "common.reintentar": "Try again",
+  "common.seleccionar.todo": "Select all",
   "common.system": "System"
 }

@@ -49,14 +49,14 @@ const ALIAS_MODES = new Set(['auto_edit', 'all_allow'])
 
 /** Plantillas para armar la regla sin conocer la sintaxis de memoria. */
 const TOOL_TEMPLATES: Array<{ label: string; value: string }> = [
-  { label: 'Comando de shell', value: 'Bash()' },
-  { label: 'Leer archivos', value: 'Read()' },
-  { label: 'Editar archivos', value: 'Edit()' },
-  { label: 'Buscar en archivos', value: 'Grep()' },
-  { label: 'Acceso web', value: 'WebFetch(domain:)' },
-  { label: 'Buscar en la web', value: 'WebSearch' },
-  { label: 'Herramienta MCP', value: 'MCPTool()' },
-  { label: 'Cualquier herramienta', value: '' }
+  { get label() { return t('settings.comando.de.shell') }, value: 'Bash()' },
+  { get label() { return t('settings.leer.archivos') }, value: 'Read()' },
+  { get label() { return t('settings.editar.archivos') }, value: 'Edit()' },
+  { get label() { return t('settings.buscar.en.archivos') }, value: 'Grep()' },
+  { get label() { return t('settings.acceso.web') }, value: 'WebFetch(domain:)' },
+  { get label() { return t('settings.buscar.en.la.web') }, value: 'WebSearch' },
+  { get label() { return t('settings.herramienta.mcp') }, value: 'MCPTool()' },
+  { get label() { return t('settings.cualquier.herramienta') }, value: '' }
 ]
 
 interface RawEntry {
@@ -223,12 +223,12 @@ export function PermissionsSection(): JSX.Element {
           onClick={(event) =>
             openSelect(event, [
               {
-                label: 'Proyecto',
+                label: t('settings.proyecto'),
                 checked: scope === 'project',
                 onClick: () => setScope('project')
               },
               {
-                label: 'Usuario',
+                label: t('settings.usuario'),
                 checked: scope === 'user',
                 onClick: () => setScope('user')
               }

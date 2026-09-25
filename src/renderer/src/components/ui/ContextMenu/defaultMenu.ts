@@ -19,6 +19,7 @@
 
 import type { ContextMenuItem } from './ContextMenu'
 
+import { t } from '@core/i18n'
 /** Campos editables de texto (los que tienen selección programable). */
 const TEXT_FIELD_TYPES = new Set(['text', 'search', 'url', 'tel', 'password', 'email'])
 
@@ -242,19 +243,19 @@ export function buildDefaultMenuItems(target: Element): ContextMenuItem[] | null
 
   return [
     {
-      label: 'Copiar',
+      label: t('common.copiar'),
       disabled: copyDisabled,
       onClick: () => copySelection(doc)
     },
     {
-      label: 'Pegar',
+      label: t('common.pegar'),
       disabled: pasteDisabled,
       onClick: () => {
         if (ctx.pasteTarget) pasteInto(ctx.pasteTarget)
       }
     },
     {
-      label: 'Seleccionar todo',
+      label: t('common.seleccionar.todo'),
       disabled: selectDisabled,
       separatorBefore: true,
       onClick: () => selectScope(ctx)

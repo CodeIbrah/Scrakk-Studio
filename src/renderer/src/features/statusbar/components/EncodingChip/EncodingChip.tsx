@@ -97,8 +97,8 @@ export function EncodingChip(): JSX.Element | null {
 
     // 3) Ofrecer convertir EOL también (opcional).
     const eol = await pickOption('Convertir saltos de línea', [
-      { id: 'LF', label: 'LF — Unix/macOS (\\n)', disabled: doc?.lineEnding === 'LF' },
-      { id: 'CRLF', label: 'CRLF — Windows (\\r\\n)', disabled: doc?.lineEnding === 'CRLF' }
+      { id: 'LF', label: t('statusbar.lf.unix.macos.n'), disabled: doc?.lineEnding === 'LF' },
+      { id: 'CRLF', label: t('statusbar.crlf.windows.r.n'), disabled: doc?.lineEnding === 'CRLF' }
     ])
     void eol // v1: la conversión aplica al guardar (lineEnding del docState)
   }, [activePath, doc])

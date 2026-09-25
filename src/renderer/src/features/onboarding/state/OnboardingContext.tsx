@@ -51,6 +51,7 @@ import {
 } from './machine'
 import type { OnboardingStep } from '../types'
 
+import { t } from '@core/i18n'
 /** Id del comando de la paleta que vuelve a abrir esta pantalla. */
 export const ONBOARDING_COMMAND_ID = 'onboarding.open'
 /** Key de dev para reseteo manual (útil mientras la pantalla es maqueta). */
@@ -100,7 +101,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }): JSX.E
     return commandRegistry.register(
       {
         id: ONBOARDING_COMMAND_ID,
-        title: 'Ver configuración inicial',
+        title: t('onboarding.ver.configuracion.inicial'),
         category: 'General',
         run: () => setWizard((prev) => machineReopen(prev))
       },

@@ -23,13 +23,14 @@ import { WelcomeStep } from './fake/WelcomeStep'
 import { PrivacyStep } from './real/PrivacyStep'
 import { ThemeStep } from './real/ThemeStep'
 
+import { t } from '@core/i18n'
 /** Catálogo de pasos, en orden de aparición. */
 export const BUILTIN_ONBOARDING_STEPS: OnboardingStep[] = [
   {
     id: 'welcome',
-    label: 'Bienvenida',
-    title: 'Bienvenido a Scrakk Studio',
-    subtitle: 'Un editor con layout libre, terminal real y un ecosistema de extensiones.',
+    get label() { return t('onboarding.bienvenida') },
+    get title() { return t('onboarding.bienvenido.a.scrakk.studio') },
+    get subtitle() { return t('onboarding.un.editor.con.layout.libre') },
     icon: 'home',
     kind: 'fake',
     order: 10,
@@ -37,9 +38,9 @@ export const BUILTIN_ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: 'theme',
-    label: 'Apariencia',
-    title: 'Elige cómo se ve',
-    subtitle: 'Los temas se aplican al instante y quedan guardados.',
+    get label() { return t('onboarding.apariencia') },
+    get title() { return t('onboarding.elige.como.se.ve') },
+    get subtitle() { return t('onboarding.los.temas.se.aplican.al') },
     icon: 'grid',
     kind: 'real',
     order: 20,
@@ -47,9 +48,9 @@ export const BUILTIN_ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: 'privacy',
-    label: 'Privacidad',
-    title: 'Tú decides qué se comparte',
-    subtitle: 'Una sola vez, sin insistir: se cambia cuando quieras desde Ajustes.',
+    get label() { return t('onboarding.privacidad') },
+    get title() { return t('onboarding.tu.decides.que.se.comparte') },
+    get subtitle() { return t('onboarding.una.sola.vez.sin.insistir') },
     icon: 'shield-check',
     kind: 'real',
     order: 30,
@@ -57,9 +58,9 @@ export const BUILTIN_ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: 'keymap',
-    label: 'Atajos',
-    title: 'Atajos a tu manera',
-    subtitle: 'Si vienes de otro editor, arrancá con sus combinaciones.',
+    get label() { return t('onboarding.atajos') },
+    get title() { return t('onboarding.atajos.a.tu.manera') },
+    get subtitle() { return t('onboarding.si.vienes.de.otro.editor') },
     icon: 'keyboard',
     kind: 'fake',
     order: 40,
@@ -67,9 +68,9 @@ export const BUILTIN_ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: 'ready',
-    label: 'Listo',
-    title: 'Todo listo',
-    subtitle: 'Revisa lo elegido o empieza a usar Scrakk.',
+    get label() { return t('onboarding.listo') },
+    get title() { return t('onboarding.todo.listo') },
+    get subtitle() { return t('onboarding.revisa.lo.elegido.o.empieza') },
     icon: 'check',
     kind: 'fake',
     order: 50,

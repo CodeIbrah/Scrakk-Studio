@@ -1,0 +1,15 @@
+{
+  "app.abrir.ajustes": "Open Settings",
+  "app.abrir.carpeta": "Open folder…",
+  "app.abrir.proveedores.llm": "Open LLM providers",
+  "app.alternar.minimapa": "Toggle minimap",
+  "app.capturar.el.editor.png": "Screenshot of the editor (PNG)",
+  "app.cerrar.archivo.activo": "Close active file",
+  "app.expandir.seleccion.objeto.de.texto": "Expand selection (text object)",
+  "app.guardar.archivo": "Save File",
+  "app.ir.a.la.definicion": "Go to definition",
+  "app.language.servers": "Language Servers",
+  "app.paleta.de.comandos": "Command Palette",
+  "app.refrescar.explorador": "Refresh browser",
+  "app.sin.definicion.en.el.cursor": "No definition at the cursor"
+}

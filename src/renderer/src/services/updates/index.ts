@@ -19,6 +19,7 @@ import { isNewerVersion } from '@shared/version'
 import type { ReleaseInfo, UpdaterState } from '@shared/updates'
 import { notify } from '@services/notifications'
 
+import { t } from '@core/i18n'
 const SEEN_KEY = 'updates:seen-version'
 
 export interface UpdatesSnapshot {
@@ -136,16 +137,16 @@ export function notifyAvailable(release?: ReleaseInfo): void {
     /* sin storage: se permite repetir */
   }
   notify({
-    title: 'Actualización disponible',
+    title: t('services.actualizacion.disponible'),
     message: `Scrakk Studio v${target.version}`,
     severity: 'info',
     timeoutMs: 0,
     actions:
       snapshot.updater.status === 'unsupported'
-        ? [{ label: 'Ver release', run: () => openReleasePage(target) }]
+        ? [{ label: t('services.ver.release'), run: () => openReleasePage(target) }]
         : [
-            { label: 'Actualizar', run: () => void downloadUpdate() },
-            { label: 'Ver release', run: () => openReleasePage(target) }
+            { label: t('services.actualizar'), run: () => void downloadUpdate() },
+            { label: t('services.ver.release'), run: () => openReleasePage(target) }
           ]
   })
 }
@@ -165,14 +166,14 @@ export async function downloadUpdate(): Promise<UpdaterState> {
   applyUpdaterState(state)
   if (state.status === 'unsupported') {
     notify({
-      title: 'Actualización disponible',
+      title: t('services.actualizacion.disponible'),
       message: state.error ?? 'Esta instalación no se actualiza sola.',
       severity: 'warn',
       timeoutMs: 0,
-      actions: [{ label: 'Ver release', run: () => openReleasePage() }]
+      actions: [{ label: t('services.ver.release'), run: () => openReleasePage() }]
     })
   } else if (state.status === 'error') {
-    notify({ title: 'No se pudo descargar', message: state.error, severity: 'error' })
+    notify({ title: t('services.no.se.pudo.descargar'), message: state.error, severity: 'error' })
   }
   return state
 }
@@ -185,10 +186,10 @@ export async function installUpdate(): Promise<void> {
 /** Aviso de que la actualización ya está descargada. */
 export function notifyDownloaded(state: UpdaterState): void {
   notify({
-    title: 'Actualización lista',
+    title: t('services.actualizacion.lista'),
     message: state.version ? `v${state.version} — reinicia para aplicarla` : 'Reinicia para aplicarla',
     severity: 'success',
     timeoutMs: 0,
-    actions: [{ label: 'Reiniciar y actualizar', run: () => void installUpdate() }]
+    actions: [{ label: t('services.reiniciar.y.actualizar'), run: () => void installUpdate() }]
   })
 }

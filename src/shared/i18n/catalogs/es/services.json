@@ -1,0 +1,17 @@
+{
+  "services.actualizacion.disponible": "Actualización disponible",
+  "services.actualizacion.lista": "Actualización lista",
+  "services.actualizar": "Actualizar",
+  "services.copiar": "Copiar",
+  "services.git.crear.pr": "Git: crear PR",
+  "services.git.merge.pr": "Git: merge PR",
+  "services.git.pr.creado": "Git: PR creado",
+  "services.git.pr.mergeado": "Git: PR mergeado",
+  "services.limpiar.pantalla": "Limpiar pantalla",
+  "services.no.se.pudo.descargar": "No se pudo descargar",
+  "services.pegar": "Pegar",
+  "services.puente.nativo.no.disponible": "Puente nativo no disponible",
+  "services.reiniciar.y.actualizar": "Reiniciar y actualizar",
+  "services.sin.seguimiento": "Sin seguimiento",
+  "services.ver.release": "Ver release"
+}

@@ -465,26 +465,26 @@ export function ExplorerPanel({
     if (menu.background || menu.node === null) {
       items.push(
         {
-          label: 'Actualizar',
+          label: t('explorer.actualizar'),
           onClick: () => workspace.refresh()
         },
         {
-          label: 'Nuevo archivo',
+          label: t('explorer.nuevo.archivo'),
           onClick: () => startCreate(root, false)
         },
         {
-          label: 'Nueva carpeta',
+          label: t('explorer.nueva.carpeta'),
           onClick: () => startCreate(root, true)
         },
         {
-          label: 'Copiar ruta raíz',
+          label: t('explorer.copiar.ruta.raiz'),
           separatorBefore: true,
           onClick: () => void copyPath(root)
         }
       )
       if (root) {
         items.push({
-          label: 'Abrir en explorador',
+          label: t('explorer.abrir.en.explorador'),
           onClick: () => void window.api.fs.openInFolder(root)
         })
       }
@@ -499,7 +499,7 @@ export function ExplorerPanel({
           onClick: () => setDeleteTarget({ label: 'elementos', paths: [...selection.selected] })
         },
         {
-          label: 'Copiar rutas',
+          label: t('explorer.copiar.rutas'),
           separatorBefore: true,
           onClick: () => void copyPath([...selection.selected].join('\n'))
         }
@@ -511,39 +511,39 @@ export function ExplorerPanel({
     if (node.isDirectory) {
       items.push(
         {
-          label: 'Nuevo archivo',
+          label: t('explorer.nuevo.archivo'),
           onClick: () => startCreate(node.path, false)
         },
         {
-          label: 'Nueva carpeta',
+          label: t('explorer.nueva.carpeta'),
           onClick: () => startCreate(node.path, true)
         }
       )
     } else {
       items.push({
-        label: 'Abrir',
+        label: t('explorer.abrir'),
         onClick: () => openFileInEditor(node.path, node.name)
       })
     }
 
     items.push(
       {
-        label: 'Renombrar',
+        label: t('explorer.renombrar'),
         separatorBefore: true,
         onClick: () => startRename(node)
       },
       {
-        label: 'Eliminar',
+        label: t('explorer.eliminar'),
         danger: true,
         onClick: () => requestDelete(node)
       },
       {
-        label: 'Mostrar en explorador',
+        label: t('explorer.mostrar.en.explorador'),
         separatorBefore: true,
         onClick: () => void window.api.fs.openInFolder(node.path)
       },
       {
-        label: 'Copiar ruta',
+        label: t('explorer.copiar.ruta'),
         onClick: () => void copyPath(node.path)
       }
     )

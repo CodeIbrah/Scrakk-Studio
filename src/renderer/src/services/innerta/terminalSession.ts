@@ -22,6 +22,7 @@ import { applyInnertaTheme, listenThemeChanges } from '@features/editor/engines/
 import type { ContextMenuItem } from '@ui'
 import { showContextMenu } from '@features/editor/engines/innerta/menuHost'
 
+import { t } from '@core/i18n'
 /** API del terminal expuesta por el preload (window.api.terminal). */
 interface TerminalApi {
   create: (req: { id: string; shell: string; cwd?: string; cols: number; rows: number }) => Promise<unknown>
@@ -271,7 +272,7 @@ class TerminalSessionImpl implements LiveSession {
     }
     const items: ContextMenuItem[] = [
       {
-        label: 'Copiar',
+        get label() { return t('services.copiar') },
         disabled: !hasSelection,
         onClick: () => {
           try {
@@ -284,7 +285,7 @@ class TerminalSessionImpl implements LiveSession {
         }
       },
       {
-        label: 'Pegar',
+        get label() { return t('services.pegar') },
         onClick: () => {
           if (!api) return
           void navigator.clipboard
@@ -296,7 +297,7 @@ class TerminalSessionImpl implements LiveSession {
         }
       },
       {
-        label: 'Limpiar pantalla',
+        get label() { return t('services.limpiar.pantalla') },
         separatorBefore: true,
         onClick: () => {
           // Limpia el buffer visible del vterm (sin tocar el shell).

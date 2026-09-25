@@ -29,9 +29,9 @@ import { t } from '@core/i18n'
 type TypeFilter = 'all' | 'dark' | 'light'
 
 const FILTERS: { id: TypeFilter; label: string }[] = [
-  { id: 'all', label: 'Todos' },
-  { id: 'dark', label: 'Oscuros' },
-  { id: 'light', label: 'Claros' }
+  { id: 'all', get label() { return t('onboarding.todos') } },
+  { id: 'dark', get label() { return t('onboarding.oscuros') } },
+  { id: 'light', get label() { return t('onboarding.claros') } }
 ]
 
 /** Paleta de la tarjeta: acento, fondo de editor, fondo de ventana. */
@@ -103,7 +103,7 @@ export function ThemeStep({ choice, setChoice }: StepContext): JSX.Element {
           {visible.length < themes.length ? ` · ${visible.length} de ${themes.length}` : ''}
         </SectionLabel>
         {visible.length === 0 ? (
-          <OptionCard title={t('onboarding.no.hay.temas.que.coincidan')} description="Prueba con otro nombre o quitá el filtro." />
+          <OptionCard title={t('onboarding.no.hay.temas.que.coincidan')} description={t('onboarding.prueba.con.otro.nombre.o')} />
         ) : (
           <CardGrid columns={3}>
             {visible.map((theme) => (

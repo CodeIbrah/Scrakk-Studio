@@ -43,10 +43,10 @@ import styles from './ProblemsPanel.module.css'
 import { t } from '@core/i18n'
 /** Severidades del LSP, con su icono y su color (1 = error … 4 = hint). */
 const SEVERITIES = [
-  { id: 1, label: 'Errores', icon: 'close', color: 'var(--color-danger, #f14c4c)' },
-  { id: 2, label: 'Advertencias', icon: 'alert', color: 'var(--color-warning, #cca700)' },
-  { id: 3, label: 'Información', icon: 'info', color: 'var(--color-info, #3794ff)' },
-  { id: 4, label: 'Sugerencias', icon: 'info', color: 'var(--color-text-muted)' }
+  { id: 1, get label() { return t('layout.errores') }, icon: 'close', color: 'var(--color-danger, #f14c4c)' },
+  { id: 2, get label() { return t('layout.advertencias') }, icon: 'alert', color: 'var(--color-warning, #cca700)' },
+  { id: 3, get label() { return t('layout.informacion') }, icon: 'info', color: 'var(--color-info, #3794ff)' },
+  { id: 4, get label() { return t('layout.sugerencias') }, icon: 'info', color: 'var(--color-text-muted)' }
 ] as const
 
 function severityMeta(severity: number): (typeof SEVERITIES)[number] {

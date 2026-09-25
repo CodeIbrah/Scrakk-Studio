@@ -60,7 +60,7 @@ export function StatusBar({ onOpenSettings }: StatusBarProps): JSX.Element {
     }
     showAnchoredModal({
       key: NOTIFICATIONS_POPOVER_KEY,
-      title: 'Notificaciones',
+      title: t('statusbar.notificaciones'),
       anchor,
       width: 300,
       render: () => <NotificationsHistoryPanel />

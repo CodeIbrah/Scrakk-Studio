@@ -250,8 +250,8 @@ export function AgentsSection(): JSX.Element {
         activeId={kind}
         onChange={(id) => setKind(id as AgentKind)}
         items={[
-          { id: 'primary', label: 'Primarios' },
-          { id: 'subagent', label: 'Subagentes' }
+          { id: 'primary', label: t('settings.primarios') },
+          { id: 'subagent', label: t('settings.subagentes') }
         ]}
       />
 
@@ -262,8 +262,8 @@ export function AgentsSection(): JSX.Element {
           aria-haspopup="menu"
           onClick={(event) =>
             openSelect(event, [
-              { label: 'Proyecto', checked: scope === 'project', onClick: () => setScope('project') },
-              { label: 'Usuario', checked: scope === 'user', onClick: () => setScope('user') }
+              { label: t('settings.proyecto'), checked: scope === 'project', onClick: () => setScope('project') },
+              { label: t('settings.usuario'), checked: scope === 'user', onClick: () => setScope('user') }
             ])
           }
         >

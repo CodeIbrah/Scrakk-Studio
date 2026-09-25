@@ -3,7 +3,7 @@
 // Licencia completa en LICENSE (Apache License 2.0).
 
 import { useEffect, useState } from 'react'
-import { useLocale } from '@core/i18n'
+import { t, useLocale } from '@core/i18n'
 import { AppShell } from '@layout/AppShell'
 import { ChatsProvider, ToolConfirmationModal, registerChatCommands } from '@features/chat'
 import {
@@ -59,7 +59,7 @@ import {
 const APP_COMMANDS: Command[] = [
   {
     id: 'app.openSettings',
-    title: 'Abrir ajustes',
+    get title() { return t('app.abrir.ajustes') },
     category: 'Configuración',
     keybinding: 'mod+,',
     run: () => {
@@ -68,7 +68,7 @@ const APP_COMMANDS: Command[] = [
   },
   {
     id: 'workspace.openFolder',
-    title: 'Abrir carpeta…',
+    get title() { return t('app.abrir.carpeta') },
     category: 'Workspace',
     run: async () => {
       const res = await window.api.fs.pickFolder()
@@ -77,7 +77,7 @@ const APP_COMMANDS: Command[] = [
   },
   {
     id: 'workspace.refreshExplorer',
-    title: 'Refrescar explorador',
+    get title() { return t('app.refrescar.explorador') },
     category: 'Workspace',
     run: () => {
       window.dispatchEvent(new CustomEvent('refresh-explorer'))
@@ -85,7 +85,7 @@ const APP_COMMANDS: Command[] = [
   },
   {
     id: 'palette.open',
-    title: 'Paleta de comandos',
+    get title() { return t('app.paleta.de.comandos') },
     category: 'General',
     run: () => {
       window.dispatchEvent(new CustomEvent('open-command-palette'))
@@ -93,7 +93,7 @@ const APP_COMMANDS: Command[] = [
   },
   {
     id: 'file.save',
-    title: 'Guardar archivo',
+    get title() { return t('app.guardar.archivo') },
     category: 'Archivo',
     keybinding: 'mod+s',
     run: () => {
@@ -102,7 +102,7 @@ const APP_COMMANDS: Command[] = [
   },
   {
     id: 'view.toggleMinimap',
-    title: 'Alternar minimapa',
+    get title() { return t('app.alternar.minimapa') },
     category: 'Ver',
     run: () => {
       setMinimapVisibleEverywhere(!getMinimapVisible())
@@ -110,7 +110,7 @@ const APP_COMMANDS: Command[] = [
   },
   {
     id: 'providers.open',
-    title: 'Abrir proveedores LLM',
+    get title() { return t('app.abrir.proveedores.llm') },
     category: 'Configuración',
     run: () => {
       window.dispatchEvent(
@@ -195,7 +195,7 @@ export function App() {
     // Pasa por la guardia dirty: no se tira un buffer con cambios callando.
     const unsubClose = commandRegistry.register({
       id: 'editor.closeActiveFile',
-      title: 'Cerrar archivo activo',
+      title: t('app.cerrar.archivo.activo'),
       category: 'Editor',
       keybinding: 'mod+alt+w',
       run: () => {
@@ -216,7 +216,7 @@ export function App() {
     const unsubDefinition = commandRegistry.register(
       {
         id: 'editor.goToDefinition',
-        title: 'Ir a la definición',
+        title: t('app.ir.a.la.definicion'),
         category: 'Editor',
         keybinding: 'f12',
         run: () => {
@@ -230,8 +230,8 @@ export function App() {
             })
             if (!target) {
               notify({
-                title: 'Ir a la definición',
-                message: 'Sin definición en el cursor.',
+                title: t('app.ir.a.la.definicion'),
+                message: t('app.sin.definicion.en.el.cursor'),
                 severity: 'info'
               })
               return
@@ -247,7 +247,7 @@ export function App() {
     const unsubExpand = commandRegistry.register(
       {
         id: 'editor.expandSelection',
-        title: 'Expandir selección (objeto de texto)',
+        title: t('app.expandir.seleccion.objeto.de.texto'),
         category: 'Editor',
         keybinding: 'shift+alt+right',
         run: () => void expandSelectionFromTree()
@@ -262,7 +262,7 @@ export function App() {
     const unsubCapture = commandRegistry.register(
       {
         id: 'editor.captureScreenshot',
-        title: 'Capturar el editor (PNG)',
+        title: t('app.capturar.el.editor.png'),
         category: 'Editor',
         run: () => void captureEditorScreenshot()
       },
@@ -284,7 +284,7 @@ export function App() {
   useEffect(() => {
     const unsub = commandRegistry.register({
       id: 'lsp.openModal',
-      title: 'Language Servers',
+      title: t('app.language.servers'),
       category: 'Configuración',
       run: () => openSettingsModal('servers')
     })

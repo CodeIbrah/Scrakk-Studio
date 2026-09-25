@@ -4,6 +4,7 @@
 
 import { lazy, type LazyExoticComponent, type ComponentType } from 'react'
 
+import { t } from '@core/i18n'
 /**
  * Registro de widgets de la titlebar — el "widgetcontainer".
  *
@@ -37,7 +38,7 @@ export interface TitlebarWidgetEntry {
 export const TITLEBAR_WIDGET_REGISTRY: Record<string, TitlebarWidgetEntry> = {
   workspaces: {
     id: 'workspaces',
-    title: 'Workspaces',
+    get title() { return t('titlebar.workspaces') },
     order: 10,
     component: lazy(() =>
       import('./workspaces/WorkspacesWidget').then((module) => ({

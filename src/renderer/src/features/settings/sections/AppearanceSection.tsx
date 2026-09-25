@@ -165,8 +165,8 @@ export function AppearanceSection(): JSX.Element {
           onChange={(id) => pickLocale(id as LocalePreference)}
           items={[
             { id: 'system', label: t('common.system') },
-            { id: 'es', label: 'Español' },
-            { id: 'en', label: 'English' }
+            { id: 'es', label: t('settings.espanol') },
+            { id: 'en', label: t('settings.english') }
           ]}
         />
         <p className={styles.hint}>{t('appearance.language.hint')}</p>

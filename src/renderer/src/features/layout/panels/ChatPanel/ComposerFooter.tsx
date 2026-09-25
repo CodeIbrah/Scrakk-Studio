@@ -77,22 +77,22 @@ export function ComposerFooter({ variant }: { variant: string }): JSX.Element {
     const items: ContextMenuItem[] = []
     if (!showSkills) {
       items.push({
-        label: 'Skills',
+        label: t('layout.skills'),
         sublabel: `${skillCount} cargadas`,
         icon: <ProductIcon id="layers" size={13} aria-hidden="true" />,
         onClick: () => toggleSkillsView()
       })
     }
     if (!showVariants) {
-      items.push({ label: 'Pensamiento', disabled: true, separatorBefore: items.length > 0 })
+      items.push({ label: t('layout.pensamiento'), disabled: true, separatorBefore: items.length > 0 })
       const info = getAvailableVariants()
       if (!info.catalogReady) {
-        items.push({ label: 'Cargando catálogo…', disabled: true })
+        items.push({ label: t('layout.cargando.catalogo'), disabled: true })
       } else if (info.options.length === 0) {
-        items.push({ label: 'El modelo no declara variantes', disabled: true })
+        items.push({ label: t('layout.el.modelo.no.declara.variantes'), disabled: true })
       } else {
         items.push({
-          label: 'Automática',
+          label: t('layout.automatica'),
           checked: info.current === '',
           onClick: () => applyVariant('auto')
         })
@@ -106,7 +106,7 @@ export function ComposerFooter({ variant }: { variant: string }): JSX.Element {
       }
     }
     if (!showModel) {
-      items.push({ label: 'Modelo', disabled: true, separatorBefore: items.length > 0 })
+      items.push({ label: t('layout.modelo'), disabled: true, separatorBefore: items.length > 0 })
       items.push(...modelItems)
     }
     return items

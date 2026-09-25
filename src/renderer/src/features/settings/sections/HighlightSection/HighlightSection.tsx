@@ -42,12 +42,12 @@ const SOURCE_OPTIONS: Array<{ id: EditorHighlightSource; label: string; desc: st
   },
   {
     id: 'lsp',
-    label: 'LSP (semantic tokens)',
+    get label() { return t('settings.lsp.semantic.tokens') },
     desc: 'Solo tokens del language server. Máxima precisión.'
   },
   {
     id: 'mixed',
-    label: 'Mixto',
+    get label() { return t('settings.mixto') },
     desc: 'Base Tree-sitter + overlay LSP donde cubre.'
   }
 ]
@@ -55,12 +55,12 @@ const SOURCE_OPTIONS: Array<{ id: EditorHighlightSource; label: string; desc: st
 const ENGINE_OPTIONS: Array<{ id: EditorGrammarEngine; label: string; desc: string }> = [
   {
     id: 'auto',
-    label: 'Automático',
+    get label() { return t('settings.automatico') },
     desc: 'TextMate si el paquete lo trae; si no, el parser tree-sitter.'
   },
   {
     id: 'treeSitter',
-    label: 'Tree-sitter del paquete',
+    get label() { return t('settings.tree.sitter.del.paquete') },
     desc: 'Siempre el árbol de sintaxis si hay uno usable. Más preciso, usa un proceso aparte.'
   },
   {

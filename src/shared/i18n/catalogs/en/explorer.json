@@ -1,14 +1,22 @@
 {
   "explorer.abre.una.carpeta.para.explorar": "Open a folder to browse your files and work with the agent.",
+  "explorer.abrir": "Open",
   "explorer.abrir.carpeta": "Open Folder",
+  "explorer.abrir.en.explorador": "Open in browser",
+  "explorer.actualizar": "Update",
   "explorer.actualizar.explorador": "Refresh browser",
   "explorer.cancelar": "Cancel",
   "explorer.carpeta.vacia": "Empty folder",
   "explorer.colapsar.todas.las.carpetas": "Collapse all folders",
+  "explorer.copiar.ruta": "Copy path",
+  "explorer.copiar.ruta.raiz": "Copy root path",
+  "explorer.copiar.rutas": "Copy paths",
   "explorer.eliminar": "Delete",
   "explorer.explorador.de.archivos": "File Explorer",
   "explorer.mas.acciones": "More actions",
+  "explorer.mostrar.en.explorador": "View in browser",
   "explorer.nueva.carpeta": "New Folder",
   "explorer.nuevo.archivo": "New file",
+  "explorer.renombrar": "Rename",
   "explorer.sin.workspace": "No workspace"
 }

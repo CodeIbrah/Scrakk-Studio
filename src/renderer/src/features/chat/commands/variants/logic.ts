@@ -16,6 +16,7 @@ import { thinkingOptionsFor } from '@shared/thinking'
 import type { SlashCommandResult } from '@services/slash-commands'
 import { activeProviderSelection, readProviderSettings, setProviderVariant } from '@features/providers/settings'
 
+import { t } from '@core/i18n'
 export interface VariantInfo {
   providerId: string | null
   model: string
@@ -104,8 +105,8 @@ export async function openVariantsPicker(): Promise<SlashCommandResult> {
   const items = [
     {
       id: 'auto',
-      label: 'Automática',
-      description: 'No forzar effort (default del proveedor)',
+      label: t('chat.automatica'),
+      description: t('chat.no.forzar.effort.default.del'),
       hint: info.current ? '' : 'actual'
     },
     ...info.options.map((value) => ({

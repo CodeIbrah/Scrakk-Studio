@@ -107,8 +107,8 @@ export function SkillsPanel(): JSX.Element {
   const openScopeMenu = (event: MouseEvent<HTMLButtonElement>): void => {
     const rect = event.currentTarget.getBoundingClientRect()
     const items: ContextMenuItem[] = [
-      { label: 'Proyecto (.scrakk/skills)', checked: scope === 'project', onClick: () => setScope('project') },
-      { label: 'Usuario (~/.scrakk/skills)', checked: scope === 'user', onClick: () => setScope('user') }
+      { label: t('layout.proyecto.scrakk.skills'), checked: scope === 'project', onClick: () => setScope('project') },
+      { label: t('layout.usuario.scrakk.skills'), checked: scope === 'user', onClick: () => setScope('user') }
     ]
     showContextMenu(rect.left, rect.bottom, items)
   }
@@ -158,7 +158,7 @@ export function SkillsPanel(): JSX.Element {
   /** Pide confirmación (modal global) antes de borrar una skill. */
   const requestDelete = (skill: SkillInfo): void => {
     showModal({
-      title: 'Eliminar skill',
+      title: t('layout.eliminar.skill'),
       render: ({ close }) => (
         <div className={styles.confirm}>
           <p className={styles.confirmText}>
@@ -192,10 +192,10 @@ export function SkillsPanel(): JSX.Element {
     primary?: boolean
     onClick: () => void
   }> = [
-    { id: 'new', label: 'Nueva', icon: 'plus', primary: true, onClick: openComposer },
+    { id: 'new', label: t('layout.nueva'), icon: 'plus', primary: true, onClick: openComposer },
     creating
-      ? { id: 'close', label: 'Cerrar', icon: 'close', onClick: closeComposer }
-      : { id: 'reload', label: 'Recargar', icon: 'refresh', onClick: reload }
+      ? { id: 'close', label: t('layout.cerrar'), icon: 'close', onClick: closeComposer }
+      : { id: 'reload', label: t('layout.recargar'), icon: 'refresh', onClick: reload }
   ]
 
   return (

@@ -4287,6 +4287,2438 @@
       "needsReview": false,
       "at": "2026-09-25T17:31:26.369Z",
       "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "app.abrir.ajustes": {
+      "src": "e1e9ab220c9d0d83",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.708Z",
+      "approvedAt": "2026-09-25T17:45:46.188Z"
+    },
+    "app.abrir.carpeta": {
+      "src": "4f970c0bd2de1cbd",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "app.abrir.proveedores.llm": {
+      "src": "d1d55306357dc92f",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "app.alternar.minimapa": {
+      "src": "5a64efca948e4bd8",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "app.capturar.el.editor.png": {
+      "src": "c48aca57c1f00395",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "app.cerrar.archivo.activo": {
+      "src": "b3d74e1048cedc30",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "app.expandir.seleccion.objeto.de.texto": {
+      "src": "9415b4849ddd3d98",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "app.guardar.archivo": {
+      "src": "9bd16201d3b07cdf",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "app.ir.a.la.definicion": {
+      "src": "5e92505586a0316e",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "app.language.servers": {
+      "src": "48ef58b57ffe2649",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "app.paleta.de.comandos": {
+      "src": "5b63975b7d828550",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "app.refrescar.explorador": {
+      "src": "d9fdab5a6a35131f",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "app.sin.definicion.en.el.cursor": {
+      "src": "6bd583b7fd4841cb",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:21.709Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "chat.automatica": {
+      "src": "e51e19df5b7449a9",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:22.589Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "chat.confirmar.accion": {
+      "src": "86fffa7fda741489",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:22.590Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "chat.copiar.al.portapapeles": {
+      "src": "6ab1756c945c6c3e",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:22.590Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "chat.elige.la.variante.de.razonamiento": {
+      "src": "7c427c2a376a6c34",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:22.590Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "chat.exportar.como.md": {
+      "src": "e2131f76f12b737f",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:22.590Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "chat.exportar.como.txt": {
+      "src": "24b3a811fcf77ae0",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:22.590Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "chat.no.forzar.effort.default.del": {
+      "src": "8f8ce38c9fb79f3a",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:22.590Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "chat.nuevo.chat": {
+      "src": "b23acf397929fc0f",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:22.590Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "chat.variante.a.aplicar.o.auto": {
+      "src": "a8f4e4d8c4d48f21",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:22.590Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "common.copiar": {
+      "src": "39dcf1cbeb5adbd0",
+      "area": "common",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:23.302Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "common.pegar": {
+      "src": "9536d53c4922de14",
+      "area": "common",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:23.302Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "common.seleccionar.todo": {
+      "src": "f691776fbc8ed669",
+      "area": "common",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:23.302Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "core.cambiar.tema.claro.oscuro": {
+      "src": "1a5a6f8764e2527d",
+      "area": "core",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:24.076Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "core.tema.claro": {
+      "src": "64b58754485a1894",
+      "area": "core",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:24.076Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "core.tema.oscuro": {
+      "src": "b095d9ede1b6db10",
+      "area": "core",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:24.076Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "explorer.abrir": {
+      "src": "a01a5fce396edb61",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:24.844Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "explorer.abrir.en.explorador": {
+      "src": "1757ebea8c579342",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:24.844Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "explorer.actualizar": {
+      "src": "fe5f6628c7b56bf1",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:24.844Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "explorer.copiar.ruta": {
+      "src": "e493a29c95088537",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:24.844Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "explorer.copiar.ruta.raiz": {
+      "src": "72b42b88733cefb1",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:24.844Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "explorer.copiar.rutas": {
+      "src": "d71b0f37ff471153",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:24.844Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "explorer.mostrar.en.explorador": {
+      "src": "c355b752457945be",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:24.844Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "explorer.renombrar": {
+      "src": "c89723ac88fde6bf",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:24.844Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "features.esquema": {
+      "src": "cd99483a6458457d",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:25.648Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "features.linea.de.tiempo": {
+      "src": "93cdab39116f9824",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:25.648Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "features.marcadores": {
+      "src": "a0e10dff1a8de85c",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:25.648Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.apply": {
+      "src": "31e392d1c0378bec",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.cancelar": {
+      "src": "bb9dbb406dcbd524",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.copiar.sha": {
+      "src": "fae29bb17a933110",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.drop": {
+      "src": "c8af9ae37a48273f",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.git.abrir.panel": {
+      "src": "5577fc9211e955b3",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.git.fetch.all.prune": {
+      "src": "191e544087c67d27",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.git.ir.a.commit.abre": {
+      "src": "871d1cbe1c9d40ee",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.git.pull.ff.only": {
+      "src": "d7e58cf986335f55",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.git.push": {
+      "src": "5c7380a12f549655",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.merge": {
+      "src": "8851aaa7d08ca1ae",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.no.se.pudo.copiar": {
+      "src": "2af3009605d0a4d7",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.rebase": {
+      "src": "9eb5b275c3a0fa43",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "git.squash": {
+      "src": "9f9a8456f0eef1e4",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:26.560Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.0": {
+      "src": "04f61883674941b6",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.0": {
+      "src": "5e8bb4697b067305",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.0": {
+      "src": "26b8291ff1775d95",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.0": {
+      "src": "c70df81fe616484a",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.1": {
+      "src": "156cee34e489f140",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.1": {
+      "src": "31f304a96386aecb",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.1": {
+      "src": "f52a5f73b4b18384",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.1": {
+      "src": "71e34f67d85648c6",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.2": {
+      "src": "0a79837e8022d8d3",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.2": {
+      "src": "5087e44d9b3094d8",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.2": {
+      "src": "cb55520733e9ed97",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.2": {
+      "src": "9574f830e5c00216",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.3": {
+      "src": "aab216ced6e17c74",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.3": {
+      "src": "3b785cc9ba7a620e",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.3": {
+      "src": "b8211b18592767d8",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.3": {
+      "src": "a439bb9b5a43ce8a",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.4": {
+      "src": "621b7e4402512c96",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.4": {
+      "src": "2d16d4b1bbfe9186",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.4": {
+      "src": "3f0e2dd77672d037",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.4": {
+      "src": "0d394b3a27a4ad7e",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.5": {
+      "src": "988553c94bf270b9",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.5": {
+      "src": "0fb25770404b5a06",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.5": {
+      "src": "5d6469d245624d36",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.5": {
+      "src": "597351dd67edc7cb",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.6": {
+      "src": "948b490b128f0823",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.6": {
+      "src": "32b6cc4d2bb199db",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.6": {
+      "src": "2e144b6ad4053e27",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.6": {
+      "src": "cc3e3fb8f8bc174b",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.7": {
+      "src": "cabd720f13f32318",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.7": {
+      "src": "d3cd56573b79977d",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.7": {
+      "src": "117d888b80566ed7",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.7": {
+      "src": "a22b965d87a5154d",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.210Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.8": {
+      "src": "7a45f74659a7ed7d",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.8": {
+      "src": "56a37d6ce97c8e99",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.8": {
+      "src": "3ebcb701c6852ae5",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.8": {
+      "src": "0bb10fc6a5a47c73",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.9": {
+      "src": "2c762a6c1a08dfe7",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.9": {
+      "src": "5ab0da852c96af98",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.9": {
+      "src": "90a2bf9d77f4dfbd",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.9": {
+      "src": "b1f314cfd9b658f3",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.10": {
+      "src": "4cdff06345a9214e",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.10": {
+      "src": "3385e4d69d8eeb94",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.10": {
+      "src": "d3e938b84129c864",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.10": {
+      "src": "0281657e58d4dc88",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.11": {
+      "src": "13f7bed21be50291",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.11": {
+      "src": "2a5274df60eff925",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.11": {
+      "src": "5103fde0177f3525",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.11": {
+      "src": "08b0fd3e8f093e56",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.12": {
+      "src": "f29e76c295762bd0",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.12": {
+      "src": "711ce36c9707dad8",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:28.211Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.12": {
+      "src": "279ead13a5332d5a",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.611Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.12": {
+      "src": "dd85c6f9e6823f5b",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.611Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.13": {
+      "src": "724f58930d502449",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.611Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.13": {
+      "src": "a608b934284ab40f",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.611Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.13": {
+      "src": "3307e097d869ce22",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.611Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.13": {
+      "src": "90a51516216a4553",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.611Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.14": {
+      "src": "101e6c61e6040b2f",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.14": {
+      "src": "95d09a93a6015a15",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.14": {
+      "src": "7be724e70614c11c",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.14": {
+      "src": "2e4a4f96d103e09d",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.15": {
+      "src": "3bf9974f7d669304",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.15": {
+      "src": "6acc9aff8c17e823",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.15": {
+      "src": "22c921cd847aad30",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.15": {
+      "src": "5f5d1c19d3c4f259",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.16": {
+      "src": "f00d89a8c650bc1b",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.16": {
+      "src": "664ea2a86f1767b3",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.16": {
+      "src": "c609fa53e2ec031c",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.16": {
+      "src": "26aacbdb379f98bb",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.17": {
+      "src": "a9f8e74a67c5a231",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.17": {
+      "src": "2bd9b6929ba3b9d7",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.17": {
+      "src": "c6a475086950b0eb",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.17": {
+      "src": "ba66651918a8dc93",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.18": {
+      "src": "17821b4e73cb91d2",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.18": {
+      "src": "8387554e8d107c48",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.18": {
+      "src": "d816c0dee4c50d66",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.18": {
+      "src": "c98f9b66fd180b36",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.19": {
+      "src": "3cb1e8dd6b863a74",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.19": {
+      "src": "5d4e924dbafcc3ef",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.19": {
+      "src": "8416610cb4123423",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.19": {
+      "src": "1d6c98680421a2a9",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.20": {
+      "src": "e42b41d9ca5e55e4",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.20": {
+      "src": "e04dd816509e5710",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.20": {
+      "src": "18273cf27c628fc5",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.20": {
+      "src": "5ec9be99517037b8",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.21": {
+      "src": "3671efd67334e443",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.21": {
+      "src": "ef2c854c7dd8c99c",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.21": {
+      "src": "849765a75c8b6f58",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.21": {
+      "src": "3d060cf1db21e070",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.22": {
+      "src": "bd88a00f18ff978a",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.22": {
+      "src": "090ca4e8a89150d1",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.tarde.22": {
+      "src": "23a05ae14a39b070",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.noche.22": {
+      "src": "6d3dbe1f6d26967d",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.madrugada.23": {
+      "src": "e71a7f9d026dafe0",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.190Z"
+    },
+    "greetings.manana.23": {
+      "src": "0253810f78481a7d",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.23": {
+      "src": "099caaefe6ce741d",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.23": {
+      "src": "65a6c51f29748474",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.24": {
+      "src": "3b468c09e3eee3b9",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.24": {
+      "src": "8ae15a62f5485efb",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.24": {
+      "src": "a3348183a9fe753e",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.24": {
+      "src": "d930525be72940e7",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:29.612Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.25": {
+      "src": "36441e4f43d39308",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.170Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.25": {
+      "src": "338e88ebf33c962a",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.25": {
+      "src": "7425d661d7040dfe",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.25": {
+      "src": "f93e8e716a58e936",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.26": {
+      "src": "d729606de7570f23",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.26": {
+      "src": "de42e217b32ab35a",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.26": {
+      "src": "6cd3d0c1f4e71514",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.26": {
+      "src": "dca939f1b371c185",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.27": {
+      "src": "c2155a9407e9b897",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.27": {
+      "src": "d4dbd5cca42ebfd3",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.27": {
+      "src": "041fd781d900477c",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.27": {
+      "src": "a86ed7c77d929c26",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.28": {
+      "src": "98ac4cda02c3dbb6",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.28": {
+      "src": "bd60128cc734f54e",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.28": {
+      "src": "81802bf9db14302b",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.28": {
+      "src": "dfb17ca848c4ec4e",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.29": {
+      "src": "f86f260e09df4cb9",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.29": {
+      "src": "ef3ca7501311ef58",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.29": {
+      "src": "d9d8e6499e068e2b",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.29": {
+      "src": "ced96fad63a93297",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.30": {
+      "src": "3eca87bd60448cd1",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.30": {
+      "src": "1c11912435d86d96",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.30": {
+      "src": "d8e60c66716abfa3",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.30": {
+      "src": "0b9de10e9e1925ea",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.31": {
+      "src": "c9a5a40a1f8b0821",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.31": {
+      "src": "11142ff75133caef",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.31": {
+      "src": "d87aee4b7e82c0cc",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.31": {
+      "src": "7b8ce5546556c2f8",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.32": {
+      "src": "f1a15a54da79d1e8",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.32": {
+      "src": "461397de10e0faf3",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.32": {
+      "src": "ba3c7da83f20457a",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.32": {
+      "src": "1602cd5c20490814",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.33": {
+      "src": "7aa8a955b2449d7b",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.33": {
+      "src": "03da98a43574041a",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.33": {
+      "src": "1c5e6f12816265b4",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.33": {
+      "src": "1f5425b8f44d2a6a",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.34": {
+      "src": "a2a063d86a47f5af",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.34": {
+      "src": "a09dd43878ef9bf8",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.34": {
+      "src": "d2fba4c923c8beca",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.34": {
+      "src": "bfaedb44cb865b64",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.35": {
+      "src": "d73031c712e97949",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.35": {
+      "src": "08f7d825b7e6b1ff",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.35": {
+      "src": "bcaec48aa2fd1a7d",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.35": {
+      "src": "e67f3be709ed2c47",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.36": {
+      "src": "25f72b42ec591e1d",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.36": {
+      "src": "b58615df28b1ade3",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.36": {
+      "src": "613dc44c65fded7f",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.36": {
+      "src": "22709c06b666ec06",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.madrugada.37": {
+      "src": "cb1c39667f17a512",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.171Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.manana.37": {
+      "src": "169d8148e7937258",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:31.172Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.tarde.37": {
+      "src": "219b6399e67242f7",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:32.163Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "greetings.noche.37": {
+      "src": "8b6aef4d83e93c1c",
+      "area": "greetings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:32.163Z",
+      "approvedAt": "2026-09-25T17:45:46.191Z"
+    },
+    "layout.advertencias": {
+      "src": "c459d1c9972456a0",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.197Z"
+    },
+    "layout.automatica": {
+      "src": "e51e19df5b7449a9",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.el.modelo.no.declara.variantes": {
+      "src": "90656795301dc6b8",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.eliminar.skill": {
+      "src": "3f9a8f56d8274233",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.errores": {
+      "src": "15242737a9b72470",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.exportar.chat": {
+      "src": "4b6dea1aee788905",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.modelo": {
+      "src": "a5ab3212dad17406",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.mostrar.ocultar.chat": {
+      "src": "186001d480609055",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.mostrar.ocultar.explorador": {
+      "src": "66e1f2f9692b6087",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.mostrar.ocultar.historial.de.chats": {
+      "src": "6747dd21eb11ea42",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.nueva": {
+      "src": "caf7d2bd0b101fab",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.pensamiento": {
+      "src": "5dec1def370ee8a1",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.proyecto.scrakk.skills": {
+      "src": "8f5c20c683e8dd5e",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.recargar": {
+      "src": "9565f197873f81df",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.skills": {
+      "src": "66d0f523a379b2de",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.sugerencias": {
+      "src": "70cf296fe178d5d4",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.usuario.scrakk.skills": {
+      "src": "a5a07283aa034962",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.ver.terminales.en.lienzo": {
+      "src": "462197da31fa8629",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.vista.de.nodos": {
+      "src": "d33f9cd93decf36e",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:33.048Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.apariencia": {
+      "src": "e3e9cbaccaec3d2a",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.atajos": {
+      "src": "ca3cecf1334a1af8",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.atajos.a.tu.manera": {
+      "src": "86c5153b81b3934d",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.bienvenida": {
+      "src": "f5f273d88e2e1d2c",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.bienvenido.a.scrakk.studio": {
+      "src": "a415e3af52861faa",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.cada.panel.se.mueve.se": {
+      "src": "d3f9a3d63bb8a4c0",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.claros": {
+      "src": "160b3c182900a471",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.editor.con.innerta": {
+      "src": "70abdd836340ef8f",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.elige.como.se.ve": {
+      "src": "558342beffdad5c4",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.esquema.de.intellij.webstorm": {
+      "src": "21264ba1d008b164",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.extensiones": {
+      "src": "f8980f8b253d6f4b",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.layout.libre": {
+      "src": "b662617e2368c597",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.listo": {
+      "src": "b5fa51d564a9d880",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.los.atajos.del.editor.tal": {
+      "src": "5f00d1545f59641c",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.los.mismos.atajos.que.ya": {
+      "src": "f593130026937f22",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.los.temas.se.aplican.al": {
+      "src": "d1cc982cb31089c6",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.modo.normal.para.los.que": {
+      "src": "675d1413a53d684b",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.oscuros": {
+      "src": "b1a2190166808098",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.privacidad": {
+      "src": "52233e2c4d6b2e9a",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.prueba.con.otro.nombre.o": {
+      "src": "77c4dd138715203a",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.pty.nativo.con.sesiones.persistentes": {
+      "src": "581fbb2608d5490a",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.resaltado.minimapa.y.simbolos.sobre": {
+      "src": "c7fa6a8d7f76e34d",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.revisa.lo.elegido.o.empieza": {
+      "src": "a54d783a77f7ffa9",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.scrakk": {
+      "src": "d7fb235bcef647bf",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.si.vienes.de.otro.editor": {
+      "src": "f367bd1e01735ab5",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.temas.paneles.y.compatibilidad.con": {
+      "src": "508127c9cd95f4dc",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.terminal.real": {
+      "src": "c4f3228976e188e2",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.104Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.todo.listo": {
+      "src": "658af939b901ac3e",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.105Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.todos": {
+      "src": "bd02b9a7d71dac67",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.105Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.tu.decides.que.se.comparte": {
+      "src": "63cf0fad47bbe972",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.108Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.un.editor.con.layout.libre": {
+      "src": "098bdd6df3aaa3bc",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.108Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.una.sola.vez.sin.insistir": {
+      "src": "2f4eb731595786a9",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.108Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.ver.configuracion.inicial": {
+      "src": "d42dfe9a08343d08",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.108Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.vim": {
+      "src": "c71ba099f4405e40",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.108Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "onboarding.vs.code": {
+      "src": "af437cf8caed3e51",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.108Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "providers.abrir.proveedores": {
+      "src": "4b3c6ecfc2c784f2",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.824Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "providers.no.hay.modelos.todavia": {
+      "src": "cde2cb726d71f592",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:34.824Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.actualizacion.disponible": {
+      "src": "81e17ebcc17b0f55",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.actualizacion.lista": {
+      "src": "302285b0d0f63b43",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.actualizar": {
+      "src": "fe5f6628c7b56bf1",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.copiar": {
+      "src": "39dcf1cbeb5adbd0",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.git.crear.pr": {
+      "src": "dd7bc6509fb63fab",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.git.merge.pr": {
+      "src": "556d509b62641cc5",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.git.pr.creado": {
+      "src": "eee1ff6ddd3e0e41",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.git.pr.mergeado": {
+      "src": "0499aec7ae2782c9",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.limpiar.pantalla": {
+      "src": "c331b1140d1da8e4",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.no.se.pudo.descargar": {
+      "src": "473d27a4aecfdb40",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.pegar": {
+      "src": "9536d53c4922de14",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.puente.nativo.no.disponible": {
+      "src": "2ee4f8936b0a9079",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.reiniciar.y.actualizar": {
+      "src": "62ac2749f08b0b18",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.sin.seguimiento": {
+      "src": "2d1e3f4f05f86729",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "services.ver.release": {
+      "src": "402ea9f014294517",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:35.658Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.acceso.web": {
+      "src": "2942db84b0dca036",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.561Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.automatico": {
+      "src": "b803f24d52edd7bc",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.562Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.buscar.en.archivos": {
+      "src": "f6d24e5566daf2d9",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.buscar.en.la.web": {
+      "src": "cb41aa46bd496530",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.comando.de.shell": {
+      "src": "718609178fc0e486",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.cualquier.herramienta": {
+      "src": "b5d3a7aee2e25d4f",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.editar.archivos": {
+      "src": "8649fa16463ef42b",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.el.puente.nativo.no.esta": {
+      "src": "fc076b9154ef9ee6",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.english": {
+      "src": "ba118bf7fc9c1aed",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.espanol": {
+      "src": "94b382b61b9dde0f",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.herramienta.mcp": {
+      "src": "5024646e786d58d0",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.leer.archivos": {
+      "src": "75b631a1e7768ae9",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.lsp.semantic.tokens": {
+      "src": "e3dd5b7634cd5997",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.mixto": {
+      "src": "8ccb514d4d28ece3",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.primarios": {
+      "src": "d204ce6c148a794f",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.proyecto": {
+      "src": "f3b525782609277a",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.subagentes": {
+      "src": "da248e047f2f15d0",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.tree.sitter.del.paquete": {
+      "src": "af101b3f16ed9a64",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.usuario": {
+      "src": "63614ffde2d350df",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:36.563Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "social.archivo.abierto": {
+      "src": "8efa414cf1183d33",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:37.391Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "social.femenino": {
+      "src": "981147725909115a",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:37.391Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "social.masculino": {
+      "src": "cbb8b78dc192f1be",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:37.391Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "social.no.binario": {
+      "src": "4d31b1c720a696af",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:37.391Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "social.nunca": {
+      "src": "12fcd0c7b77c94f2",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:37.391Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "social.otro": {
+      "src": "0d5a52a92cb9f499",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:37.392Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "social.prefiero.no.decir": {
+      "src": "577ff2e365d6fccc",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:37.392Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "social.que.proyecto.estoy.usando": {
+      "src": "e06295f193cb85f4",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:37.392Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "statusbar.crlf.windows.r.n": {
+      "src": "b833840564cc40e5",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:38.275Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "statusbar.lf.unix.macos.n": {
+      "src": "aefc059a8d573ba3",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:45:38.275Z",
+      "approvedAt": "2026-09-25T17:45:46.198Z"
     }
   },
   "version": 1

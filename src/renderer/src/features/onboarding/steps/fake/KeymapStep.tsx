@@ -47,8 +47,8 @@ interface DemoProfile {
 const DEMO_PROFILES: DemoProfile[] = [
   {
     id: 'scrakk',
-    title: 'Scrakk',
-    description: 'Los atajos del editor tal como vienen.',
+    get title() { return t('onboarding.scrakk') },
+    get description() { return t('onboarding.los.atajos.del.editor.tal') },
     badge: 'Actual',
     shortcuts: [
       { action: 'Paleta de comandos', keys: ['Ctrl', 'Shift', 'P'] },
@@ -59,8 +59,8 @@ const DEMO_PROFILES: DemoProfile[] = [
   },
   {
     id: 'vscode',
-    title: 'VS Code',
-    description: 'Los mismos atajos que ya venías usando.',
+    get title() { return t('onboarding.vs.code') },
+    get description() { return t('onboarding.los.mismos.atajos.que.ya') },
     shortcuts: [
       { action: 'Paleta de comandos', keys: ['Ctrl', 'Shift', 'P'] },
       { action: 'Buscar archivo', keys: ['Ctrl', 'P'] },
@@ -71,7 +71,7 @@ const DEMO_PROFILES: DemoProfile[] = [
   {
     id: 'jetbrains',
     title: 'JetBrains',
-    description: 'Esquema de IntelliJ / WebStorm.',
+    get description() { return t('onboarding.esquema.de.intellij.webstorm') },
     shortcuts: [
       { action: 'Buscar acción', keys: ['Ctrl', 'Shift', 'A'] },
       { action: 'Buscar archivo', keys: ['Ctrl', 'Shift', 'N'] },
@@ -81,8 +81,8 @@ const DEMO_PROFILES: DemoProfile[] = [
   },
   {
     id: 'vim',
-    title: 'Vim',
-    description: 'Modo normal para los que no sueltan hjkl.',
+    get title() { return t('onboarding.vim') },
+    get description() { return t('onboarding.modo.normal.para.los.que') },
     shortcuts: [
       { action: 'Paleta de comandos', keys: ['Ctrl', 'Shift', 'P'] },
       { action: 'Buscar en archivo', keys: ['/'] },

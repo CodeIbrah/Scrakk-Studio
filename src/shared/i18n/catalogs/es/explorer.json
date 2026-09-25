@@ -1,14 +1,22 @@
 {
   "explorer.abre.una.carpeta.para.explorar": "Abre una carpeta para explorar tus archivos y trabajar con el agente.",
+  "explorer.abrir": "Abrir",
   "explorer.abrir.carpeta": "Abrir carpeta",
+  "explorer.abrir.en.explorador": "Abrir en explorador",
+  "explorer.actualizar": "Actualizar",
   "explorer.actualizar.explorador": "Actualizar explorador",
   "explorer.cancelar": "Cancelar",
   "explorer.carpeta.vacia": "Carpeta vacía",
   "explorer.colapsar.todas.las.carpetas": "Colapsar todas las carpetas",
+  "explorer.copiar.ruta": "Copiar ruta",
+  "explorer.copiar.ruta.raiz": "Copiar ruta raíz",
+  "explorer.copiar.rutas": "Copiar rutas",
   "explorer.eliminar": "Eliminar",
   "explorer.explorador.de.archivos": "Explorador de archivos",
   "explorer.mas.acciones": "Más acciones",
+  "explorer.mostrar.en.explorador": "Mostrar en explorador",
   "explorer.nueva.carpeta": "Nueva carpeta",
   "explorer.nuevo.archivo": "Nuevo archivo",
+  "explorer.renombrar": "Renombrar",
   "explorer.sin.workspace": "Sin workspace"
 }

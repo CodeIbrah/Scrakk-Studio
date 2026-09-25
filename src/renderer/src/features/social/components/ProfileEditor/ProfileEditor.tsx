@@ -154,11 +154,11 @@ export function ProfileEditor({
           onClick={(e) => {
             const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
             showContextMenu(rect.left, rect.bottom + 4, [
-              { label: 'Prefiero no decir', onClick: () => setGender('') },
-              { label: 'Masculino', onClick: () => setGender('male') },
-              { label: 'Femenino', onClick: () => setGender('female') },
-              { label: 'No binario', onClick: () => setGender('nonbinary') },
-              { label: 'Otro', onClick: () => setGender('other') }
+              { label: t('social.prefiero.no.decir'), onClick: () => setGender('') },
+              { label: t('social.masculino'), onClick: () => setGender('male') },
+              { label: t('social.femenino'), onClick: () => setGender('female') },
+              { label: t('social.no.binario'), onClick: () => setGender('nonbinary') },
+              { label: t('social.otro'), onClick: () => setGender('other') }
             ])
           }}
         >
@@ -199,7 +199,7 @@ export function ProfileEditor({
                 { label: '1h', onClick: () => setCustomDuration('1h') },
                 { label: '4h', onClick: () => setCustomDuration('4h') },
                 { label: '1d', onClick: () => setCustomDuration('1d') },
-                { label: 'Nunca', onClick: () => setCustomDuration('never') }
+                { label: t('social.nunca'), onClick: () => setCustomDuration('never') }
               ])
             }}
           >

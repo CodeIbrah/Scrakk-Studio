@@ -12,12 +12,13 @@
 import { slashCommands, type SlashCommand } from '@services/slash-commands'
 import { applyVariant, openVariantsPicker } from './logic'
 
+import { t } from '@core/i18n'
 export const variantsCommand: SlashCommand = {
   name: 'variants',
-  description: 'Elige la variante de razonamiento (effort) del modelo activo.',
+  get description() { return t('chat.elige.la.variante.de.razonamiento') },
   usage: '/variants [<valor>|auto]',
   category: 'Chat',
-  args: [{ name: 'valor', description: 'Variante a aplicar (o "auto" para limpiar)' }],
+  args: [{ name: 'valor', get description() { return t('chat.variante.a.aplicar.o.auto') } }],
   run: (ctx) => {
     // Sin argumento: selector con UI propia (modal de opciones).
     if (ctx.args.length === 0) return openVariantsPicker()

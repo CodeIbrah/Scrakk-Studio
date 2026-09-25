@@ -12,6 +12,7 @@
 import type { FileDecoration } from '@features/explorer/decorations'
 import type { GitStatus } from '@shared/git'
 
+import { t } from '@core/i18n'
 const LETTER_COLORS: Record<string, string> = {
   M: '#d29922',
   A: '#3fb950',
@@ -71,7 +72,7 @@ export function gitFileDecoration(status: Pick<GitStatus, 'staged' | 'unstaged' 
     }
   }
   if (status.untracked.some((f) => f.path === relPath)) {
-    return { badge: 'U', color: LETTER_COLORS.U, tooltip: 'Sin seguimiento' }
+    return { badge: 'U', color: LETTER_COLORS.U, tooltip: t('services.sin.seguimiento') }
   }
   return null
 }

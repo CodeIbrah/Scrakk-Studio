@@ -28,6 +28,7 @@ import type {
   ReflogEntry
 } from '@shared/git'
 
+import { t } from '@core/i18n'
 export interface RepoState {
   root: string
   toplevel: string
@@ -383,10 +384,10 @@ export const createPr = async (
 ): Promise<boolean> => {
   const res = await gitApi.ghPrCreate({ cwd: root, ...input })
   if (!res.ok) {
-    notify({ title: 'Git: crear PR', message: res.error.message, severity: 'error' })
+    notify({ title: t('services.git.crear.pr'), message: res.error.message, severity: 'error' })
     return false
   }
-  notify({ title: 'Git: PR creado', message: res.data.url, severity: 'success' })
+  notify({ title: t('services.git.pr.creado'), message: res.data.url, severity: 'success' })
   void refreshPrs(root)
   return true
 }
@@ -394,10 +395,10 @@ export const createPr = async (
 export const mergePr = async (root: string, number: number, method?: 'merge' | 'squash' | 'rebase'): Promise<boolean> => {
   const res = await gitApi.ghPrMerge({ cwd: root, number, method })
   if (!res.ok) {
-    notify({ title: 'Git: merge PR', message: res.error.message, severity: 'error' })
+    notify({ title: t('services.git.merge.pr'), message: res.error.message, severity: 'error' })
     return false
   }
-  notify({ title: 'Git: PR mergeado', severity: 'success' })
+  notify({ title: t('services.git.pr.mergeado'), severity: 'success' })
   void refreshPrs(root)
   void refreshRepoFull(root)
   return true

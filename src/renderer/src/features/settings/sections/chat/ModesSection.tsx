@@ -242,12 +242,12 @@ export function ModesSection(): JSX.Element {
           onClick={(event) =>
             openSelect(event, [
               {
-                label: 'Proyecto',
+                label: t('settings.proyecto'),
                 checked: scope === 'project',
                 onClick: () => setScope('project')
               },
               {
-                label: 'Usuario',
+                label: t('settings.usuario'),
                 checked: scope === 'user',
                 onClick: () => setScope('user')
               }

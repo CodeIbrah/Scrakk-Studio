@@ -74,8 +74,8 @@ export function ProfileCard({
   }
 
   const fields: Array<{ key: 'project' | 'file'; label: string; value?: string }> = [
-    { key: 'project', label: 'Qué proyecto estoy usando', value: projectName },
-    { key: 'file', label: 'Archivo abierto', value: fileName }
+    { key: 'project', label: t('social.que.proyecto.estoy.usando'), value: projectName },
+    { key: 'file', label: t('social.archivo.abierto'), value: fileName }
   ]
 
   return (

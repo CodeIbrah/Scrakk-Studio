@@ -155,7 +155,7 @@ export function ExtensionsSection(): JSX.Element {
 
   const handleInstall = useCallback(async () => {
     if (!window.api?.extensions) {
-      setStatus({ kind: 'error', text: 'El puente nativo no está disponible.' })
+      setStatus({ kind: 'error', text: t('settings.el.puente.nativo.no.esta') })
       return
     }
     setBusy(true)
@@ -190,7 +190,7 @@ export function ExtensionsSection(): JSX.Element {
 
   const handleInstallVsix = useCallback(async () => {
     if (!window.api?.extensions) {
-      setStatus({ kind: 'error', text: 'El puente nativo no está disponible.' })
+      setStatus({ kind: 'error', text: t('settings.el.puente.nativo.no.esta') })
       return
     }
     setBusy(true)
