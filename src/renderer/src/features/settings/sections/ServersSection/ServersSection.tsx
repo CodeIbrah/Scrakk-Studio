@@ -237,6 +237,7 @@ export function ServersSection({ visible = true }: ServersSectionProps): JSX.Ele
     counts: {},
     total: 0
   })
+  const [query, setQuery] = useState('')
 
   const refresh = useCallback(async (): Promise<void> => {
     const list = await lspStatus()
@@ -268,6 +269,15 @@ export function ServersSection({ visible = true }: ServersSectionProps): JSX.Ele
     }
   }, [refresh, visible])
 
+  const q = query.trim().toLowerCase()
+  const visibleServers = q
+    ? servers.filter((server) =>
+        [server.name, server.id, server.source, server.extensionId ?? ''].some((field) =>
+          field.toLowerCase().includes(q)
+        )
+      )
+    : servers
+
   return (
     <div className={styles.section}>
       <p className={styles.summary}>
@@ -294,9 +304,23 @@ export function ServersSection({ visible = true }: ServersSectionProps): JSX.Ele
       ) : (
         <div className={styles.listWrap}>
           <div className={styles.list}>
-            {servers.map((server) => (
-              <ServerRow key={server.id} server={server} onRefresh={refresh} />
-            ))}
+            <div className={styles.searchWrap}>
+              <input
+                className={styles.searchInput}
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder={t('settings.buscar.servidores')}
+                aria-label={t('settings.buscar.servidores-2')}
+                spellCheck={false}
+              />
+            </div>
+            {visibleServers.length === 0 ? (
+              <p className={styles.empty}>{t('settings.sin.resultados')}</p>
+            ) : (
+              visibleServers.map((server) => (
+                <ServerRow key={server.id} server={server} onRefresh={refresh} />
+              ))
+            )}
           </div>
         </div>
       )}

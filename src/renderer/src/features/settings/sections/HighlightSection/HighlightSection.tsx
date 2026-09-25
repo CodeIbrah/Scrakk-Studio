@@ -126,7 +126,7 @@ export function HighlightSection(): JSX.Element {
       {/* Estado en vivo: demuestra que el ajuste aplica de verdad. */}
       <p className={styles.hint}>
         {`resaltado: ${
-          diag.mode === 0 ? 'motor' : diag.mode === 1 ? 'solo host' : 'mixto'
+          diag.mode === 0 ? 'motor' : diag.mode === 1 ? t('settings.solo.host') : 'mixto'
         } · LSP ${diag.sources.semanticTokens} · tree-sitter ${diag.sources.treeSitterDynamic} · TextMate ${diag.sources.textMate}`}
       </p>
 

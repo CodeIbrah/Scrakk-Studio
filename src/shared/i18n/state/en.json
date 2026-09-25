@@ -10607,6 +10607,38 @@
       "needsReview": false,
       "at": "2026-09-25T19:54:36.683Z",
       "approvedAt": "2026-09-25T19:54:36.800Z"
+    },
+    "settings.buscar.servidores": {
+      "src": "e314ef113018cdb1",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T22:19:45.853Z",
+      "approvedAt": "2026-09-25T22:19:46.074Z"
+    },
+    "settings.buscar.servidores-2": {
+      "src": "240866e61a0b100d",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T22:19:45.854Z",
+      "approvedAt": "2026-09-25T22:19:46.075Z"
+    },
+    "settings.sin.resultados": {
+      "src": "e9daea0a0b02ae76",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T22:19:45.854Z",
+      "approvedAt": "2026-09-25T22:19:46.075Z"
+    },
+    "settings.solo.host": {
+      "src": "52a8c1c2455f9057",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T22:19:45.854Z",
+      "approvedAt": "2026-09-25T22:19:46.075Z"
     }
   },
   "version": 1
