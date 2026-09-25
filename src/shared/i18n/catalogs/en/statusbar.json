@@ -31,5 +31,8 @@
   "statusbar.toggle.center": "Center panel",
   "statusbar.toggle.left": "Left panel",
   "statusbar.toggle.right": "Right panel",
-  "statusbar.visibilidad.de.paneles": "Panel visibility"
+  "statusbar.utf.16.be": "UTF-16 BE",
+  "statusbar.utf.16.le": "UTF-16 LE",
+  "statusbar.visibilidad.de.paneles": "Panel visibility",
+  "statusbar.windows.1252": "Windows 1252"
 }

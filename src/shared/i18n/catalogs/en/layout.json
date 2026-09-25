@@ -47,6 +47,7 @@
   "layout.escribe.tu.nota": "Write your note…",
   "layout.esfuerzo.de.pensamiento": "Mental effort",
   "layout.esta.escribiendo": "is typing",
+  "layout.estas.dentro.de.un.subagente": "You are inside a subagent: the main chat is locked",
   "layout.este.modelo.no.declara.variantes": "This model does not declare stress states.",
   "layout.este.panel.fallo": "This panel failed",
   "layout.exportar.chat": "Export chat",

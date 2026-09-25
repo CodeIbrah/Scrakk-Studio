@@ -228,7 +228,7 @@ export function installVSCodeBuiltinCommands(): () => void {
       {
         id: entry.id,
         title: entry.label,
-        category: 'VS Code',
+        category: t('services.vs.code'),
         run: () => {
           void runVSCodeCommand(entry.id)
         }

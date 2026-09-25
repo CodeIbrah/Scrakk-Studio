@@ -31,6 +31,7 @@
   "services.stash.drop": "stash drop",
   "services.stash.pop": "stash pop",
   "services.ver.release": "Ver release",
+  "services.vs.code": "VS Code",
   "services.vscode.open.necesita.la.uri": "vscode.open necesita la URI del archivo (llegó un argumento sin path de disco)",
   "services.vscode.openwith.necesita.la.uri": "vscode.openWith necesita la URI del archivo",
   "services.workbench.view.extension.necesita.el": "workbench.view.extension necesita el id del contenedor"

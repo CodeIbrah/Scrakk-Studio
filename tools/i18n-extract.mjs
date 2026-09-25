@@ -48,13 +48,14 @@ const ROOTS = ['src/renderer/src', 'src/main']
 /** Nada de esto se traduce (datos/modelo/terceros). */
 const DENY = [
   'features/editor/', 'features/lsp/', 'features/quickfix/', 'features/debug/',
-  'services/ai/', 'features/social/emoji/', 'services/extensions/types/',
-  'features/editor/languages.ts', 'src/main/extensions/'
+  'services/ai/', 'services/extensions/types/',
+  'features/editor/languages.ts', 'src/main/extensions/', 'core/i18n/'
 ]
 
 const UI_ATTRS = new Set([
-  'placeholder', 'aria-label', 'title', 'alt', 'label', 'description', 'tooltip',
-  'heading', 'subtitle', 'hint', 'emptyText', 'message', 'confirmLabel', 'cancelLabel'
+  'placeholder', 'aria-label', 'ariaLabel', 'ariaDescription', 'title', 'alt', 'label',
+  'description', 'tooltip', 'heading', 'subtitle', 'hint', 'emptyText', 'message',
+  'confirmLabel', 'cancelLabel', 'helperText'
 ])
 const UI_KEYS = new Set([
   'label', 'title', 'message', 'description', 'tooltip', 'detail', 'hint', 'subtitle',
@@ -97,6 +98,20 @@ function isUi(text) {
     return /^\p{Lu}\p{Ll}{2,}$/u.test(core)
   }
   return t.split(' ').length <= 44
+}
+
+/**
+ * ¿El texto parece una FRASE de UI aunque la clave del objeto no sea obvia?
+ * (p. ej. `STATUS_TEXT = { pending: 'Solicitud enviada' }`). Exige que empiece
+ * en mayúscula (o ¡¿) y tenga más de una palabra, para no tocar ids/códigos.
+ */
+function isUiSentence(text) {
+  const t = text.trim()
+  if (t.length < 4 || t.length > 200) return false
+  if (!/\s/.test(t)) return false
+  if (CODEISH.test(t)) return false
+  if (/^(https?:|\/|\.\/|\.\.\/|#)/.test(t)) return false
+  return /^[¿¡]?[A-ZÀ-ÞÁÉÍÓÚÑÜ]/.test(t)
 }
 
 function areaFor(rel) {
@@ -250,19 +265,21 @@ for (const file of files) {
     }
     // 5. propiedad de objeto de MÓDULO → getter (sigue al idioma)
     if (node.type === 'ObjectProperty' && node.value?.type === 'StringLiteral' && node.key?.type === 'Identifier' &&
-      UI_KEYS.has(node.key.name) && !insideFn(ancestors) && !insideJsx(ancestors) && isUi(node.value.value)) {
+      (UI_KEYS.has(node.key.name) ? isUi(node.value.value) : isUiSentence(node.value.value)) &&
+      !insideFn(ancestors) && !insideJsx(ancestors)) {
       return push(node, `get ${node.key.name}() { return t('${key(node.value.value)}') }`)
     }
     // 6/7. propiedad de objeto en función → t(); comandos → clave
-    if (node.type === 'ObjectProperty' && node.value?.type === 'StringLiteral' && isUi(node.value.value) &&
+    if (node.type === 'ObjectProperty' && node.value?.type === 'StringLiteral' &&
       (insideFn(ancestors) || insideJsx(ancestors))) {
       const object = ancestors[ancestors.length - 1]
       const isCommand = object?.type === 'ObjectExpression' &&
         object.properties.some((p) => (p.key?.name ?? p.key?.value) === 'run')
       const name = node.key?.type === 'Identifier' ? node.key.name : node.key?.value
+      const looksUi = UI_KEYS.has(name) ? isUi(node.value.value) : isUiSentence(node.value.value)
+      if (!looksUi) return
       if (isCommand && name === 'title') return push(node.value, `'${key(node.value.value)}'`)
-      if (UI_KEYS.has(name)) return push(node.value, `t('${key(node.value.value)}')`)
-      return
+      return push(node.value, `t('${key(node.value.value)}')`)
     }
     // comandos ya migrados: title: t('x') → title: 'x'
     if (node.type === 'ObjectProperty' && node.key?.name === 'title' && node.value?.type === 'CallExpression' &&
@@ -291,6 +308,10 @@ for (const file of files) {
     if (node.type === 'VariableDeclarator' && node.init?.type === 'StringLiteral' && isUi(node.init.value)) {
       return push(node.init, `t('${key(node.init.value)}')`)
     }
+    // default de parámetro: `function X({ placeholder = 'Texto…' })`
+    if (node.type === 'AssignmentPattern' && node.right?.type === 'StringLiteral' && isUi(node.right.value)) {
+      return push(node.right, `t('${key(node.right.value)}')`)
+    }
     if (node.type === 'AssignmentExpression' && node.right?.type === 'StringLiteral' && isUi(node.right.value)) {
       return push(node.right, `t('${key(node.right.value)}')`)
     }
@@ -305,17 +326,25 @@ for (const file of files) {
     }
   })
 
-  if (edits.length === 0) continue
+  const importPath = rel.startsWith('src/main') ? '@shared/i18n' : '@core/i18n'
+  const needsImport = /(?<!\.)\bt\(/.test(code) && !code.includes(`from '${importPath}'`)
+  if (edits.length === 0 && !needsImport) continue
   edits.sort((a, b) => b.start - a.start)
   for (const edit of edits) code = code.slice(0, edit.start) + edit.text + code.slice(edit.end)
 
-  const importPath = rel.startsWith('src/main') ? '@shared/i18n' : '@core/i18n'
-  if (!code.includes(`from '${importPath}'`)) {
+  if (needsImport) {
     const imports = [...code.matchAll(/^import[\s\S]*?from\s+['"][^'"]+['"];?\s*$/gm)]
     if (imports.length > 0) {
       const last = imports[imports.length - 1]
       const at = last.index + last[0].length
       code = `${code.slice(0, at)}\nimport { t } from '${importPath}'${code.slice(at)}`
+    } else {
+      // Archivo sin imports: el import va tras el bloque de comentario inicial.
+      const lines = code.split('\n')
+      let i = 0
+      while (i < lines.length && ['', '//', '/*', '*', '*/'].some((p) => lines[i].trim().startsWith(p) || lines[i].trim().startsWith('#'))) i += 1
+      lines.splice(i, 0, `import { t } from '${importPath}'`, '')
+      code = lines.join('\n')
     }
   }
 

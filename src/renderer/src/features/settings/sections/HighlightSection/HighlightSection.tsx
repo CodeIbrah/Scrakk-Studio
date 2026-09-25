@@ -38,17 +38,17 @@ const SOURCE_OPTIONS: Array<{ id: EditorHighlightSource; label: string; desc: st
   {
     id: 'treesitter',
     get label() { return t('settings.tree.sitter') },
-    desc: 'Gramáticas locales. Rápido, sin servidor.'
+    get desc() { return t('settings.gramaticas.locales.rapido.sin.servidor') }
   },
   {
     id: 'lsp',
     get label() { return t('settings.lsp.semantic.tokens') },
-    desc: 'Solo tokens del language server. Máxima precisión.'
+    get desc() { return t('settings.solo.tokens.del.language.server') }
   },
   {
     id: 'mixed',
     get label() { return t('settings.mixto') },
-    desc: 'Base Tree-sitter + overlay LSP donde cubre.'
+    get desc() { return t('settings.base.tree.sitter.overlay.lsp') }
   }
 ]
 
@@ -61,12 +61,12 @@ const ENGINE_OPTIONS: Array<{ id: EditorGrammarEngine; label: string; desc: stri
   {
     id: 'treeSitter',
     get label() { return t('settings.tree.sitter.del.paquete') },
-    desc: 'Siempre el árbol de sintaxis si hay uno usable. Más preciso, usa un proceso aparte.'
+    get desc() { return t('settings.siempre.el.arbol.de.sintaxis') }
   },
   {
     id: 'textMate',
     label: 'TextMate',
-    desc: 'Solo gramáticas .tmLanguage. No levanta el proceso de tree-sitter.'
+    get desc() { return t('settings.solo.gramaticas.tmlanguage.no.levanta') }
   }
 ]
 

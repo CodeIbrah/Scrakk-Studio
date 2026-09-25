@@ -43,8 +43,8 @@ export function EffortSlider({
   value,
   onChange,
   onAuto,
-  title = 'Pensamiento',
-  ariaLabel = 'Esfuerzo'
+  title = t('chat.pensamiento'),
+  ariaLabel = t('chat.esfuerzo')
 }: EffortSliderProps): JSX.Element {
   const indexOf = steps.indexOf(value)
   const index = indexOf >= 0 ? indexOf : Math.max(0, Math.floor((steps.length - 1) / 2))

@@ -16,6 +16,7 @@ import type { JSX, ReactNode } from 'react'
 import { ProductIcon } from '@services/productIcons/components'
 import styles from './kit.module.css'
 
+import { t } from '@core/i18n'
 /** Pila vertical con separación del sistema de espacios. */
 export function Stack({ children, gap = 3 }: { children: ReactNode; gap?: 2 | 3 | 4 }): JSX.Element {
   return (
@@ -249,7 +250,7 @@ export function TextInput({
 export function SummaryRow({
   label,
   value,
-  actionLabel = 'Cambiar',
+  actionLabel = t('onboarding.cambiar'),
   onAction
 }: {
   label: string

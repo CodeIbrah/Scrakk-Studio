@@ -46,8 +46,8 @@ const BEHAVIOR_LABEL: Record<BehaviorChoice, string> = {
 
 const PROMPT_LABEL: Record<PromptChoice, string> = {
   ask: 'Preguntar',
-  deny: 'Negar en silencio',
-  auto: 'Decidir solo'
+  get deny() { return t('settings.negar.en.silencio') },
+  get auto() { return t('settings.decidir.solo') }
 }
 
 function emptyDraft(base = 'default'): CustomModeEntry {

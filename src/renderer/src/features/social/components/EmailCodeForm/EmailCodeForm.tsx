@@ -131,7 +131,7 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
             slotSize={36}
             gap={5}
             radius={10}
-            ariaLabel="Código de verificación"
+            ariaLabel={t('social.codigo.de.verificacion')}
           />
         </div>
       </div>

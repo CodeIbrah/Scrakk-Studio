@@ -17,7 +17,7 @@ import { CardGrid, Lead, OptionCard, SectionLabel, Stack } from '../kit'
 import { t } from '@core/i18n'
 /** Datos DEMO de este paso (maqueta). */
 const DEMO_SESSION = {
-  greeting: 'Hola 👋',
+  get greeting() { return t('onboarding.hola') },
   get line() { return t('onboarding.tu.editor.ya.esta.listo') },
   highlights: [
     {

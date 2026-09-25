@@ -18,9 +18,9 @@ import { PreviewNote, SectionLabel, Stack, SummaryRow } from '../kit'
 import { t } from '@core/i18n'
 /** Pasos revisables desde el resumen (id + etiqueta + qué mostrar si no eligió). */
 const REVIEW: { stepId: string; label: string; fallback: string }[] = [
-  { stepId: 'theme', get label() { return t('onboarding.apariencia') }, fallback: 'Sin cambios' },
-  { stepId: 'privacy', get label() { return t('onboarding.privacidad') }, fallback: 'Sin responder' },
-  { stepId: 'keymap', get label() { return t('onboarding.atajos') }, fallback: 'Sin elegir' }
+  { stepId: 'theme', get label() { return t('onboarding.apariencia') }, get fallback() { return t('onboarding.sin.cambios') } },
+  { stepId: 'privacy', get label() { return t('onboarding.privacidad') }, get fallback() { return t('onboarding.sin.responder') } },
+  { stepId: 'keymap', get label() { return t('onboarding.atajos') }, get fallback() { return t('onboarding.sin.elegir') } }
 ]
 
 /** Ids de los pasos que aplican de verdad (el resto es vista previa). */

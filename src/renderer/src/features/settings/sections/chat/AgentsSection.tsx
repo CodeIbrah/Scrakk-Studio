@@ -50,8 +50,8 @@ const BEHAVIOR_LABEL: Record<BehaviorChoice, string> = {
 
 const PROMPT_LABEL: Record<PromptChoice, string> = {
   ask: 'Preguntar',
-  deny: 'Negar en silencio',
-  auto: 'Decidir solo'
+  get deny() { return t('settings.negar.en.silencio') },
+  get auto() { return t('settings.decidir.solo') }
 }
 
 function emptyDraft(kind: AgentKind): AgentEntry {
@@ -246,7 +246,7 @@ export function AgentsSection(): JSX.Element {
       </p>
 
       <SegmentedTabs
-        ariaLabel="Tipo de agente"
+        ariaLabel={t('settings.tipo.de.agente')}
         activeId={kind}
         onChange={(id) => setKind(id as AgentKind)}
         items={[

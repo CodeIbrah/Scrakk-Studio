@@ -10207,6 +10207,342 @@
       "needsReview": false,
       "at": "2026-09-25T18:15:31.089Z",
       "approvedAt": "2026-09-25T18:15:31.531Z"
+    },
+    "chat.esfuerzo": {
+      "src": "cb66cc74511ae7e9",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:34.541Z",
+      "approvedAt": "2026-09-25T18:24:40.588Z"
+    },
+    "chat.pensamiento": {
+      "src": "5dec1def370ee8a1",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:34.542Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "layout.estas.dentro.de.un.subagente": {
+      "src": "75c5c44b303e3314",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:35.376Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "main.scrakk.extension.sef": {
+      "src": "1a3b641ca07aa19b",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.168Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "main.vs.code.extension": {
+      "src": "a3a04d16841f5e7c",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.168Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "onboarding.buscar.accion": {
+      "src": "c5e54db2ad4cf0d9",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.990Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "onboarding.buscar.archivo": {
+      "src": "8c35f960a7fb3be3",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.990Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "onboarding.buscar.en.archivo": {
+      "src": "1f5ba1553032329f",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.990Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "onboarding.cambiar": {
+      "src": "b322167924121f7b",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.990Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "onboarding.hola": {
+      "src": "6775f3cdf6a285ff",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.990Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "onboarding.paleta.de.comandos": {
+      "src": "5b63975b7d828550",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.990Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "onboarding.salir.del.modo": {
+      "src": "222f97683dcd69f5",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.990Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "onboarding.sin.cambios": {
+      "src": "9e82d5e86d7c3583",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.990Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "onboarding.sin.elegir": {
+      "src": "36f8615ff57b80fc",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.990Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "onboarding.sin.responder": {
+      "src": "ba65279e3d7a2fc5",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:36.990Z",
+      "approvedAt": "2026-09-25T18:24:40.590Z"
+    },
+    "services.vs.code": {
+      "src": "af437cf8caed3e51",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:37.652Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "settings.base.tree.sitter.overlay.lsp": {
+      "src": "12f55c84769b8601",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:38.789Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "settings.decidir.solo": {
+      "src": "858a9a218b1b365b",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:38.789Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "settings.gramaticas.locales.rapido.sin.servidor": {
+      "src": "f70781ac49ef6772",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:38.789Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "settings.negar.en.silencio": {
+      "src": "55a742431bb3894d",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:38.789Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "settings.siempre.el.arbol.de.sintaxis": {
+      "src": "1cd060fc77d7bf42",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:38.789Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "settings.solo.gramaticas.tmlanguage.no.levanta": {
+      "src": "9715ca3bebbd6878",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:38.789Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "settings.solo.tokens.del.language.server": {
+      "src": "f88cdb85e7f3f23a",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:38.789Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "settings.tipo.de.agente": {
+      "src": "356735072e54f851",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:38.789Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.actividades": {
+      "src": "0c91432cf9b924ac",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.ahora.son.amigos": {
+      "src": "50b84e6b2fee14db",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.animales": {
+      "src": "c55d05eca08e4d31",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.caras": {
+      "src": "ddd9965aa01a23cd",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.codigo.de.verificacion": {
+      "src": "8a702f225d803ddb",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.comida": {
+      "src": "56dd40554fc9fdd5",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.escribe.un.mensaje": {
+      "src": "f1da881f1cb8108a",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.gestos": {
+      "src": "182c8cbab96988ee",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.objetos": {
+      "src": "54a54a384ffb6cf0",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.one.time.code": {
+      "src": "1b774f3cfe6aae23",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.personas": {
+      "src": "fa2ea3fb081cf5c5",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.simbolos": {
+      "src": "817d1527dad8a625",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.solicitud.enviada-2": {
+      "src": "08700c78e940f8fe",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.viajes": {
+      "src": "f9d45bddd7695222",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "social.ya.son.amigos": {
+      "src": "96718a2313dbe0a7",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:39.634Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "statusbar.utf.16.be": {
+      "src": "20fc244d1109c7fe",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:40.396Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "statusbar.utf.16.le": {
+      "src": "87560d85e9f09437",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:40.396Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "statusbar.windows.1252": {
+      "src": "8532f90874e64941",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:24:40.396Z",
+      "approvedAt": "2026-09-25T18:24:40.591Z"
     }
   },
   "version": 1

@@ -123,7 +123,7 @@ export default function CodeSlots({
   settle = 0.3,
   rise = 8,
   cascade = 20,
-  ariaLabel = 'One-time code',
+  ariaLabel = t('social.one.time.code'),
   className = ''
 }: CodeSlotsProps): JSX.Element {
   const uid = useId()

@@ -51,8 +51,8 @@ const DEMO_PROFILES: DemoProfile[] = [
     get description() { return t('onboarding.los.atajos.del.editor.tal') },
     badge: 'Actual',
     shortcuts: [
-      { action: 'Paleta de comandos', keys: [t('onboarding.ctrl'), t('onboarding.shift'), 'P'] },
-      { action: 'Buscar archivo', keys: [t('onboarding.ctrl'), 'P'] },
+      { get action() { return t('onboarding.paleta.de.comandos') }, keys: [t('onboarding.ctrl'), t('onboarding.shift'), 'P'] },
+      { get action() { return t('onboarding.buscar.archivo') }, keys: [t('onboarding.ctrl'), 'P'] },
       { action: 'Guardar', keys: [t('onboarding.ctrl'), 'S'] },
       { action: 'Terminal', keys: [t('onboarding.ctrl'), 'Ñ'] }
     ]
@@ -62,8 +62,8 @@ const DEMO_PROFILES: DemoProfile[] = [
     get title() { return t('onboarding.vs.code') },
     get description() { return t('onboarding.los.mismos.atajos.que.ya') },
     shortcuts: [
-      { action: 'Paleta de comandos', keys: [t('onboarding.ctrl'), t('onboarding.shift'), 'P'] },
-      { action: 'Buscar archivo', keys: [t('onboarding.ctrl'), 'P'] },
+      { get action() { return t('onboarding.paleta.de.comandos') }, keys: [t('onboarding.ctrl'), t('onboarding.shift'), 'P'] },
+      { get action() { return t('onboarding.buscar.archivo') }, keys: [t('onboarding.ctrl'), 'P'] },
       { action: 'Guardar', keys: [t('onboarding.ctrl'), 'S'] },
       { action: 'Terminal', keys: [t('onboarding.ctrl'), '`'] }
     ]
@@ -73,8 +73,8 @@ const DEMO_PROFILES: DemoProfile[] = [
     title: 'JetBrains',
     get description() { return t('onboarding.esquema.de.intellij.webstorm') },
     shortcuts: [
-      { action: 'Buscar acción', keys: [t('onboarding.ctrl'), t('onboarding.shift'), 'A'] },
-      { action: 'Buscar archivo', keys: [t('onboarding.ctrl'), t('onboarding.shift'), 'N'] },
+      { get action() { return t('onboarding.buscar.accion') }, keys: [t('onboarding.ctrl'), t('onboarding.shift'), 'A'] },
+      { get action() { return t('onboarding.buscar.archivo') }, keys: [t('onboarding.ctrl'), t('onboarding.shift'), 'N'] },
       { action: 'Guardar', keys: [t('onboarding.ctrl'), 'S'] },
       { action: 'Terminal', keys: [t('onboarding.alt'), 'F12'] }
     ]
@@ -84,10 +84,10 @@ const DEMO_PROFILES: DemoProfile[] = [
     get title() { return t('onboarding.vim') },
     get description() { return t('onboarding.modo.normal.para.los.que') },
     shortcuts: [
-      { action: 'Paleta de comandos', keys: [t('onboarding.ctrl'), t('onboarding.shift'), 'P'] },
-      { action: 'Buscar en archivo', keys: ['/'] },
+      { get action() { return t('onboarding.paleta.de.comandos') }, keys: [t('onboarding.ctrl'), t('onboarding.shift'), 'P'] },
+      { get action() { return t('onboarding.buscar.en.archivo') }, keys: ['/'] },
       { action: 'Guardar', keys: [t('onboarding.ctrl'), 'S'] },
-      { action: 'Salir del modo', keys: [t('onboarding.esc')] }
+      { get action() { return t('onboarding.salir.del.modo') }, keys: [t('onboarding.esc')] }
     ]
   }
 ]

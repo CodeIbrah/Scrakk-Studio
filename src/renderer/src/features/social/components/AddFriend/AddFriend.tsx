@@ -16,9 +16,9 @@ interface AddFriendProps {
 }
 
 const STATUS_TEXT: Record<string, string> = {
-  pending: 'Solicitud enviada ✔',
-  accepted: '¡Ahora son amigos!',
-  already_friends: 'Ya son amigos'
+  get pending() { return t('social.solicitud.enviada-2') },
+  get accepted() { return t('social.ahora.son.amigos') },
+  get already_friends() { return t('social.ya.son.amigos') }
 }
 
 /** Busca usuarios por handle/nombre y manda solicitud de amistad. */

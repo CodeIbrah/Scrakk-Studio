@@ -47,6 +47,7 @@
   "layout.escribe.tu.nota": "Escribe tu nota…",
   "layout.esfuerzo.de.pensamiento": "Esfuerzo de pensamiento",
   "layout.esta.escribiendo": "está escribiendo",
+  "layout.estas.dentro.de.un.subagente": "Estás dentro de un subagente: el chat principal está bloqueado",
   "layout.este.modelo.no.declara.variantes": "Este modelo no declara variantes de esfuerzo",
   "layout.este.panel.fallo": "Este panel falló",
   "layout.exportar.chat": "Exportar chat",

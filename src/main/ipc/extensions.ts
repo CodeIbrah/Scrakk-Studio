@@ -266,7 +266,7 @@ export function registerExtensionsIpc(): void {
     const result = await dialog.showOpenDialog({
       title: t('main.instalar.extension'),
       properties: ['openFile'],
-      filters: [{ name: 'Scrakk Extension (SEF)', extensions: ['sef'] }]
+      filters: [{ name: t('main.scrakk.extension.sef'), extensions: ['sef'] }]
     })
     if (result.canceled || result.filePaths.length === 0) {
       return { success: false }
@@ -278,7 +278,7 @@ export function registerExtensionsIpc(): void {
     const result = await dialog.showOpenDialog({
       title: t('main.instalar.extension.vs.code.vsix'),
       properties: ['openFile'],
-      filters: [{ name: 'VS Code Extension', extensions: ['vsix', 'zip'] }]
+      filters: [{ name: t('main.vs.code.extension'), extensions: ['vsix', 'zip'] }]
     })
     if (result.canceled || result.filePaths.length === 0) {
       return { success: false }

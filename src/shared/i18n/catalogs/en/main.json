@@ -122,6 +122,7 @@
   "main.ruta.fuera.de.scrakk": "Path outside of .scrakk",
   "main.ruta.fuera.del.repo": "Path outside the repo",
   "main.ruta.invalida": "Invalid path",
+  "main.scrakk.extension.sef": "Scrakk Extension (SEF)",
   "main.scrakk.studio": "Scrakk Studio",
   "main.server.no.configurado": "Server not configured",
   "main.server.no.registrado": "Unregistered server",
@@ -143,5 +144,6 @@
   "main.utf.16.le": "UTF-16 LE",
   "main.utf.16.le.con.bom": "UTF-16 LE with BOM",
   "main.utf.8.con.bom": "UTF-8 with BOM",
+  "main.vs.code.extension": "VS Code Extension",
   "main.western.windows.1252": "Western (Windows 1252)"
 }

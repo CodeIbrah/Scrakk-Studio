@@ -36,11 +36,11 @@ function labelOf(doc: DocumentEncoding | undefined): string | null {
 const SHORT_LABELS: Record<string, string> = {
   utf8: 'UTF-8',
   'utf8-bom': 'UTF-8 BOM',
-  utf16le: 'UTF-16 LE',
+  get utf16le() { return t('statusbar.utf.16.le') },
   'utf16le-bom': 'UTF-16 LE BOM',
-  utf16be: 'UTF-16 BE',
+  get utf16be() { return t('statusbar.utf.16.be') },
   'utf16be-bom': 'UTF-16 BE BOM',
-  latin1: 'Windows 1252'
+  get latin1() { return t('statusbar.windows.1252') }
 }
 
 function labelForId(id: string): string {

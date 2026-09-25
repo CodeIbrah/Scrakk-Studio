@@ -75,7 +75,7 @@ function dimsOf(dataUrl: string): Promise<{ width: number | null; height: number
  */
 export function MessageComposer({
   onSend,
-  placeholder = 'Escribe un mensaje…',
+  placeholder = t('social.escribe.un.mensaje'),
   disabled = false,
   replyTo,
   onCancelReply,

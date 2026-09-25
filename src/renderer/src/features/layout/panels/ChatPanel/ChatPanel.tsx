@@ -395,7 +395,7 @@ export function ChatPanel(): JSX.Element {
           sessionId: targetId,
           texts: {
             title: agentRegistry.getSubagent(mention[1])?.label,
-            lockedText: 'Estás dentro de un subagente: el chat principal está bloqueado'
+            lockedText: t('layout.estas.dentro.de.un.subagente')
           }
         })
         return
