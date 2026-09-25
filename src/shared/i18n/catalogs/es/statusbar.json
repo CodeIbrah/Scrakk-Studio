@@ -1,0 +1,20 @@
+{
+  "statusbar.abrir.paleta.de.comandos": "Abrir paleta de comandos",
+  "statusbar.ajustes": "Ajustes",
+  "statusbar.barra.de.estado": "Barra de estado",
+  "statusbar.codificacion.del.archivo": "Codificación del archivo",
+  "statusbar.codificacion.del.archivo.activo.click": "Codificación del archivo activo (click para cambiar)",
+  "statusbar.col": "Col",
+  "statusbar.estado.de.language.servers": "Estado de language servers",
+  "statusbar.git.abrir.panel": "Git: abrir panel",
+  "statusbar.historial.de.notificaciones": "Historial de notificaciones",
+  "statusbar.notificaciones": "Notificaciones",
+  "statusbar.paleta.de.comandos.mod.shift": "Paleta de comandos (mod+shift+p)",
+  "statusbar.posicion.del.cursor.en.el": "Posición del cursor en el editor",
+  "statusbar.problemas": "Problemas",
+  "statusbar.toggle.bottom": "Panel inferior",
+  "statusbar.toggle.center": "Panel central",
+  "statusbar.toggle.left": "Panel izquierdo",
+  "statusbar.toggle.right": "Panel derecho",
+  "statusbar.visibilidad.de.paneles": "Visibilidad de paneles"
+}

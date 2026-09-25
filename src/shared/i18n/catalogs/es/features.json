@@ -1,0 +1,19 @@
+{
+  "features.abre.un.archivo.para.ver": "Abre un archivo para ver su esquema",
+  "features.abre.un.archivo.para.ver-2": "Abre un archivo para ver su línea de tiempo",
+  "features.acciones.del.strip": "Acciones del strip",
+  "features.activas": "Activas",
+  "features.cerrar.notificacion": "Cerrar notificación",
+  "features.historial": "Historial",
+  "features.historial.de.notificaciones": "Historial de notificaciones",
+  "features.limpiar": "Limpiar",
+  "features.los.simbolos.del.arbol.los": "Los símbolos del árbol los aporta la extensión del lenguaje",
+  "features.no.hay.simbolos.en.este": "No hay símbolos en este archivo",
+  "features.notificaciones.activas": "Notificaciones activas",
+  "features.opciones.de.la.tab.activa": "Opciones de la tab activa",
+  "features.ruta.del.archivo": "Ruta del archivo",
+  "features.sin.actividad.registrada.todavia": "Sin actividad registrada todavía",
+  "features.sin.marcadores.click.derecho.sobre": "Sin marcadores. Click derecho sobre el editor → “Añadir marcador”.",
+  "features.sin.notificaciones.todavia": "Sin notificaciones todavía.",
+  "features.tabs.abiertas": "Tabs abiertas"
+}

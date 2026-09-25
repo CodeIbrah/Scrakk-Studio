@@ -1,0 +1,18 @@
+{
+  "appearance.active.prefix": "Active extension theme:",
+  "appearance.active.reset": "Restore default theme",
+  "appearance.base.note": "Using the app's default theme.",
+  "appearance.empty": "No themes have been registered yet.",
+  "appearance.font.fallbackAria": "Font fallback",
+  "appearance.font.fallbackHint": "Fallback if it doesn't load (no internet):",
+  "appearance.font.source": "Theme font",
+  "appearance.hint": "All themes: built-in and those provided by .sef extensions (appear automatically upon installation).",
+  "appearance.language.aria": "Interface language",
+  "appearance.language.hint": "Changes take effect immediately. Spanish is the default; English is being added in batches.",
+  "appearance.language.label": "Interface language",
+  "appearance.search.aria": "Search themes",
+  "appearance.search.noResults": "No results found for “{query}.”",
+  "appearance.search.placeholder": "Search themes…",
+  "appearance.theme.dark": "Dark",
+  "appearance.theme.light": "Light"
+}

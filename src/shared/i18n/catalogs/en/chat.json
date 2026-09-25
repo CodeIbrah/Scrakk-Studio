@@ -1,0 +1,23 @@
+{
+  "chat.adjuntar.proximamente": "Attach (coming soon)",
+  "chat.aprobar": "Approve",
+  "chat.auto": "Auto",
+  "chat.cerrar.subagente": "Close subagent",
+  "chat.comandos": "Commands",
+  "chat.detener.generacion": "Stop generation",
+  "chat.enviar": "Send",
+  "chat.formato.de.exportacion": "Export format",
+  "chat.incluir.herramientas": "Include tools",
+  "chat.incluir.herramientas.en.la.exportacion": "Include tools in the export",
+  "chat.mensaje": "Message",
+  "chat.procesando": "Processing",
+  "chat.profundo": "Deep",
+  "chat.rapido": "Fast",
+  "chat.rechazar": "Reject",
+  "chat.regenerar": "Regenerate",
+  "chat.regenerar.respuesta": "Regenerate response",
+  "chat.siempre.aprobar": "Always approve",
+  "chat.subagentes": "Subagents",
+  "chat.thinking": "Thinking",
+  "chat.thought.for": "Thought for"
+}

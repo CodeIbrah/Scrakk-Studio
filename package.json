@@ -20,6 +20,7 @@
     "dist": "electron-vite build && electron-builder",
     "dist:dir": "electron-vite build && electron-builder --dir",
     "up": "node tools/bump.mjs",
+  "i18n": "node tools/i18n.mjs",
     "pack:audit": "node tools/pack-audit.mjs",
     "perf:baseline": "node tools/perf/baseline.mjs",
     "perf:baseline:runtime": "node tools/perf/baseline.mjs --runtime",

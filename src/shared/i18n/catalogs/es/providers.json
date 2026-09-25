@@ -1,0 +1,19 @@
+{
+  "providers.activo": "Activo",
+  "providers.api.key.de": "API key de",
+  "providers.buscar.proveedores": "Buscar proveedores",
+  "providers.cancelar": "Cancelar",
+  "providers.elige.un.proveedor.pega.tu": "Elige un proveedor, pega tu API key y escribe el",
+  "providers.guardar.y.usar": "Guardar y usar",
+  "providers.id.del.modelo": "id del modelo",
+  "providers.key.guardada": "Key guardada",
+  "providers.key.guardada.escribe.el.modelo": "Key guardada. Escribe el modelo que uses abajo.",
+  "providers.modelo.id.exacto": "Modelo (id exacto)",
+  "providers.modo.de.pensamiento": "Modo de pensamiento",
+  "providers.no.se.encontraron.proveedores.para": "No se encontraron proveedores para \"",
+  "providers.obtienes.tu.key.en": "Obtienes tu key en:",
+  "providers.proveedores": "Proveedores",
+  "providers.quitar.key": "Quitar key",
+  "providers.se.detecta.segun.el.modelo": "Se detecta según el modelo (o1/o3/gpt-5, Claude, Gemini, DeepSeek R1…).",
+  "providers.sugeridos.del.catalogo.models.dev": "Sugeridos del catálogo (models.dev):"
+}

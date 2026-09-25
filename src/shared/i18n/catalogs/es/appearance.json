@@ -1,0 +1,18 @@
+{
+  "appearance.hint": "Todos los temas: los que viajan con la app y los que aportan las extensiones .sef (aparecen solos al instalarse).",
+  "appearance.empty": "No hay temas registrados todavía.",
+  "appearance.search.placeholder": "Buscar temas…",
+  "appearance.search.aria": "Buscar temas",
+  "appearance.search.noResults": "Sin resultados para “{query}”.",
+  "appearance.font.source": "Fuente del tema",
+  "appearance.font.fallbackHint": "Respaldo si no carga (sin internet):",
+  "appearance.font.fallbackAria": "Respaldo de fuente",
+  "appearance.theme.light": "Claro",
+  "appearance.theme.dark": "Oscuro",
+  "appearance.active.prefix": "Tema de extensión activo:",
+  "appearance.active.reset": "Restaurar tema base",
+  "appearance.base.note": "Usando el tema base de la app.",
+  "appearance.language.label": "Idioma de la interfaz",
+  "appearance.language.hint": "Se aplica al instante. El español es la base; el inglés se completa por lotes.",
+  "appearance.language.aria": "Idioma de la interfaz"
+}

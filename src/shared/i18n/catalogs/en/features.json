@@ -1,0 +1,19 @@
+{
+  "features.abre.un.archivo.para.ver": "Open a file to view its outline",
+  "features.abre.un.archivo.para.ver-2": "Open a file to view its timeline",
+  "features.acciones.del.strip": "Strip actions",
+  "features.activas": "Active",
+  "features.cerrar.notificacion": "Close notification",
+  "features.historial": "History",
+  "features.historial.de.notificaciones": "Notification history",
+  "features.limpiar": "Clear",
+  "features.los.simbolos.del.arbol.los": "The tree symbols are provided by the language extension.",
+  "features.no.hay.simbolos.en.este": "No symbols found",
+  "features.notificaciones.activas": "Active notifications",
+  "features.opciones.de.la.tab.activa": "Options on the active tab",
+  "features.ruta.del.archivo": "File path",
+  "features.sin.actividad.registrada.todavia": "No activity recorded yet",
+  "features.sin.marcadores.click.derecho.sobre": "No bookmarks. Right-click in the editor → “Add Bookmark.”",
+  "features.sin.notificaciones.todavia": "No notifications yet",
+  "features.tabs.abiertas": "Open tabs"
+}

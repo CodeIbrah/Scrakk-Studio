@@ -1,0 +1,4293 @@
+{
+  "keys": {
+    "appearance.hint": {
+      "src": "30a7f78eeb3c032d",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.661Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.empty": {
+      "src": "10b270dd2ac87378",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.661Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.search.placeholder": {
+      "src": "db7e6dea3b6c3b63",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.661Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.search.aria": {
+      "src": "13b7ac43e3f9556c",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.662Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.search.noResults": {
+      "src": "a3032d97c83f9029",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.662Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.font.source": {
+      "src": "606f69ab56cd2b66",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.662Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.font.fallbackHint": {
+      "src": "c001bd30477c12de",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.662Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.font.fallbackAria": {
+      "src": "002c9e57f12f856a",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.662Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.theme.light": {
+      "src": "2f3e8dcc24649850",
+      "area": "appearance",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:26.033Z",
+      "source": "glossary"
+    },
+    "appearance.theme.dark": {
+      "src": "1b1c27c397aee60c",
+      "area": "appearance",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:26.034Z",
+      "source": "glossary"
+    },
+    "appearance.active.prefix": {
+      "src": "f0120db180d090da",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.662Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.active.reset": {
+      "src": "d80dcae356e98a48",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.662Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.base.note": {
+      "src": "dd854f830c2415fb",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.662Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.language.label": {
+      "src": "ae41373cea3bf791",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.662Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.language.hint": {
+      "src": "4ae1ef24bfc50c42",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.662Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "appearance.language.aria": {
+      "src": "ae41373cea3bf791",
+      "area": "appearance",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.662Z",
+      "approvedAt": "2026-09-25T17:09:51.741Z"
+    },
+    "common.system": {
+      "src": "f150afd3c5994d18",
+      "area": "common",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.664Z",
+      "source": "glossary"
+    },
+    "common.original": {
+      "src": "88d759ea02cef4b8",
+      "area": "common",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-09-25T17:09:27.664Z",
+      "source": "glossary"
+    },
+    "chat.adjuntar.proximamente": {
+      "src": "ada1e10102fdd1dd",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.767Z",
+      "approvedAt": "2026-09-25T17:32:07.882Z"
+    },
+    "chat.aprobar": {
+      "src": "10a00fdf1a44dec2",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.auto": {
+      "src": "0286249762f7c943",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.cerrar.subagente": {
+      "src": "e1ae147646322f60",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.comandos": {
+      "src": "4b8731e4eac25e37",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.detener.generacion": {
+      "src": "68118f79fd619b59",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.enviar": {
+      "src": "e1d12d1a29a77b00",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.formato.de.exportacion": {
+      "src": "ecd94f1f7c7a8795",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.incluir.herramientas": {
+      "src": "1b68f241a21bb7c8",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.incluir.herramientas.en.la.exportacion": {
+      "src": "160ac4066985e77c",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.mensaje": {
+      "src": "d2af31712ead0414",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.procesando": {
+      "src": "d9ab8c014a69233f",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.profundo": {
+      "src": "d6b12b7c01ebec9c",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.rapido": {
+      "src": "76495f26e6c562dd",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.rechazar": {
+      "src": "2a0515602d315876",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.regenerar": {
+      "src": "4477deff6ab77d2a",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.regenerar.respuesta": {
+      "src": "6ca6f078c5e426fd",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.siempre.aprobar": {
+      "src": "59105abf5232b638",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.768Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.subagentes": {
+      "src": "da248e047f2f15d0",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.769Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.thinking": {
+      "src": "a20d12c5e9c428c3",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.769Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "chat.thought.for": {
+      "src": "2d72b445b19fe653",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:38.769Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "common.algo.fallo": {
+      "src": "d3c5d4009ed98b73",
+      "area": "common",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:39.558Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "common.cerrar": {
+      "src": "aeccae342e4bd0a7",
+      "area": "common",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:39.558Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "common.recargar": {
+      "src": "9565f197873f81df",
+      "area": "common",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:39.558Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "common.reintentar": {
+      "src": "a9254c5f812829af",
+      "area": "common",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:39.558Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.abre.una.carpeta.para.explorar": {
+      "src": "23425af116392692",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.762Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.abrir.carpeta": {
+      "src": "3c9eb629c102503a",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.762Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.actualizar.explorador": {
+      "src": "560a44a4b811e8e1",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.762Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.cancelar": {
+      "src": "bb9dbb406dcbd524",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.762Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.carpeta.vacia": {
+      "src": "e87b6b0e232ea7fd",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.762Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.colapsar.todas.las.carpetas": {
+      "src": "f20382f600651185",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.762Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.eliminar": {
+      "src": "c9894cf002f90bd0",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.762Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.explorador.de.archivos": {
+      "src": "1391178cc1138e17",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.763Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.mas.acciones": {
+      "src": "78eb2e0551731bd4",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.763Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.nueva.carpeta": {
+      "src": "c65bb9796109a125",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.763Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.nuevo.archivo": {
+      "src": "2d2da797d801a334",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.763Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "explorer.sin.workspace": {
+      "src": "2ffebbe4b6701f5e",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:40.763Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "extensionviews.arbol.de.la.extension": {
+      "src": "10bb2fd6fea709b2",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:41.684Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "extensionviews.cargando.el.arbol.de.la": {
+      "src": "633272893603dd97",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:41.684Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "extensionviews.cargando.el.panel.de.la": {
+      "src": "2a1306244cf783be",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:41.685Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "extensionviews.cargando.panel": {
+      "src": "bf55b23ac2be9904",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:41.685Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "extensionviews.este.panel.de.extension.ya": {
+      "src": "49f5afa6e042ce36",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:41.685Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "extensionviews.extension": {
+      "src": "b19cc0c0282a5136",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:41.685Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "extensionviews.iniciando.el.panel.de.la": {
+      "src": "77699ddca3ca6982",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:41.685Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "extensionviews.la.extension.no.devolvio.nodos": {
+      "src": "288633c7aab62901",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:41.685Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "extensionviews.no.se.pudo.cargar.el": {
+      "src": "695a2a311d1261eb",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:41.686Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "extensionviews.vista": {
+      "src": "83ae07147db79fab",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:41.686Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.abre.un.archivo.para.ver": {
+      "src": "ad584e63fb8f8c25",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.abre.un.archivo.para.ver-2": {
+      "src": "1bbf57cdb567b8d9",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.acciones.del.strip": {
+      "src": "a922c19dd67eed71",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.activas": {
+      "src": "afad2bb73d963766",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.cerrar.notificacion": {
+      "src": "5170568e6dcfa870",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.historial": {
+      "src": "995c071dfaee74ce",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.historial.de.notificaciones": {
+      "src": "1e0a7de19ca9dd8c",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.limpiar": {
+      "src": "08df229fa5adc7fa",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.los.simbolos.del.arbol.los": {
+      "src": "d053e2d037811ec8",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.no.hay.simbolos.en.este": {
+      "src": "a1d7a912217884f5",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.notificaciones.activas": {
+      "src": "c977385963dd55d8",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.opciones.de.la.tab.activa": {
+      "src": "b28b647dd80e8688",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.ruta.del.archivo": {
+      "src": "cdf605a8f9d4a5c6",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.sin.actividad.registrada.todavia": {
+      "src": "70d644fe357c3047",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.sin.marcadores.click.derecho.sobre": {
+      "src": "c4c81590d46f9652",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.sin.notificaciones.todavia": {
+      "src": "2666dba6a209232a",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "features.tabs.abiertas": {
+      "src": "e102974bff182925",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:42.630Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.abre.una.carpeta.para.usar": {
+      "src": "36ab99118a598490",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.908Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.abrir": {
+      "src": "a01a5fce396edb61",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.908Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.actualizar": {
+      "src": "fe5f6628c7b56bf1",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.908Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.agregar": {
+      "src": "bc5581f6f2ba7cdb",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.agregar.remoto": {
+      "src": "216d6e5426d13625",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.arbol.limpio": {
+      "src": "2a8bd5438cec58f8",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.archivos.solo.lectura": {
+      "src": "df416b88869a1e80",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.auth.no.detectada.todavia": {
+      "src": "5990e759ca768c20",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.badges.apagados": {
+      "src": "233da2c0fe7f2746",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.cambios": {
+      "src": "8544c53630607f75",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.cargando.archivos": {
+      "src": "cb453d99e527c32c",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.cargando.git": {
+      "src": "7270bcc42e688d5a",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.commit": {
+      "src": "82a9c46ffa478994",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.con.badges.de.git.a": {
+      "src": "4a90b68db590aa06",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.crear": {
+      "src": "3fe5ff266fc3ceac",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.credential.helper": {
+      "src": "9ac26c9f547c20c7",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.cuenta": {
+      "src": "e436ddcd06e85cd0",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.descartar": {
+      "src": "1a878a55c594b0f7",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.descripcion.del.pr": {
+      "src": "9f5ffd5727fe4578",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.descripcion.opcional": {
+      "src": "6ad71d0a2d9a94a7",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.detectando.auth": {
+      "src": "9b2ac1c67afbd2b6",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.ejecuta.gh.pr.create.real": {
+      "src": "dc8a75dc0d111efb",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.elegir.ref.del.historial": {
+      "src": "2da7bdab2807c7e2",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.eliminadas": {
+      "src": "e530ec38be0754c7",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.911Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.fetch": {
+      "src": "cd7d61bf7e38c7c2",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.fetch.all.prune": {
+      "src": "b113f67beb8923ba",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.gh.cli": {
+      "src": "b2e0bf5ac494ee8e",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.gh.pr.list": {
+      "src": "ca55e364e0fcdf6f",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.git.ls.remote.origin": {
+      "src": "8511866e5a0f37dd",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.guardar": {
+      "src": "13e51a210f45ed1b",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.guardar.stash": {
+      "src": "5bba85ddf6113247",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.historial": {
+      "src": "995c071dfaee74ce",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.host": {
+      "src": "4a823118b9ba8baa",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.host.de.github.enterprise.opcional": {
+      "src": "9071a85a3b7ccd1b",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.inicializar.repo.aqui": {
+      "src": "12716770a55b658a",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.integracion": {
+      "src": "a2036aa68a9c1ac2",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.logout.gh": {
+      "src": "1acb637f2fed1f09",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.mensaje.de.commit": {
+      "src": "3882c8a0956ffec2",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.mensaje.de.commit-2": {
+      "src": "8211fa65d684ed7d",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.mensaje.del.stash": {
+      "src": "4cb791c81be199b6",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.mensaje.opcional": {
+      "src": "7fc58b4afe573646",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.metodo.de.login": {
+      "src": "cfae3d96762f93f1",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.mostrar.estados": {
+      "src": "940ad0f381bc10b4",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.nombre.de.rama": {
+      "src": "09fc7f0a1a6e3aec",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.nombre.del.remoto": {
+      "src": "2e4553861578fc2a",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.nombre.del.tag": {
+      "src": "7771576db8038057",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.nueva.rama": {
+      "src": "bb2e914e954afdbd",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.nuevo.pr": {
+      "src": "2c67c4bfa50b370b",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.nuevo.tag": {
+      "src": "ba04c85060ea617d",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.opciones": {
+      "src": "81db3b5709d0ba95",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:43.912Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.pop": {
+      "src": "4d616d53988e27e9",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.985Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.pull": {
+      "src": "b66d044181a0e296",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.pull.ff.only": {
+      "src": "2c0cce945b4b592e",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.pull.requests": {
+      "src": "d9e3f260282517ed",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.push": {
+      "src": "731ce7ed808913b2",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.rama.base": {
+      "src": "d13f647eae78a148",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.ramas": {
+      "src": "d4fe90e545b3f568",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.remotas": {
+      "src": "4db08eb552870b90",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.remotos": {
+      "src": "fded544f69efe6dc",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.repositorio": {
+      "src": "85477234e6b322bb",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.reset.hard": {
+      "src": "ad26f064e82d2d51",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.restaurar": {
+      "src": "eda02893d340c1be",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.revert": {
+      "src": "0026c505347863ae",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.sesion.gh": {
+      "src": "9241def1f915e699",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.sin.commits.repo.vacio": {
+      "src": "84eb2416ffd13a09",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.sin.prs.abiertos.gh.instalado": {
+      "src": "91d963bc175ce244",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.sin.remotos": {
+      "src": "92546df7a3437553",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.sin.repos.git.bajo.este": {
+      "src": "506109bb4097a33b",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.sin.stashes": {
+      "src": "7e7b205f5cd5bea2",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.sin.tags": {
+      "src": "cd6e9ec8e01f7d2a",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.ssh.t.git.github.com": {
+      "src": "4e88f320a240e933",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.stage": {
+      "src": "d7fd1c4e2b0e493e",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.stage.todo.commit": {
+      "src": "1f0c053be12fd680",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.stash": {
+      "src": "38bdfeaa67bdbe8a",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.tags": {
+      "src": "1331275bc537b4c2",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.titulo.del.pr": {
+      "src": "277d5b1a786d91ec",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.todo": {
+      "src": "4ff402d768211082",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.token": {
+      "src": "d2089be672953d11",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.unstage": {
+      "src": "23e6ee3bee7847e6",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.url.del.remoto": {
+      "src": "57c8ea7d3e721e5e",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.usuario": {
+      "src": "63614ffde2d350df",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.validar": {
+      "src": "404848c9e4d3c3cc",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "git.workspace": {
+      "src": "87bb59ba2f92f2a5",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:44.986Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.abre.una.carpeta.para.buscar": {
+      "src": "b5ac9deb32b8b3f5",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.385Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.abrir.archivo": {
+      "src": "a1e205334c0df09c",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.385Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.abrir.carpeta": {
+      "src": "3c9eb629c102503a",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.385Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.agregar.amigo": {
+      "src": "0965f0825a1ec7ce",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.385Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.amigos": {
+      "src": "bead8677698a4b14",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.385Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.ampliar.zoom": {
+      "src": "0fdb324a0fbefb20",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.385Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.anuncios": {
+      "src": "56830d1638255f82",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.385Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.arrastra.hasta.otra.terminal.para": {
+      "src": "c95bd95ffcee2862",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.385Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.arrastra.una.tab.o.un": {
+      "src": "f9e70a79d25449ec",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.385Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.arrastrar.para.mover": {
+      "src": "c38244fef1458971",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.385Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.browser.no.implementado.todavia": {
+      "src": "462169aa9e210ffb",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.386Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.buscar.chats": {
+      "src": "88e2f1938e612a87",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.389Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.buscar.chats-2": {
+      "src": "3c681ca566b64766",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.389Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.buscar.en.archivos": {
+      "src": "cbf7774d296ac079",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.389Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.buscar.en.archivos-2": {
+      "src": "f6d24e5566daf2d9",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.389Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.cancelar": {
+      "src": "bb9dbb406dcbd524",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.389Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.cargando.catalogo": {
+      "src": "9f862531febf3aef",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.389Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.cargando.panel": {
+      "src": "bf55b23ac2be9904",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.389Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.cerrar": {
+      "src": "aeccae342e4bd0a7",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.389Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.cerrar.este.slot": {
+      "src": "70119abf5d14f6ca",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.cerrar.slot": {
+      "src": "d86831d1a8521d85",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.cerrar.terminal": {
+      "src": "5df0299df2607d8a",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.clic.para.desenlazar": {
+      "src": "299748265dea0ce9",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.consejos": {
+      "src": "67f972cfdc311f13",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.contenido.de.la.nota": {
+      "src": "cd6b4514e7c9e403",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.controles.del.lienzo": {
+      "src": "0aefa5b9167ede5e",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.crear.terminal": {
+      "src": "4ea12d95d1271b04",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.ctrl.k.o": {
+      "src": "21fa41c8102a1838",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.cuentas": {
+      "src": "7c1ca4e97e077175",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.debug.no.disponible.todavia": {
+      "src": "9b416a04aa5f5d4d",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.descripcion.cuando.usarla": {
+      "src": "c6b2ed79bc6edd2e",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.eliminar": {
+      "src": "c9894cf002f90bd0",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.escribe.para.buscar.en.el": {
+      "src": "d9fa7f21900b0ee0",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.escribe.tu.nota": {
+      "src": "ef234560584c1d94",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.esfuerzo.de.pensamiento": {
+      "src": "c26ce0cc22743d12",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.esta.escribiendo": {
+      "src": "ab5b42932cd2a3ff",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.391Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.este.modelo.no.declara.variantes": {
+      "src": "90b527dace9df379",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.este.panel.fallo": {
+      "src": "34c67618cabc19d6",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.filtrar.problemas": {
+      "src": "0210b08894ed8958",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.filtrar.problemas-2": {
+      "src": "2307b4ddee2b2af3",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.hay.novedades": {
+      "src": "d5b597a5cf641488",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.historial.de.chats": {
+      "src": "99b4491c83175df8",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.historial.de.notas": {
+      "src": "05ebd61860fe7cb8",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.informacion": {
+      "src": "7263ec8c2d08c2c0",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.instrucciones.markdown": {
+      "src": "bae0f34e738c8872",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.mas.acciones": {
+      "src": "78eb2e0551731bd4",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.mas.opciones": {
+      "src": "a03923b7f08d2eb6",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.mi.perfil": {
+      "src": "ce08fdc24c114958",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.no.hay.panel.activo": {
+      "src": "7988e99d0aa74780",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.no.se.pudo.cargar.el": {
+      "src": "f40d1811ca66aacc",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:46.392Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.nombre.ej.release.notes": {
+      "src": "3074f0165397ce3c",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.827Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.nueva.nota": {
+      "src": "dc6ac884f6f06306",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.827Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.nueva.terminal.en.el.lienzo": {
+      "src": "362f4f255be018df",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.827Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.nuevo.archivo": {
+      "src": "2d2da797d801a334",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.nuevo.chat": {
+      "src": "b23acf397929fc0f",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.redimensionar.panel.derecho": {
+      "src": "833dbff5550fd675",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.redimensionar.panel.derecho.e.inferior": {
+      "src": "60317992733a3bd1",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.redimensionar.panel.inferior": {
+      "src": "06c5704d21f7d847",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.redimensionar.panel.izquierdo": {
+      "src": "8729a05e1a37ceed",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.redimensionar.panel.izquierdo.e.inferior": {
+      "src": "13d81c87e1827ba9",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.redimensionar.paneles.laterales": {
+      "src": "a105293973e50bbf",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.redimensionar.split": {
+      "src": "ad35fecd57fbc978",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.redimensionar.vista": {
+      "src": "f2046dca281c98a9",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.reducir.zoom": {
+      "src": "2370347a676dc8ef",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.reintentar": {
+      "src": "a9254c5f812829af",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.restablecer.vista": {
+      "src": "fe26b4487a34282e",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.resultados.de.busqueda": {
+      "src": "5c1742856c8b354b",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.scrakk.studio": {
+      "src": "0f5d91ba2e304fe9",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.sin.anuncios": {
+      "src": "db4be63b64793d9e",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.sin.notas.todavia": {
+      "src": "17111b1ab3c1af98",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.sin.resultados.para": {
+      "src": "6f0cd6674a715db6",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.sin.terminales.en.el.lienzo": {
+      "src": "25a551401c72ec98",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.slot.vacio": {
+      "src": "4f500b0805bdca17",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.solicitudes": {
+      "src": "03e7cb126f4b2a26",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.tienes": {
+      "src": "de269f5f73b7c92e",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.todavia.no.hay.skills": {
+      "src": "f2f12cfd297b7d0e",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.todavia.no.hay.un.changelog": {
+      "src": "ec679452c332e080",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.ver.release.en.github": {
+      "src": "18b2bbe1b72ac698",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.ver.y.administrar.skills": {
+      "src": "ca3acb4f4340ed79",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.volver": {
+      "src": "ab26ae7bca362195",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.volver.a.las.tabs": {
+      "src": "f21fae6af25aaf25",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.volver.al.chat": {
+      "src": "cad1a2451709ee1e",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "layout.workspaces": {
+      "src": "1377264ba3b0a717",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:47.828Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.abrir.dashboard": {
+      "src": "4e1193abd36475f7",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.724Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.abrir.el.subagente": {
+      "src": "4cf1e2138c09a62b",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.724Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.appended.to": {
+      "src": "384ca1b73a45adda",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.724Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.bloqueado": {
+      "src": "d552e8fe73224192",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.724Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.created.blueprint": {
+      "src": "81169ff5fe337170",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.deleted": {
+      "src": "b48ff39c2e0f5451",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.edited": {
+      "src": "7117f0807129493f",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.elegir.enter.tab.aceptar.esc": {
+      "src": "5c51841d49aebed3",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.fecha": {
+      "src": "93b2a9ef782cacd6",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.hora": {
+      "src": "503f312cde03e217",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.in.browser": {
+      "src": "7daabc83da8fc182",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.in.files": {
+      "src": "ee750dcee06c5127",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.lineas": {
+      "src": "6dad0dc475bc97fd",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.listed": {
+      "src": "78797afdac993780",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.listed.browser.tabs": {
+      "src": "db9f34d1099c46ca",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.lsp": {
+      "src": "4244dc07c5653a7f",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.moved": {
+      "src": "b11c9047f3512271",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.opened": {
+      "src": "b19fb8d1b395b333",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.ran": {
+      "src": "3a3d28a9e34d3758",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.ran-2": {
+      "src": "b6a7c95e785f14dd",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.read": {
+      "src": "9b9a8d05a7ec353b",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.requested.diagnostics": {
+      "src": "df1865a458e680a8",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.searched": {
+      "src": "9827fdebc2044a34",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.searched.files.for": {
+      "src": "39f25841efed6ade",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.set.title": {
+      "src": "4b04a95d36a35870",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.sugerencias": {
+      "src": "70cf296fe178d5d4",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.terminal.innerta": {
+      "src": "276b336be1af362d",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.timeout": {
+      "src": "a694f0893f99cbdd",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.tools.in.sequence": {
+      "src": "7238994c29631c1a",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "misc.wrote": {
+      "src": "4271706273b65093",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:48.725Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.asi.quedaria": {
+      "src": "09b4b932153d2aed",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.594Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.atras": {
+      "src": "f9618693ab0e05f9",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.594Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.buscar.tema": {
+      "src": "2b7aaecc8597529d",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.594Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.buscar.tema-2": {
+      "src": "73164f3383e2231b",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.594Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.compartir.datos.de.uso": {
+      "src": "06d0b112c81b4341",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.595Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.compartir.datos.de.uso.del": {
+      "src": "c9f3569c6a312df0",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.595Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.configuracion.inicial": {
+      "src": "c2dd607b2122631f",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.595Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.datos.de.uso": {
+      "src": "9b7085f3476908f7",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.595Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.empecemos": {
+      "src": "a3c4f75cc2eaff0a",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.595Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.lo.que.elegiste": {
+      "src": "8a35b55e49a0b460",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.595Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.los.perfiles.de.atajos.son": {
+      "src": "087bedf8f03f068a",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.595Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.no.hay.temas.que.coincidan": {
+      "src": "147927ec6249fb09",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.595Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.omitir.configuracion": {
+      "src": "5abdc9fa6208c5cd",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.595Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.pasos.de.la.configuracion.inicial": {
+      "src": "826d8e57aecb9ea7",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.595Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "onboarding.perfil.de.atajos": {
+      "src": "e0ff82d6330492ca",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:49.595Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "palette.buscar.comando": {
+      "src": "daea419f673935cc",
+      "area": "palette",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:50.339Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "palette.escribe.un.comando": {
+      "src": "4c299ffa2477bb1d",
+      "area": "palette",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:50.339Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "palette.paleta.de.comandos": {
+      "src": "5b63975b7d828550",
+      "area": "palette",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:50.339Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "palette.sin.resultados": {
+      "src": "bf9fc1983ffa7841",
+      "area": "palette",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:50.339Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.activo": {
+      "src": "723858144bd5482d",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.api.key.de": {
+      "src": "d8e02ef195f9aabf",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.buscar.proveedores": {
+      "src": "5ecc129c79fc9bf2",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.cancelar": {
+      "src": "bb9dbb406dcbd524",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.elige.un.proveedor.pega.tu": {
+      "src": "8298ef33314bb388",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.guardar.y.usar": {
+      "src": "1ded12afa7acdb30",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.id.del.modelo": {
+      "src": "6167c646235941df",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.key.guardada": {
+      "src": "9ff97e66647cd07c",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.key.guardada.escribe.el.modelo": {
+      "src": "d19ef5896f784c44",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.modelo.id.exacto": {
+      "src": "815e43cadd5b56fa",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.modo.de.pensamiento": {
+      "src": "88532efa8ef43a55",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.no.se.encontraron.proveedores.para": {
+      "src": "6fb0e2d020e55106",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.obtienes.tu.key.en": {
+      "src": "7ae769229d0948ba",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.proveedores": {
+      "src": "bb1bb5cc7a83b6c0",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.quitar.key": {
+      "src": "ea36275f1e4e4c81",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.se.detecta.segun.el.modelo": {
+      "src": "0c1dc7619216bdec",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "providers.sugeridos.del.catalogo.models.dev": {
+      "src": "f94fabeb5cd6156c",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:51.258Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.abre.una.carpeta.con.codigo": {
+      "src": "afdfcfeec8c1f5f9",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.abrir.agentes": {
+      "src": "40cde5705438be11",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.abrir.herramientas": {
+      "src": "7f7cbd137c886035",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.abrir.permisos": {
+      "src": "256589e4adc0dde6",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.abrir.proveedores": {
+      "src": "4b3c6ecfc2c784f2",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.abrir.skills": {
+      "src": "3d636b9de8510773",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.activa.o.desactiva.las.skills": {
+      "src": "13a980464a63e9b4",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.agentes": {
+      "src": "08a28e4cc1aacda4",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.agregar": {
+      "src": "bc5581f6f2ba7cdb",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.ajustes": {
+      "src": "4f2debbbf4fab6c9",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.aplica.a": {
+      "src": "27dab1243f887ee0",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.bash.git.push.o.read": {
+      "src": "5656c7259ea573d1",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.build": {
+      "src": "92f2d633f250eeaf",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.cancelar": {
+      "src": "bb9dbb406dcbd524",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.color": {
+      "src": "6b73191a0a4b6742",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.comandos.de.shell": {
+      "src": "f9e27430b829245b",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.con.un.frontmatter": {
+      "src": "fa18dd5a32cde184",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.crea.modos.propios.a.partir": {
+      "src": "f1b0214f41535419",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.cuando.algo.pida.confirmacion": {
+      "src": "e30ac3e840a1c735",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.descargar.v": {
+      "src": "bc4dc1e7223e4ea5",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.descripcion": {
+      "src": "ee00b96fff266fe2",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.desinstalar": {
+      "src": "dc131ad4e22fbe95",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.duplicar": {
+      "src": "88f77287cbdba827",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.ediciones.de.archivos": {
+      "src": "d25e938807e652f4",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.editor": {
+      "src": "936a161c39314b05",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.461Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.editor.de.codigo": {
+      "src": "92c4c06ea28adb3d",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.el.editor.usa.un.motor": {
+      "src": "55224fe50dd64ede",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.el.explorer.y.las.tabs": {
+      "src": "eb997f23500b9e15",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.elige.que.herramientas.puede.usar": {
+      "src": "c7cd7893f34be5ee",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.en.el.input": {
+      "src": "5cc673a6e420e729",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.en.heaps.wasm": {
+      "src": "7311f2c0b0bc90c5",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.extension": {
+      "src": "4f76019c48dd696d",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.extensiones": {
+      "src": "f8980f8b253d6f4b",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.flujos.de.trabajo.reutilizables": {
+      "src": "eecb5c33b45f23ad",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.guardar.agente": {
+      "src": "aa920a6793cf944b",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.guardar.modo": {
+      "src": "421c2ce56072f4af",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.guardar.y.aplicar": {
+      "src": "03288e2cbdea9b7a",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.herramienta": {
+      "src": "d96883cb96534014",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.herramientas": {
+      "src": "a558a4d8c3e61bcd",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.herramientas.habilitadas.en.este.modo": {
+      "src": "9e1e5a17abbac338",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.iconos.de.archivos": {
+      "src": "60774dce6781b977",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.iconos.de.la.interfaz": {
+      "src": "1fa5c16b63df162c",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.inspeccionar.tokens.del.archivo.activo": {
+      "src": "169295653d86ad5e",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.instalar.receta.del.servidor": {
+      "src": "3de315f63a1e89d4",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.instalar.sef": {
+      "src": "fb537822806e53c2",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.instalar.vsix": {
+      "src": "0445eb8966ff0a67",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.instrucciones.del.agente": {
+      "src": "3eff1f82488e8f04",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.instrucciones.extra.para.el.modelo": {
+      "src": "da69d32d7ea5e82c",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.memoria.del.editor": {
+      "src": "8b29ed81b5cdacdc",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.minimapa": {
+      "src": "3305bf7204bc105a",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:52.462Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.modelo": {
+      "src": "a5ab3212dad17406",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.modelos.y.claves.de.api": {
+      "src": "e941e4aa3cf92cde",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.modo.inicial": {
+      "src": "09c302bf71707b7b",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.modo.pc.mala": {
+      "src": "a039c2f2deaf5cd9",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.modos.integrados": {
+      "src": "3ddb07fa59ca5c8f",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.motor.de.gramatica": {
+      "src": "6f6cadac74db58f7",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.motor.es.de.panel": {
+      "src": "65d59cc00810c1cf",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.no.hay.extensiones.cargadas": {
+      "src": "8e4416616a1eee88",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.no.hay.proyecto.abierto.usa": {
+      "src": "0d223f09b82b3bbc",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.no.hay.skills.todavia.crea": {
+      "src": "be7d9ff6dc5c4cb8",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.nombre": {
+      "src": "562bb15757a8b593",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.nuevo.modo": {
+      "src": "23b44fb64119576c",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.para.que.sirve.este.agente": {
+      "src": "e7d315af3cb7ea62",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.para.que.sirve.este.modo": {
+      "src": "83e91cd6f7cda88d",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.parte.de": {
+      "src": "824faef7bbe6c46f",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.perfiles.permisos.y.subagentes": {
+      "src": "b21900cc7737d793",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.permisos": {
+      "src": "e8d94ecbab5499b1",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.preferencias.del.chat.con.ia": {
+      "src": "f7ebe5fd76f2179a",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.prompt": {
+      "src": "5c39123805ffb4e2",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.prompt.opcional": {
+      "src": "c228699b4691bc8d",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.proveedores": {
+      "src": "bb1bb5cc7a83b6c0",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.que.puede.usar.la.ia": {
+      "src": "dd928daa42321e8a",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.que.se.permite.se.pregunta": {
+      "src": "970c36f1ea3a9f7f",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.react.typescript.electron.sistema.de": {
+      "src": "9142a3a0fe7b83db",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.reglas": {
+      "src": "db8661d1e95a31b0",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.reiniciar.y.actualizar": {
+      "src": "62ac2749f08b0b18",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.rendimiento": {
+      "src": "0fb6f5157a9090e0",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.riesgo.alto": {
+      "src": "c56e1ac43e07a1e2",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.scrakk": {
+      "src": "d7fb235bcef647bf",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.scrakk.studio": {
+      "src": "0f5d91ba2e304fe9",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.secciones.de.ajustes": {
+      "src": "c503baa712db906a",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.servers": {
+      "src": "854e641cf380be0a",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.shell.segura": {
+      "src": "6d83f0819afcd4f8",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.sin.grupo": {
+      "src": "6d46f325f5550c23",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.sin.reglas": {
+      "src": "551065400e218b7f",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.309Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.skills": {
+      "src": "66d0f523a379b2de",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.310Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.subagentes.permitidos": {
+      "src": "c618c7e6d01050e0",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.310Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.todavia.no.creaste.ninguno": {
+      "src": "f00e39eb77510daf",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.310Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.todavia.no.hay.subagentes.crea": {
+      "src": "cc81624d6bff0dc4",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.310Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.todos.los.modos": {
+      "src": "04d0378382eb3119",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.310Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.tus.modos": {
+      "src": "1fc5fdf7537ec9ef",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.310Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.ver.release.v": {
+      "src": "488255fa851511da",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.310Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.volver.arriba": {
+      "src": "e06e2e6400797b86",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:54.310Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.abrir.imagen.en.tamano.completo": {
+      "src": "4b17a4cace3f0b02",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.aceptar": {
+      "src": "640d6761c178f2ad",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.adjuntar.imagen": {
+      "src": "2dd0ec0a4e08f1ed",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.agregar.cuenta": {
+      "src": "47c30a39233e819b",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.amigos": {
+      "src": "bead8677698a4b14",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.borrar": {
+      "src": "d50a3d4468356132",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.buscar.emoji": {
+      "src": "215029bd3ae4c0e7",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.buscar.emoji-2": {
+      "src": "9306b76a82a08dd1",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.buscar.por.usuario.o.nombre": {
+      "src": "ee9f66ddebea0bdf",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.buscar.usuarios": {
+      "src": "84da02868fdbb88f",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.cambiar.email": {
+      "src": "6765cc6682762832",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.cancelar": {
+      "src": "bb9dbb406dcbd524",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.cancelar.respuesta": {
+      "src": "3d9061c198ec9a9e",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.cerrar.sesion": {
+      "src": "c6e6960395f49b48",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.codigo": {
+      "src": "f58b85570398c0cc",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.cuenta.algo.sobre.ti.opcional": {
+      "src": "a4172cb70a7ade89",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.cuentas": {
+      "src": "7c1ca4e97e077175",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.descripcion": {
+      "src": "ee00b96fff266fe2",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.editar": {
+      "src": "2eba946b2e1ee4b6",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.editar.perfil": {
+      "src": "c10011b93f9c07a4",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.ej.enfocado.jugando": {
+      "src": "699548fb495ac701",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.email": {
+      "src": "969ccbd3cf6300ec",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.010Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.emojis": {
+      "src": "0a76ba756cf5e3a5",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.011Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.enlace.de.la.foto": {
+      "src": "3521f5b4ecacf7c1",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.entra.o.crea.tu.cuenta": {
+      "src": "596ee985505a4959",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.escribe.el.codigo": {
+      "src": "c582295a1320a24f",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.estado": {
+      "src": "98e5acddb6c46a24",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.estado.personalizado": {
+      "src": "d0736bb2d84f8771",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.foto.cargada.desde.tu.equipo": {
+      "src": "0dc883c8f9171289",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.genero": {
+      "src": "736f64cd6d4a796f",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.imagen.adjunta": {
+      "src": "db0a6461626ddcc7",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.imagenes.por.enviar": {
+      "src": "da827795fc1cbf71",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.mensaje": {
+      "src": "d2af31712ead0414",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.miembro.desde": {
+      "src": "1d368df49e98c843",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.no.hay.cuentas.guardadas": {
+      "src": "f63a6771cbd0af00",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.nombre": {
+      "src": "562bb15757a8b593",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.nunca.se.comparten.rutas.reales": {
+      "src": "cc789ef3ddacb284",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.o.pega.un.enlace.https": {
+      "src": "822cbabf64806fa3",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.que.comparto": {
+      "src": "38f7e6be94d19f9d",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.quitar": {
+      "src": "f039f4a8c9759318",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.quitar.cuenta": {
+      "src": "17d485e304b71fb7",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.rechazar": {
+      "src": "2a0515602d315876",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.recientes": {
+      "src": "2a731b52293f60a4",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.017Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.reenviar.codigo": {
+      "src": "ac172e5c0f42bdb8",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.020Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.responder": {
+      "src": "8630a0dc25e2395a",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.020Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.respondiendo.a": {
+      "src": "baf32e5542b84973",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.020Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.resultados": {
+      "src": "31056106ce607411",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.020Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.sin.resultados": {
+      "src": "bf9fc1983ffa7841",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.020Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.te.mandamos.un.codigo.al": {
+      "src": "46bd7bf122035db4",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.020Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.te.mandamos.un.codigo.de": {
+      "src": "1347d24b4dba396f",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:56.020Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.todavia.no.hay.mensajes.escribe": {
+      "src": "7ead7b387ebf83de",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:57.347Z",
+      "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.todavia.no.tienes.amigos.busca": {
+      "src": "3233012d3f3b3a8e",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:57.348Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "social.tu.dni.es.el.id": {
+      "src": "cecf8e742f421003",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:57.348Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "social.tu.nombre": {
+      "src": "d36ae2c1bf451e93",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:57.348Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "social.usuario": {
+      "src": "63614ffde2d350df",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:57.348Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "social.ver.perfil.completo": {
+      "src": "cc41507213691a78",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:57.350Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "social.volver": {
+      "src": "ab26ae7bca362195",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:57.350Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.abrir.paleta.de.comandos": {
+      "src": "c43a6acb3744e7ab",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.ajustes": {
+      "src": "4f2debbbf4fab6c9",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.barra.de.estado": {
+      "src": "badde038d1dc738f",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.codificacion.del.archivo": {
+      "src": "5c8b03502a131809",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.codificacion.del.archivo.activo.click": {
+      "src": "ca55245c1bbc113f",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.col": {
+      "src": "3a6fbf385006b327",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.estado.de.language.servers": {
+      "src": "fd2aeb797fb72be3",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.git.abrir.panel": {
+      "src": "5577fc9211e955b3",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.historial.de.notificaciones": {
+      "src": "1e0a7de19ca9dd8c",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.notificaciones": {
+      "src": "80dade6fab6f9387",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.paleta.de.comandos.mod.shift": {
+      "src": "ed4c9ca9a6c67381",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.posicion.del.cursor.en.el": {
+      "src": "6bd8864fe5e04bd0",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.problemas": {
+      "src": "5dd91edef3949d00",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.278Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.visibilidad.de.paneles": {
+      "src": "e4e07f1dcaee8a09",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:58.279Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.acerca.de.scrakk.studio": {
+      "src": "8ed691ab9eb594d0",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.148Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.agregar.workspace": {
+      "src": "78d876c7332690f6",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.149Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.chat.modular.para.agentes.ia": {
+      "src": "b24919bf02967442",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.149Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.historial.de.workspaces": {
+      "src": "b7ee73879fad9d94",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.149Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.menu.de.la.aplicacion": {
+      "src": "e82c266122eb63de",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.149Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.scrakk.studio": {
+      "src": "0f5d91ba2e304fe9",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.149Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.sin.workspaces.todavia": {
+      "src": "6cf24701acabb3fb",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.149Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.terminal": {
+      "src": "e0926fdac700b094",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.149Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.widgets.de.la.titlebar": {
+      "src": "a0727fb74dc24487",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.149Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.workspace.anterior": {
+      "src": "a2a5a6c8295ac004",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.149Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.workspace.siguiente": {
+      "src": "6da7f19498d6ad13",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.149Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "titlebar.workspaces": {
+      "src": "1377264ba3b0a717",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:29:59.149Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.browser": {
+      "src": "d31de1a5c5c8ba2a",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.924Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.chat": {
+      "src": "460b3a7da007b7af",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.926Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.debug": {
+      "src": "1a03bd2fd107c453",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.927Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.editor": {
+      "src": "936a161c39314b05",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.927Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.explorer": {
+      "src": "d5120059860db4c9",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.927Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.git": {
+      "src": "b949c922b6ef9ffb",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.927Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.history": {
+      "src": "995c071dfaee74ce",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.927Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.notes": {
+      "src": "8a6172e21a8758f7",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.927Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.problems": {
+      "src": "5dd91edef3949d00",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.927Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.search": {
+      "src": "d6f7feda7a7e2af7",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.927Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.social": {
+      "src": "f1b7505afa5c9e2b",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.927Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "layout.panel.welcome": {
+      "src": "f5f273d88e2e1d2c",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:23.927Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.agents": {
+      "src": "08a28e4cc1aacda4",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.680Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.appearance": {
+      "src": "e3e9cbaccaec3d2a",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.680Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.chat": {
+      "src": "460b3a7da007b7af",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.680Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.editor": {
+      "src": "936a161c39314b05",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.680Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.extensions": {
+      "src": "f8980f8b253d6f4b",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.680Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.highlight": {
+      "src": "890070701afab7ce",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.680Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.info": {
+      "src": "26ff89f034fe8a10",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.680Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.performance": {
+      "src": "0fb6f5157a9090e0",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.680Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.permissions": {
+      "src": "e8d94ecbab5499b1",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.688Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.providers": {
+      "src": "bb1bb5cc7a83b6c0",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.688Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.servers": {
+      "src": "c1158df03518f1f2",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.688Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.skills": {
+      "src": "66d0f523a379b2de",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.688Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.tools": {
+      "src": "a558a4d8c3e61bcd",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:24.688Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.toggle.bottom": {
+      "src": "dd94b83d238d5597",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:25.447Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.toggle.center": {
+      "src": "d7268a0f4ab9c88a",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:25.447Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.toggle.left": {
+      "src": "9374c1e94674527a",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:25.447Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "statusbar.toggle.right": {
+      "src": "aa0f362a04444295",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:25.447Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.edit": {
+      "src": "2eba946b2e1ee4b6",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.368Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.edit.copy": {
+      "src": "39dcf1cbeb5adbd0",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.368Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.edit.paste": {
+      "src": "9536d53c4922de14",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.368Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.edit.selectAll": {
+      "src": "f691776fbc8ed669",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.368Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.file": {
+      "src": "75d6b4579e1d29eb",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.368Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.file.closeFile": {
+      "src": "1f6c4d1e7909b543",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.368Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.file.closeWindow": {
+      "src": "5d4bca945e656651",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.368Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.file.openFile": {
+      "src": "89506dc1eed67101",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.368Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.file.openFolder": {
+      "src": "4f970c0bd2de1cbd",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.368Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.help": {
+      "src": "32b40035b08043ae",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.368Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.help.about": {
+      "src": "8ed691ab9eb594d0",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.368Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.view": {
+      "src": "20ab386d12d982bd",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.369Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.view.chatHistory": {
+      "src": "99b4491c83175df8",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.369Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.view.chatPanel": {
+      "src": "60a7728031a9a195",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.369Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.view.darkMode": {
+      "src": "808d4a199c740939",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.369Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.view.explorerPanel": {
+      "src": "0ecef9a067d868a5",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.369Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.view.lightMode": {
+      "src": "3a28469f0c7f07a2",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:31:26.369Z",
+      "approvedAt": "2026-09-25T17:32:07.888Z"
+    }
+  },
+  "version": 1
+}
