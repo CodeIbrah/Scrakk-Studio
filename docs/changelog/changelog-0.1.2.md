@@ -229,6 +229,14 @@ publicadas no se editan. El archivo va por versión:
   cualquier botón de la app y con el color del tema.
 
 ### Ajustes (UI)
+- **Ajustes → Servidores (LSP)**: las filas de cada server dejaron la forma de
+  *card con cápsulas* (estado, origen y extensiones iban en píldoras) por una
+  **superficie única con filas planas**, al estilo de Apariencia y Skills: el
+  **estado es un punto de color + texto**, el origen y las extensiones van en
+  **texto tenue** (sin fondo) y las filas tienen **hover** en vez de borde por
+  card. Los botones pasan de cápsula a **radio de input** y **conservan el
+  loader animado** (`LoadingButton`), ahora con radio configurable por contexto
+  (`--loading-border-radius`).
 - **Botón "volver arriba"** en el contenido de Ajustes: aparece al bajar con una
   animación de **150ms** (fade + deslizamiento) y sube el contenido de forma
   **suave**; respeta `prefers-reduced-motion` (salto directo) y al cambiar de

@@ -7,7 +7,9 @@
 .wrap {
   position: relative;
   display: inline-flex;
-  border-radius: var(--radius-capsule);
+  /* El radio se puede ajustar por contexto con `--loading-border-radius`; si
+     no, se mantiene la cápsula por defecto (comportamiento actual). */
+  border-radius: var(--loading-border-radius, var(--radius-capsule));
   padding: 1.5px;
   overflow: hidden;
   isolation: isolate;

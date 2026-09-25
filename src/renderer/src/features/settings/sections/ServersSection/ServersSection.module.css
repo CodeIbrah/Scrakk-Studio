@@ -4,6 +4,13 @@
  * Licencia completa en LICENSE (Apache License 2.0).
  */
 
+/*
+ * Servidores LSP — filas planas sobre una superficie, al estilo de Apariencia
+ * y Skills: sin cápsulas en estado/origen/chips y sin bordes por card. Los
+ * botones conservan el loader animado (`LoadingButton`/`LoadingBorder`), pero
+ * con radio de input en vez de cápsula.
+ */
+
 .section {
   display: flex;
   flex-direction: column;
@@ -16,6 +23,11 @@
   color: var(--color-text-muted);
 }
 
+.summary strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
 .empty {
   margin: 0;
   font-size: var(--text-xs);
@@ -23,10 +35,14 @@
   line-height: var(--leading-normal);
 }
 
+/* Superficie única que contiene las filas (nada de una card por server). */
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  scrollbar-gutter: stable;
 }
 
 /* ── Fila de server ─────────────────────────────────────────────────── */
@@ -36,16 +52,13 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--duration-fast) var(--ease-out);
 }
 
-.rowMain {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.row:hover {
+  background: var(--color-hover);
 }
 
 /* Apagado por el usuario: se ve "fuera de juego", no roto. */
@@ -53,9 +66,17 @@
   opacity: 0.6;
 }
 
+.rowMain {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
 .rowTop {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-2);
 }
 
@@ -64,14 +85,13 @@
   font-weight: 600;
 }
 
+/* Estado: punto + texto. El color comunica; sin fondo de pastilla. */
 .stateBadge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 1px 8px;
-  border-radius: var(--radius-capsule);
-  font-size: 10px;
-  font-weight: 600;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .dot {
@@ -82,48 +102,41 @@
 }
 
 .state_ready {
-  background: color-mix(in srgb, #3fb950 16%, transparent);
   color: #3fb950;
 }
 .state_starting {
-  background: color-mix(in srgb, #58a6ff 16%, transparent);
   color: #58a6ff;
 }
 .state_retrying {
-  background: color-mix(in srgb, #d29922 16%, transparent);
   color: #d29922;
 }
 .state_crashed,
 .state_failed {
-  background: color-mix(in srgb, #f85149 16%, transparent);
   color: #f85149;
 }
 .state_stopped {
-  background: var(--color-hover);
   color: var(--color-text-muted);
 }
 
+/* Origen: texto tenue, sin pastilla. */
 .sourceBadge {
-  padding: 1px 8px;
-  border-radius: var(--radius-capsule);
-  background: var(--color-hover);
   color: var(--color-text-muted);
-  font-size: 10px;
+  font-size: 11px;
 }
 
+/* Extensiones que lo aportan: mono tenue, sin píldoras. */
 .extChips {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 6px;
 }
 
 .extChip {
-  padding: 0 6px;
-  border-radius: var(--radius-sm);
-  background: var(--color-hover);
-  color: var(--color-text-secondary);
+  padding: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-family: ui-monospace, 'SF Mono', Consolas, monospace;
   font-size: 10px;
-  line-height: 18px;
 }
 
 .more {
@@ -133,7 +146,7 @@
 
 .rowError {
   margin: 0;
-  color: #f85149;
+  color: var(--color-danger, #e5484d);
   font-size: 11px;
 }
 
@@ -141,4 +154,14 @@
   display: flex;
   gap: var(--space-2);
   flex-shrink: 0;
+  /* El loader (`LoadingBorder`) respeta el radio del contexto. */
+  --loading-border-radius: var(--radius-input);
+}
+
+/* Botones de la fila: rectangulares y discretos; el loader animado es el
+   mismo que ya existía. */
+.rowActions button {
+  border-radius: var(--radius-input);
+  padding: 3px 10px;
+  font-size: 11px;
 }
