@@ -11,6 +11,7 @@
 
 import { fuzzyScore } from './fuzzy'
 import { shortcuts } from '@services/shortcuts'
+import { msg } from '@core/i18n'
 
 export interface Command {
   /** Id único, namespaced: 'layout.toggleChat', 'theme.cycle', … */
@@ -58,7 +59,7 @@ class CommandRegistryClass {
       unsubShortcut = shortcuts.register({
         id: `command:${command.id}`,
         combo: command.keybinding,
-        description: command.title,
+        description: msg(command.title),
         handler: () => {
           void command.run()
         },
@@ -89,7 +90,7 @@ class CommandRegistryClass {
     return [...this.commands.values()].sort(
       (a, b) =>
         (a.category ?? '').localeCompare(b.category ?? '') ||
-        a.title.localeCompare(b.title)
+        msg(a.title).localeCompare(msg(b.title))
     )
   }
 
@@ -99,7 +100,7 @@ class CommandRegistryClass {
       .map((command) => ({
         command,
         score:
-          fuzzyScore(query, command.title) +
+          fuzzyScore(query, msg(command.title)) +
           fuzzyScore(query, command.category ?? '') +
           fuzzyScore(query, command.id)
       }))

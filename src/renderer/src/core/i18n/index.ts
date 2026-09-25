@@ -16,6 +16,7 @@
 
 import { useSyncExternalStore } from 'react'
 import {
+  catalogs,
   getLocale,
   resolveLocale,
   setLocale,
@@ -29,6 +30,20 @@ import {
 import { getPersistedLocalePreference, persistLocalePreference } from '@services/storage'
 
 export type TFunction = (key: MessageKey, vars?: Vars) => string
+
+const knownKeys = new Set(Object.keys(catalogs.es))
+
+/**
+ * Resuelve un texto que puede ser una CLAVE i18n o un literal.
+ *
+ * Pensado para datos que se registran una sola vez (p. ej. los comandos del
+ * palette): guardan la clave y el consumidor la resuelve en render, así el
+ * texto sigue al idioma activo sin re-registrar nada. Un literal que no sea
+ * clave se devuelve tal cual (compatible con lo no migrado).
+ */
+export function msg(keyOrText: string): string {
+  return knownKeys.has(keyOrText) ? t(keyOrText as MessageKey) : keyOrText
+}
 
 /** Aplica `document.lang` (accesibilidad y correctores del navegador). */
 function applyPreference(preference: LocalePreference): void {

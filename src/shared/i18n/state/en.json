@@ -9911,6 +9911,126 @@
       "needsReview": false,
       "at": "2026-09-25T18:04:49.539Z",
       "approvedAt": "2026-09-25T18:04:49.749Z"
+    },
+    "app.app.capturar.el.editor.png": {
+      "src": "1df5da8e36a77f40",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:16.799Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "app.app.cerrar.archivo.activo": {
+      "src": "438f277adecd2655",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:16.800Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "app.app.expandir.seleccion.objeto.de": {
+      "src": "5dc3d5bfc94bb621",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:16.800Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "app.app.ir.a.la.definicion": {
+      "src": "254c4b983ddd5431",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:16.800Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "app.app.language.servers": {
+      "src": "37334aa66f2cee84",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:16.800Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "features.onboarding.ver.configuracion.inicial": {
+      "src": "749f4bd24402a805",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:17.608Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "git.git.git.abrir.panel": {
+      "src": "493e061826d2ac58",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:18.562Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "git.git.git.fetch.all.prune": {
+      "src": "7de5c9729e02bf10",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:18.563Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "git.git.git.ir.a.commit": {
+      "src": "d7ad6d300a80c0ef",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:18.563Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "git.git.git.pull.ff.only": {
+      "src": "c217e5521c9e9a4b",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:18.563Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "git.git.git.push": {
+      "src": "2b536a2a2c9c11ff",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:18.563Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "layout.layout.mostrar.ocultar.historial.de": {
+      "src": "7beb16f5f5ae1bd2",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:19.345Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "misc.core.cambiar.tema.claro.oscuro": {
+      "src": "80ad6847c820e904",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:20.168Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "misc.core.tema.claro": {
+      "src": "611811c9f4cff354",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:20.168Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
+    },
+    "misc.core.tema.oscuro": {
+      "src": "f56503927ea31563",
+      "area": "misc",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T18:11:20.168Z",
+      "approvedAt": "2026-09-25T18:11:20.451Z"
     }
   },
   "version": 1

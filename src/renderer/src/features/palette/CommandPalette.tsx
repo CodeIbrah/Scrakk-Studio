@@ -26,7 +26,7 @@ function resolveResults(query: string): Command[] {
 import { shortcuts } from '@services/shortcuts'
 import styles from './CommandPalette.module.css'
 
-import { t } from '@core/i18n'
+import { msg, t } from '@core/i18n'
 export function CommandPalette(): JSX.Element | null {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
@@ -146,7 +146,7 @@ export function CommandPalette(): JSX.Element | null {
                 onClick={() => void execute(command)}
                 title={command.id + (command.keybinding ? ` (${formatCombo(command.keybinding)})` : '')}
               >
-                <span className={styles.title}>{command.title}</span>
+                <span className={styles.title}>{msg(command.title)}</span>
                 <span className={styles.meta}>
                   {command.keybinding ? (
                     <kbd className={styles.kbd}>{formatCombo(command.keybinding)}</kbd>
