@@ -18,6 +18,7 @@
 import { runCommand } from '@services/commands'
 import type { StatusBarItemModel, StatusBarItemPayload } from '@shared/extensionHost/protocol'
 
+import { t } from '@core/i18n'
 type Listener = () => void
 
 class ExtensionStatusBarStore {
@@ -88,7 +89,7 @@ class ExtensionStatusBarStore {
         args: []
       })
       if (result && !result.success) {
-        console.warn(`[statusbar] "${item.command}" falló: ${result.error ?? 'error desconocido'}`)
+        console.warn(`[statusbar] "${item.command}" falló: ${result.error ?? t('services.error.desconocido')}`)
       }
     } catch (error) {
       console.warn(`[statusbar] no se pudo correr "${item.command}":`, error)

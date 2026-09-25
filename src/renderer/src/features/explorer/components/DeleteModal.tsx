@@ -38,7 +38,7 @@ export function DeleteModal({ target, onCancel, onConfirm }: DeleteModalProps): 
       await onConfirm(target.paths)
       onCancel()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No se pudo borrar.')
+      setError(err instanceof Error ? err.message : t('explorer.no.se.pudo.borrar'))
       setBusy(false)
     }
   }
@@ -75,7 +75,7 @@ export function DeleteModal({ target, onCancel, onConfirm }: DeleteModalProps): 
             onClick={() => void handleConfirm()}
             disabled={busy}
           >
-            {busy ? 'Eliminando…' : 'Eliminar'}
+            {busy ? 'Eliminando…' : t('explorer.eliminar')}
           </button>
         </div>
       </div>

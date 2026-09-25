@@ -35,15 +35,15 @@ export function SubagentChatView({ sessionId, texts, onClose }: SubagentChatView
     status === 'running'
       ? (texts?.working ?? 'Trabajando…')
       : status === 'done'
-        ? (texts?.done ?? 'Listo')
-        : (texts?.error ?? 'Error')
+        ? (texts?.done ?? t('chat.listo'))
+        : (texts?.error ?? t('chat.error'))
 
   return (
     <div className={styles.view}>
       <header className={styles.header}>
         <ProductIcon id="people" size={14} className={styles.icon} />
         <div className={styles.headText}>
-          <span className={styles.title}>{texts?.title ?? session?.agentLabel ?? 'Subagente'}</span>
+          <span className={styles.title}>{texts?.title ?? session?.agentLabel ?? t('chat.subagente')}</span>
           <span className={styles.status} data-status={status}>
             {statusText}
           </span>

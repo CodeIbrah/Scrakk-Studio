@@ -51,10 +51,10 @@ export function AddFriend({ search, onSend }: AddFriendProps): JSX.Element {
     const result = await onSend(userId)
     setBusyId(null)
     if (!result.ok) {
-      setNotice(result.error ?? 'No se pudo enviar la solicitud')
+      setNotice(result.error ?? t('social.no.se.pudo.enviar.la'))
       return
     }
-    setNotice(result.status ? STATUS_TEXT[result.status] ?? 'Listo' : 'Listo')
+    setNotice(result.status ? STATUS_TEXT[result.status] ?? t('social.listo') : t('social.listo'))
     setSentIds((prev) => new Set(prev).add(userId))
   }
 
@@ -77,7 +77,7 @@ export function AddFriend({ search, onSend }: AddFriendProps): JSX.Element {
       {results.length > 0 ? (
         <div className={styles.results} role="listbox" aria-label={t('social.resultados')}>
           {results.map((user) => {
-            const label = user.displayName ?? user.handle ?? 'Usuario'
+            const label = user.displayName ?? user.handle ?? t('social.usuario')
             const sent = sentIds.has(user.id)
             return (
               <div key={user.id} className={styles.row}>
@@ -93,7 +93,7 @@ export function AddFriend({ search, onSend }: AddFriendProps): JSX.Element {
                   onClick={() => void handleSend(user.id)}
                 >
                   <ProductIcon id={sent ? 'check' : 'person-add'} size={13} />
-                  {sent ? 'Enviada' : 'Agregar'}
+                  {sent ? t('social.enviada') : t('social.agregar')}
                 </button>
               </div>
             )
@@ -103,7 +103,7 @@ export function AddFriend({ search, onSend }: AddFriendProps): JSX.Element {
         <p className={styles.empty}>
           {query.trim().replace(/^@+/, '').length < SOCIAL_RULES.searchMin
             ? `Escribe al menos ${SOCIAL_RULES.searchMin} caracteres.`
-            : 'Sin resultados. Prueba con otro @usuario o nombre.'}
+            : t('social.sin.resultados.prueba.con.otro')}
         </p>
       ) : null}
     </div>

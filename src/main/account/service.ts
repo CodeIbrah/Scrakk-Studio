@@ -91,7 +91,7 @@ export async function requestCode(req: RequestCodeRequest): Promise<AccountResul
       { email }
     )
     if (status >= 200 && status < 300 && data?.ok !== false) return { ok: true, data: null }
-    return fail(mapApiError(status, data?.error), data?.error ?? 'No se pudo enviar el código')
+    return fail(mapApiError(status, data?.error), data?.error ?? t('main.no.se.pudo.enviar.el'))
   } catch {
     return fail('network', t('main.no.pudimos.contactar.el.servidor'))
   }
@@ -119,7 +119,7 @@ export async function verifyCode(req: VerifyCodeRequest): Promise<AccountResult<
   try {
     const { status, data } = await callCliApi<LoginResponse>('/auth/login', { email, code })
     if (status < 200 || status >= 300 || !data?.access_token || !data.refresh_token) {
-      return fail(mapApiError(status, data?.error), data?.error ?? 'Código inválido o expirado')
+      return fail(mapApiError(status, data?.error), data?.error ?? t('main.codigo.invalido.o.expirado'))
     }
     login = data
   } catch {

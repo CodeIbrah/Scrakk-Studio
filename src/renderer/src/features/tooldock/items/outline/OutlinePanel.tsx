@@ -173,7 +173,7 @@ export default function OutlinePanel({ currentFile }: ToolDockPanelProps): JSX.E
     <div className={styles.list}>
       {symbols.map((symbol, index) => renderSymbol(symbol, String(index), 0))}
       <div className={styles.source} title={t('features.los.simbolos.del.arbol.los')}>
-        {fromTree ? 'Árbol de sintaxis (tags.scm)' : 'Extractor local'}
+        {fromTree ? t('features.arbol.de.sintaxis.tags.scm') : t('features.extractor.local')}
       </div>
     </div>
   )

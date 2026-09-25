@@ -36,7 +36,7 @@ export function ProblemsChip(): JSX.Element {
 
   const clean = counts.errors === 0 && counts.warnings === 0
   const title = clean
-    ? 'No hay errores ni advertencias'
+    ? t('statusbar.no.hay.errores.ni.advertencias')
     : `${counts.errors} error${counts.errors === 1 ? '' : 'es'} · ${counts.warnings} advertencia${
         counts.warnings === 1 ? '' : 's'
       }${counts.infos > 0 ? ` · ${counts.infos} de información` : ''}`

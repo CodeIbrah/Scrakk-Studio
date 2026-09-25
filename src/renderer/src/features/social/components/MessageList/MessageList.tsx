@@ -52,21 +52,21 @@ function dayLabel(timestamp: string): string {
   const yesterday = new Date()
   yesterday.setDate(today.getDate() - 1)
   const sameDay = (a: Date, b: Date): boolean => a.toDateString() === b.toDateString()
-  if (sameDay(date, today)) return 'Hoy'
-  if (sameDay(date, yesterday)) return 'Ayer'
+  if (sameDay(date, today)) return t('social.hoy')
+  if (sameDay(date, yesterday)) return t('social.ayer')
   return date.toLocaleDateString([], { day: '2-digit', month: 'short' })
 }
 
 function statusLabel(status: string): string {
   switch (status) {
     case 'online':
-      return 'En línea'
+      return t('social.en.linea')
     case 'away':
-      return 'Ausente'
+      return t('social.ausente')
     case 'busy':
-      return 'Ocupado'
+      return t('social.ocupado')
     default:
-      return 'Desconectado'
+      return t('social.desconectado')
   }
 }
 
@@ -169,7 +169,7 @@ export function MessageList({ messages, meId, friends, meName, meAvatar, meProfi
   const avatarById = new Map<string, string | null>()
   const friendById = new Map<string, Friend>()
   for (const f of friends) {
-    nameById.set(f.id, f.displayName ?? f.handle ?? 'Usuario')
+    nameById.set(f.id, f.displayName ?? f.handle ?? t('social.usuario'))
     avatarById.set(f.id, f.avatarUrl)
     friendById.set(f.id, f)
   }
@@ -213,7 +213,7 @@ export function MessageList({ messages, meId, friends, meName, meAvatar, meProfi
           lastSender = message.senderId
           lastTime = time
 
-          const senderName = nameById.get(message.senderId) ?? 'Usuario'
+          const senderName = nameById.get(message.senderId) ?? t('social.usuario')
           const senderAvatar = avatarById.get(message.senderId) ?? (message.senderId === meId ? meAvatar : null)
           const friend = friendById.get(message.senderId)
           const presence = friendsPresence?.[message.senderId]
@@ -247,7 +247,7 @@ export function MessageList({ messages, meId, friends, meName, meAvatar, meProfi
                 }
               : undefined
           const replySenderName = message.replyPreview
-            ? nameById.get(message.replyPreview.senderId) ?? 'Usuario'
+            ? nameById.get(message.replyPreview.senderId) ?? t('social.usuario')
             : undefined
 
           return (

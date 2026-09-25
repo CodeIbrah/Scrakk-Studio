@@ -18,7 +18,7 @@ import { t } from '@core/i18n'
 /** Datos DEMO de este paso (maqueta). */
 const DEMO_SESSION = {
   greeting: 'Hola 👋',
-  line: 'Tu editor ya está listo. Antes de arrancar, unos ajustes rápidos: dos se aplican en el momento y dos son solo una vista previa de lo que viene.',
+  get line() { return t('onboarding.tu.editor.ya.esta.listo') },
   highlights: [
     {
       id: 'editor',

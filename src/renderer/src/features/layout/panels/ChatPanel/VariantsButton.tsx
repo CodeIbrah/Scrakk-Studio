@@ -57,7 +57,7 @@ export function VariantsButton({ variant }: VariantsButtonProps): JSX.Element {
         className={styles.button}
         aria-expanded={open}
         aria-haspopup="dialog"
-        title={`Esfuerzo de pensamiento: ${variant || 'automática'}`}
+        title={`Esfuerzo de pensamiento: ${variant || t('layout.automatica-2')}`}
         // Evita que el pointerdown cierre el menú antes del click.
         onPointerDown={(event) => event.stopPropagation()}
         onClick={(event) => {

@@ -174,7 +174,7 @@ function deserializeTab(raw: PersistedSlotData['tabs'][number]): TabSpec | null 
         id: raw.id,
         kind: 'file',
         filePath: raw.filePath,
-        label: raw.label ?? raw.filePath.split(/[/\\\\]/).pop() ?? 'Archivo',
+        label: raw.label ?? raw.filePath.split(/[/\\\\]/).pop() ?? t('layout.archivo'),
         closable: true,
         persist: true
       }

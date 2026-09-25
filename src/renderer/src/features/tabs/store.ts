@@ -15,6 +15,7 @@
 
 import type { StripId, StripState, TabSpec } from './types'
 
+import { t } from '@core/i18n'
 /** Evento de mutación (para bridges que reaccionan a cambios puntuales). */
 export type TabsEvent =
   | { type: 'hydrate' }
@@ -325,7 +326,7 @@ export function terminalTab(sessionId: string, label?: string): TabSpec {
     id: `term:${sessionId}`,
     kind: 'terminal',
     sessionId,
-    label: label ?? 'Terminal',
+    label: label ?? t('features.terminal'),
     closable: true,
     persist: true
   }
@@ -333,7 +334,7 @@ export function terminalTab(sessionId: string, label?: string): TabSpec {
 
 /** Tab del explorador sobre una carpeta arbitraria (una instancia por raíz). */
 export function explorerTab(rootPath: string, name?: string): TabSpec {
-  const label = name ?? rootPath.split(/[/\\]/).filter(Boolean).pop() ?? 'Explorador'
+  const label = name ?? rootPath.split(/[/\\]/).filter(Boolean).pop() ?? t('features.explorador')
   return {
     id: `explorer:${rootPath}`,
     kind: 'explorer',

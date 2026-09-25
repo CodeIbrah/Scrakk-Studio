@@ -1,7 +1,10 @@
 {
   "common.algo.fallo": "Algo falló",
   "common.cerrar": "Cerrar",
+  "common.copiado": "Copiado",
   "common.copiar": "Copiar",
+  "common.copiar.error": "Copiar error",
+  "common.error.desconocido": "Error desconocido",
   "common.original": "Original",
   "common.pegar": "Pegar",
   "common.recargar": "Recargar",

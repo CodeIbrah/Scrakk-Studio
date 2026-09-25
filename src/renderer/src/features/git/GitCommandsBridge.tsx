@@ -14,7 +14,6 @@ import { useLayout } from '@features/layout'
 import { commandRegistry } from '@services/commands'
 import { getActiveRoot, fetchRepo, pullRepo, pushRepo } from '@services/git'
 
-import { t } from '@core/i18n'
 export function GitCommandsBridge(): JSX.Element | null {
   const { toggleSlotPanel } = useLayout()
 
@@ -23,14 +22,14 @@ export function GitCommandsBridge(): JSX.Element | null {
     const unsubs = [
       commandRegistry.register({
         id: 'git.panel',
-        title: t('git.git.abrir.panel'),
+        title: 'git.git.abrir.panel',
         category: 'Git',
         keybinding: 'mod+shift+g',
         run: openPanel
       }),
       commandRegistry.register({
         id: 'git.fetch',
-        title: t('git.git.fetch.all.prune'),
+        title: 'git.git.fetch.all.prune',
         category: 'Git',
         run: () => {
           const root = getActiveRoot()
@@ -39,7 +38,7 @@ export function GitCommandsBridge(): JSX.Element | null {
       }),
       commandRegistry.register({
         id: 'git.pull',
-        title: t('git.git.pull.ff.only'),
+        title: 'git.git.pull.ff.only',
         category: 'Git',
         run: () => {
           const root = getActiveRoot()
@@ -48,7 +47,7 @@ export function GitCommandsBridge(): JSX.Element | null {
       }),
       commandRegistry.register({
         id: 'git.push',
-        title: t('git.git.push'),
+        title: 'git.git.push',
         category: 'Git',
         run: () => {
           const root = getActiveRoot()
@@ -57,7 +56,7 @@ export function GitCommandsBridge(): JSX.Element | null {
       }),
       commandRegistry.register({
         id: 'git.commit',
-        title: t('git.git.ir.a.commit.abre'),
+        title: 'git.git.ir.a.commit.abre',
         category: 'Git',
         run: openPanel
       })

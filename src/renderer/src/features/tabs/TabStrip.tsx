@@ -230,15 +230,15 @@ function defaultLabel(tab: TabSpec, stripId: StripId): string {
   if (tab.label) return tab.label
   switch (tab.kind) {
     case 'welcome':
-      return 'Bienvenida'
+      return t('features.bienvenida')
     case 'file':
-      return tab.filePath?.split(/[/\\]/).pop() ?? 'Archivo'
+      return tab.filePath?.split(/[/\\]/).pop() ?? t('features.archivo')
     case 'terminal':
-      return 'Terminal'
+      return t('features.terminal')
     case 'panel':
-      return tab.panelId ?? 'Panel'
+      return tab.panelId ?? t('features.panel')
     case 'explorer':
-      return tab.rootPath?.split(/[/\\]/).filter(Boolean).pop() ?? 'Explorador'
+      return tab.rootPath?.split(/[/\\]/).filter(Boolean).pop() ?? t('features.explorador')
   }
 }
 
@@ -408,8 +408,8 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
           <button
             type="button"
             className={styles.addTab}
-            aria-label={addTabLabel ?? 'Nueva tab'}
-            title={addTabLabel ?? 'Nueva tab'}
+            aria-label={addTabLabel ?? t('features.nueva.tab')}
+            title={addTabLabel ?? t('features.nueva.tab')}
             onClick={onAddTab}
           >
             <ProductIcon id="plus" size={15} aria-hidden="true" />
@@ -420,7 +420,7 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
         <button
           type="button"
           className={styles.overflow}
-          aria-label={`Opciones de ${activeTab?.label ?? 'la tab activa'}`}
+          aria-label={`Opciones de ${activeTab?.label ?? t('features.la.tab.activa')}`}
           title={t('features.opciones.de.la.tab.activa')}
           onClick={openOverflowMenu}
         >

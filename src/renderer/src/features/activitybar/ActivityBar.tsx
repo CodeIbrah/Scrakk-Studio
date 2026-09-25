@@ -35,6 +35,7 @@ import {
 import { getActivityBadge, subscribeToActivityBadges } from './badges'
 import styles from './ActivityBar.module.css'
 
+import { t } from '@core/i18n'
 /** Umbral en px antes de promover a drag (un click simple no dragea). */
 const DRAG_THRESHOLD = 6
 
@@ -178,7 +179,7 @@ export function ActivityBar({ side }: { side: ActivityBarSide }): JSX.Element {
     <nav
       className={styles.bar}
       data-side={side}
-      aria-label={side === 'left' ? 'Barra lateral izquierda' : 'Barra lateral derecha'}
+      aria-label={side === 'left' ? t('activitybar.barra.lateral.izquierda') : t('activitybar.barra.lateral.derecha')}
     >
       {buttons.map((button) => {
         // El panel sigue al botón: si se mudó de barra, abre en ese slot.

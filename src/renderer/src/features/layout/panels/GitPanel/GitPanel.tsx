@@ -382,7 +382,7 @@ export function GitPanel(): JSX.Element {
           host: loginHost.trim() || undefined
         })
         if (res.ok) {
-          setLoginMessage(res.data.loggedIn ? `Logueado como ${res.data.user ?? 'gh'}.` : 'gh disponible pero sin sesión.')
+          setLoginMessage(res.data.loggedIn ? `Logueado como ${res.data.user ?? 'gh'}.` : t('git.gh.disponible.pero.sin.sesion'))
           setLoginToken('')
         } else {
           setLoginMessage(`Error: ${res.error.message}`)
@@ -472,7 +472,7 @@ export function GitPanel(): JSX.Element {
           onClick={(event) => openRepoMenu(event.clientX, event.clientY)}
         >
           <ProductIcon id="source-control" size={13} />
-          <span className={styles.branchName}>{state.branch ?? 'sin rama'}</span>
+          <span className={styles.branchName}>{state.branch ?? t('git.sin.rama')}</span>
           {state.ahead ? <span className={styles.ahead}>↑{state.ahead}</span> : null}
           {state.behind ? <span className={styles.behind}>↓{state.behind}</span> : null}
           {repos.length > 1 ? (
@@ -507,7 +507,7 @@ export function GitPanel(): JSX.Element {
             type="button"
             className={styles.syncBtn}
             disabled={syncing !== null}
-            title={state.upstream ? 'Push' : 'Push --set-upstream'}
+            title={state.upstream ? t('git.push') : t('git.push.set.upstream')}
             aria-label={t('git.push')}
             onClick={() => void doSync('push')}
           >
@@ -1054,7 +1054,7 @@ export function GitPanel(): JSX.Element {
             if (!activeRoot) return
             setLoginMessage(t('git.validando.contra.origin'))
             void gitApi.authValidate({ cwd: activeRoot }).then((res) => {
-              setLoginMessage(res.ok ? 'Acceso OK.' : `Error: ${res.error.message}`)
+              setLoginMessage(res.ok ? t('git.acceso.ok') : `Error: ${res.error.message}`)
             })
           }}
         />
@@ -1272,12 +1272,12 @@ function AuthSection(): JSX.Element {
       <AuthRow
         ok={detected.ghAvailable}
         label={t('git.gh.cli')}
-        detail={detected.ghAvailable ? 'instalado' : 'no instalado (cli.github.com)'}
+        detail={detected.ghAvailable ? 'instalado' : t('git.no.instalado.cli.github.com')}
       />
       <AuthRow
         ok={detected.ghLoggedIn}
         label={t('git.sesion.gh')}
-        detail={detected.ghLoggedIn ? (detected.ghUser ?? 'logueado') : 'sin sesión'}
+        detail={detected.ghLoggedIn ? (detected.ghUser ?? 'logueado') : t('git.sin.sesion')}
       />
       <AuthRow
         ok={detected.credentialHelper !== null}
@@ -1330,7 +1330,7 @@ function AccountLoginForm(props: {
               .join(' ')}
             onClick={() => props.setMode(mode)}
           >
-            {mode === 'gh' ? 'Token gh' : 'HTTPS'}
+            {mode === 'gh' ? t('git.token.gh') : 'HTTPS'}
           </button>
         ))}
       </div>
@@ -1368,7 +1368,7 @@ function AccountLoginForm(props: {
         type="password"
         value={props.token}
         onChange={(event) => props.setToken(event.target.value)}
-        placeholder={props.mode === 'gh' ? 'ghp_… o github_pat_…' : 'Token / password'}
+        placeholder={props.mode === 'gh' ? t('git.ghp.o.github.pat') : t('git.token.password')}
         aria-label={t('git.token')}
         spellCheck={false}
         autoComplete="off"
@@ -1377,7 +1377,7 @@ function AccountLoginForm(props: {
       <div className={styles.loginActions}>
         <button type="button" className={styles.primary} disabled={props.busy} onClick={props.onLogin}>
           <ProductIcon id="key" size={14} />
-          {props.busy ? 'Ingresando…' : 'Login'}
+          {props.busy ? 'Ingresando…' : t('git.login')}
         </button>
         {auth.detected?.ghLoggedIn ? (
           <button type="button" className={styles.ghost} disabled={props.busy} onClick={props.onLogout}>
@@ -1393,13 +1393,13 @@ function AccountLoginForm(props: {
           onClick={props.onSshProbe}
           title={t('git.ssh.t.git.github.com')}
         >
-          SSH: {props.sshState === 'idle' ? 'probar' : props.sshState === 'checking' ? '…' : props.sshState === 'ok' ? 'OK' : 'falló'}
+          SSH: {props.sshState === 'idle' ? 'probar' : props.sshState === 'checking' ? '…' : props.sshState === 'ok' ? 'OK' : t('git.fallo')}
         </button>
       </div>
       <p className={styles.hint}>
         {props.mode === 'gh'
           ? 'Ejecuta gh auth login --with-token por stdin; el token nunca va en argv ni en logs.'
-          : 'Guarda en el credential helper del sistema (keychain) vía git credential approve.'}
+          : t('git.guarda.en.el.credential.helper')}
       </p>
     </div>
   )

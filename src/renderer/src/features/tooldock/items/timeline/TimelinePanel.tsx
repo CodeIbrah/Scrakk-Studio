@@ -35,7 +35,7 @@ function formatTime(date: Date): string {
   const minutes = Math.floor(seconds / 60)
   const hours = Math.floor(minutes / 60)
   const days = Math.floor(hours / 24)
-  if (seconds < 60) return 'Hace un momento'
+  if (seconds < 60) return t('features.hace.un.momento')
   if (minutes < 60) return `Hace ${minutes} min`
   if (hours < 24) return `Hace ${hours} h`
   if (days < 7) return `Hace ${days} d`

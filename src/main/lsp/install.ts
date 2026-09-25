@@ -23,6 +23,7 @@ import type { LspInstallProgressPayload, LspServerConfig } from '@shared/lsp'
 import { scrakkHome } from '../scrakkFolder'
 import { resolveExecutable } from '../binaries'
 
+import { t } from '@shared/i18n'
 /**
  * Callback de progreso de instalación. No incluye `serverName`: lo agrega el
  * manager, que es quien conoce la clave de la operación.
@@ -147,7 +148,7 @@ function resolveCommand(cmd: string): string {
   if (resolved) return resolved
   throw new Error(
     `No encontré «${cmd}» en el PATH. Instalalo, o abre la app desde una terminal, ` +
-      `o pon su directorio en el PATH (se buscan también ~/.local/bin, nvm, fnm, volta, snap y linuxbrew).`
+      t('main.o.pon.su.directorio.en')
   )
 }
 

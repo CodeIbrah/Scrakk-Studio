@@ -43,7 +43,7 @@ export function LspChip(): JSX.Element {
 
   const title =
     aggregate.total === 0
-      ? 'Language Servers: ninguno registrado'
+      ? t('statusbar.language.servers.ninguno.registrado')
       : `Language Servers: ${aggregate.total} · ${aggregate.state}` +
         ((aggregate.counts['failed'] ?? 0) > 0
           ? ` (${aggregate.counts['failed']} con error)`

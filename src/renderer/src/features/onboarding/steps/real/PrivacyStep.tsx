@@ -27,7 +27,7 @@ import { PreviewNote, SectionLabel, Stack, SwitchRow } from '../kit'
 import { t } from '@core/i18n'
 /** Texto de la elección tal como lo muestra el resumen final. */
 function labelFor(enabled: boolean): string {
-  return enabled ? 'Telemetría activada' : 'Telemetría desactivada'
+  return enabled ? t('onboarding.telemetria.activada') : t('onboarding.telemetria.desactivada')
 }
 
 export function PrivacyStep({ setChoice }: StepContext): JSX.Element {
@@ -53,7 +53,7 @@ export function PrivacyStep({ setChoice }: StepContext): JSX.Element {
         <SectionLabel>{t('onboarding.datos.de.uso')}</SectionLabel>
         <SwitchRow
           title={t('onboarding.compartir.datos.de.uso.del')}
-          description="Permite que las extensiones detecten si el IDE tiene la telemetría activada. Scrakk no envía nada por su cuenta."
+          description={t('onboarding.permite.que.las.extensiones.detecten')}
         >
           <ToggleSwitch checked={enabled} onChange={toggle} label={t('onboarding.compartir.datos.de.uso')} />
         </SwitchRow>

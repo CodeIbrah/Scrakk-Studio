@@ -26,7 +26,7 @@ import styles from './PerformanceSection.module.css'
 
 import { t } from '@core/i18n'
 function formatMB(bytes: number): string {
-  if (bytes <= 0) return '0 MB'
+  if (bytes <= 0) return t('settings.0.mb')
   const mb = bytes / (1024 * 1024)
   return mb < 10 ? `${mb.toFixed(1)} MB` : `${Math.round(mb)} MB`
 }
@@ -67,8 +67,7 @@ export function PerformanceSection(): JSX.Element {
         <div className={styles.headerText}>
           <h3>{t('settings.rendimiento')}</h3>
           <p>
-            {t('settings.el.editor.usa.un.motor')} <strong>panel</strong>: cada archivo
-            abierto es una sesión dentro de él, con su undo, cursor y scroll.
+            {t('settings.el.editor.usa.un.motor')} <strong>panel</strong>{t('settings.cada.archivo.abierto.es.una')}
           </p>
         </div>
       </div>
@@ -77,13 +76,12 @@ export function PerformanceSection(): JSX.Element {
         <div className={styles.rowInfo}>
           <span className={styles.rowName}>{t('settings.modo.pc.mala')}</span>
           <span className={styles.rowMeta}>
-            Menos trabajo de fondo (tokens semánticos y hover) para PCs
-            modestas. Editar no pierde nada.
+            {t('settings.menos.trabajo.de.fondo.tokens')}
           </span>
         </div>
         <ToggleSwitch
           checked={lowEnd}
-          label={lowEnd ? 'Desactivar modo PC mala' : 'Activar modo PC mala'}
+          label={lowEnd ? t('settings.desactivar.modo.pc.mala') : t('settings.activar.modo.pc.mala')}
           onChange={(next) => handleToggle(next)}
         />
       </div>

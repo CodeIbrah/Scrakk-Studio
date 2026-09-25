@@ -46,10 +46,10 @@ export function InfoSection(): JSX.Element {
         setMessage(
           release && updates.updateAvailable
             ? `Nueva versión v${release.version} disponible.`
-            : 'Esta instalación no se actualiza sola.'
+            : t('settings.esta.instalacion.no.se.actualiza')
         )
       } else if (state.status === 'error') {
-        setMessage(state.error ?? 'No se pudo comprobar.')
+        setMessage(state.error ?? t('settings.no.se.pudo.comprobar'))
       } else {
         setMessage(t('settings.no.se.pudo.comprobar'))
       }
@@ -74,7 +74,7 @@ export function InfoSection(): JSX.Element {
             onClick={() => void handleCheck()}
             disabled={checking || downloading}
           >
-            {checking ? 'Buscando…' : 'Buscar actualizaciones'}
+            {checking ? 'Buscando…' : t('settings.buscar.actualizaciones')}
           </button>
 
           {downloaded && (
@@ -126,10 +126,10 @@ export function InfoSection(): JSX.Element {
                 : updater.status === 'unsupported'
                   ? updates.updateAvailable
                     ? `Nueva versión v${updates.latest?.version} disponible.`
-                    : 'Al día.'
+                    : t('settings.al.dia')
                   : updates.updateAvailable
                     ? `Nueva versión v${updates.latest?.version} disponible.`
-                    : 'Al día.')}
+                    : t('settings.al.dia'))}
         </p>
       </div>
     </div>

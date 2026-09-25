@@ -42,8 +42,8 @@ export function MessageActions({ content, onRegenerate }: MessageActionsProps): 
         type="button"
         className={styles.button}
         onClick={handleCopy}
-        aria-label={copied ? 'Copiado' : 'Copiar mensaje'}
-        title={copied ? 'Copiado' : 'Copiar'}
+        aria-label={copied ? t('chat.copiado-2') : t('chat.copiar.mensaje')}
+        title={copied ? t('chat.copiado-2') : t('chat.copiar')}
       >
         {copied ? (
           <ProductIcon id="check" size={14} className={styles.iconCopied} aria-hidden="true" />

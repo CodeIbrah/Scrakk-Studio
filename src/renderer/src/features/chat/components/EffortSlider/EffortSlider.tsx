@@ -48,7 +48,7 @@ export function EffortSlider({
 }: EffortSliderProps): JSX.Element {
   const indexOf = steps.indexOf(value)
   const index = indexOf >= 0 ? indexOf : Math.max(0, Math.floor((steps.length - 1) / 2))
-  const level = indexOf >= 0 ? value : 'Automática'
+  const level = indexOf >= 0 ? value : t('chat.automatica')
   const maxed = steps.length > 1 && indexOf === steps.length - 1
   const trackRef = useRef<HTMLDivElement>(null)
 

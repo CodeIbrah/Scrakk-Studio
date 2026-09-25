@@ -201,8 +201,8 @@ export function ProblemsPanel(): JSX.Element {
       {filtered.length === 0 ? (
         <p className={styles.empty}>
           {groups.length === 0
-            ? 'No hay problemas en el workspace.'
-            : 'Ningún problema coincide con el filtro.'}
+            ? t('layout.no.hay.problemas.en.el')
+            : t('layout.ningun.problema.coincide.con.el')}
         </p>
       ) : (
         <div className={styles.list}>

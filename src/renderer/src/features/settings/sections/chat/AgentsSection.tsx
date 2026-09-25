@@ -268,13 +268,13 @@ export function AgentsSection(): JSX.Element {
           }
         >
           <span className={styles.selectLabel}>
-            {scope === 'project' ? 'Proyecto' : 'Usuario'}
+            {scope === 'project' ? t('settings.proyecto') : t('settings.usuario')}
           </span>
           <ProductIcon id="chevron-down" size={12} className={styles.selectChevron} />
         </button>
         <button type="button" className={styles.saveBtn} onClick={startCreate}>
           <ProductIcon id="plus" size={12} />
-          {kind === 'primary' ? 'Nuevo primario' : 'Nuevo subagente'}
+          {kind === 'primary' ? t('settings.nuevo.primario') : t('settings.nuevo.subagente')}
         </button>
       </div>
 
@@ -284,7 +284,7 @@ export function AgentsSection(): JSX.Element {
 
       <div className={styles.group}>
         <span className={styles.groupLabel}>
-          {kind === 'primary' ? 'Tus primarios' : 'Tus subagentes'}
+          {kind === 'primary' ? t('settings.tus.primarios') : t('settings.tus.subagentes')}
         </span>
         {entries.length === 0 ? (
           <span className={styles.rowDesc}>{t('settings.todavia.no.creaste.ninguno')}</span>
@@ -336,8 +336,8 @@ export function AgentsSection(): JSX.Element {
             {editingId
               ? `Editar ${kind === 'primary' ? 'primario' : 'subagente'}`
               : kind === 'primary'
-                ? 'Nuevo primario'
-                : 'Nuevo subagente'}
+                ? t('settings.nuevo.primario')
+                : t('settings.nuevo.subagente')}
           </span>
 
           <div className={styles.field}>
@@ -345,7 +345,7 @@ export function AgentsSection(): JSX.Element {
             <input
               className={styles.input}
               value={draft.label}
-              placeholder={kind === 'primary' ? 'Asistente' : 'Explorador'}
+              placeholder={kind === 'primary' ? t('settings.asistente') : t('settings.explorador')}
               onChange={(event) => update({ label: event.target.value })}
             />
           </div>

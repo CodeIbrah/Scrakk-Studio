@@ -294,7 +294,8 @@ describe('pureza de los pasos', () => {
     )
     // La etiqueta honesta depende del `kind` declarado por el paso.
     expect(wizard).toMatch(/current\.kind/)
-    expect(wizard).toContain('Vista previa')
-    expect(wizard).toContain('Se aplica ahora')
+    // El texto vive en el catálogo (clave i18n), no hardcodeado.
+    expect(wizard).toContain('onboarding.vista.previa')
+    expect(wizard).toContain('onboarding.se.aplica.ahora')
   })
 })

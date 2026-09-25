@@ -23,7 +23,7 @@ const NOTES_KEY = 'scrakk-studio:notes'
 /** Título derivado: primera línea no vacía, o fallback. */
 export function noteTitle(content: string): string {
   const line = content.split('\n').map((l) => l.trim()).find((l) => l.length > 0)
-  return line ?? 'Sin título'
+  return line ?? t('services.sin.titulo')
 }
 
 function readStorage(): string | null {
@@ -151,3 +151,5 @@ export function _resetNotesForTests(): void {
   listeners.clear()
   writeStorage(JSON.stringify([]))
 }
+
+import { t } from '@core/i18n'

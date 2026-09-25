@@ -79,7 +79,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
             <ProductIcon id="alert" size={28} />
           </span>
           <h1 className={styles.title}>{t('common.algo.fallo')}</h1>
-          <p className={styles.message}>{error.message || 'Error desconocido'}</p>
+          <p className={styles.message}>{error.message || t('common.error.desconocido')}</p>
           <pre className={styles.stack}>{errorText(error, info)}</pre>
           <div className={styles.actions}>
             <button type="button" className={styles.primary} onClick={this.handleRetry}>
@@ -87,7 +87,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
             </button>
             <button type="button" className={styles.ghost} onClick={this.handleCopy}>
               <ProductIcon id="copy" size={14} />
-              {copied ? 'Copiado' : 'Copiar error'}
+              {copied ? t('common.copiado') : t('common.copiar.error')}
             </button>
             <button type="button" className={styles.ghost} onClick={this.handleReload}>
               <ProductIcon id="refresh" size={14} />

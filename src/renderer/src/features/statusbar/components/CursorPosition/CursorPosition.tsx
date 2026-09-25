@@ -40,7 +40,7 @@ export function CursorPosition(): JSX.Element | null {
       className={styles.indicator}
       data-empty={hasValue ? 'false' : 'true'}
       aria-label={t('statusbar.posicion.del.cursor.en.el')}
-      title={hasValue ? 'Posición del cursor' : 'Sin editor activo'}
+      title={hasValue ? t('statusbar.posicion.del.cursor') : t('statusbar.sin.editor.activo')}
     >
       <span className={styles.label}>Ln</span>
       <span className={styles.value}>{hasValue ? cursor.line + 1 : '—'}</span>

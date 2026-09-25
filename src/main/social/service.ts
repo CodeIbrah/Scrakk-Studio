@@ -39,12 +39,12 @@ function fail<T>(error: string): SocialResult<T> {
 
 function cleanError(message: string | undefined): string {
   const m = (message ?? '').toLowerCase()
-  if (m.includes('no_auth')) return 'Necesitás iniciar sesión'
-  if (m.includes('user_not_found')) return 'Ese usuario no existe'
-  if (m.includes('invalid_target')) return 'Destino inválido'
-  if (m.includes('request_not_found')) return 'La solicitud ya no existe'
-  if (m.includes('rate_limited')) return 'Tienes demasiadas solicitudes pendientes. Espera un poco.'
-  return message ?? 'Algo salió mal'
+  if (m.includes('no_auth')) return t('main.necesitas.iniciar.sesion')
+  if (m.includes('user_not_found')) return t('main.ese.usuario.no.existe')
+  if (m.includes('invalid_target')) return t('main.destino.invalido')
+  if (m.includes('request_not_found')) return t('main.la.solicitud.ya.no.existe')
+  if (m.includes('rate_limited')) return t('main.tienes.demasiadas.solicitudes.pendientes.espera')
+  return message ?? t('main.algo.salio.mal')
 }
 
 interface UserRow {
@@ -361,7 +361,7 @@ export async function sendMessage(
   const uploads: Array<{ url: string; path: string; mime: string; sizeBytes: number; width: number | null; height: number | null }> = []
   for (const image of attachments.slice(0, 8)) {
     const up = await uploadImage(accountId, 'chat', image)
-    if (!up.ok) return fail(`No se pudo subir la imagen: ${up.error ?? 'error desconocido'}`)
+    if (!up.ok) return fail(`No se pudo subir la imagen: ${up.error ?? t('main.error.desconocido')}`)
     uploads.push({
       url: up.data.url,
       path: up.data.path,

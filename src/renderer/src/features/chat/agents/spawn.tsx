@@ -15,6 +15,7 @@ import { agentRegistry, startSubagentSession, subagentSessions } from '@services
 import { SubagentChatView } from './SubagentChatView'
 import type { SpawnTexts } from './types'
 
+import { t } from '@core/i18n'
 export interface SpawnSubagentInput {
   agentId: string
   prompt: string
@@ -46,7 +47,7 @@ export function openSubagentChat(input: OpenSubagentInput): string {
   }
   subagentSessions.setViewOpen(true)
   const handle = showModal({
-    title: input.title ?? 'Subagente',
+    title: input.title ?? t('chat.subagente'),
     variant: 'plain',
     portalSelector: '[data-modal-portal="chat"]',
     render: ({ close }) => (

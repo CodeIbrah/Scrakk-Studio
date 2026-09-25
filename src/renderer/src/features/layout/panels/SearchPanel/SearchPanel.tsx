@@ -102,7 +102,7 @@ export function SearchPanel(): JSX.Element {
             setError(null)
           } else {
             setMatches([])
-            setError(res.error ?? 'Falló la búsqueda')
+            setError(res.error ?? t('layout.fallo.la.busqueda'))
           }
         } catch (e) {
           if (genRef.current !== gen) return

@@ -23,6 +23,7 @@ import { PanelTitleProvider } from '@features/layout'
 import { ExplorerPanel } from './ExplorerPanel'
 import { baseNameOf } from './utils/fileUtils'
 
+import { t } from '@core/i18n'
 export function ExplorerView({
   root,
   interactive = false,
@@ -45,7 +46,7 @@ export function ExplorerView({
   onOpenFile?: (path: string, name: string) => void
 }): JSX.Element {
   return (
-    <PanelTitleProvider initialTitle={title ?? (root ? baseNameOf(root) : 'Explorador')}>
+    <PanelTitleProvider initialTitle={title ?? (root ? baseNameOf(root) : t('explorer.explorador'))}>
       <ExplorerPanel
         rootOverride={root ?? undefined}
         interactive={interactive}

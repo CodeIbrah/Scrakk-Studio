@@ -13,11 +13,12 @@ import { BreadcrumbsBar } from '@features/breadcrumbs'
 import { LiveSessionHost } from '@features/sessions'
 import { getTerminalSession } from '@services/innerta/terminalSession'
 
+import { t } from '@core/i18n'
 /** Título inicial del contexto de header cuando NO hay PanelFrame (strip). */
 function panelTitleFor(spec: TabSpec): string {
-  if (spec.kind === 'welcome') return 'Bienvenida'
+  if (spec.kind === 'welcome') return t('layout.panel.welcome')
   if (spec.kind === 'panel') {
-    return spec.label ?? (spec.panelId ? (getPanel(spec.panelId)?.title ?? spec.panelId) : 'Panel')
+    return spec.label ?? (spec.panelId ? (getPanel(spec.panelId)?.title ?? spec.panelId) : t('layout.panel'))
   }
   return spec.label ?? ''
 }

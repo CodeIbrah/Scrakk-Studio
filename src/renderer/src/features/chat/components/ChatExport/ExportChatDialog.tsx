@@ -83,7 +83,7 @@ export function ExportChatDialog({
           >
             <ProductIcon id={option.icon} size={14} aria-hidden="true" />
             <span className={styles.optionLabel}>
-              {option.id === 'copy' && copied ? '¡Copiado!' : option.label}
+              {option.id === 'copy' && copied ? t('chat.copiado') : option.label}
             </span>
             <span className={styles.optionHint}>{option.hint}</span>
           </button>

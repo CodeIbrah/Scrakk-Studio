@@ -89,7 +89,7 @@ export function LayoutToggles(): JSX.Element {
             type="button"
             className={[styles.btn, open ? styles.active : null].filter(Boolean).join(' ')}
             onClick={() => toggleSlot(slot)}
-            title={`${open ? 'Ocultar' : 'Mostrar'} ${label.toLowerCase()}`}
+            title={`${open ? t('statusbar.ocultar') : t('statusbar.mostrar')} ${label.toLowerCase()}`}
             aria-label={label}
             aria-pressed={open}
           >

@@ -47,7 +47,7 @@ import { t } from '@core/i18n'
 type Status = { kind: 'ok' | 'error'; text: string } | null
 
 function contributionsText(extensionId: string, enabled: boolean): string {
-  if (!enabled) return 'desactivada — actívala para aplicar sus aportes'
+  if (!enabled) return t('settings.desactivada.activala.para.aplicar.sus')
   const counts = ExtensionRegistry.getContributionCount(extensionId)
   const bits: string[] = []
   if (counts.panels > 0) bits.push(`${counts.panels} panel${counts.panels === 1 ? '' : 'es'}`)
@@ -59,7 +59,7 @@ function contributionsText(extensionId: string, enabled: boolean): string {
   if (icons > 0) bits.push(`${icons} tema${icons === 1 ? '' : 's'} de iconos`)
   const productIcons = listProductIconThemes().filter((t) => t.extensionId === extensionId).length
   if (productIcons > 0) bits.push(`${productIcons} tema${productIcons === 1 ? '' : 's'} de iconos UI`)
-  return bits.length > 0 ? bits.join(' · ') : 'sin contribuciones'
+  return bits.length > 0 ? bits.join(' · ') : t('settings.sin.contribuciones')
 }
 
 function errorText(error: unknown): string {
@@ -220,7 +220,7 @@ export function ExtensionsSection(): JSX.Element {
       if (result.compat.translatedProductIcons > 0) {
         parts.push(`${result.compat.translatedProductIcons} tema(s) de iconos UI`)
       }
-      const base = `"${result.extension.name}" convertida (${pct}% compatible, ${parts.join(' + ') || 'sin aportes'}).`
+      const base = `"${result.extension.name}" convertida (${pct}% compatible, ${parts.join(' + ') || t('settings.sin.aportes')}).`
       const applied = activateExtensionIconThemes(result.extension.id)
       const appliedText = applied.length > 0 ? ` Aplicados: ${applied.join(' + ')}.` : ''
       setStatus({
@@ -242,7 +242,7 @@ export function ExtensionsSection(): JSX.Element {
       try {
         const result = await window.api.extensions.uninstall(entry.id)
         if (!result.success) {
-          setStatus({ kind: 'error', text: result.error ?? 'No se pudo desinstalar.' })
+          setStatus({ kind: 'error', text: result.error ?? t('settings.no.se.pudo.desinstalar') })
           return
         }
         unregisterInstalledExtension(entry.id)
@@ -315,8 +315,7 @@ export function ExtensionsSection(): JSX.Element {
         <div className={styles.headerText}>
           <h3>{t('settings.extensiones')}</h3>
           <p>
-            Extensiones del usuario instaladas desde disco (.sef o .vsix
-            convertidas).
+            {t('settings.extensiones.del.usuario.instaladas.desde')}
           </p>
         </div>
       </div>
@@ -437,7 +436,7 @@ export function ExtensionsSection(): JSX.Element {
                 disabled={busy || activeIconTheme === theme.id}
                 onClick={() => setActiveFileIconTheme(theme.id)}
               >
-                {activeIconTheme === theme.id ? 'Activo' : 'Activar'}
+                {activeIconTheme === theme.id ? t('settings.activo') : t('settings.activar')}
               </button>
             </li>
           ))}
@@ -462,7 +461,7 @@ export function ExtensionsSection(): JSX.Element {
             disabled={busy || activeProductTheme === SCRAKK_PRODUCT_ICON_THEME_ID}
             onClick={() => setActiveProductIconTheme(SCRAKK_PRODUCT_ICON_THEME_ID)}
           >
-            {activeProductTheme === SCRAKK_PRODUCT_ICON_THEME_ID ? 'Activo' : 'Activar'}
+            {activeProductTheme === SCRAKK_PRODUCT_ICON_THEME_ID ? t('settings.activo') : t('settings.activar')}
           </button>
         </li>
         {productThemes.map((theme) => (
@@ -477,7 +476,7 @@ export function ExtensionsSection(): JSX.Element {
               disabled={busy || activeProductTheme === theme.id}
               onClick={() => setActiveProductIconTheme(theme.id)}
             >
-              {activeProductTheme === theme.id ? 'Activo' : 'Activar'}
+              {activeProductTheme === theme.id ? t('settings.activo') : t('settings.activar')}
             </button>
           </li>
         ))}

@@ -7,6 +7,7 @@ import { Highlight, Prism, themes } from 'prism-react-renderer'
 import { useTheme } from '@core/theme/ThemeProvider'
 import styles from './CodeBlock.module.css'
 
+import { t } from '@core/i18n'
 interface CodeBlockProps {
   /** className del <code> de react-markdown: "language-tsx". */
   className?: string
@@ -72,8 +73,8 @@ export const CodeBlock = memo(function CodeBlock({
           type="button"
           className={styles.cbCopy}
           onClick={copy}
-          title={copied ? 'Copiado' : 'Copiar código'}
-          aria-label={copied ? 'Copiado' : 'Copiar código'}
+          title={copied ? t('chat.copiado-2') : t('chat.copiar.codigo')}
+          aria-label={copied ? t('chat.copiado-2') : t('chat.copiar.codigo')}
         >
           {copied ? (
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

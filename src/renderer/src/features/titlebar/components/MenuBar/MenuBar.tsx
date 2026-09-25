@@ -293,8 +293,7 @@ export function MenuBar(): JSX.Element {
             <strong>{t('titlebar.scrakk.studio')}</strong> {t('titlebar.chat.modular.para.agentes.ia')}
           </p>
           <p>
-            React + TypeScript + Electron. Sistema de paneles resizables con
-            aislamiento de errores por panel.
+            {t('titlebar.react.typescript.electron.sistema.de')}
           </p>
           <p className={styles.aboutVersion}>v{__APP_VERSION__}</p>
         </div>

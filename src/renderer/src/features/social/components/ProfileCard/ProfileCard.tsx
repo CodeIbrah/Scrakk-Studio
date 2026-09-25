@@ -25,13 +25,13 @@ interface ProfileCardProps {
 function presenceLabel(presence: PresenceStatus): string {
   switch (presence) {
     case 'online':
-      return 'En línea'
+      return t('social.en.linea')
     case 'away':
-      return 'Ausente'
+      return t('social.ausente')
     case 'busy':
-      return 'Ocupado'
+      return t('social.ocupado')
     case 'offline':
-      return 'Desconectado'
+      return t('social.desconectado')
   }
 }
 
@@ -95,7 +95,7 @@ export function ProfileCard({
       <div className={styles.dniRow}>
         <span className={styles.dniLabel}>DNI</span>
         <span className={styles.dni}>{profile.dni}</span>
-        <IconButton label={copied ? 'Copiado' : 'Copiar DNI'} size="sm" shape="rounded" onClick={copyDni}>
+        <IconButton label={copied ? t('social.copiado') : t('social.copiar.dni')} size="sm" shape="rounded" onClick={copyDni}>
           <ProductIcon id={copied ? 'check' : 'copy'} size={13} />
         </IconButton>
       </div>
@@ -127,7 +127,7 @@ export function ProfileCard({
               <span className={styles.toggleInfo}>
                 <span className={styles.toggleLabel}>{field.label}</span>
                 {sharing[field.key] ? (
-                  <span className={styles.toggleValue}>{field.value ?? 'sin datos todavía'}</span>
+                  <span className={styles.toggleValue}>{field.value ?? t('social.sin.datos.todavia')}</span>
                 ) : null}
               </span>
               <ToggleSwitch

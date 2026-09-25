@@ -40,7 +40,7 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
     const result = await onRequestCode(email.trim())
     setBusy(false)
     if (result.ok) setStep('code')
-    else setError(result.error ?? 'No se pudo enviar el código')
+    else setError(result.error ?? t('social.no.se.pudo.enviar.el'))
   }
 
   const verify = useCallback(
@@ -53,7 +53,7 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
       if (result.ok) {
         setStatus('success')
       } else {
-        setError(result.error ?? 'Código inválido o expirado')
+        setError(result.error ?? t('social.codigo.invalido.o.expirado'))
         setStatus('error')
       }
     },
@@ -91,7 +91,7 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
 
         <button type="submit" className={styles.primaryBtn} disabled={!emailValid || busy}>
           <ProductIcon id={busy ? 'refresh' : 'arrow-right'} size={14} />
-          {busy ? 'Enviando…' : 'Enviar código'}
+          {busy ? 'Enviando…' : t('social.enviar.codigo')}
         </button>
       </form>
     )

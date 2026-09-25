@@ -124,7 +124,7 @@ export function ExplorerPanel({
 
   // El header del panel muestra el nombre de la carpeta abierta.
   useEffect(() => {
-    setTitle(workspace.rootPath ? baseNameOf(workspace.rootPath) : 'Explorador')
+    setTitle(workspace.rootPath ? baseNameOf(workspace.rootPath) : t('explorer.explorador'))
   }, [workspace.rootPath, setTitle])
 
   // ── Lista plana visible (para render y selección por rango) ────────────
@@ -288,7 +288,7 @@ export function ExplorerPanel({
         />
         <HeaderActionButton
           id="explorer.git-badges"
-          label={gitBadges ? 'Git: ocultar estados' : 'Git: mostrar estados'}
+          label={gitBadges ? t('explorer.git.ocultar.estados') : t('explorer.git.mostrar.estados')}
           icon="source-control"
           size="sm"
           shape="rounded"
@@ -327,7 +327,7 @@ export function ExplorerPanel({
     if (res.ok) {
       cancelEdit()
     } else {
-      setEditError(res.error ?? 'No se pudo crear.')
+      setEditError(res.error ?? t('explorer.no.se.pudo.crear'))
     }
   }, [creating, editValue, workspace, cancelEdit])
 
@@ -342,7 +342,7 @@ export function ExplorerPanel({
     if (res.ok) {
       cancelEdit()
     } else {
-      setEditError(res.error ?? 'No se pudo renombrar.')
+      setEditError(res.error ?? t('explorer.no.se.pudo.renombrar'))
     }
   }, [renamingPath, editValue, workspace, cancelEdit])
 
@@ -592,7 +592,7 @@ export function ExplorerPanel({
           </span>
           <input
             className={styles.input}
-            placeholder={creating?.isDirectory ? 'Nombre de carpeta…' : 'Nombre de archivo…'}
+            placeholder={creating?.isDirectory ? t('explorer.nombre.de.carpeta') : t('explorer.nombre.de.archivo')}
             value={editValue}
             onChange={(event) => {
               setEditValue(event.target.value)

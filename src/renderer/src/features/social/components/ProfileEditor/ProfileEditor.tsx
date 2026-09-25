@@ -92,7 +92,7 @@ export function ProfileEditor({
       customStatusDuration: expiresAt
     })
     setSubmitting(false)
-    if (!result.ok) setError(result.error ?? 'No se pudo guardar el perfil')
+    if (!result.ok) setError(result.error ?? t('social.no.se.pudo.guardar.el'))
   }
 
   return (
@@ -100,9 +100,9 @@ export function ProfileEditor({
       <AvatarPicker value={avatarUrl} onChange={setAvatarUrl} name={name} accountId={accountId} />
 
       <div className={styles.introText}>
-        <span className={styles.title}>{isSetup ? 'Completa tu perfil' : 'Editar perfil'}</span>
+        <span className={styles.title}>{isSetup ? t('social.completa.tu.perfil') : t('social.editar.perfil')}</span>
         <span className={styles.subtitle}>
-          {isSetup ? 'Ya tienes sesión. Elige cómo te verán en Scrakk.' : 'Actualiza tu perfil público.'}
+          {isSetup ? t('social.ya.tienes.sesion.elige.como') : t('social.actualiza.tu.perfil.publico')}
         </span>
       </div>
 
@@ -164,14 +164,14 @@ export function ProfileEditor({
         >
           <span>
             {gender === 'male'
-              ? 'Masculino'
+              ? t('social.masculino')
               : gender === 'female'
-                ? 'Femenino'
+                ? t('social.femenino')
                 : gender === 'nonbinary'
-                  ? 'No binario'
+                  ? t('social.no.binario')
                   : gender === 'other'
-                    ? 'Otro'
-                    : 'Prefiero no decir'}
+                    ? t('social.otro')
+                    : t('social.prefiero.no.decir')}
           </span>
           <ProductIcon id="chevron-down" size={14} />
         </button>
@@ -230,7 +230,7 @@ export function ProfileEditor({
         ) : null}
         <button type="submit" className={styles.primaryBtn} disabled={!canSubmit}>
           <ProductIcon id={submitting ? 'refresh' : 'check'} size={14} />
-          {submitting ? 'Guardando…' : isSetup ? 'Empezar' : 'Guardar'}
+          {submitting ? 'Guardando…' : isSetup ? t('social.empezar') : t('social.guardar')}
         </button>
       </div>
     </form>

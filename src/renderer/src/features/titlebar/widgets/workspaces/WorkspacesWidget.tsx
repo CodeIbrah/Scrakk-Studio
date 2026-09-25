@@ -94,7 +94,7 @@ export function WorkspacesWidget(): JSX.Element {
 
   const prev = prevWorkspace(current)
   const next = nextWorkspace(current)
-  const label = current ? baseNameOf(current) : 'Sin workspace'
+  const label = current ? baseNameOf(current) : t('titlebar.sin.workspace')
 
   return (
     <div className={styles.widget} role="group" aria-label={t('titlebar.workspaces')}>
@@ -102,7 +102,7 @@ export function WorkspacesWidget(): JSX.Element {
         type="button"
         className={styles.nav}
         aria-label={t('titlebar.workspace.anterior')}
-        title={prev ? `Ir a ${baseNameOf(prev)}` : 'Sin workspace anterior'}
+        title={prev ? `Ir a ${baseNameOf(prev)}` : t('titlebar.sin.workspace.anterior')}
         disabled={!prev}
         onClick={() => goTo(prev)}
       >

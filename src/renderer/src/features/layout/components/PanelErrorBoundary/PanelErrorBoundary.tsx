@@ -43,7 +43,7 @@ export class PanelErrorBoundary extends Component<
       return (
         <div className={styles.wrapper} role="alert">
           <p className={styles.title}>{t('layout.este.panel.fallo')}</p>
-          <p className={styles.message}>{error.message || 'Error desconocido'}</p>
+          <p className={styles.message}>{error.message || t('layout.error.desconocido')}</p>
           <button type="button" className={styles.retry} onClick={this.handleRetry}>
             {t('layout.reintentar')}
           </button>

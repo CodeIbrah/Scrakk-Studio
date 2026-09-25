@@ -1061,10 +1061,10 @@ async function projectDeclaresDependency(root: string, dependency: string): Prom
 function crashHint(stderrTail: string): string | null {
   const tail = stderrTail.toLowerCase()
   if (tail.includes('unknown binary') && tail.includes('rust-analyzer')) {
-    return 'corre: rustup component add rust-analyzer'
+    return t('main.corre.rustup.component.add.rust')
   }
   if (tail.includes('enoent') || tail.includes('spawn')) {
-    return 'binario no encontrado'
+    return t('main.binario.no.encontrado')
   }
   return null
 }

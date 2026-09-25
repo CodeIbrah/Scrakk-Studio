@@ -47,6 +47,7 @@ import * as fs from 'node:fs'
 import * as os from 'node:os'
 import * as path from 'node:path'
 
+import { t } from '@shared/i18n'
 /** `PATHEXT` de Windows: un ejecutable puede ser `npm`, `npm.cmd`, `npm.exe`… */
 const WINDOWS_EXEC_EXTENSIONS = ['.cmd', '.exe', '.bat', '.ps1', '']
 
@@ -117,7 +118,7 @@ export function extraBinDirs(
   if (platform === 'win32') {
     const appData = env['APPDATA'] ?? path.join(home, 'AppData', 'Roaming')
     const localAppData = env['LOCALAPPDATA'] ?? path.join(home, 'AppData', 'Local')
-    const programFiles = env['ProgramFiles'] ?? 'C:\\Program Files'
+    const programFiles = env['ProgramFiles'] ?? t('main.c.program.files')
     return [
       path.join(appData, 'npm'),
       path.join(localAppData, 'Volta', 'bin'),

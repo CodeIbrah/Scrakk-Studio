@@ -194,7 +194,7 @@ export function PermissionsSection(): JSX.Element {
       .writeJson(FILE, payload as unknown as Record<string, unknown>)
       .catch(() => null)
     if (!result?.ok) {
-      setError(result?.error ?? 'No se pudo guardar')
+      setError(result?.error ?? t('settings.no.se.pudo.guardar'))
       return
     }
 
@@ -211,8 +211,7 @@ export function PermissionsSection(): JSX.Element {
   return (
     <div className={styles.section}>
       <p className={styles.hint}>
-        Cada regla permite, pregunta o niega. Si no eliges modos, aplica a
-        todos.
+        {t('settings.cada.regla.permite.pregunta.o')}
       </p>
 
       <div className={styles.formRow}>
@@ -236,7 +235,7 @@ export function PermissionsSection(): JSX.Element {
           }
         >
           <span className={styles.selectLabel}>
-            {scope === 'project' ? 'Proyecto' : 'Usuario'}
+            {scope === 'project' ? t('settings.proyecto') : t('settings.usuario')}
           </span>
           <ProductIcon id="chevron-down" size={12} className={styles.selectChevron} />
         </button>
@@ -281,7 +280,7 @@ export function PermissionsSection(): JSX.Element {
                   </span>
                   <span className={styles.rowDesc}>
                     {row.modes.length === 0
-                      ? 'Todos los modos'
+                      ? t('settings.todos.los.modos')
                       : `Solo: ${row.modes.map(labelOf).join(', ')}`}
                   </span>
                 </div>

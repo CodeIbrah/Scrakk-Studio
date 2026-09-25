@@ -19,7 +19,7 @@ import { t } from '@core/i18n'
 function titleFor(tab: TabSpec): string {
   if (tab.label) return tab.label
   if (tab.kind === 'panel' && tab.panelId) return getPanel(tab.panelId)?.title ?? tab.panelId
-  if (tab.kind === 'file') return tab.filePath?.split(/[/\\\\]/).pop() ?? 'Archivo'
+  if (tab.kind === 'file') return tab.filePath?.split(/[/\\\\]/).pop() ?? t('layout.archivo')
   return tab.id
 }
 

@@ -161,7 +161,7 @@ export function ChatPanel(): JSX.Element {
       return undefined
     }
     const name = activeSession?.title?.trim()
-    panelHeader.setTitle(name && name !== 'Nuevo chat' ? `Chat: ${name}` : 'Chat')
+    panelHeader.setTitle(name && name !== 'Nuevo chat' ? `Chat: ${name}` : t('layout.panel.chat'))
     return undefined
   }, [panelHeader, activeSession?.title, showSkills, showHistory])
 
@@ -328,7 +328,7 @@ export function ChatPanel(): JSX.Element {
         })
       } catch (error) {
         const message =
-          error instanceof Error ? error.message : 'Ups, algo salió mal. Prueba de nuevo.'
+          error instanceof Error ? error.message : t('layout.ups.algo.salio.mal.prueba')
         if (currentSegmentId) {
           patchSegment(currentSegmentId, (current) => ({
             ...current,
@@ -372,7 +372,7 @@ export function ChatPanel(): JSX.Element {
         appendMessage(targetId, {
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: result.ok ? (result.message ?? 'Listo.') : `⚠ ${result.error ?? 'Error'}`,
+          content: result.ok ? (result.message ?? 'Listo.') : `⚠ ${result.error ?? t('layout.error')}`,
           timestamp: Date.now()
         })
         return

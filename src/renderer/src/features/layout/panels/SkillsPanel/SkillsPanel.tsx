@@ -126,7 +126,7 @@ export function SkillsPanel(): JSX.Element {
     })
     setBusy(false)
     if (!result.ok) {
-      setError(result.error ?? 'No se pudo guardar la skill')
+      setError(result.error ?? t('layout.no.se.pudo.guardar.la'))
       return
     }
     setName('')
@@ -141,7 +141,7 @@ export function SkillsPanel(): JSX.Element {
     setStatus(null)
     const result = await insertSkillIntoChat(skill.name)
     if (!result.ok) {
-      setError(result.error ?? 'No se pudo insertar la skill')
+      setError(result.error ?? t('layout.no.se.pudo.insertar.la'))
       return
     }
     setStatus(`"${skill.name}" insertada en el chat`)
@@ -152,7 +152,7 @@ export function SkillsPanel(): JSX.Element {
     setError(null)
     setStatus(null)
     const result = await removeSkill(skill.name, skill.source)
-    if (!result.ok) setError(result.error ?? 'No se pudo borrar la skill')
+    if (!result.ok) setError(result.error ?? t('layout.no.se.pudo.borrar.la'))
   }
 
   /** Pide confirmación (modal global) antes de borrar una skill. */
@@ -262,7 +262,7 @@ export function SkillsPanel(): JSX.Element {
                 onClick={openScopeMenu}
               >
                 <span className={styles.scopeLabel}>
-                  {scope === 'project' ? 'Proyecto' : 'Usuario'}
+                  {scope === 'project' ? t('layout.proyecto') : t('layout.usuario')}
                 </span>
                 <ProductIcon id="chevron-down" size={12} aria-hidden="true" />
               </button>
@@ -272,7 +272,7 @@ export function SkillsPanel(): JSX.Element {
                 variant="accent"
                 shape="rounded"
                 size="sm"
-                label={busy ? 'Guardando…' : 'Guardar skill'}
+                label={busy ? 'Guardando…' : t('layout.guardar.skill')}
                 disabled={!canSave}
               >
                 <ProductIcon id="check" size={14} aria-hidden="true" />

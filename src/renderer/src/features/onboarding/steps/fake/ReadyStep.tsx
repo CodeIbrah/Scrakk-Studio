@@ -47,8 +47,8 @@ export function ReadyStep({ choices, openStep }: StepContext): JSX.Element {
 
       <PreviewNote>
         {applied.length > 0
-          ? 'Apariencia y privacidad ya quedaron aplicadas y se cambian cuando quieras desde Ajustes. Los atajos son una vista previa: todavía no se aplican.'
-          : 'Todo lo de arriba es una vista previa: nada se aplicó todavía.'}
+          ? t('onboarding.apariencia.y.privacidad.ya.quedaron')
+          : t('onboarding.todo.lo.de.arriba.es')}
       </PreviewNote>
     </Stack>
   )

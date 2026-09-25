@@ -40,6 +40,7 @@ import { extensionPanels } from './webviewPanels'
 import { commandUnavailableReason } from '@shared/compatibility/vscode/commands/builtin'
 import { runVSCodeCommand } from './vscodeCommands'
 
+import { t } from '@core/i18n'
 /** `severity` del host → severidad de la app. */
 function toSeverity(severity: string): 'info' | 'warn' | 'error' {
   if (severity === 'error') return 'error'
@@ -83,7 +84,7 @@ function showExtensionNotification(payload: {
       run: () => finish({ actionIndex: index })
     }))
     notify({
-      title: typeof payload.title === 'string' && payload.title ? payload.title : 'Extensión',
+      title: typeof payload.title === 'string' && payload.title ? payload.title : t('services.extension'),
       message: typeof payload.message === 'string' ? payload.message : String(payload.message ?? ''),
       detail: typeof payload.detail === 'string' && payload.detail ? payload.detail : undefined,
       severity: toSeverity(String(payload.severity ?? 'info')),

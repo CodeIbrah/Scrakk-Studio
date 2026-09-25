@@ -87,7 +87,7 @@ export function HistoryPanel({ onPick }: { onPick?: () => void } = {}): JSX.Elem
       <nav className={styles.list} aria-label={t('layout.historial.de.chats')}>
         {filteredSessions.length === 0 ? (
           <p className={styles.empty}>
-            {sessions.length === 0 ? 'Sin chats todavía' : 'Sin resultados'}
+            {sessions.length === 0 ? t('layout.sin.chats.todavia') : t('layout.sin.resultados')}
           </p>
         ) : (
           filteredSessions.map((session) => {

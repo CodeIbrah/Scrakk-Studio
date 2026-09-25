@@ -22,6 +22,7 @@ import { resolveExecutable } from '../binaries'
 import { parseLspServerConfig } from './config'
 import type { InstallRecipe } from './install'
 
+import { t } from '@shared/i18n'
 export interface BuiltinServerDef {
   id: string
   command: string
@@ -108,7 +109,7 @@ export const BUILTIN_SERVERS: BuiltinServerDef[] = [
     command: 'clangd',
     args: ['--background-index'],
     extensions: { '.c': 'c', '.h': 'c', '.cpp': 'cpp', '.cc': 'cpp', '.hpp': 'hpp' },
-    rootMarkers: ['compile_commands.json', 'CMakeLists.txt', 'Makefile', '.git'],
+    rootMarkers: ['compile_commands.json', 'CMakeLists.txt', t('main.makefile'), '.git'],
     install: { kind: 'github', repo: 'clangd/clangd', assetPattern: 'clangd-linux-\\d+\\.\\d+\\.\\d+\\.zip', binaryPath: 'clangd' }
   },
   {
@@ -128,7 +129,7 @@ export const BUILTIN_SERVERS: BuiltinServerDef[] = [
     id: 'ruby',
     command: 'ruby-lsp',
     extensions: { '.rb': 'ruby' },
-    rootMarkers: ['Gemfile', '.git'],
+    rootMarkers: [t('main.gemfile'), '.git'],
     install: { kind: 'gem', package: 'ruby-lsp' }
   },
   {

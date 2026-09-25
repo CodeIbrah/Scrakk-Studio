@@ -201,7 +201,7 @@ export function MessageComposer({
         if (!result.ok) {
           // No se pierde nada: las miniaturas vuelven al composer con el error.
           setPending(current)
-          setAttachError(result.error ?? 'No se pudo enviar.')
+          setAttachError(result.error ?? t('social.no.se.pudo.enviar'))
           return
         }
         setValue('')
@@ -423,7 +423,7 @@ export function MessageComposer({
           type="submit"
           variant="accent"
           shape="rounded"
-          label={sending ? 'Enviando…' : 'Enviar'}
+          label={sending ? 'Enviando…' : t('social.enviar')}
           disabled={!canSend}
           size="sm"
           className={styles.send}

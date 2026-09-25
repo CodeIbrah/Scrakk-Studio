@@ -99,7 +99,7 @@ export function ThemeStep({ choice, setChoice }: StepContext): JSX.Element {
 
       <Stack gap={3}>
         <SectionLabel>
-          {activeTheme ? `Activo ahora: ${activeTheme.name}` : 'Sin tema activo'}
+          {activeTheme ? `Activo ahora: ${activeTheme.name}` : t('onboarding.sin.tema.activo')}
           {visible.length < themes.length ? ` · ${visible.length} de ${themes.length}` : ''}
         </SectionLabel>
         {visible.length === 0 ? (
@@ -110,8 +110,8 @@ export function ThemeStep({ choice, setChoice }: StepContext): JSX.Element {
               <OptionCard
                 key={theme.id}
                 title={theme.name}
-                meta={theme.type === 'light' ? 'Claro' : 'Oscuro'}
-                badge={theme.id === activeId ? 'Activo' : undefined}
+                meta={theme.type === 'light' ? t('onboarding.claro') : t('onboarding.oscuro')}
+                badge={theme.id === activeId ? t('onboarding.activo') : undefined}
                 selected={theme.id === activeId}
                 onSelect={() => handleActivate(theme)}
               >

@@ -215,8 +215,7 @@ export function ProvidersPanel(): JSX.Element {
                     ) : null}
                   </div>
                   <p className={styles.hint}>
-                    {t('providers.sugeridos.del.catalogo.models.dev')} {provider.models.length} modelos.
-                    Puedes escribir otro id.
+                    {t('providers.sugeridos.del.catalogo.models.dev')} {provider.models.length} {t('providers.modelos.puedes.escribir.otro.id')}
                   </p>
 
                   <label className={styles.keyLabel} htmlFor={`thinking-${provider.id}`}>

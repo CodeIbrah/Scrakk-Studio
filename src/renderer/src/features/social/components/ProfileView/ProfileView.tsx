@@ -70,13 +70,13 @@ export function ProfileView({ profile, config }: ProfileViewProps): JSX.Element 
 
   const genderLabel =
     profile.gender === 'male'
-      ? 'Hombre'
+      ? t('social.hombre')
       : profile.gender === 'female'
-        ? 'Mujer'
+        ? t('social.mujer')
         : profile.gender === 'nonbinary'
-          ? 'No binario'
+          ? t('social.no.binario')
           : profile.gender === 'other'
-            ? 'Otro'
+            ? t('social.otro')
             : profile.gender
 
   const createdLabel = profile.createdAt

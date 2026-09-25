@@ -195,7 +195,7 @@ export function App() {
     // Pasa por la guardia dirty: no se tira un buffer con cambios callando.
     const unsubClose = commandRegistry.register({
       id: 'editor.closeActiveFile',
-      title: t('app.cerrar.archivo.activo'),
+      title: 'app.cerrar.archivo.activo',
       category: 'Editor',
       keybinding: 'mod+alt+w',
       run: () => {
@@ -216,7 +216,7 @@ export function App() {
     const unsubDefinition = commandRegistry.register(
       {
         id: 'editor.goToDefinition',
-        title: t('app.ir.a.la.definicion'),
+        title: 'app.ir.a.la.definicion',
         category: 'Editor',
         keybinding: 'f12',
         run: () => {
@@ -247,7 +247,7 @@ export function App() {
     const unsubExpand = commandRegistry.register(
       {
         id: 'editor.expandSelection',
-        title: t('app.expandir.seleccion.objeto.de.texto'),
+        title: 'app.expandir.seleccion.objeto.de.texto',
         category: 'Editor',
         keybinding: 'shift+alt+right',
         run: () => void expandSelectionFromTree()
@@ -262,7 +262,7 @@ export function App() {
     const unsubCapture = commandRegistry.register(
       {
         id: 'editor.captureScreenshot',
-        title: t('app.capturar.el.editor.png'),
+        title: 'app.capturar.el.editor.png',
         category: 'Editor',
         run: () => void captureEditorScreenshot()
       },
@@ -284,7 +284,7 @@ export function App() {
   useEffect(() => {
     const unsub = commandRegistry.register({
       id: 'lsp.openModal',
-      title: t('app.language.servers'),
+      title: 'app.language.servers',
       category: 'Configuración',
       run: () => openSettingsModal('servers')
     })

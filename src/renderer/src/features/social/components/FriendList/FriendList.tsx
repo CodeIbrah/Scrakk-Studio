@@ -22,13 +22,13 @@ interface FriendListProps {
 export function presenceLabel(status: PresenceStatus): string {
   switch (status) {
     case 'online':
-      return 'En línea'
+      return t('social.en.linea')
     case 'away':
-      return 'Ausente'
+      return t('social.ausente')
     case 'busy':
-      return 'Ocupado'
+      return t('social.ocupado')
     case 'offline':
-      return 'Desconectado'
+      return t('social.desconectado')
   }
 }
 
@@ -55,7 +55,7 @@ export function FriendList({
   return (
     <div className={styles.list} role="listbox" aria-label={t('social.amigos')}>
       {friends.map((friend) => {
-        const label = friend.displayName ?? friend.handle ?? 'Usuario'
+        const label = friend.displayName ?? friend.handle ?? t('social.usuario')
         const pending = unread?.[friend.id] ?? 0
         const presenceEntry = presence?.[friend.id]
         const status: PresenceStatus = presenceEntry?.status ?? 'offline'

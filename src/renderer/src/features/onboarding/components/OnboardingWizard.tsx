@@ -98,7 +98,7 @@ export function OnboardingWizard(): JSX.Element | null {
                   .filter(Boolean)
                   .join(' ')}
               >
-                {current.kind === 'fake' ? 'Vista previa' : 'Se aplica ahora'}
+                {current.kind === 'fake' ? t('onboarding.vista.previa') : t('onboarding.se.aplica.ahora')}
               </span>
             </div>
             <h2 className={styles.title}>{current.title}</h2>
@@ -123,7 +123,7 @@ export function OnboardingWizard(): JSX.Element | null {
               {t('onboarding.atras')}
             </button>
             <button type="button" className={styles.primary} onClick={next}>
-              {progress.isLast ? 'Empezar a usar Scrakk' : 'Siguiente'}
+              {progress.isLast ? t('onboarding.empezar.a.usar.scrakk') : t('onboarding.siguiente')}
             </button>
           </footer>
         </div>

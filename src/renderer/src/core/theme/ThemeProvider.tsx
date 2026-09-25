@@ -72,14 +72,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const unsubs = [
       commandRegistry.register({
         id: 'theme.cycle',
-        title: t('core.cambiar.tema.claro.oscuro'),
+        title: 'core.cambiar.tema.claro.oscuro',
         category: 'Apariencia',
         keybinding: 'mod+alt+t',
         run: toggleTheme
       }),
       commandRegistry.register({
         id: 'theme.set.dark',
-        title: t('core.tema.oscuro'),
+        title: 'core.tema.oscuro',
         category: 'Apariencia',
         run: () => {
           activateTheme(DARK_THEME_ID)
@@ -87,7 +87,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }),
       commandRegistry.register({
         id: 'theme.set.light',
-        title: t('core.tema.claro'),
+        title: 'core.tema.claro',
         category: 'Apariencia',
         run: () => {
           activateTheme(LIGHT_THEME_ID)

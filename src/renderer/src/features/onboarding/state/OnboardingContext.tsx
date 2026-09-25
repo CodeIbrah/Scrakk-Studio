@@ -101,7 +101,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }): JSX.E
     return commandRegistry.register(
       {
         id: ONBOARDING_COMMAND_ID,
-        title: t('onboarding.ver.configuracion.inicial'),
+        title: 'onboarding.ver.configuracion.inicial',
         category: 'General',
         run: () => setWizard((prev) => machineReopen(prev))
       },

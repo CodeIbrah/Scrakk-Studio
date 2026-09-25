@@ -23,6 +23,7 @@ import {
 import type { OptionsModalSpec, CustomModalSpec, AnchoredModalSpec } from '@services/modals/registry'
 import styles from './ModalHost.module.css'
 
+import { t } from '@core/i18n'
 interface HostEntry {
   id: string
   spec: OptionsModalSpec | CustomModalSpec | AnchoredModalSpec
@@ -173,7 +174,7 @@ function OptionsList({ id, spec }: { id: string; spec: OptionsModalSpec }): JSX.
           />
         ) : null}
         {filtered.length === 0 ? (
-          <p className={styles.empty}>{spec.emptyMessage ?? 'Sin opciones'}</p>
+          <p className={styles.empty}>{spec.emptyMessage ?? t('features.sin.opciones')}</p>
         ) : (
           <ul className={styles.list} role="listbox">
             {filtered.map((item) => (

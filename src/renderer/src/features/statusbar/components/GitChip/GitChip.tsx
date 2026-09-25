@@ -55,10 +55,10 @@ export function GitChip(): JSX.Element | null {
       ? `${state.ahead ? `↑${state.ahead}` : ''}${state.behind ? `↓${state.behind}` : ''}`
       : null
   const title = state.branch
-    ? `${state.branch}${dirty ? ' · cambios sin commitear' : ' · limpio'}${
+    ? `${state.branch}${dirty ? t('statusbar.cambios.sin.commitear') : t('statusbar.limpio')}${
         counts ? ` · ${counts}` : ''
       }${state.upstream ? ` · ${state.upstream}` : ''}`
-    : 'Git: sin rama'
+    : t('statusbar.git.sin.rama')
 
   return (
     <button

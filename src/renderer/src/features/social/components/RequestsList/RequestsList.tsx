@@ -29,7 +29,7 @@ export function RequestsList({ requests, onRespond }: RequestsListProps): JSX.El
   return (
     <div className={styles.list}>
       {requests.map((request) => {
-        const label = request.displayName ?? request.handle ?? 'Usuario'
+        const label = request.displayName ?? request.handle ?? t('social.usuario')
         const incoming = request.direction === 'incoming'
         return (
           <div key={request.id} className={styles.row}>
@@ -37,7 +37,7 @@ export function RequestsList({ requests, onRespond }: RequestsListProps): JSX.El
             <span className={styles.main}>
               <span className={styles.name}>{label}</span>
               <span className={styles.handle}>
-                {incoming ? 'quiere ser tu amigo' : 'solicitud enviada'}
+                {incoming ? t('social.quiere.ser.tu.amigo') : t('social.solicitud.enviada')}
               </span>
             </span>
             {incoming ? (

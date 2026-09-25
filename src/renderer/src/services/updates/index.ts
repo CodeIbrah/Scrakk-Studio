@@ -167,7 +167,7 @@ export async function downloadUpdate(): Promise<UpdaterState> {
   if (state.status === 'unsupported') {
     notify({
       title: t('services.actualizacion.disponible'),
-      message: state.error ?? 'Esta instalación no se actualiza sola.',
+      message: state.error ?? t('services.esta.instalacion.no.se.actualiza'),
       severity: 'warn',
       timeoutMs: 0,
       actions: [{ label: t('services.ver.release'), run: () => openReleasePage() }]
@@ -187,7 +187,7 @@ export async function installUpdate(): Promise<void> {
 export function notifyDownloaded(state: UpdaterState): void {
   notify({
     title: t('services.actualizacion.lista'),
-    message: state.version ? `v${state.version} — reinicia para aplicarla` : 'Reinicia para aplicarla',
+    message: state.version ? `v${state.version} — reinicia para aplicarla` : t('services.reinicia.para.aplicarla'),
     severity: 'success',
     timeoutMs: 0,
     actions: [{ label: t('services.reiniciar.y.actualizar'), run: () => void installUpdate() }]

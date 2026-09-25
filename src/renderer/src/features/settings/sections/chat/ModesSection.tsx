@@ -255,7 +255,7 @@ export function ModesSection(): JSX.Element {
           }
         >
           <span className={styles.selectLabel}>
-            {scope === 'project' ? 'Proyecto' : 'Usuario'}
+            {scope === 'project' ? t('settings.proyecto') : t('settings.usuario')}
           </span>
           <ProductIcon id="chevron-down" size={12} className={styles.selectChevron} />
         </button>
@@ -318,7 +318,7 @@ export function ModesSection(): JSX.Element {
       {draft ? (
         <div className={styles.editor}>
           <span className={styles.groupLabel}>
-            {editingId ? 'Editar modo' : 'Nuevo modo'}
+            {editingId ? t('settings.editar.modo') : t('settings.nuevo.modo')}
           </span>
 
           <div className={styles.field}>

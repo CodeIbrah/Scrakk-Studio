@@ -38,6 +38,7 @@ import {
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Tick02Icon } from '@hugeicons/core-free-icons'
 
+import { t } from '@core/i18n'
 import './CodeSlots.css'
 
 export type CodeSlotsStatus = 'idle' | 'error' | 'success'
@@ -516,7 +517,7 @@ export default function CodeSlots({
       </div>
       <span id={`${uid}-count`} className="code-slots__sr" aria-live="polite">
         {status === 'success'
-          ? 'Código aceptado'
+          ? t('social.codigo.aceptado')
           : `${view.filter(Boolean).length} de ${length} dígitos ingresados`}
       </span>
     </div>

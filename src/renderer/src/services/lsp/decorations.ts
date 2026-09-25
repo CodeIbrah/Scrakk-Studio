@@ -46,6 +46,7 @@ import {
 import { listenThemeChanges } from '@features/editor/engines/innerta/innertaTheme'
 import { getAllStoredDiagnostics, subscribeToDiagnostics } from './diagnosticsStore'
 
+import { t } from '@core/i18n'
 /** Prefijo de las fuentes que maneja ESTE adaptador. */
 export const DIAGNOSTICS_SOURCE_PREFIX = 'diagnostics:'
 
@@ -89,7 +90,7 @@ const SEVERITY_LABEL: Record<number, string> = {
  */
 export function diagnosticHoverText(diagnostic: LspDiagnostic): string {
   const severity = typeof diagnostic.severity === 'number' ? diagnostic.severity : 1
-  const label = SEVERITY_LABEL[severity] ?? 'Problema'
+  const label = SEVERITY_LABEL[severity] ?? t('services.problema')
   const origin = diagnostic.source ?? ''
   const code = diagnostic.code !== undefined ? `(${String(diagnostic.code)})` : ''
   const footer = `${origin}${code}`.trim()

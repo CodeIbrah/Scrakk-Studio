@@ -150,7 +150,7 @@ export const MessageBubble = memo(function MessageBubble({
         {message.replyPreview ? (
           <div className={styles.replyQuote}>
             <span className={styles.replyBar} />
-            <span className={styles.replyName}>{replySenderName ?? 'Mensaje'}</span>
+            <span className={styles.replyName}>{replySenderName ?? t('social.mensaje')}</span>
             <span className={styles.replyBody}>{message.replyPreview.body.slice(0, 80)}</span>
           </div>
         ) : null}

@@ -62,7 +62,7 @@ function ThemeSwatches({ theme }: { theme: RegisteredThemeEntry }): JSX.Element 
 function ThemeCard({ theme, isActive, onActivate }: ThemeCardProps): JSX.Element {
   const t = useT()
   const author = theme.isBuiltin
-    ? 'Scrakk'
+    ? t('settings.scrakk')
     : (ExtensionRegistry.getExtension(theme.extensionId)?.name ?? theme.extensionId)
 
   return (

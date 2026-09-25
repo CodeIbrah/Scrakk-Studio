@@ -85,13 +85,13 @@ export function ModelPicker(): JSX.Element {
         className={styles.button}
         aria-expanded={open}
         aria-haspopup="menu"
-        title={activeModel ? `Modelo: ${activeModel}` : 'Seleccionar modelo'}
+        title={activeModel ? `Modelo: ${activeModel}` : t('providers.seleccionar.modelo')}
         // Evita que el pointerdown cierre el menú antes del click (si no,
         // el toggle reabriría y el botón nunca cerraría).
         onPointerDown={(event) => event.stopPropagation()}
         onClick={() => (open ? setAnchor(null) : openMenu())}
       >
-        <span className={styles.buttonModel}>{activeModel ?? 'Modelo'}</span>
+        <span className={styles.buttonModel}>{activeModel ?? t('providers.modelo')}</span>
         <ProductIcon
           id="chevron-down"
           size={11}

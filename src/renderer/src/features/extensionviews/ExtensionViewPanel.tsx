@@ -242,7 +242,7 @@ function ExtensionView({
       if (cancelled) return
       if (!resolved.success) {
         setStatus('error')
-        setError(resolved.error ?? 'La extensión no pudo resolver la vista.')
+        setError(resolved.error ?? t('extensionviews.la.extension.no.pudo.resolver'))
         return
       }
 
@@ -296,13 +296,13 @@ function ExtensionView({
           const pending = info?.pending ?? []
           setProgress(
             `${info?.seconds ?? 0} s` +
-              (pending.length > 0 ? ` · esperando: ${pending.join(', ')}` : ' · trabajando')
+              (pending.length > 0 ? ` · esperando: ${pending.join(', ')}` : t('extensionviews.trabajando'))
           )
           break
         }
         case 'fatal':
           setStatus('error')
-          setError(String((payload as { message?: string })?.message ?? 'La extensión falló.'))
+          setError(String((payload as { message?: string })?.message ?? t('extensionviews.la.extension.fallo')))
           break
         case 'exit':
           setStatus('error')

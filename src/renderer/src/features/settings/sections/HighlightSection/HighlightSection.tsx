@@ -95,8 +95,7 @@ export function HighlightSection(): JSX.Element {
   return (
     <div className={styles.section}>
       <p className={styles.hint}>
-        La opción aplica al editor Innerta con un archivo que tenga server LSP
-        activo. Sin server, siempre pinta Tree-sitter.
+        {t('settings.la.opcion.aplica.al.editor')}
       </p>
       <div className={styles.grid}>
         {SOURCE_OPTIONS.map((option) => (
@@ -116,9 +115,7 @@ export function HighlightSection(): JSX.Element {
 
       <span className={styles.groupLabel}>{t('settings.motor.de.gramatica')}</span>
       <p className={styles.hint}>
-        Un paquete puede traer gramática TextMate y parser tree-sitter para el
-        mismo lenguaje. Aquí se decide cuál manda (los dos a la vez pintarían dos
-        veces el mismo rango).
+        {t('settings.un.paquete.puede.traer.gramatica')}
       </p>
       <div className={styles.grid}>
         {ENGINE_OPTIONS.map((option) => (

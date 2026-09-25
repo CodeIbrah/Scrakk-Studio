@@ -38,8 +38,8 @@ interface ServersSectionProps {
 function stateLabel(server: LspServerStatus): string {
   // Apagado primero: decir "Detenido" de algo que el usuario apagó a propósito
   // sugiere que se cayó (y manda al usuario a buscar un bug que no existe).
-  if (server.disabled) return 'Apagado'
-  if (server.state === 'stopped' && !server.available) return 'No instalado'
+  if (server.disabled) return t('settings.apagado')
+  if (server.state === 'stopped' && !server.available) return t('settings.no.instalado')
   return (
     ({
       ready: 'Activo',
@@ -117,7 +117,7 @@ function ServerRow({ server, onRefresh }: ServerRowProps): JSX.Element {
     // el server responda al instante (si no, parpadea).
     const res = await withMinLoading(lspRestartServer(server.name))
     if (!res.ok) {
-      setError(res.error ?? 'error al reiniciar')
+      setError(res.error ?? t('settings.error.al.reiniciar'))
       notifyInstallResult(server.name, res)
     }
     await onRefresh()
@@ -131,7 +131,7 @@ function ServerRow({ server, onRefresh }: ServerRowProps): JSX.Element {
     // El aviso sale DESPUÉS del mínimo: nunca adelanta al loader que lo anuncia.
     const res = await withMinLoading(lspInstallServer(server.name))
     notifyInstallResult(server.name, res)
-    if (!res.ok) setError(res.error ?? 'error al instalar')
+    if (!res.ok) setError(res.error ?? t('settings.error.al.instalar'))
     await onRefresh()
     setBusy(null)
     setProgress(null)
@@ -197,11 +197,11 @@ function ServerRow({ server, onRefresh }: ServerRowProps): JSX.Element {
           onClick={() => void handleToggle()}
           title={
             disabled
-              ? 'Volver a arrancar este server cuando haga falta'
-              : 'No arrancar este server (ni sus diagnósticos)'
+              ? t('settings.volver.a.arrancar.este.server')
+              : t('settings.no.arrancar.este.server.ni')
           }
         >
-          {disabled ? 'Encender' : 'Apagar'}
+          {disabled ? t('settings.encender') : t('settings.apagar')}
         </LoadingButton>
         {disabled ? null : (
           <LoadingButton
@@ -210,7 +210,7 @@ function ServerRow({ server, onRefresh }: ServerRowProps): JSX.Element {
             disabled={busy !== null}
             onClick={() => void handleRestart()}
           >
-            Reiniciar
+            {t('settings.reiniciar')}
           </LoadingButton>
         )}
         {installable && !disabled ? (
@@ -221,7 +221,7 @@ function ServerRow({ server, onRefresh }: ServerRowProps): JSX.Element {
             onClick={() => void handleInstall()}
             title={t('settings.instalar.receta.del.servidor')}
           >
-            Instalar
+            {t('settings.instalar')}
           </LoadingButton>
         ) : null}
       </div>
@@ -272,7 +272,7 @@ export function ServersSection({ visible = true }: ServersSectionProps): JSX.Ele
     <div className={styles.section}>
       <p className={styles.summary}>
         {aggregate.total === 0 ? (
-          'No hay servers registrados para este workspace.'
+          t('settings.no.hay.servers.registrados.para')
         ) : (
           <>
             <strong>{aggregate.total}</strong> {t('settings.servers')}{' '}
@@ -284,7 +284,7 @@ export function ServersSection({ visible = true }: ServersSectionProps): JSX.Ele
         )}
       </p>
 
-      {loading ? <LoadingBar label="Cargando servidores…" /> : null}
+      {loading ? <LoadingBar label={t('settings.cargando.servidores')} /> : null}
 
       {!loading && servers.length === 0 ? (
         <p className={styles.empty}>

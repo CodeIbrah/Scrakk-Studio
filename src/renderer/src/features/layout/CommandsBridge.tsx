@@ -51,7 +51,7 @@ export function LayoutCommandsBridge(): JSX.Element | null {
   useEffect(() => {
     const unsub = commandRegistry.register({
       id: 'layout.toggleHistory',
-      title: t('layout.mostrar.ocultar.historial.de.chats'),
+      title: 'layout.mostrar.ocultar.historial.de.chats',
       category: 'Paneles',
       keybinding: 'mod+alt+h',
       run: () => {

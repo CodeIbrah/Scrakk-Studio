@@ -188,7 +188,7 @@ export function ChatInput({
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        placeholder={locked ? (lockedText ?? 'Bloqueado: estás dentro de un subagente') : 'Escribe un mensaje…'}
+        placeholder={locked ? (lockedText ?? t('chat.bloqueado.estas.dentro.de.un')) : t('chat.escribe.un.mensaje')}
         rows={1}
         disabled={disabled || locked}
         aria-label={t('chat.mensaje')}

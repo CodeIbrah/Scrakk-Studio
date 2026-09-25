@@ -114,12 +114,12 @@ export function AvatarPicker({ value, onChange, name, accountId }: AvatarPickerP
 
   return (
     <div className={styles.wrap}>
-      <UserAvatar name={name || 'Nuevo usuario'} src={value || undefined} size={56} />
+      <UserAvatar name={name || t('social.nuevo.usuario')} src={value || undefined} size={56} />
       <div className={styles.controls}>
         <div className={styles.actions}>
           <button type="button" className={styles.pickBtn} onClick={() => fileRef.current?.click()} disabled={uploading}>
             <ProductIcon id="new-file" size={13} />
-            {uploading ? 'Subiendo…' : 'Subir foto'}
+            {uploading ? 'Subiendo…' : t('social.subir.foto')}
           </button>
           {value ? (
             <button type="button" className={styles.clearBtn} onClick={() => onChange('')}>

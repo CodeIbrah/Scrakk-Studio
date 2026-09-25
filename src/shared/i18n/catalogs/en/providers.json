@@ -9,7 +9,9 @@
   "providers.id.del.modelo": "Model ID",
   "providers.key.guardada": "Key saved",
   "providers.key.guardada.escribe.el.modelo": "Key saved. Enter the model you use below.",
+  "providers.modelo": "Model",
   "providers.modelo.id.exacto": "Model (exact ID)",
+  "providers.modelos.puedes.escribir.otro.id": "models. You can enter a different ID.",
   "providers.modo.de.pensamiento": "Way of thinking",
   "providers.no.hay.modelos.todavia": "No models yet",
   "providers.no.se.encontraron.proveedores.para": "No providers were found for \"",
@@ -17,6 +19,7 @@
   "providers.proveedores": "Providers",
   "providers.quitar.key": "Remove key",
   "providers.se.detecta.segun.el.modelo": "Detected based on the model (o1/o3/gpt-5, Claude, Gemini, DeepSeek R1…).",
+  "providers.seleccionar.modelo": "Select a model",
   "providers.sugeridos.del.catalogo.models.dev": "Suggestions from the catalog (models.dev):",
   "providers.useproviders.debe.usarse.dentro.de": "`useProviders` must be used inside `<providersprovider>`</providersprovider>"
 }

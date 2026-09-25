@@ -622,7 +622,7 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
                 title={t('layout.arrastrar.para.mover')}
               >
                 <ProductIcon id="terminal" size={14} aria-hidden="true" />
-                <span className={styles.nodeTitle}>{tab.label ?? 'Terminal'}</span>
+                <span className={styles.nodeTitle}>{tab.label ?? t('layout.terminal')}</span>
                 <button
                   type="button"
                   className={styles.nodeClose}
@@ -710,7 +710,7 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
           <ProductIcon id="plus" size={14} aria-hidden="true" />
         </button>
       </div>
-      <div className={styles.hint}>Arrastra el fondo para mover · Ctrl+rueda para zoom · une terminales desde los puntos del borde · clic en un enlace para borrarlo · el mando central mueve el grupo</div>
+      <div className={styles.hint}>{t('layout.arrastra.el.fondo.para.mover')}</div>
     </div>
   )
 }

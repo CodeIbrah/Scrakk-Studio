@@ -148,16 +148,16 @@ const WEBVIEW_SHIM = `<script>
 function webviewCsp(extensionId: string): string {
   const source = `${EXTENSION_SCHEME}://${extensionId}`
   return [
-    "default-src 'none'",
+    t('main.default.src.none'),
     `img-src ${source} https: data:`,
     `media-src ${source} https: data:`,
     `script-src ${source} 'unsafe-inline' https:`,
     `style-src ${source} 'unsafe-inline' https:`,
     `font-src ${source} https: data:`,
     `connect-src ${source} https: wss:`,
-    "frame-src 'none'",
-    "base-uri 'none'",
-    "form-action 'none'"
+    t('main.frame.src.none'),
+    t('main.base.uri.none'),
+    t('main.form.action.none')
   ].join('; ')
 }
 

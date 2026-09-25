@@ -63,7 +63,7 @@ export function ExtensionTreeView({
       const host = getHostBridge()
       if (!host) throw new Error(t('extensionviews.el.puente.nativo.no.esta'))
       const response = await host.treeChildren({ id: extensionId, viewId, elementId })
-      if (!response.success) throw new Error(response.error ?? 'La extensión no devolvió nodos.')
+      if (!response.success) throw new Error(response.error ?? t('extensionviews.la.extension.no.devolvio.nodos'))
       return response.nodes ?? []
     },
     [extensionId, viewId]
@@ -214,7 +214,7 @@ export function ExtensionTreeView({
           viewId,
           elementId: node.id
         })
-        if (!result.success) setError(result.error ?? 'El comando del nodo falló.')
+        if (!result.success) setError(result.error ?? t('extensionviews.el.comando.del.nodo.fallo'))
       })()
     },
     [extensionId, viewId]
@@ -277,7 +277,7 @@ export function ExtensionTreeView({
             <button
               type="button"
               className={styles.twisty}
-              aria-label={isOpen ? 'Contraer' : 'Expandir'}
+              aria-label={isOpen ? t('extensionviews.contraer') : t('extensionviews.expandir')}
               onClick={(event) => {
                 event.stopPropagation()
                 toggle(node)
@@ -285,7 +285,7 @@ export function ExtensionTreeView({
             >
               <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
                 <path
-                  d={isOpen ? 'M3 6l5 5 5-5' : 'M6 3l5 5-5 5'}
+                  d={isOpen ? t('extensionviews.m3.6l5.5.5.5') : t('extensionviews.m6.3l5.5.5.5')}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.6"

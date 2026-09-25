@@ -46,8 +46,7 @@ export function EditorSection(): JSX.Element {
       <div className={styles.headerText}>
         <h3>{t('settings.editor')}</h3>
         <p>
-          Opciones del editor de código (Innerta). Los cambios aplican al
-          instante en todos los archivos abiertos.
+          {t('settings.opciones.del.editor.de.codigo')}
         </p>
       </div>
 
@@ -55,13 +54,12 @@ export function EditorSection(): JSX.Element {
         <div className={styles.rowInfo}>
           <span className={styles.rowName}>{t('settings.minimapa')}</span>
           <span className={styles.rowMeta}>
-            Vista previa del archivo a la derecha del editor, con desplazamiento
-            continuo y clic para navegar.
+            {t('settings.vista.previa.del.archivo.a')}
           </span>
         </div>
         <ToggleSwitch
           checked={minimap}
-          label={minimap ? 'Desactivar minimapa' : 'Activar minimapa'}
+          label={minimap ? t('settings.desactivar.minimapa') : t('settings.activar.minimapa')}
           onChange={handleMinimap}
         />
       </div>

@@ -9,7 +9,9 @@
   "providers.id.del.modelo": "id del modelo",
   "providers.key.guardada": "Key guardada",
   "providers.key.guardada.escribe.el.modelo": "Key guardada. Escribe el modelo que uses abajo.",
+  "providers.modelo": "Modelo",
   "providers.modelo.id.exacto": "Modelo (id exacto)",
+  "providers.modelos.puedes.escribir.otro.id": "modelos.\n                    Puedes escribir otro id.",
   "providers.modo.de.pensamiento": "Modo de pensamiento",
   "providers.no.hay.modelos.todavia": "No hay modelos todavía",
   "providers.no.se.encontraron.proveedores.para": "No se encontraron proveedores para \"",
@@ -17,6 +19,7 @@
   "providers.proveedores": "Proveedores",
   "providers.quitar.key": "Quitar key",
   "providers.se.detecta.segun.el.modelo": "Se detecta según el modelo (o1/o3/gpt-5, Claude, Gemini, DeepSeek R1…).",
+  "providers.seleccionar.modelo": "Seleccionar modelo",
   "providers.sugeridos.del.catalogo.models.dev": "Sugeridos del catálogo (models.dev):",
   "providers.useproviders.debe.usarse.dentro.de": "useProviders debe usarse dentro de <ProvidersProvider>"
 }

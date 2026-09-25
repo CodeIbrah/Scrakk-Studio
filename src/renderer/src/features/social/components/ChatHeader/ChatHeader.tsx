@@ -22,19 +22,19 @@ interface ChatHeaderProps {
 function statusLabel(status: PresenceStatus): string {
   switch (status) {
     case 'online':
-      return 'En línea'
+      return t('social.en.linea')
     case 'away':
-      return 'Ausente'
+      return t('social.ausente')
     case 'busy':
-      return 'Ocupado'
+      return t('social.ocupado')
     case 'offline':
-      return 'Desconectado'
+      return t('social.desconectado')
   }
 }
 
 /** Cabecera del chat directo: compacta, sin quitar amigo, clickeable para ver perfil. */
 export function ChatHeader({ peer, status, onBack }: ChatHeaderProps): JSX.Element {
-  const label = peer.displayName ?? peer.handle ?? 'Usuario'
+  const label = peer.displayName ?? peer.handle ?? t('social.usuario')
   const sub = status ? statusLabel(status) : peer.handle ? `@${peer.handle}` : ''
   const openProfile = (): void => {
     const p = peer as unknown as {

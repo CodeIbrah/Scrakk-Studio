@@ -234,8 +234,8 @@ function SocialPanelInner(): JSX.Element {
   // Chat directo.
   if (view === 'chat' && activePeer) {
     const isTyping = !!typingByPeer[activePeer.id]
-    const typingName = activePeer.displayName ?? activePeer.handle ?? 'Alguien'
-    const replySender = replyTo ? (replyTo.senderId === me.dni ? me.name : friends.find((f) => f.id === replyTo.senderId)?.displayName ?? 'Usuario') : undefined
+    const typingName = activePeer.displayName ?? activePeer.handle ?? t('layout.alguien')
+    const replySender = replyTo ? (replyTo.senderId === me.dni ? me.name : friends.find((f) => f.id === replyTo.senderId)?.displayName ?? t('layout.usuario')) : undefined
     return (
       <main className={styles.screen}>
         <ChatHeader peer={activePeer} status={friendsPresence[activePeer.id]?.status} onBack={closeChat} />
@@ -298,7 +298,7 @@ function SocialPanelInner(): JSX.Element {
           </span>
           <span className={styles.switchHint}>
             <ProductIcon id="people" size={13} />
-            {accounts.accounts.length > 1 ? `${accounts.accounts.length} cuentas` : 'Cuentas'}
+            {accounts.accounts.length > 1 ? `${accounts.accounts.length} cuentas` : t('layout.cuentas')}
           </span>
         </button>
 

@@ -1,7 +1,10 @@
 {
   "common.algo.fallo": "Something went wrong",
   "common.cerrar": "Close",
+  "common.copiado": "Copied",
   "common.copiar": "Copy",
+  "common.copiar.error": "Copy error",
+  "common.error.desconocido": "Unknown error",
   "common.original": "Original",
   "common.pegar": "Paste",
   "common.recargar": "Reload",

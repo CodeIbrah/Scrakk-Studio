@@ -35,14 +35,14 @@ import type { MyProfile, SocialView } from './types'
 import { t } from '@core/i18n'
 /** Frases del slowmode (estilo Discord), en español neutro. */
 const SLOWMODE_MESSAGES = [
-  'Tranquilo, se te va a quemar el teclado 🔥',
-  'Más despacio, campeón',
-  'Respira… el teclado no corre',
-  'Ehh, muy rápido. Espera un toque',
-  'Slowmode: deja que el server respire',
-  '¿Todo bien con el teclado?',
-  'Un mensaje a la vez, sin apuro',
-  'Baja un cambio 🙃'
+  t('social.tranquilo.se.te.va.a'),
+  t('social.mas.despacio.campeon'),
+  t('social.respira.el.teclado.no.corre'),
+  t('social.ehh.muy.rapido.espera.un'),
+  t('social.slowmode.deja.que.el.server'),
+  t('social.todo.bien.con.el.teclado'),
+  t('social.un.mensaje.a.la.vez'),
+  t('social.baja.un.cambio')
 ]
 
 /** Clave donde la app guarda la raíz del workspace (misma que breadcrumbs). */
@@ -178,7 +178,7 @@ const SocialContext = createContext<SocialContextValue | null>(null)
 
 /** Perfil de cuenta (backend) → modelo de UI. DNI = `auth.users.id`. */
 function toMyProfile(account: AccountProfile): MyProfile {
-  const fallback = account.email.split('@')[0] || 'Usuario'
+  const fallback = account.email.split('@')[0] || t('social.usuario')
   return {
     dni: account.id,
     name: account.displayName?.trim() || fallback,
@@ -430,7 +430,7 @@ export function SocialProvider({
         const myHandle = account?.handle ?? ''
         const isMention = myHandle && message.body.toLowerCase().includes(`@${myHandle.toLowerCase()}`)
         const sender = friends.find((f) => f.id === message.senderId)
-        const senderName = sender?.displayName ?? sender?.handle ?? 'Alguien'
+        const senderName = sender?.displayName ?? sender?.handle ?? t('social.alguien')
         notify({
           title: isMention ? `${senderName} te mencionó` : `Mensaje de ${senderName}`,
           message: message.body.slice(0, 120),
