@@ -70,10 +70,10 @@ function section(
 export const SETTINGS_SECTIONS: SettingsSectionDef[] = [
   section('appearance', 'settings.nav.appearance', 'grid', AppearanceSection),
   section('editor', 'settings.nav.editor', 'code', EditorSection),
+  section('servers', 'settings.nav.servers', 'server', ServersSection, 'editor'),
+  section('highlight', 'settings.nav.highlight', 'code', HighlightSection, 'editor'),
   section('extensions', 'settings.nav.extensions', 'extensions', ExtensionsSection),
   section('performance', 'settings.nav.performance', 'chart', PerformanceSection),
-  section('servers', 'settings.nav.servers', 'server', ServersSection),
-  section('highlight', 'settings.nav.highlight', 'code', HighlightSection, 'servers'),
   section('chat', 'settings.nav.chat', 'chat', ChatSection),
   section('chatProviders', 'settings.nav.providers', 'server', ProvidersSection, 'chat'),
   section('chatTools', 'settings.nav.tools', 'grid', ToolsSection, 'chat'),

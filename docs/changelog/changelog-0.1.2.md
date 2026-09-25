@@ -237,6 +237,9 @@ publicadas no se editan. El archivo va por versión:
   card. Los botones pasan de cápsula a **radio de input** y **conservan el
   loader animado** (`LoadingButton`), ahora con radio configurable por contexto
   (`--loading-border-radius`).
+- **Nav de Ajustes**: **Servidores** y **Resaltado** pasan a ser **hijos de
+  Editor** (antes Servidores era de primer nivel y Resaltado colgaba de
+  Servidores), para que la jerarquía refleje que son ajustes del editor.
 - **Botón "volver arriba"** en el contenido de Ajustes: aparece al bajar con una
   animación de **150ms** (fade + deslizamiento) y sube el contenido de forma
   **suave**; respeta `prefers-reduced-motion` (salto directo) y al cambiar de
