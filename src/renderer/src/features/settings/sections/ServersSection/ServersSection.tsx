@@ -292,10 +292,12 @@ export function ServersSection({ visible = true }: ServersSectionProps): JSX.Ele
           <code>lspServers</code>.
         </p>
       ) : (
-        <div className={styles.list}>
-          {servers.map((server) => (
-            <ServerRow key={server.id} server={server} onRefresh={refresh} />
-          ))}
+        <div className={styles.listWrap}>
+          <div className={styles.list}>
+            {servers.map((server) => (
+              <ServerRow key={server.id} server={server} onRefresh={refresh} />
+            ))}
+          </div>
         </div>
       )}
     </div>
