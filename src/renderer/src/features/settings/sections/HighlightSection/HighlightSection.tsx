@@ -21,7 +21,7 @@
  * de Innerta (`languageHighlightBridge` / `treeSitterHighlightBridge`).
  */
 
-import { useState, type JSX } from 'react'
+import { useEffect, useState, type JSX } from 'react'
 import {
   getPersistedGrammarEngine,
   getPersistedHighlightSource,
@@ -31,6 +31,8 @@ import {
   type EditorHighlightSource
 } from '@services/storage'
 import { openTokenInspector } from '@features/editor/inspect'
+import { getHighlightDiagnostics } from '@features/editor/engines/innerta/hostTokens'
+import { HIGHLIGHT_SOURCE_EVENT } from '@features/editor/engines/innerta/InnertaEngine'
 import styles from './HighlightSection.module.css'
 
 import { t } from '@core/i18n'
@@ -75,12 +77,20 @@ export function HighlightSection(): JSX.Element {
     getPersistedHighlightSource()
   )
   const [engine, setEngine] = useState<EditorGrammarEngine>(() => getPersistedGrammarEngine())
+  const [diag, setDiag] = useState(() => getHighlightDiagnostics())
+
+  // Estado REAL (no el guardado): qué está publicando el host AHORA MISMO.
+  // Refresca solo para que la opción sea verificable, no solo "se guardó".
+  useEffect(() => {
+    const id = setInterval(() => setDiag(getHighlightDiagnostics()), 1000)
+    return () => clearInterval(id)
+  }, [])
 
   const handleSelectSource = (next: EditorHighlightSource): void => {
     setSource(next)
     persistHighlightSource(next)
     // El puente de Innerta escucha este evento (innertaTheme ya lo hace).
-    window.dispatchEvent(new CustomEvent('highlight-source-changed', { detail: { source: next } }))
+    window.dispatchEvent(new CustomEvent(HIGHLIGHT_SOURCE_EVENT, { detail: { source: next } }))
   }
 
   const handleSelectEngine = (next: EditorGrammarEngine): void => {
@@ -112,6 +122,13 @@ export function HighlightSection(): JSX.Element {
           </button>
         ))}
       </div>
+
+      {/* Estado en vivo: demuestra que el ajuste aplica de verdad. */}
+      <p className={styles.hint}>
+        {`resaltado: ${
+          diag.mode === 0 ? 'motor' : diag.mode === 1 ? 'solo host' : 'mixto'
+        } · LSP ${diag.sources.semanticTokens} · tree-sitter ${diag.sources.treeSitterDynamic} · TextMate ${diag.sources.textMate}`}
+      </p>
 
       <span className={styles.groupLabel}>{t('settings.motor.de.gramatica')}</span>
       <p className={styles.hint}>

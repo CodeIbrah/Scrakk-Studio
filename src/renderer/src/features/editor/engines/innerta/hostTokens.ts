@@ -69,13 +69,44 @@ function resolveHighlightSource(hasTokens: boolean): number {
   return getPersistedHighlightSource() === 'lsp' ? 1 : 2
 }
 
+/** Diagnóstico de la última publicación (lo usa Ajustes para mostrar qué pinta). */
+export interface HighlightDiagnostics {
+  /** 0 = sólo motor · 1 = sólo host · 2 = mixto. */
+  mode: number
+  /** Total de tokens del host publicados. */
+  tokens: number
+  /** Cuántos aporta cada fuente. */
+  sources: Record<HostTokenSource, number>
+}
+
+let diagnostics: HighlightDiagnostics = {
+  mode: 0,
+  tokens: 0,
+  sources: { textMate: 0, semanticTokens: 0, treeSitterDynamic: 0 }
+}
+
+/** Qué está publicando el host AHORA MISMO (para verificar desde Ajustes). */
+export function getHighlightDiagnostics(): HighlightDiagnostics {
+  return diagnostics
+}
+
 /** Empuja al motor el estado actual (fusionado). */
 function publish(mod: InnertaModule, state: HostTokenState): void {
   if (typeof mod.setHostTokens !== 'function') return
   const merged = mergeHostTokens(
     [...state.sources.entries()].map(([source, tokens]) => ({ source, tokens }))
   )
-  mod.setHostTokens(encodeHostTokens(merged), resolveHighlightSource(merged.length > 0))
+  const source = resolveHighlightSource(merged.length > 0)
+  mod.setHostTokens(encodeHostTokens(merged), source)
+  diagnostics = {
+    mode: source,
+    tokens: merged.length,
+    sources: {
+      textMate: state.sources.get('textMate')?.length ?? 0,
+      semanticTokens: state.sources.get('semanticTokens')?.length ?? 0,
+      treeSitterDynamic: state.sources.get('treeSitterDynamic')?.length ?? 0
+    }
+  }
 }
 
 /**

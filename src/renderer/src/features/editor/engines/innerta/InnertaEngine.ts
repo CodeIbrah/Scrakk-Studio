@@ -199,6 +199,8 @@ type PendingRequest = { text?: string; path?: string; content?: string }
 
 // ── Minimap: setting global persistente + broadcast a los engines vivos ────
 const MINIMAP_EVENT = 'innerta-minimap-changed'
+/** Broadcast del ajuste `editor.highlightSource`: re-aplica en los engines vivos. */
+export const HIGHLIGHT_SOURCE_EVENT = 'highlight-source-changed'
 export const MINIMAP_SETTING_KEY = 'scrakk-editor-minimap'
 
 /** ¿El minimap está visible? (default: sí). */
@@ -270,6 +272,7 @@ export class InnertaEngine implements EditorEngine {
   private minimapUnsubscribe: (() => void) | null = null
   /** Unsubscribe del cambio de MOTOR de gramática (Ajustes → Resaltado). */
   private grammarUnsubscribe: (() => void) | null = null
+  private highlightSourceUnsubscribe: (() => void) | null = null
   /** Unsubscribe de la store de bookmarks (empuja la lista al engine). */
   private bookmarksUnsubscribe: (() => void) | null = null
   /** Unsubscribe de la store de decoraciones (empuja los subrayados). */
@@ -474,6 +477,19 @@ export class InnertaEngine implements EditorEngine {
           window.addEventListener(GRAMMAR_ENGINE_EVENT, onGrammarEngineChanged)
           this.grammarUnsubscribe = () => {
             window.removeEventListener(GRAMMAR_ENGINE_EVENT, onGrammarEngineChanged)
+          }
+
+          // Cambio de fuente de resaltado (tree-sitter / LSP / mixto): se
+          // re-aplican las tres vías sobre el archivo ABIERTO. Sin esto el
+          // ajuste recién se vería al reabrir el archivo (inútil desde Ajustes).
+          this.highlightSourceUnsubscribe?.()
+          const onHighlightSourceChanged = (): void => {
+            if (!this.currentPath || !this.module) return
+            this.startHighlightPipelines(this.currentPath, this.module.getText?.())
+          }
+          window.addEventListener(HIGHLIGHT_SOURCE_EVENT, onHighlightSourceChanged)
+          this.highlightSourceUnsubscribe = () => {
+            window.removeEventListener(HIGHLIGHT_SOURCE_EVENT, onHighlightSourceChanged)
           }
 
           // Bookmarks: push inicial + re-push cuando la store cambia
@@ -942,6 +958,8 @@ export class InnertaEngine implements EditorEngine {
     this.minimapUnsubscribe = null
     this.grammarUnsubscribe?.()
     this.grammarUnsubscribe = null
+    this.highlightSourceUnsubscribe?.()
+    this.highlightSourceUnsubscribe = null
     this.bookmarksUnsubscribe?.()
     this.bookmarksUnsubscribe = null
     this.decorationsUnsubscribe?.()
