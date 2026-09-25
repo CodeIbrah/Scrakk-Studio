@@ -5,6 +5,7 @@
 import type { CSSProperties, JSX } from 'react'
 import styles from './Orb.module.css'
 
+import { t } from '@core/i18n'
 /** La geometría está afinada para un stage de 28px; --orb-k la escala a `size`. */
 const STAGE = 28
 
@@ -61,7 +62,7 @@ export function Orb({ size = SIZE, className, style }: OrbProps): JSX.Element {
       <span
         className={styles.glyph}
         role="img"
-        aria-label="Procesando"
+        aria-label={t('chat.procesando')}
         style={{ width: size, height: size, '--orb-k': size / STAGE } as CSSProperties}
       >
         <span className={styles.lattice} data-variant="S2">

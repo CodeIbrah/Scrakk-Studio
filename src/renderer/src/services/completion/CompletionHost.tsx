@@ -21,6 +21,7 @@ import {
 import { acceptCompletion, closeCompletionPopup } from './controller'
 import styles from './CompletionHost.module.css'
 
+import { t } from '@core/i18n'
 /** LSP CompletionItemKind → glifo + clase de color. */
 function kindBadge(kind: number): { glyph: string; tone: string } {
   switch (kind) {
@@ -89,7 +90,7 @@ export function CompletionHost(): JSX.Element | null {
       className={styles.popup}
       style={{ left, top, width, maxHeight }}
       role="listbox"
-      aria-label="Sugerencias"
+      aria-label={t('misc.sugerencias')}
       onMouseDown={(event) => event.preventDefault()}
     >
       <div className={styles.list} ref={listRef}>
@@ -126,7 +127,7 @@ export function CompletionHost(): JSX.Element | null {
 
       <div className={styles.footer}>
         <span>{state.items.length} sugerencia(s)</span>
-        <span className={styles.hint}>↑↓ elegir · Enter/Tab aceptar · Esc cerrar</span>
+        <span className={styles.hint}>{t('misc.elegir.enter.tab.aceptar.esc')}</span>
       </div>
     </div>
   )

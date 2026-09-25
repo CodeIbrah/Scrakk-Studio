@@ -23,6 +23,7 @@ import { toolSettingsService } from '@services/ai/toolSettings'
 import { getChatInputAnchor } from '../ChatInput/inputAnchor'
 import styles from './ToolConfirmationModal.module.css'
 
+import { t } from '@core/i18n'
 function applyAlwaysApprove(): void {
   toolSettingsService.setApprovalMode('all_allow')
   policyEngine.setModeId('all_allow')
@@ -58,13 +59,13 @@ function ConfirmationCard({
           className={styles.always}
           onClick={() => onRespond('approved_always')}
         >
-          Siempre aprobar
+          {t('chat.siempre.aprobar')}
         </button>
         <button type="button" className={styles.reject} onClick={() => onRespond('rejected')}>
-          Rechazar
+          {t('chat.rechazar')}
         </button>
         <button type="button" className={styles.approve} onClick={() => onRespond('approved')} autoFocus>
-          Aprobar
+          {t('chat.aprobar')}
         </button>
       </div>
     </div>

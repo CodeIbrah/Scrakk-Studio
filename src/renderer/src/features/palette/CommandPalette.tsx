@@ -26,6 +26,7 @@ function resolveResults(query: string): Command[] {
 import { shortcuts } from '@services/shortcuts'
 import styles from './CommandPalette.module.css'
 
+import { t } from '@core/i18n'
 export function CommandPalette(): JSX.Element | null {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
@@ -117,22 +118,22 @@ export function CommandPalette(): JSX.Element | null {
         if (event.target === event.currentTarget) setOpen(false)
       }}
     >
-      <div className={styles.panel} role="dialog" aria-label="Paleta de comandos">
+      <div className={styles.panel} role="dialog" aria-label={t('palette.paleta.de.comandos')}>
         <input
           ref={inputRef}
           className={styles.input}
-          placeholder="Escribe un comando…"
+          placeholder={t('palette.escribe.un.comando')}
           value={query}
           onChange={(event) => {
             setQuery(event.target.value)
             setSelected(0)
           }}
           onKeyDown={handleKeyDown}
-          aria-label="Buscar comando"
+          aria-label={t('palette.buscar.comando')}
         />
         <div className={styles.results} ref={resultsRef}>
           {results.length === 0 ? (
-            <p className={styles.empty}>Sin resultados</p>
+            <p className={styles.empty}>{t('palette.sin.resultados')}</p>
           ) : (
             results.map((command, index) => (
               <button

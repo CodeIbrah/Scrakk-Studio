@@ -23,6 +23,7 @@ import type {
 } from '@services/notifications'
 import styles from './NotificationsHistoryPanel.module.css'
 
+import { t } from '@core/i18n'
 const SEVERITY_DOT: Record<NotificationSeverity, string> = {
   info: styles.dotInfo,
   success: styles.dotSuccess,
@@ -57,7 +58,7 @@ function ActiveRow({ notification }: { notification: AppNotification }): JSX.Ele
       <button
         type="button"
         className={styles.rowClose}
-        aria-label="Cerrar notificación"
+        aria-label={t('features.cerrar.notificacion')}
         onClick={() => dismissNotification(notification.id)}
       >
         <ProductIcon id="x" size={11} />
@@ -87,14 +88,14 @@ export function NotificationsHistoryPanel(): JSX.Element {
   const past = notificationRegistry.history()
 
   if (active.length === 0 && past.length === 0) {
-    return <p className={styles.empty}>Sin notificaciones todavía.</p>
+    return <p className={styles.empty}>{t('features.sin.notificaciones.todavia')}</p>
   }
 
   return (
     <div className={styles.list}>
       {active.length > 0 ? (
-        <section aria-label="Notificaciones activas">
-          <h3 className={styles.sectionTitle}>Activas</h3>
+        <section aria-label={t('features.notificaciones.activas')}>
+          <h3 className={styles.sectionTitle}>{t('features.activas')}</h3>
           {active.map((notification) => (
             <ActiveRow key={notification.id} notification={notification} />
           ))}
@@ -102,15 +103,15 @@ export function NotificationsHistoryPanel(): JSX.Element {
       ) : null}
 
       {past.length > 0 ? (
-        <section aria-label="Historial de notificaciones">
+        <section aria-label={t('features.historial.de.notificaciones')}>
           <div className={styles.sectionHead}>
-            <h3 className={styles.sectionTitle}>Historial</h3>
+            <h3 className={styles.sectionTitle}>{t('features.historial')}</h3>
             <button
               type="button"
               className={styles.clearBtn}
               onClick={() => clearNotificationHistory()}
             >
-              Limpiar
+              {t('features.limpiar')}
             </button>
           </div>
           {past.map((entry) => (

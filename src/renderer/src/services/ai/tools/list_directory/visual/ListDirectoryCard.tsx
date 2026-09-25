@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface ListDirectoryCardProps {
   args: Record<string, unknown>
   result?: string
@@ -22,5 +23,5 @@ export function ListDirectoryCard({ args, status }: ListDirectoryCardProps): JSX
     return <ToolShimmerText text="Listing directory…" />
   }
   const path = typeof args.path === 'string' && args.path !== '.' ? args.path : './'
-  return <span>Listed {path}</span>
+  return <span>{t('misc.listed')} {path}</span>
 }

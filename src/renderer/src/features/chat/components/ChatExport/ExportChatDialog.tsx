@@ -22,6 +22,7 @@ import {
 } from './exportChat'
 import styles from './ExportChatDialog.module.css'
 
+import { t } from '@core/i18n'
 type ExportAction = 'txt' | 'md' | 'copy'
 
 interface ExportOption {
@@ -64,13 +65,13 @@ export function ExportChatDialog({
       <label className={styles.toggleRow}>
         <ToggleSwitch
           checked={includeTools}
-          label="Incluir herramientas en la exportación"
+          label={t('chat.incluir.herramientas.en.la.exportacion')}
           onChange={setIncludeTools}
         />
-        <span className={styles.toggleLabel}>Incluir herramientas</span>
+        <span className={styles.toggleLabel}>{t('chat.incluir.herramientas')}</span>
       </label>
 
-      <div className={styles.options} role="listbox" aria-label="Formato de exportación">
+      <div className={styles.options} role="listbox" aria-label={t('chat.formato.de.exportacion')}>
         {EXPORT_OPTIONS.map((option) => (
           <button
             key={option.id}

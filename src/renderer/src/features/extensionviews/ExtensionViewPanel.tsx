@@ -43,6 +43,7 @@ import { ExtensionTreeView } from './ExtensionTreeView'
 import { getHostBridge, parseViewPanelId, readHostMode } from './panelBridge'
 import styles from './ExtensionViewPanel.module.css'
 
+import { t } from '@core/i18n'
 // ── Envoltorio: contenedor + selector de vistas ───────────────────────────
 
 export function ExtensionViewPanel(): JSX.Element {
@@ -367,12 +368,12 @@ function ExtensionView({
             <>
               <p className={styles.error}>{error}</p>
               <p className={styles.hint}>
-                Extensión <code>{extensionId}</code> · Vista <code>{viewId}</code>
+                {t('extensionviews.extension')} <code>{extensionId}</code> {t('extensionviews.vista')} <code>{viewId}</code>
               </p>
             </>
           ) : (
             <>
-              <p className={styles.hint}>Iniciando el panel de la extensión…</p>
+              <p className={styles.hint}>{t('extensionviews.iniciando.el.panel.de.la')}</p>
               {progress ? <p className={styles.hint}>{progress}</p> : null}
             </>
           )}

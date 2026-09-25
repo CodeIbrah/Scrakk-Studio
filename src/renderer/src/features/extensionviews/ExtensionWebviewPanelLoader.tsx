@@ -14,6 +14,7 @@
 import { useEffect, useState, type ComponentType, type JSX } from 'react'
 import styles from './ExtensionViewPanel.module.css'
 
+import { t } from '@core/i18n'
 export function ExtensionWebviewPanelLoader(): JSX.Element {
   const [Component, setComponent] = useState<ComponentType | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -35,7 +36,7 @@ export function ExtensionWebviewPanelLoader(): JSX.Element {
   if (error) {
     return (
       <div className={styles.overlay} role="status">
-        <p className={styles.error}>No se pudo cargar el panel: {error}</p>
+        <p className={styles.error}>{t('extensionviews.no.se.pudo.cargar.el')} {error}</p>
       </div>
     )
   }
@@ -43,7 +44,7 @@ export function ExtensionWebviewPanelLoader(): JSX.Element {
   if (!Component) {
     return (
       <div className={styles.overlay} role="status">
-        <p className={styles.hint}>Cargando panel…</p>
+        <p className={styles.hint}>{t('extensionviews.cargando.panel')}</p>
       </div>
     )
   }

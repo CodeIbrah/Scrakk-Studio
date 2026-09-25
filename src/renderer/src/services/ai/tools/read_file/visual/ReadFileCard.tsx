@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface ReadFileCardProps {
   args: Record<string, unknown>
   result?: string
@@ -23,5 +24,5 @@ export function ReadFileCard({ args, status }: ReadFileCardProps): JSX.Element |
   }
   const path = typeof args.path === 'string' ? args.path : ''
   if (!path) return null
-  return <span>Read {path}</span>
+  return <span>{t('misc.read')} {path}</span>
 }

@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface HistoryTitleCardProps {
   args: Record<string, unknown>
   result?: string
@@ -23,5 +24,5 @@ export function HistoryTitleCard({ args, status }: HistoryTitleCardProps): JSX.E
   }
   const title = typeof args.title === 'string' ? args.title : ''
   if (!title) return null
-  return <span>Set title: {title}</span>
+  return <span>{t('misc.set.title')} {title}</span>
 }

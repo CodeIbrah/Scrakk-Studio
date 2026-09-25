@@ -9,6 +9,7 @@ import type { AccountList } from '@shared/account'
 import { UserAvatar } from '../UserAvatar/UserAvatar'
 import styles from './AccountSwitcher.module.css'
 
+import { t } from '@core/i18n'
 interface AccountSwitcherProps {
   accounts: AccountList
   /** Cuenta que usa ESTE panel (no la global). */
@@ -48,15 +49,15 @@ export function AccountSwitcher({
   return (
     <div className={styles.wrap}>
       <div className={styles.header}>
-        <IconButton label="Volver" size="sm" shape="rounded" onClick={onClose}>
+        <IconButton label={t('social.volver')} size="sm" shape="rounded" onClick={onClose}>
           <ProductIcon id="chevron-right" size={15} style={{ transform: 'rotate(180deg)' }} />
         </IconButton>
-        <span className={styles.title}>Cuentas</span>
+        <span className={styles.title}>{t('social.cuentas')}</span>
       </div>
 
       <div className={styles.list}>
         {accounts.accounts.length === 0 ? (
-          <p className={styles.empty}>No hay cuentas guardadas.</p>
+          <p className={styles.empty}>{t('social.no.hay.cuentas.guardadas')}</p>
         ) : (
           accounts.accounts.map((account) => {
             const active = account.id === activeId
@@ -80,7 +81,7 @@ export function AccountSwitcher({
                   {active ? <span className={styles.badge}>ACTIVA</span> : null}
                 </button>
                 <IconButton
-                  label="Quitar cuenta"
+                  label={t('social.quitar.cuenta')}
                   size="sm"
                   shape="rounded"
                   disabled={busyId !== null}
@@ -96,7 +97,7 @@ export function AccountSwitcher({
 
       <button type="button" className={styles.add} onClick={onAdd}>
         <ProductIcon id="person-add" size={15} />
-        Agregar cuenta
+        {t('social.agregar.cuenta')}
       </button>
     </div>
   )

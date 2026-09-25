@@ -31,6 +31,7 @@ import { getHostBridge } from './panelBridge'
 import type { ContainerWelcome } from './containers'
 import styles from './ExtensionTreeView.module.css'
 
+import { t } from '@core/i18n'
 interface ExtensionTreeViewProps {
   extensionId: string
   viewId: string
@@ -224,7 +225,7 @@ export function ExtensionTreeView({
       <div className={styles.state} role="status">
         <p className={styles.error}>{error}</p>
         <p className={styles.hint}>
-          Extensión <code>{extensionId}</code> · Vista <code>{viewId}</code>
+          {t('extensionviews.extension')} <code>{extensionId}</code> {t('extensionviews.vista')} <code>{viewId}</code>
         </p>
       </div>
     )
@@ -233,7 +234,7 @@ export function ExtensionTreeView({
   if (root === null) {
     return (
       <div className={styles.state} role="status">
-        <p className={styles.hint}>Cargando el árbol de la extensión…</p>
+        <p className={styles.hint}>{t('extensionviews.cargando.el.arbol.de.la')}</p>
       </div>
     )
   }
@@ -313,7 +314,7 @@ export function ExtensionTreeView({
   walk(root, 0)
 
   return (
-    <div className={styles.tree} role="tree" aria-label="Árbol de la extensión">
+    <div className={styles.tree} role="tree" aria-label={t('extensionviews.arbol.de.la.extension')}>
       {rows}
       {error ? <p className={styles.error}>{error}</p> : null}
     </div>
@@ -352,7 +353,7 @@ function WelcomeContent({
   if (!hasWelcomeContent(parts)) {
     return (
       <div className={styles.state} role="status">
-        <p className={styles.hint}>La extensión no devolvió nodos.</p>
+        <p className={styles.hint}>{t('extensionviews.la.extension.no.devolvio.nodos')}</p>
       </div>
     )
   }

@@ -30,6 +30,7 @@ import {
 import type { StripId, TabSpec } from './types'
 import styles from './TabStrip.module.css'
 
+import { t } from '@core/i18n'
 interface TabStripProps {
   /** Strip que renderiza (sus tabs + activa vienen del tabsStore). */
   stripId: StripId
@@ -400,7 +401,7 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
         ref={setTabsNode}
         className={styles.tabs}
         role="tablist"
-        aria-label="Tabs abiertas"
+        aria-label={t('features.tabs.abiertas')}
       >
         {rendered}
         {onAddTab ? (
@@ -420,14 +421,14 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
           type="button"
           className={styles.overflow}
           aria-label={`Opciones de ${activeTab?.label ?? 'la tab activa'}`}
-          title="Opciones de la tab activa"
+          title={t('features.opciones.de.la.tab.activa')}
           onClick={openOverflowMenu}
         >
           <ProductIcon id="more" size={15} aria-hidden="true" />
         </button>
       ) : null}
       {actions && actions.length > 0 ? (
-        <div className={styles.stripActions} role="toolbar" aria-label="Acciones del strip">
+        <div className={styles.stripActions} role="toolbar" aria-label={t('features.acciones.del.strip')}>
           {actions.slice(0, MAX_STRIP_ACTIONS).map((action) => (
             <button
               key={action.id}

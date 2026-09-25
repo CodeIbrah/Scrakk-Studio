@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface MoveFileCardProps {
   args: Record<string, unknown>
   result?: string
@@ -24,5 +25,5 @@ export function MoveFileCard({ args, status }: MoveFileCardProps): JSX.Element |
   const source = typeof args.source === 'string' ? args.source : ''
   const destination = typeof args.destination === 'string' ? args.destination : ''
   if (!source && !destination) return null
-  return <span>Moved {source} → {destination}</span>
+  return <span>{t('misc.moved')} {source} → {destination}</span>
 }

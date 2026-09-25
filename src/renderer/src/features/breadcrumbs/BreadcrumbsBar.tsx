@@ -23,6 +23,7 @@ import { buildSegments, type CrumbSegment } from './segments'
 import { ExplorerView } from '@features/explorer'
 import styles from './BreadcrumbsBar.module.css'
 
+import { t } from '@core/i18n'
 const DROPDOWN_KEY = 'breadcrumbs-level'
 const ROOT_KEY = 'scrakk-studio:root-path'
 
@@ -136,7 +137,7 @@ export function BreadcrumbsBar({
   if (segments.length === 0) return null
 
   return (
-    <nav className={styles.bar} aria-label="Ruta del archivo">
+    <nav className={styles.bar} aria-label={t('features.ruta.del.archivo')}>
       {segments.map((segment, index) => (
         <span key={`${segment.path}-${index}`} className={styles.crumb}>
           {index > 0 ? (

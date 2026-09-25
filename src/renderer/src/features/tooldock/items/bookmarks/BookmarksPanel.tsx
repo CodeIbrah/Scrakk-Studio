@@ -23,6 +23,7 @@ import {
 import type { ToolDockPanelProps } from '../../types'
 import styles from './BookmarksPanel.module.css'
 
+import { t } from '@core/i18n'
 function baseName(path: string): string {
   return path.split(/[/\\]/).pop() ?? path
 }
@@ -42,7 +43,7 @@ export default function BookmarksPanel({ hostId }: ToolDockPanelProps): JSX.Elem
   if (paths.length === 0) {
     return (
       <div className={styles.empty}>
-        Sin marcadores. Click derecho sobre el editor → “Añadir marcador”.
+        {t('features.sin.marcadores.click.derecho.sobre')}
       </div>
     )
   }

@@ -15,6 +15,7 @@ import type { JSX } from 'react'
 import type { StepContext } from '../../types'
 import { PreviewNote, SectionLabel, Stack, SummaryRow } from '../kit'
 
+import { t } from '@core/i18n'
 /** Pasos revisables desde el resumen (id + etiqueta + qué mostrar si no eligió). */
 const REVIEW: { stepId: string; label: string; fallback: string }[] = [
   { stepId: 'theme', label: 'Apariencia', fallback: 'Sin cambios' },
@@ -31,7 +32,7 @@ export function ReadyStep({ choices, openStep }: StepContext): JSX.Element {
   return (
     <Stack gap={4}>
       <Stack gap={3}>
-        <SectionLabel>Lo que elegiste</SectionLabel>
+        <SectionLabel>{t('onboarding.lo.que.elegiste')}</SectionLabel>
         <Stack gap={2}>
           {REVIEW.map((item) => (
             <SummaryRow

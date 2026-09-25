@@ -9,6 +9,7 @@ import { ACCOUNT_RULES } from '@shared/account'
 import { AvatarPicker } from '../AvatarPicker/AvatarPicker'
 import styles from './ProfileEditor.module.css'
 
+import { t } from '@core/i18n'
 /** Datos de perfil que el editor entrega al confirmar. */
 export interface ProfileDraft {
   name: string
@@ -106,19 +107,19 @@ export function ProfileEditor({
       </div>
 
       <label className={styles.field}>
-        <span className={styles.label}>Nombre</span>
+        <span className={styles.label}>{t('social.nombre')}</span>
         <input
           className={styles.input}
           value={name}
           onChange={(event: ChangeEvent<HTMLInputElement>) => setName(event.target.value)}
-          placeholder="Tu nombre"
+          placeholder={t('social.tu.nombre')}
           maxLength={ACCOUNT_RULES.displayNameMax}
           autoFocus
         />
       </label>
 
       <label className={styles.field}>
-        <span className={styles.label}>Usuario</span>
+        <span className={styles.label}>{t('social.usuario')}</span>
         <div className={styles.inputWithPrefix}>
           <span className={styles.prefix}>@</span>
           <input
@@ -133,19 +134,19 @@ export function ProfileEditor({
       </label>
 
       <label className={styles.field}>
-        <span className={styles.label}>Descripción</span>
+        <span className={styles.label}>{t('social.descripcion')}</span>
         <textarea
           className={styles.textarea}
           value={description}
           onChange={(event: ChangeEvent<HTMLTextAreaElement>) => setDescription(event.target.value)}
-          placeholder="Cuenta algo sobre ti (opcional)"
+          placeholder={t('social.cuenta.algo.sobre.ti.opcional')}
           rows={3}
           maxLength={ACCOUNT_RULES.bioMax}
         />
       </label>
 
       <label className={styles.field}>
-        <span className={styles.label}>Género</span>
+        <span className={styles.label}>{t('social.genero')}</span>
         <button
           type="button"
           className={styles.input}
@@ -177,14 +178,14 @@ export function ProfileEditor({
       </label>
 
       <div className={styles.field}>
-        <span className={styles.label}>Estado personalizado</span>
+        <span className={styles.label}>{t('social.estado.personalizado')}</span>
         <div style={{ display: 'flex', gap: 8 }}>
           <input
             className={styles.input}
             style={{ flex: 1 }}
             value={customStatus}
             onChange={(event: ChangeEvent<HTMLInputElement>) => setCustomStatus(event.target.value)}
-            placeholder="Ej: Enfocado, Jugando..."
+            placeholder={t('social.ej.enfocado.jugando')}
             maxLength={ACCOUNT_RULES.customStatusMax}
           />
           <button
@@ -215,7 +216,7 @@ export function ProfileEditor({
             DNI <span className={styles.dni}>{dni}</span>
           </span>
         ) : (
-          <span className={styles.dniText}>Tu DNI es el id de tu cuenta.</span>
+          <span className={styles.dniText}>{t('social.tu.dni.es.el.id')}</span>
         )}
       </div>
 
@@ -224,7 +225,7 @@ export function ProfileEditor({
       <div className={styles.actions}>
         {onCancel ? (
           <button type="button" className={styles.ghostBtn} onClick={onCancel} disabled={submitting}>
-            Cancelar
+            {t('social.cancelar')}
           </button>
         ) : null}
         <button type="submit" className={styles.primaryBtn} disabled={!canSubmit}>

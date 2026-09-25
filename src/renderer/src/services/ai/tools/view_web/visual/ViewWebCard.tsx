@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface ViewWebCardProps {
   args: Record<string, unknown>
   result?: string
@@ -23,5 +24,5 @@ export function ViewWebCard({ args, status }: ViewWebCardProps): JSX.Element | n
   }
   const url = typeof args.url === 'string' ? args.url : ''
   if (!url) return null
-  return <span>Read {url}</span>
+  return <span>{t('misc.read')} {url}</span>
 }

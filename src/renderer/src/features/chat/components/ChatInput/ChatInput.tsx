@@ -20,6 +20,7 @@ import { bumpEffortTyping } from '../EffortSparks/EffortSparks'
 import { registerChatInputAnchor } from './inputAnchor'
 import styles from './ChatInput.module.css'
 
+import { t } from '@core/i18n'
 interface ChatInputProps {
   onSend: (content: string) => void
   disabled?: boolean
@@ -146,7 +147,7 @@ export function ChatInput({
       onSubmit={handleSubmit}
     >
       {suggestions.length > 0 ? (
-        <div className={styles.suggestions} role="listbox" aria-label="Comandos">
+        <div className={styles.suggestions} role="listbox" aria-label={t('chat.comandos')}>
           {suggestions.map((command) => (
             <button
               key={command.name}
@@ -164,7 +165,7 @@ export function ChatInput({
         </div>
       ) : null}
       {agentSuggestions.length > 0 ? (
-        <div className={styles.suggestions} role="listbox" aria-label="Subagentes">
+        <div className={styles.suggestions} role="listbox" aria-label={t('chat.subagentes')}>
           {agentSuggestions.map((agent) => (
             <button
               key={agent.id}
@@ -190,16 +191,16 @@ export function ChatInput({
         placeholder={locked ? (lockedText ?? 'Bloqueado: estás dentro de un subagente') : 'Escribe un mensaje…'}
         rows={1}
         disabled={disabled || locked}
-        aria-label="Mensaje"
+        aria-label={t('chat.mensaje')}
       />
 
       <div className={styles.toolbar}>
         <IconButton
           type="button"
           shape="rounded"
-          label="Adjuntar (próximamente)"
+          label={t('chat.adjuntar.proximamente')}
           disabled
-          title="Adjuntar (próximamente)"
+          title={t('chat.adjuntar.proximamente')}
           size="sm"
           className={styles.sendBtnSm}
         >
@@ -213,7 +214,7 @@ export function ChatInput({
             type="button"
             variant="accent"
             shape="rounded"
-            label="Detener generación"
+            label={t('chat.detener.generacion')}
             size="sm"
             className={styles.sendNudge}
             onClick={onStop}
@@ -225,7 +226,7 @@ export function ChatInput({
             type="submit"
             variant="accent"
             shape="rounded"
-            label="Enviar"
+            label={t('chat.enviar')}
             disabled={!canSend}
             size="sm"
             className={styles.sendNudge}

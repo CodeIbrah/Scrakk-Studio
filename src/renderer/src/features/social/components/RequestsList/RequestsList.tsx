@@ -8,6 +8,7 @@ import type { FriendRequest } from '@shared/social'
 import { UserAvatar } from '../UserAvatar/UserAvatar'
 import styles from './RequestsList.module.css'
 
+import { t } from '@core/i18n'
 interface RequestsListProps {
   requests: FriendRequest[]
   onRespond: (requestId: string, accept: boolean) => Promise<{ ok: boolean; error?: string }>
@@ -46,7 +47,7 @@ export function RequestsList({ requests, onRespond }: RequestsListProps): JSX.El
                   className={styles.accept}
                   disabled={busyId === request.id}
                   onClick={() => void respond(request.id, true)}
-                  title="Aceptar"
+                  title={t('social.aceptar')}
                 >
                   <ProductIcon id="check" size={13} />
                 </button>
@@ -55,7 +56,7 @@ export function RequestsList({ requests, onRespond }: RequestsListProps): JSX.El
                   className={styles.reject}
                   disabled={busyId === request.id}
                   onClick={() => void respond(request.id, false)}
-                  title="Rechazar"
+                  title={t('social.rechazar')}
                 >
                   <ProductIcon id="close" size={13} />
                 </button>

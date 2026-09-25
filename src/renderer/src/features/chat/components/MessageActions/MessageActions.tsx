@@ -6,6 +6,7 @@ import { ProductIcon } from '@services/productIcons/components'
 import { useEffect, useRef, useState, type JSX } from 'react'
 import styles from './MessageActions.module.css'
 
+import { t } from '@core/i18n'
 interface MessageActionsProps {
   /** Contenido del mensaje a copiar. */
   content: string
@@ -56,8 +57,8 @@ export function MessageActions({ content, onRegenerate }: MessageActionsProps): 
           type="button"
           className={styles.button}
           onClick={onRegenerate}
-          aria-label="Regenerar respuesta"
-          title="Regenerar"
+          aria-label={t('chat.regenerar.respuesta')}
+          title={t('chat.regenerar')}
         >
           <ProductIcon id="refresh" size={14} className={styles.icon} aria-hidden="true" />
         </button>

@@ -11,6 +11,7 @@ import { UserAvatar } from '../UserAvatar/UserAvatar'
 import { ProfileView } from '../ProfileView/ProfileView'
 import styles from './ChatHeader.module.css'
 
+import { t } from '@core/i18n'
 interface ChatHeaderProps {
   peer: Friend
   /** Estado real del amigo (presencia). */
@@ -67,7 +68,7 @@ export function ChatHeader({ peer, status, onBack }: ChatHeaderProps): JSX.Eleme
   }
   return (
     <div className={styles.header}>
-      <IconButton label="Volver" size="sm" shape="rounded" onClick={onBack}>
+      <IconButton label={t('social.volver')} size="sm" shape="rounded" onClick={onBack}>
         <ProductIcon id="chevron-right" size={15} style={{ transform: 'rotate(180deg)' }} />
       </IconButton>
 

@@ -9,6 +9,7 @@ import { ACCOUNT_RULES } from '@shared/account'
 import { UserAvatar } from '../UserAvatar/UserAvatar'
 import styles from './AvatarPicker.module.css'
 
+import { t } from '@core/i18n'
 interface AvatarPickerProps {
   /** Enlace http(s) o data URL de la imagen. */
   value: string
@@ -123,7 +124,7 @@ export function AvatarPicker({ value, onChange, name, accountId }: AvatarPickerP
           {value ? (
             <button type="button" className={styles.clearBtn} onClick={() => onChange('')}>
               <ProductIcon id="trash" size={13} />
-              Quitar
+              {t('social.quitar')}
             </button>
           ) : null}
         </div>
@@ -131,11 +132,11 @@ export function AvatarPicker({ value, onChange, name, accountId }: AvatarPickerP
           className={styles.urlInput}
           value={value.startsWith('data:') ? '' : value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder="…o pega un enlace (https://)"
+          placeholder={t('social.o.pega.un.enlace.https')}
           spellCheck={false}
-          aria-label="Enlace de la foto"
+          aria-label={t('social.enlace.de.la.foto')}
         />
-        {value.startsWith('data:') ? <span className={styles.hint}>Foto cargada desde tu equipo.</span> : null}
+        {value.startsWith('data:') ? <span className={styles.hint}>{t('social.foto.cargada.desde.tu.equipo')}</span> : null}
         {error ? <span className={styles.error}>{error}</span> : null}
       </div>
       <input

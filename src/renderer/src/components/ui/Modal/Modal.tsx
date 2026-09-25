@@ -7,6 +7,7 @@ import { ProductIcon } from '@services/productIcons/components'
 import { IconButton } from '../IconButton/IconButton'
 import styles from './Modal.module.css'
 
+import { t } from '@core/i18n'
 /** Tamaños del panel: md (default) y xl para settings/paneles grandes. */
 export type ModalSize = 'sm' | 'md' | 'xl'
 
@@ -87,7 +88,7 @@ export function Modal({ open, onClose, title, children, size = 'md' }: ModalProp
       >
         <header className={styles.header}>
           <h2 className={styles.title}>{title}</h2>
-          <IconButton label="Cerrar" size="sm" onClick={onClose}>
+          <IconButton label={t('common.cerrar')} size="sm" onClick={onClose}>
             <ProductIcon id="close" size={14} />
           </IconButton>
         </header>

@@ -35,6 +35,7 @@ import { revealInnertaPosition } from '@features/editor/engines/innerta/hostBrid
 import type { ToolDockPanelProps } from '../../types'
 import styles from './OutlinePanel.module.css'
 
+import { t } from '@core/i18n'
 async function readContent(path: string): Promise<string | null> {
   const live = getFileSessionText(path)
   if (typeof live === 'string') return live
@@ -163,15 +164,15 @@ export default function OutlinePanel({ currentFile }: ToolDockPanelProps): JSX.E
   )
 
   if (!currentFile) {
-    return <div className={styles.empty}>Abre un archivo para ver su esquema</div>
+    return <div className={styles.empty}>{t('features.abre.un.archivo.para.ver')}</div>
   }
   if (symbols.length === 0) {
-    return <div className={styles.empty}>No hay símbolos en este archivo</div>
+    return <div className={styles.empty}>{t('features.no.hay.simbolos.en.este')}</div>
   }
   return (
     <div className={styles.list}>
       {symbols.map((symbol, index) => renderSymbol(symbol, String(index), 0))}
-      <div className={styles.source} title="Los símbolos del árbol los aporta la extensión del lenguaje">
+      <div className={styles.source} title={t('features.los.simbolos.del.arbol.los')}>
         {fromTree ? 'Árbol de sintaxis (tags.scm)' : 'Extractor local'}
       </div>
     </div>

@@ -11,6 +11,7 @@ import { ProfileView } from '../ProfileView/ProfileView'
 import { showFloatingProfile } from '../ProfileFloating/ProfileFloating'
 import styles from './MessageBubble.module.css'
 
+import { t } from '@core/i18n'
 interface MessageBubbleProps {
   message: DirectMessage
   isOwn: boolean
@@ -198,9 +199,9 @@ export const MessageBubble = memo(function MessageBubble({
                 type="button"
                 className={styles.attachThumb}
                 onClick={() => window.open(a.url, '_blank', 'noopener')}
-                title="Abrir imagen en tamaño completo"
+                title={t('social.abrir.imagen.en.tamano.completo')}
               >
-                <img src={a.url} alt="Imagen adjunta" loading="lazy" />
+                <img src={a.url} alt={t('social.imagen.adjunta')} loading="lazy" />
               </button>
             ))}
           </div>
@@ -208,15 +209,15 @@ export const MessageBubble = memo(function MessageBubble({
       </div>
 
       <div className={styles.actions}>
-        <button className={styles.actionBtn} onClick={() => onReply?.(message)} title="Responder">
+        <button className={styles.actionBtn} onClick={() => onReply?.(message)} title={t('social.responder')}>
           <ProductIcon id="reply" size={14} />
         </button>
         {isOwn ? (
           <>
-            <button className={styles.actionBtn} onClick={handleEdit} title="Editar">
+            <button className={styles.actionBtn} onClick={handleEdit} title={t('social.editar')}>
               <ProductIcon id="pencil" size={14} />
             </button>
-            <button className={styles.actionBtn} onClick={() => onDelete?.(message.id)} title="Borrar">
+            <button className={styles.actionBtn} onClick={() => onDelete?.(message.id)} title={t('social.borrar')}>
               <ProductIcon id="trash" size={14} />
             </button>
           </>

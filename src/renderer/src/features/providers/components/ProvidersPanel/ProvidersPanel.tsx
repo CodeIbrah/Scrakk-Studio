@@ -13,6 +13,7 @@ import { showContextMenu } from '@features/editor/engines/innerta/menuHost'
 import { useProviders } from '../../state'
 import styles from '../ProvidersModal/ProvidersModal.module.css'
 
+import { t } from '@core/i18n'
 /**
  * Panel de proveedores (sin modal): lista los proveedores DETECTADOS por el
  * registry y permite configurar API key, modelo y modo de pensamiento.
@@ -71,7 +72,7 @@ export function ProvidersPanel(): JSX.Element {
   return (
     <>
       <p className={styles.intro}>
-        Elige un proveedor, pega tu API key y escribe el <strong>id del modelo</strong>.
+        {t('providers.elige.un.proveedor.pega.tu')} <strong>{t('providers.id.del.modelo')}</strong>.
       </p>
 
       <div className={styles.searchRow}>
@@ -82,7 +83,7 @@ export function ProvidersPanel(): JSX.Element {
           value={search}
           placeholder={`Buscar entre ${providers.length} proveedores…`}
           onChange={(event) => setSearch(event.target.value)}
-          aria-label="Buscar proveedores"
+          aria-label={t('providers.buscar.proveedores')}
         />
       </div>
 
@@ -118,9 +119,9 @@ export function ProvidersPanel(): JSX.Element {
                   <span className={styles.providerTop}>
                     <span className={styles.providerName}>{provider.name}</span>
                     {isActive ? (
-                      <span className={styles.statusActive}>Activo</span>
+                      <span className={styles.statusActive}>{t('providers.activo')}</span>
                     ) : hasKey ? (
-                      <span className={styles.statusSaved}>Key guardada</span>
+                      <span className={styles.statusSaved}>{t('providers.key.guardada')}</span>
                     ) : null}
                   </span>
                   <span className={styles.providerDesc}>{provider.description}</span>
@@ -132,7 +133,7 @@ export function ProvidersPanel(): JSX.Element {
                   {!hasKey && (
                     <>
                       <label className={styles.keyLabel} htmlFor={`key-${provider.id}`}>
-                        API key de {provider.name}
+                        {t('providers.api.key.de')} {provider.name}
                       </label>
                       <div className={styles.keyRow}>
                         <ProductIcon id="key" size={14} className={styles.keyIcon} aria-hidden="true" />
@@ -157,14 +158,14 @@ export function ProvidersPanel(): JSX.Element {
                           disabled={!keyDraft.trim()}
                           onClick={() => handleSaveKey(provider.id)}
                         >
-                          Guardar y usar
+                          {t('providers.guardar.y.usar')}
                         </button>
                         <button
                           type="button"
                           className={styles.cancelBtn}
                           onClick={() => setEditingId(null)}
                         >
-                          Cancelar
+                          {t('providers.cancelar')}
                         </button>
                       </div>
                     </>
@@ -173,20 +174,20 @@ export function ProvidersPanel(): JSX.Element {
                   {hasKey && (
                     <div className={styles.keyActions}>
                       <span className={styles.keySaved}>
-                        Key guardada. Escribe el modelo que uses abajo.
+                        {t('providers.key.guardada.escribe.el.modelo')}
                       </span>
                       <button
                         type="button"
                         className={styles.removeBtn}
                         onClick={() => removeApiKey(provider.id)}
                       >
-                        Quitar key
+                        {t('providers.quitar.key')}
                       </button>
                     </div>
                   )}
 
                   <label className={styles.keyLabel} htmlFor={`model-${provider.id}`}>
-                    Modelo (id exacto)
+                    {t('providers.modelo.id.exacto')}
                   </label>
                   <div className={styles.keyRow}>
                     <input
@@ -214,12 +215,12 @@ export function ProvidersPanel(): JSX.Element {
                     ) : null}
                   </div>
                   <p className={styles.hint}>
-                    Sugeridos del catálogo (models.dev): {provider.models.length} modelos.
+                    {t('providers.sugeridos.del.catalogo.models.dev')} {provider.models.length} modelos.
                     Puedes escribir otro id.
                   </p>
 
                   <label className={styles.keyLabel} htmlFor={`thinking-${provider.id}`}>
-                    Modo de pensamiento
+                    {t('providers.modo.de.pensamiento')}
                   </label>
                   {(() => {
                     const options = thinkingOptionsFor(modelDraft)
@@ -252,11 +253,11 @@ export function ProvidersPanel(): JSX.Element {
                     )
                   })()}
                   <p className={styles.hint}>
-                    Se detecta según el modelo (o1/o3/gpt-5, Claude, Gemini, DeepSeek R1…).
+                    {t('providers.se.detecta.segun.el.modelo')}
                   </p>
 
                   <p className={styles.hint}>
-                    Obtienes tu key en:{' '}
+                    {t('providers.obtienes.tu.key.en')}{' '}
                     <span className={styles.hintUrl}>{provider.apiKeyUrl}</span>
                   </p>
                 </div>
@@ -265,7 +266,7 @@ export function ProvidersPanel(): JSX.Element {
           )
         })}
         {filtered.length === 0 && (
-          <li className={styles.empty}>No se encontraron proveedores para "{search}"</li>
+          <li className={styles.empty}>{t('providers.no.se.encontraron.proveedores.para')}{search}"</li>
         )}
       </ul>
     </>

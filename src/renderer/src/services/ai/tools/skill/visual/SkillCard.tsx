@@ -8,6 +8,7 @@
 
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
+import { t } from '@core/i18n'
 import './SkillCard.css'
 
 interface SkillCardProps {
@@ -26,7 +27,7 @@ export function SkillCard({ args, result, status }: SkillCardProps): JSX.Element
   return (
     <span className="skill-card">
       Skill: {name}
-      {lines > 0 ? <span className="skill-card__lines"> · {lines} líneas</span> : null}
+      {lines > 0 ? <span className="skill-card__lines"> · {lines} {t('misc.lineas')}</span> : null}
     </span>
   )
 }

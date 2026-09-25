@@ -24,6 +24,7 @@ import { applyTelemetryEnabled } from '@services/extensions/telemetry'
 import type { StepContext } from '../../types'
 import { PreviewNote, SectionLabel, Stack, SwitchRow } from '../kit'
 
+import { t } from '@core/i18n'
 /** Texto de la elección tal como lo muestra el resumen final. */
 function labelFor(enabled: boolean): string {
   return enabled ? 'Telemetría activada' : 'Telemetría desactivada'
@@ -49,12 +50,12 @@ export function PrivacyStep({ setChoice }: StepContext): JSX.Element {
   return (
     <Stack gap={4}>
       <Stack gap={3}>
-        <SectionLabel>Datos de uso</SectionLabel>
+        <SectionLabel>{t('onboarding.datos.de.uso')}</SectionLabel>
         <SwitchRow
-          title="Compartir datos de uso del editor"
+          title={t('onboarding.compartir.datos.de.uso.del')}
           description="Permite que las extensiones detecten si el IDE tiene la telemetría activada. Scrakk no envía nada por su cuenta."
         >
-          <ToggleSwitch checked={enabled} onChange={toggle} label="Compartir datos de uso" />
+          <ToggleSwitch checked={enabled} onChange={toggle} label={t('onboarding.compartir.datos.de.uso')} />
         </SwitchRow>
       </Stack>
 

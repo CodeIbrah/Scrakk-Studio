@@ -8,6 +8,7 @@ import { useLayout } from '@features/layout'
 import { formatTime, formatDate } from '../../shared/time'
 import styles from './ClockPanel.module.css'
 
+import { t } from '@core/i18n'
 /**
  * Panel lateral de la extensión Clock — hora y fecha en vivo.
  * Se actualiza una vez por segundo; el timer se limpia al desmontar.
@@ -35,7 +36,7 @@ export default function ClockPanel(): JSX.Element {
         onClick={() => setSlotPanel('center', 'clock-dashboard')}
       >
         <ProductIcon id="grid" size={14} aria-hidden="true" />
-        Abrir dashboard
+        {t('misc.abrir.dashboard')}
       </button>
     </div>
   )

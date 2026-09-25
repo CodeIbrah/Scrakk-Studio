@@ -8,6 +8,7 @@ import { ACCOUNT_RULES } from '@shared/account'
 import CodeSlots, { type CodeSlotsStatus } from '../CodeSlots/CodeSlots'
 import styles from './EmailCodeForm.module.css'
 
+import { t } from '@core/i18n'
 interface EmailCodeFormProps {
   /** Pide el código (dispara el email por la API del CLI/Resend). */
   onRequestCode: (email: string) => Promise<{ ok: boolean; error?: string }>
@@ -65,15 +66,15 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
         <div className={styles.head}>
           <ProductIcon id="person" size={18} className={styles.headIcon} />
           <div className={styles.headText}>
-            <span className={styles.title}>Entra o crea tu cuenta</span>
+            <span className={styles.title}>{t('social.entra.o.crea.tu.cuenta')}</span>
             <span className={styles.subtitle}>
-              Te mandamos un código al email. La misma cuenta sirve para el IDE y el CLI.
+              {t('social.te.mandamos.un.codigo.al')}
             </span>
           </div>
         </div>
 
         <label className={styles.field}>
-          <span className={styles.label}>Email</span>
+          <span className={styles.label}>{t('social.email')}</span>
           <input
             className={styles.input}
             type="email"
@@ -101,15 +102,15 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
       <div className={styles.head}>
         <ProductIcon id="key" size={18} className={styles.headIcon} />
         <div className={styles.headText}>
-          <span className={styles.title}>Escribe el código</span>
+          <span className={styles.title}>{t('social.escribe.el.codigo')}</span>
           <span className={styles.subtitle}>
-            Te mandamos un código de 6 dígitos a <strong>{email.trim()}</strong>.
+            {t('social.te.mandamos.un.codigo.de')} <strong>{email.trim()}</strong>.
           </span>
         </div>
       </div>
 
       <div className={styles.field}>
-        <span className={styles.label}>Código</span>
+        <span className={styles.label}>{t('social.codigo')}</span>
         <div className={styles.codeSlotsWrap}>
           <CodeSlots
             length={6}
@@ -149,7 +150,7 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
             setError(null)
           }}
         >
-          Cambiar email
+          {t('social.cambiar.email')}
         </button>
         <button
           type="button"
@@ -157,7 +158,7 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
           disabled={busy}
           onClick={() => void onRequestCode(email.trim())}
         >
-          Reenviar código
+          {t('social.reenviar.codigo')}
         </button>
       </div>
     </div>

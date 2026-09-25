@@ -6,6 +6,7 @@ import type { JSX } from 'react'
 import { Modal } from '@ui'
 import { ProvidersPanel } from '../ProvidersPanel/ProvidersPanel'
 
+import { t } from '@core/i18n'
 interface ProvidersModalProps {
   open: boolean
   onClose: () => void
@@ -20,7 +21,7 @@ interface ProvidersModalProps {
  */
 export function ProvidersModal({ open, onClose }: ProvidersModalProps): JSX.Element {
   return (
-    <Modal open={open} onClose={onClose} title="Proveedores">
+    <Modal open={open} onClose={onClose} title={t('providers.proveedores')}>
       <ProvidersPanel />
     </Modal>
   )

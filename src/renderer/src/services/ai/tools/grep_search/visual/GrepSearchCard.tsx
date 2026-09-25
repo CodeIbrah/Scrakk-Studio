@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface GrepSearchCardProps {
   args: Record<string, unknown>
   result?: string
@@ -23,5 +24,5 @@ export function GrepSearchCard({ args, status }: GrepSearchCardProps): JSX.Eleme
   }
   const query = typeof args.query === 'string' ? args.query : ''
   if (!query) return null
-  return <span>Searched "{query}" in files</span>
+  return <span>{t('misc.searched')}{query}{t('misc.in.files')}</span>
 }

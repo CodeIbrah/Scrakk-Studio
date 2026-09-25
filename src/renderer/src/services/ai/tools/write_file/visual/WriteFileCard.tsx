@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface WriteFileCardProps {
   args: Record<string, unknown>
   result?: string
@@ -25,5 +26,5 @@ export function WriteFileCard({ args, status }: WriteFileCardProps): JSX.Element
   }
   const path = typeof args.path === 'string' ? args.path : ''
   if (!path) return null
-  return <span>Wrote {path}</span>
+  return <span>{t('misc.wrote')} {path}</span>
 }

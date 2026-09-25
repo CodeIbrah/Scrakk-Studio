@@ -12,6 +12,7 @@
 
 import type { JSX } from 'react'
 
+import { t } from '@core/i18n'
 type ToolCallStatusType = 'pending' | 'streaming' | 'running' | 'success' | 'error' | 'blocked'
 
 interface ToolCallStatusProps {
@@ -51,7 +52,7 @@ function ErrorIcon({ errorMessage }: { errorMessage?: string }): JSX.Element {
 
 function BlockedIcon(): JSX.Element {
   return (
-    <span className="tool-call-blocked-label">Bloqueado</span>
+    <span className="tool-call-blocked-label">{t('misc.bloqueado')}</span>
   )
 }
 

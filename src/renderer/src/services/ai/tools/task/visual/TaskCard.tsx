@@ -13,6 +13,7 @@ import { useEffect, useState, type JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 import { agentRegistry, sessionIdForToolCall, subagentSessions } from '@services/ai/agents'
 
+import { t } from '@core/i18n'
 interface TaskCardProps {
   args: Record<string, unknown>
   result?: string
@@ -44,7 +45,7 @@ export function TaskCard({ args, status, execution }: TaskCardProps): JSX.Elemen
   if (status === 'pending' || status === 'streaming' || status === 'running') {
     const shimmer = <ToolShimmerText text={`${label || 'Subagente'}…`} />
     return runId ? (
-      <button type="button" className="task-card" title="Abrir el subagente" onClick={open}>
+      <button type="button" className="task-card" title={t('misc.abrir.el.subagente')} onClick={open}>
         {shimmer}
       </button>
     ) : (
@@ -61,7 +62,7 @@ export function TaskCard({ args, status, execution }: TaskCardProps): JSX.Elemen
   )
   if (!runId) return <span className="task-card__static">{body}</span>
   return (
-    <button type="button" className="task-card" title="Abrir el subagente" onClick={open}>
+    <button type="button" className="task-card" title={t('misc.abrir.el.subagente')} onClick={open}>
       {body}
     </button>
   )

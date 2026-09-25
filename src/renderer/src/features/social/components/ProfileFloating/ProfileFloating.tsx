@@ -7,6 +7,7 @@ import { createPortal } from 'react-dom'
 import { ProfileView, type ProfileViewData } from '../ProfileView/ProfileView'
 import styles from './ProfileFloating.module.css'
 
+import { t } from '@core/i18n'
 interface FloatingProfileState {
   id: string
   anchor: DOMRect
@@ -99,7 +100,7 @@ export function ProfileFloatingHost(): JSX.Element | null {
           hideFloatingProfile(state.id)
           onExpand?.()
         }}>
-          Ver perfil completo
+          {t('social.ver.perfil.completo')}
         </button>
       </div>
     </div>

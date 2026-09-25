@@ -12,6 +12,7 @@ import { useEffect, useMemo, useRef, useState, type JSX } from 'react'
 import { EMOJI_CATEGORIES, ALL_EMOJIS, type EmojiEntry } from './data'
 import styles from './EmojiPicker.module.css'
 
+import { t } from '@core/i18n'
 const RECENT_KEY = 'scrakk-studio:emoji-recent'
 const MAX_RECENT = 16
 
@@ -70,14 +71,14 @@ export function EmojiPicker({ onPick }: { onPick: (char: string) => void }): JSX
   const searching = query.trim().length > 0
 
   return (
-    <div className={styles.panel} role="dialog" aria-label="Emojis">
+    <div className={styles.panel} role="dialog" aria-label={t('social.emojis')}>
       <div className={styles.head}>
         <input
           ref={inputRef}
           className={styles.search}
           value={query}
-          placeholder="Buscar emoji…"
-          aria-label="Buscar emoji"
+          placeholder={t('social.buscar.emoji')}
+          aria-label={t('social.buscar.emoji-2')}
           onChange={(event) => setQuery(event.target.value)}
         />
       </div>
@@ -88,7 +89,7 @@ export function EmojiPicker({ onPick }: { onPick: (char: string) => void }): JSX
             <button
               type="button"
               className={`${styles.tab} ${category === '__recent' ? styles.tabActive : ''}`}
-              title="Recientes"
+              title={t('social.recientes')}
               onClick={() => setCategory('__recent')}
             >
               🕘
@@ -133,7 +134,7 @@ export function EmojiPicker({ onPick }: { onPick: (char: string) => void }): JSX
               </button>
             ))}
         {searching && results.length === 0 ? (
-          <span className={styles.empty}>Sin resultados</span>
+          <span className={styles.empty}>{t('social.sin.resultados')}</span>
         ) : null}
       </div>
     </div>

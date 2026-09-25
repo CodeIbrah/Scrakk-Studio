@@ -15,6 +15,7 @@ import type { AppNotification, NotificationCorner } from '@services/notification
 import { ProductIcon } from '@services/productIcons/components'
 import styles from './NotificationHost.module.css'
 
+import { t } from '@core/i18n'
 const CORNERS: NotificationCorner[] = ['tl', 'tr', 'bl', 'br']
 
 function severityIcon(severity: string): string {
@@ -69,7 +70,7 @@ export function NotificationHost(): JSX.Element {
                     <button
                       type="button"
                       className={styles.close}
-                      aria-label="Cerrar notificación"
+                      aria-label={t('features.cerrar.notificacion')}
                       onClick={() => notificationRegistry.dismiss(notification.id)}
                     >
                       <ProductIcon id="x" size={10} />

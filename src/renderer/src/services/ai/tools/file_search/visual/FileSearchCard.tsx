@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface FileSearchCardProps {
   args: Record<string, unknown>
   result?: string
@@ -23,5 +24,5 @@ export function FileSearchCard({ args, status }: FileSearchCardProps): JSX.Eleme
   }
   const query = typeof args.query === 'string' ? args.query : ''
   if (!query) return null
-  return <span>Searched files for "{query}"</span>
+  return <span>{t('misc.searched.files.for')}{query}"</span>
 }

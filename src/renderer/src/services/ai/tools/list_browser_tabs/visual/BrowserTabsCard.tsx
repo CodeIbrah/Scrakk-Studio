@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface BrowserTabsCardProps {
   args: Record<string, unknown>
   result?: string
@@ -21,5 +22,5 @@ export function BrowserTabsCard({ status }: BrowserTabsCardProps): JSX.Element |
   if (status === 'pending' || status === 'streaming' || status === 'running') {
     return <ToolShimmerText text="Listing tabs…" />
   }
-  return <span>Listed browser tabs</span>
+  return <span>{t('misc.listed.browser.tabs')}</span>
 }

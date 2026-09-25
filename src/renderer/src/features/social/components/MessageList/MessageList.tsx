@@ -8,6 +8,7 @@ import type { MyProfile } from '../../state/types'
 import { MessageBubble } from '../MessageBubble/MessageBubble'
 import styles from './MessageList.module.css'
 
+import { t } from '@core/i18n'
 interface MessageListProps {
   messages: DirectMessage[]
   /** Tu id (para distinguir propios de ajenos). */
@@ -195,7 +196,7 @@ export function MessageList({ messages, meId, friends, meName, meAvatar, meProfi
           ))
         : null}
       {messages.length === 0 && !loadingMore ? (
-        <p className={styles.empty}>Todavía no hay mensajes. Escribe el primero.</p>
+        <p className={styles.empty}>{t('social.todavia.no.hay.mensajes.escribe')}</p>
       ) : (
         messages.map((message) => {
           const day = dayLabel(message.createdAt)

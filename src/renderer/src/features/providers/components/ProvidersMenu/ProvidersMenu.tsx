@@ -6,6 +6,7 @@ import { ProductIcon } from '@services/productIcons/components'
 import type { JSX } from 'react'
 import styles from './ProvidersMenu.module.css'
 
+import { t } from '@core/i18n'
 interface ProvidersMenuProps {
   onOpenProviders: () => void
 }
@@ -22,7 +23,7 @@ export function ProvidersMenu({ onOpenProviders }: ProvidersMenuProps): JSX.Elem
     <div className={styles.menu}>
       <button type="button" className={styles.item} onClick={onOpenProviders}>
         <ProductIcon id="server" size={13} aria-hidden="true" />
-        Proveedores
+        {t('providers.proveedores')}
       </button>
     </div>
   )

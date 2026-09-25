@@ -7,6 +7,7 @@ import { createTerminalView, type InnertaViewHandle } from '@services/innerta/vi
 import { wireInnertaInput } from '@features/editor/engines/innerta/innertaInput'
 import { applyInnertaTheme, listenThemeChanges } from '@features/editor/engines/innerta/innertaTheme'
 
+import { t } from '@core/i18n'
 /**
  * InnertaTerminalPanel — panel `innerta-terminal` contribuido por la extensión
  * builtin `innerta-terminal`. No hardcodea el renderer en el core del IDE:
@@ -269,7 +270,7 @@ export default function InnertaTerminalPanel(): JSX.Element {
     <div
       ref={hostRef}
       style={{ flex: 1, minHeight: 0, display: 'flex', background: 'var(--color-bg)' }}
-      aria-label="Terminal Innerta"
+      aria-label={t('misc.terminal.innerta')}
     />
   )
 }

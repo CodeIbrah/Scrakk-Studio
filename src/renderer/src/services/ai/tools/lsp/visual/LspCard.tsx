@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface LspCardProps {
   args: Record<string, unknown>
   result?: string
@@ -24,5 +25,5 @@ export function LspCard({ args, status }: LspCardProps): JSX.Element | null {
   const operation = typeof args.operation === 'string' ? args.operation : ''
   const filePath = typeof args.file_path === 'string' ? args.file_path : ''
   if (!operation) return null
-  return <span>LSP · {operation}{filePath ? ` · ${filePath}` : ''}</span>
+  return <span>{t('misc.lsp')} {operation}{filePath ? ` · ${filePath}` : ''}</span>
 }

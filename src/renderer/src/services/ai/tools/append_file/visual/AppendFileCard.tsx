@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface AppendFileCardProps {
   args: Record<string, unknown>
   result?: string
@@ -23,5 +24,5 @@ export function AppendFileCard({ args, status }: AppendFileCardProps): JSX.Eleme
   }
   const path = typeof args.path === 'string' ? args.path : ''
   if (!path) return null
-  return <span>Appended to {path}</span>
+  return <span>{t('misc.appended.to')} {path}</span>
 }

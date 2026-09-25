@@ -17,6 +17,7 @@ import { MessageList } from '../components/MessageList/MessageList'
 import type { SpawnTexts } from './types'
 import styles from './SubagentChatView.module.css'
 
+import { t } from '@core/i18n'
 interface SubagentChatViewProps {
   sessionId: string
   texts?: SpawnTexts
@@ -47,7 +48,7 @@ export function SubagentChatView({ sessionId, texts, onClose }: SubagentChatView
             {statusText}
           </span>
         </div>
-        <button type="button" className={styles.close} onClick={onClose} aria-label="Cerrar subagente">
+        <button type="button" className={styles.close} onClick={onClose} aria-label={t('chat.cerrar.subagente')}>
           <ProductIcon id="close" size={14} />
         </button>
       </header>

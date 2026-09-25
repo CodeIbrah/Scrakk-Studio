@@ -9,6 +9,7 @@ import { SOCIAL_RULES } from '@shared/social'
 import { UserAvatar } from '../UserAvatar/UserAvatar'
 import styles from './AddFriend.module.css'
 
+import { t } from '@core/i18n'
 interface AddFriendProps {
   search: (query: string) => Promise<SocialUser[]>
   onSend: (targetId: string) => Promise<{ ok: boolean; error?: string; status?: string }>
@@ -65,16 +66,16 @@ export function AddFriend({ search, onSend }: AddFriendProps): JSX.Element {
           className={styles.input}
           value={query}
           onChange={(event: ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)}
-          placeholder="Buscar por @usuario o nombre…"
+          placeholder={t('social.buscar.por.usuario.o.nombre')}
           spellCheck={false}
-          aria-label="Buscar usuarios"
+          aria-label={t('social.buscar.usuarios')}
         />
       </div>
 
       {notice ? <p className={styles.notice}>{notice}</p> : null}
 
       {results.length > 0 ? (
-        <div className={styles.results} role="listbox" aria-label="Resultados">
+        <div className={styles.results} role="listbox" aria-label={t('social.resultados')}>
           {results.map((user) => {
             const label = user.displayName ?? user.handle ?? 'Usuario'
             const sent = sentIds.has(user.id)

@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface TerminalCardProps {
   args: Record<string, unknown>
   result?: string
@@ -22,5 +23,5 @@ export function TerminalCard({ args, status }: TerminalCardProps): JSX.Element |
   }
   const command = typeof args.command === 'string' ? args.command : ''
   if (!command) return null
-  return <span>Ran $ {command}</span>
+  return <span>{t('misc.ran')} {command}</span>
 }

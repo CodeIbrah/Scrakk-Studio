@@ -7,6 +7,7 @@ import type { Friend, PresenceActivity, PresenceStatus } from '@shared/social'
 import { UserAvatar } from '../UserAvatar/UserAvatar'
 import styles from './FriendList.module.css'
 
+import { t } from '@core/i18n'
 interface FriendListProps {
   friends: Friend[]
   /** Id del amigo con el chat abierto (resalta la fila). */
@@ -48,11 +49,11 @@ export function FriendList({
   onSelect
 }: FriendListProps): JSX.Element {
   if (friends.length === 0) {
-    return <p className={styles.empty}>Todavía no tienes amigos. Busca a alguien abajo.</p>
+    return <p className={styles.empty}>{t('social.todavia.no.tienes.amigos.busca')}</p>
   }
 
   return (
-    <div className={styles.list} role="listbox" aria-label="Amigos">
+    <div className={styles.list} role="listbox" aria-label={t('social.amigos')}>
       {friends.map((friend) => {
         const label = friend.displayName ?? friend.handle ?? 'Usuario'
         const pending = unread?.[friend.id] ?? 0

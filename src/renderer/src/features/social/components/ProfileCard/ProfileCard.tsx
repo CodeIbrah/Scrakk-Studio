@@ -9,6 +9,7 @@ import type { MyProfile, PresenceActivity, PresenceStatus } from '../../state/ty
 import { ProfileView } from '../ProfileView/ProfileView'
 import styles from './ProfileCard.module.css'
 
+import { t } from '@core/i18n'
 interface ProfileCardProps {
   profile: MyProfile
   /** Nombre real del proyecto abierto (nunca la ruta). */
@@ -100,7 +101,7 @@ export function ProfileCard({
       </div>
 
       <div className={styles.block}>
-        <span className={styles.blockTitle}>Estado</span>
+        <span className={styles.blockTitle}>{t('social.estado')}</span>
         <div className={styles.presenceRow}>
           {PRESENCE_OPTIONS.map((presence) => (
             <button
@@ -119,7 +120,7 @@ export function ProfileCard({
       </div>
 
       <div className={styles.block}>
-        <span className={styles.blockTitle}>Qué comparto</span>
+        <span className={styles.blockTitle}>{t('social.que.comparto')}</span>
         <div className={styles.toggles}>
           {fields.map((field) => (
             <div key={field.key} className={styles.toggleRow}>
@@ -137,17 +138,17 @@ export function ProfileCard({
             </div>
           ))}
         </div>
-        <p className={styles.note}>Nunca se comparten rutas reales: solo nombres visibles.</p>
+        <p className={styles.note}>{t('social.nunca.se.comparten.rutas.reales')}</p>
       </div>
 
       <div className={styles.actions}>
         <button type="button" className={styles.actionBtn} onClick={onEdit}>
           <ProductIcon id="pencil" size={13} />
-          Editar perfil
+          {t('social.editar.perfil')}
         </button>
         <button type="button" className={styles.actionBtn} onClick={onSignOut}>
           <ProductIcon id="close" size={13} />
-          Cerrar sesión
+          {t('social.cerrar.sesion')}
         </button>
       </div>
     </div>

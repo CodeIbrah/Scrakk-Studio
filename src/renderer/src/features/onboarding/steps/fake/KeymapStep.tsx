@@ -26,6 +26,7 @@ import {
   Stack
 } from '../kit'
 
+import { t } from '@core/i18n'
 /** Perfil que arranca marcado (el actual del editor). */
 const DEFAULT_PROFILE_ID = 'scrakk'
 
@@ -107,7 +108,7 @@ export function KeymapStep({ choice, setChoice }: StepContext): JSX.Element {
   return (
     <Stack gap={4}>
       <Stack gap={3}>
-        <SectionLabel>Perfil de atajos</SectionLabel>
+        <SectionLabel>{t('onboarding.perfil.de.atajos')}</SectionLabel>
         <CardGrid>
           {DEMO_PROFILES.map((profile) => (
             <OptionCard
@@ -124,7 +125,7 @@ export function KeymapStep({ choice, setChoice }: StepContext): JSX.Element {
       </Stack>
 
       <Stack gap={3}>
-        <SectionLabel>Así quedaría «{selected.title}»</SectionLabel>
+        <SectionLabel>{t('onboarding.asi.quedaria')}{selected.title}»</SectionLabel>
         <ShortcutList>
           {selected.shortcuts.map((shortcut) => (
             <ShortcutRow key={shortcut.action} action={shortcut.action} keys={shortcut.keys} />
@@ -133,7 +134,7 @@ export function KeymapStep({ choice, setChoice }: StepContext): JSX.Element {
       </Stack>
 
       <PreviewNote>
-        Los perfiles de atajos son una vista previa: todavía no se aplican ni se guardan.
+        {t('onboarding.los.perfiles.de.atajos.son')}
       </PreviewNote>
     </Stack>
   )

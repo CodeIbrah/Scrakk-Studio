@@ -22,6 +22,7 @@ import { selectBasenameRange } from '../utils/fileUtils'
 import { FileTypeIcon } from './FileTypeIcon'
 import styles from '../Explorer.module.css'
 
+import { t } from '@core/i18n'
 interface ExplorerRowProps {
   node: FileNode
   level: number
@@ -225,7 +226,7 @@ export const ExplorerRow = memo(function ExplorerRow({
         <button
           type="button"
           className={styles.dots}
-          title="Más acciones"
+          title={t('explorer.mas.acciones')}
           aria-label={`Más acciones para ${node.name}`}
           onClick={(event) => {
             event.stopPropagation()

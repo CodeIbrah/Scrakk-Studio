@@ -7,6 +7,7 @@ import { ProductIcon } from '@services/productIcons/components'
 import { UserAvatar } from '../UserAvatar/UserAvatar'
 import styles from './ProfileView.module.css'
 
+import { t } from '@core/i18n'
 export interface ProfileViewData {
   name: string
   handle?: string | null
@@ -104,7 +105,7 @@ export function ProfileView({ profile, config }: ProfileViewProps): JSX.Element 
           {profile.gender ? <span className={styles.gender}>{genderLabel}</span> : null}
         </div>
       )}
-      {createdLabel ? <span className={styles.date}>Miembro desde {createdLabel}</span> : null}
+      {createdLabel ? <span className={styles.date}>{t('social.miembro.desde')} {createdLabel}</span> : null}
       {showDescription && description ? <p className={styles.desc}>{description}</p> : null}
       {(profile.project || profile.file) ? (
         <div className={styles.activityRow}>

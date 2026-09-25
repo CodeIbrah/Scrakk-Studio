@@ -25,6 +25,7 @@ import {
 import type { StepContext } from '../../types'
 import { CardGrid, Chip, ChipRow, OptionCard, SectionLabel, Stack, Swatches, TextInput } from '../kit'
 
+import { t } from '@core/i18n'
 type TypeFilter = 'all' | 'dark' | 'light'
 
 const FILTERS: { id: TypeFilter; label: string }[] = [
@@ -89,8 +90,8 @@ export function ThemeStep({ choice, setChoice }: StepContext): JSX.Element {
           </Chip>
         ))}
         <TextInput
-          label="Buscar tema"
-          placeholder="Buscar tema…"
+          label={t('onboarding.buscar.tema')}
+          placeholder={t('onboarding.buscar.tema-2')}
           value={query}
           onChange={setQuery}
         />
@@ -102,7 +103,7 @@ export function ThemeStep({ choice, setChoice }: StepContext): JSX.Element {
           {visible.length < themes.length ? ` · ${visible.length} de ${themes.length}` : ''}
         </SectionLabel>
         {visible.length === 0 ? (
-          <OptionCard title="No hay temas que coincidan" description="Prueba con otro nombre o quitá el filtro." />
+          <OptionCard title={t('onboarding.no.hay.temas.que.coincidan')} description="Prueba con otro nombre o quitá el filtro." />
         ) : (
           <CardGrid columns={3}>
             {visible.map((theme) => (

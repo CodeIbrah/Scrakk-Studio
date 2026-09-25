@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface ReadMultipleFilesCardProps {
   args: Record<string, unknown>
   result?: string
@@ -23,5 +24,5 @@ export function ReadMultipleFilesCard({ args, status }: ReadMultipleFilesCardPro
   }
   const paths = Array.isArray(args.paths) ? args.paths.map(String) : []
   if (paths.length === 0) return null
-  return <span>Read {paths.length} files</span>
+  return <span>{t('misc.read')} {paths.length} files</span>
 }

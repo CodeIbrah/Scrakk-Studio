@@ -21,6 +21,7 @@ import {
 import type { ToolDockPanelProps } from '../../types'
 import styles from './TimelinePanel.module.css'
 
+import { t } from '@core/i18n'
 const ACTION_ICON: Record<TimelineAction, string> = {
   created: 'add',
   opened: 'folder-open',
@@ -63,10 +64,10 @@ export default function TimelinePanel({ currentFile }: ToolDockPanelProps): JSX.
   }, [currentFile])
 
   if (!currentFile) {
-    return <div className={styles.empty}>Abre un archivo para ver su línea de tiempo</div>
+    return <div className={styles.empty}>{t('features.abre.un.archivo.para.ver-2')}</div>
   }
   if (entries.length === 0) {
-    return <div className={styles.empty}>Sin actividad registrada todavía</div>
+    return <div className={styles.empty}>{t('features.sin.actividad.registrada.todavia')}</div>
   }
   return (
     <div className={styles.list}>

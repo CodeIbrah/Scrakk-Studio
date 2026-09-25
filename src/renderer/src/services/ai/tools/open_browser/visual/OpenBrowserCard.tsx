@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface OpenBrowserCardProps {
   args: Record<string, unknown>
   result?: string
@@ -23,5 +24,5 @@ export function OpenBrowserCard({ args, status }: OpenBrowserCardProps): JSX.Ele
   }
   const url = typeof args.url === 'string' ? args.url : ''
   if (!url) return null
-  return <span>Opened {url} in browser</span>
+  return <span>{t('misc.opened')} {url} {t('misc.in.browser')}</span>
 }

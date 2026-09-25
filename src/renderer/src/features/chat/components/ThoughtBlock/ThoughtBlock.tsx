@@ -7,6 +7,7 @@ import { memo, useEffect, useMemo, useRef, useState, type JSX } from 'react'
 import { ThinkingState } from '../ThinkingState/ThinkingState'
 import styles from './ThoughtBlock.module.css'
 
+import { t } from '@core/i18n'
 interface ThoughtBlockProps {
   /** Razonamiento acumulado del modelo. */
   reasoning: string
@@ -60,7 +61,7 @@ export const ThoughtBlock = memo(function ThoughtBlock({ reasoning, thinking }: 
         {thinking ? (
           <ThinkingState />
         ) : (
-          <span className={styles.trLabel}>Thought for {seconds}s</span>
+          <span className={styles.trLabel}>{t('chat.thought.for')} {seconds}s</span>
         )}
         <ProductIcon id="chevron-down" size={14} className={styles.trChevron} aria-hidden="true" />
       </button>

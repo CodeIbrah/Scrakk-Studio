@@ -18,6 +18,7 @@ import { IMAGE_RULES, type DirectMessage, type Friend, type ImageUpload } from '
 import { EmojiPicker } from '../../emoji/EmojiPicker'
 import styles from './MessageComposer.module.css'
 
+import { t } from '@core/i18n'
 interface MessageComposerProps {
   onSend: (content: string, images: ImageUpload[]) => Promise<{ ok: boolean; error?: string }>
   placeholder?: string
@@ -334,15 +335,15 @@ export function MessageComposer({
     <div className={styles.wrap}>
       {replyTo ? (
         <div className={styles.replyPreview}>
-          <span className={styles.replyLabel}>Respondiendo a {replySenderName ?? 'mensaje'}</span>
+          <span className={styles.replyLabel}>{t('social.respondiendo.a')} {replySenderName ?? 'mensaje'}</span>
           <span className={styles.replyText}>{replyTo.body.slice(0, 80)}</span>
-          <button className={styles.replyClose} onClick={onCancelReply} aria-label="Cancelar respuesta">
+          <button className={styles.replyClose} onClick={onCancelReply} aria-label={t('social.cancelar.respuesta')}>
             <ProductIcon id="close" size={12} />
           </button>
         </div>
       ) : null}
       {pending.length > 0 ? (
-        <div className={styles.pendingRow} aria-label="Imágenes por enviar">
+        <div className={styles.pendingRow} aria-label={t('social.imagenes.por.enviar')}>
           {pending.map((p) => (
             <div key={p.id} className={styles.pendingThumb}>
               <img src={p.dataUrl} alt={p.name} />
@@ -373,7 +374,7 @@ export function MessageComposer({
           <IconButton
             type="button"
             shape="rounded"
-            label="Emojis"
+            label={t('social.emojis')}
             size="sm"
             className={styles.attach}
             onClick={() => setShowEmoji((prev) => !prev)}
@@ -388,7 +389,7 @@ export function MessageComposer({
         <IconButton
           type="button"
           shape="rounded"
-          label="Adjuntar imagen"
+          label={t('social.adjuntar.imagen')}
           size="sm"
           className={styles.attach}
           onClick={() => fileRef.current?.click()}
@@ -416,7 +417,7 @@ export function MessageComposer({
           placeholder={placeholder}
           rows={1}
           disabled={disabled}
-          aria-label="Mensaje"
+          aria-label={t('social.mensaje')}
         />
         <IconButton
           type="submit"

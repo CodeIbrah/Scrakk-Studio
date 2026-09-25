@@ -21,6 +21,7 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { HelpCircleIcon } from '@hugeicons/core-free-icons'
 import styles from './EffortSlider.module.css'
 
+import { t } from '@core/i18n'
 /** Margen de los extremos de la pista (px), igual que PromptBar. */
 const EDGE = 11
 
@@ -95,7 +96,7 @@ export function EffortSlider({
         <span className={styles.headRight}>
           {onAuto ? (
             <button type="button" className={styles.auto} onClick={onAuto}>
-              Auto
+              {t('chat.auto')}
             </button>
           ) : null}
           <span
@@ -108,8 +109,8 @@ export function EffortSlider({
       </div>
 
       <div className={styles.ends}>
-        <span>Rápido</span>
-        <span>Profundo</span>
+        <span>{t('chat.rapido')}</span>
+        <span>{t('chat.profundo')}</span>
       </div>
 
       <div

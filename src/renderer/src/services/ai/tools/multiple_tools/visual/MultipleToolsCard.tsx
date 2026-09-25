@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface MultipleToolsCardProps {
   args: Record<string, unknown>
   result?: string
@@ -23,5 +24,5 @@ export function MultipleToolsCard({ args, status }: MultipleToolsCardProps): JSX
   }
   const tools = Array.isArray(args.tools) ? args.tools : []
   if (tools.length === 0) return null
-  return <span>Ran {tools.length} tools in sequence</span>
+  return <span>{t('misc.ran-2')} {tools.length} {t('misc.tools.in.sequence')}</span>
 }

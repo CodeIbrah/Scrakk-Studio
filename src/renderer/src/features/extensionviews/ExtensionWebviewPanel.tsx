@@ -21,6 +21,7 @@ import { extensionPanels } from '@services/extensions/webviewPanels'
 import { getHostBridge, parseWebviewPanelId } from './panelBridge'
 import styles from './ExtensionViewPanel.module.css'
 
+import { t } from '@core/i18n'
 export function ExtensionWebviewPanel(): JSX.Element {
   const panelId = usePanelIdOptional()
   const rawId = useMemo(() => (panelId === null ? null : parseWebviewPanelId(panelId)), [panelId])
@@ -121,7 +122,7 @@ export function ExtensionWebviewPanel(): JSX.Element {
     return (
       <div className={styles.host} data-ext-panel={panelId ?? ''}>
         <div className={styles.overlay} role="status">
-          <p className={styles.hint}>Este panel de extensión ya no está disponible.</p>
+          <p className={styles.hint}>{t('extensionviews.este.panel.de.extension.ya')}</p>
         </div>
       </div>
     )
@@ -143,7 +144,7 @@ export function ExtensionWebviewPanel(): JSX.Element {
       ) : null}
       {documentUrl === null && error === null ? (
         <div className={styles.overlay} role="status">
-          <p className={styles.hint}>Cargando el panel de la extensión…</p>
+          <p className={styles.hint}>{t('extensionviews.cargando.el.panel.de.la')}</p>
         </div>
       ) : null}
       {frameSrc !== null ? (

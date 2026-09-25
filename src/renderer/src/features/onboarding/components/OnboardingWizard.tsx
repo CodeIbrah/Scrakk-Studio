@@ -22,6 +22,7 @@ import { useOnboarding } from '../state/OnboardingContext'
 import type { StepContext } from '../types'
 import styles from './OnboardingWizard.module.css'
 
+import { t } from '@core/i18n'
 export function OnboardingWizard(): JSX.Element | null {
   const { visible, steps, current, progress, choices, next, back, goTo, finish, setChoice } =
     useOnboarding()
@@ -43,12 +44,12 @@ export function OnboardingWizard(): JSX.Element | null {
   }
 
   return (
-    <Modal open title="Configuración inicial" size="xl" onClose={finish}>
+    <Modal open title={t('onboarding.configuracion.inicial')} size="xl" onClose={finish}>
       <div className={styles.body}>
-        <nav className={styles.nav} aria-label="Pasos de la configuración inicial">
+        <nav className={styles.nav} aria-label={t('onboarding.pasos.de.la.configuracion.inicial')}>
           <div className={styles.brand}>
             <ProductIcon id="compass" size={16} aria-hidden="true" />
-            <span className={styles.brandText}>Empecemos</span>
+            <span className={styles.brandText}>{t('onboarding.empecemos')}</span>
           </div>
           {steps.map((step, index) => {
             const mark = progress.marks[index]
@@ -110,7 +111,7 @@ export function OnboardingWizard(): JSX.Element | null {
 
           <footer className={styles.footer}>
             <button type="button" className={styles.skip} onClick={finish}>
-              Omitir configuración
+              {t('onboarding.omitir.configuracion')}
             </button>
             <div className={styles.spacer} />
             <button
@@ -119,7 +120,7 @@ export function OnboardingWizard(): JSX.Element | null {
               onClick={back}
               disabled={!progress.canBack}
             >
-              Atrás
+              {t('onboarding.atras')}
             </button>
             <button type="button" className={styles.primary} onClick={next}>
               {progress.isLast ? 'Empezar a usar Scrakk' : 'Siguiente'}

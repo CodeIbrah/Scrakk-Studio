@@ -41,6 +41,7 @@ import { ancestorDirs, filterRowsByPaths } from './filter'
 import styles from './Explorer.module.css'
 import { ToolDock, ToolDockHostProvider } from '@features/tooldock'
 
+import { t } from '@core/i18n'
 /** Fila fantasma mientras se crea un archivo/carpeta. */
 interface CreatingState {
   parentPath: string
@@ -271,7 +272,7 @@ export function ExplorerPanel({
       <>
         <HeaderActionButton
           id="explorer.new-file"
-          label="Nuevo archivo"
+          label={t('explorer.nuevo.archivo')}
           icon="new-file"
           size="sm"
           shape="rounded"
@@ -279,7 +280,7 @@ export function ExplorerPanel({
         />
         <HeaderActionButton
           id="explorer.new-folder"
-          label="Nueva carpeta"
+          label={t('explorer.nueva.carpeta')}
           icon="new-folder"
           size="sm"
           shape="rounded"
@@ -296,7 +297,7 @@ export function ExplorerPanel({
         />
         <HeaderActionButton
           id="explorer.collapse-all"
-          label="Colapsar todas las carpetas"
+          label={t('explorer.colapsar.todas.las.carpetas')}
           icon="collapse-all"
           size="sm"
           shape="rounded"
@@ -304,7 +305,7 @@ export function ExplorerPanel({
         />
         <HeaderActionButton
           id="explorer.refresh"
-          label="Actualizar explorador"
+          label={t('explorer.actualizar.explorador')}
           icon="refresh"
           size="sm"
           shape="rounded"
@@ -688,9 +689,9 @@ export function ExplorerPanel({
           <div className={styles.emptyIcon}>
             <ProductIcon id="folder" size={40} />
           </div>
-          <h3 className={styles.emptyTitle}>Sin workspace</h3>
+          <h3 className={styles.emptyTitle}>{t('explorer.sin.workspace')}</h3>
           <p className={styles.emptyText}>
-            Abre una carpeta para explorar tus archivos y trabajar con el agente.
+            {t('explorer.abre.una.carpeta.para.explorar')}
           </p>
           <div className={styles.emptyActions}>
             <button
@@ -699,7 +700,7 @@ export function ExplorerPanel({
               onClick={() => void workspace.openFolder()}
             >
               <ProductIcon id="folder" size={14} />
-              Abrir carpeta
+              {t('explorer.abrir.carpeta')}
             </button>
           </div>
         </div>
@@ -753,7 +754,7 @@ export function ExplorerPanel({
           if (workspace.rootPath) void moveDropped(workspace.rootPath)
         }}
         role="tree"
-        aria-label="Explorador de archivos"
+        aria-label={t('explorer.explorador.de.archivos')}
       >
         {workspace.isLoadingRoot && visibleFlat.length === 0 ? (
           <div className={styles.loadingRoot}>
@@ -795,7 +796,7 @@ export function ExplorerPanel({
 
         {!workspace.isLoadingRoot && visibleFlat.length === 0 ? (
           <div className={styles.empty}>
-            <p className={styles.emptyText}>Carpeta vacía</p>
+            <p className={styles.emptyText}>{t('explorer.carpeta.vacia')}</p>
           </div>
         ) : null}
       </div>

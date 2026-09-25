@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface BlueprintCardProps {
   args: Record<string, unknown>
   result?: string
@@ -23,5 +24,5 @@ export function BlueprintCard({ args, status }: BlueprintCardProps): JSX.Element
   }
   const name = typeof args.name === 'string' ? args.name : ''
   if (!name) return null
-  return <span>Created blueprint {name}</span>
+  return <span>{t('misc.created.blueprint')} {name}</span>
 }

@@ -6,6 +6,7 @@ import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { ProductIcon } from '@services/productIcons/components'
 import styles from './AppErrorBoundary.module.css'
 
+import { t } from '@core/i18n'
 interface AppErrorBoundaryProps {
   children: ReactNode
 }
@@ -77,12 +78,12 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
           <span className={styles.icon} aria-hidden="true">
             <ProductIcon id="alert" size={28} />
           </span>
-          <h1 className={styles.title}>Algo falló</h1>
+          <h1 className={styles.title}>{t('common.algo.fallo')}</h1>
           <p className={styles.message}>{error.message || 'Error desconocido'}</p>
           <pre className={styles.stack}>{errorText(error, info)}</pre>
           <div className={styles.actions}>
             <button type="button" className={styles.primary} onClick={this.handleRetry}>
-              Reintentar
+              {t('common.reintentar')}
             </button>
             <button type="button" className={styles.ghost} onClick={this.handleCopy}>
               <ProductIcon id="copy" size={14} />
@@ -90,7 +91,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
             </button>
             <button type="button" className={styles.ghost} onClick={this.handleReload}>
               <ProductIcon id="refresh" size={14} />
-              Recargar
+              {t('common.recargar')}
             </button>
           </div>
         </div>

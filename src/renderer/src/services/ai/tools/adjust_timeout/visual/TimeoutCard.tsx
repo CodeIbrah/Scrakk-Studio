@@ -10,6 +10,7 @@
 import type { JSX } from 'react'
 import { ToolShimmerText } from '@services/ai/tool-shell'
 
+import { t } from '@core/i18n'
 interface TimeoutCardProps {
   args: Record<string, unknown>
   result?: string
@@ -23,5 +24,5 @@ export function TimeoutCard({ args, status }: TimeoutCardProps): JSX.Element | n
   }
   const seconds = Number(args.additional_seconds ?? 0)
   if (!seconds) return null
-  return <span>Timeout +{seconds}s</span>
+  return <span>{t('misc.timeout')}{seconds}s</span>
 }

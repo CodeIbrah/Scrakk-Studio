@@ -6,6 +6,7 @@ import type { JSX } from 'react'
 import { EmailCodeForm } from '../EmailCodeForm/EmailCodeForm'
 import styles from './AuthGate.module.css'
 
+import { t } from '@core/i18n'
 interface AuthGateProps {
   /** Pide el código OTP para el email. */
   onRequestCode: (email: string) => Promise<{ ok: boolean; error?: string }>
@@ -26,7 +27,7 @@ export function AuthGate({ onRequestCode, onVerifyCode, onCancel }: AuthGateProp
       <EmailCodeForm onRequestCode={onRequestCode} onVerifyCode={onVerifyCode} />
       {onCancel ? (
         <button type="button" className={styles.cancel} onClick={onCancel}>
-          Cancelar
+          {t('social.cancelar')}
         </button>
       ) : null}
     </div>
