@@ -95,7 +95,7 @@ export const BUILTIN_SERVERS: BuiltinServerDef[] = [
     id: 'rust',
     command: 'rust-analyzer',
     extensions: { '.rs': 'rust' },
-    rootMarkers: ['Cargo.toml']
+    rootMarkers: [t('main.cargo.toml')]
   },
   {
     id: 'go',

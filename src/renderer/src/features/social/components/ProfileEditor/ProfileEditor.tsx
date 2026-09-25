@@ -230,7 +230,7 @@ export function ProfileEditor({
         ) : null}
         <button type="submit" className={styles.primaryBtn} disabled={!canSubmit}>
           <ProductIcon id={submitting ? 'refresh' : 'check'} size={14} />
-          {submitting ? 'Guardando…' : isSetup ? t('social.empezar') : t('social.guardar')}
+          {submitting ? t('social.guardando') : isSetup ? t('social.empezar') : t('social.guardar')}
         </button>
       </div>
     </form>

@@ -289,7 +289,7 @@ export function GitPanel(): JSX.Element {
           onClick: () => copyText(branch.sha, t('git.sha.copiado'))
         },
         {
-          label: 'Renombrar…',
+          label: t('git.renombrar'),
           separatorBefore: true,
           onClick: () => {
             const next = window.prompt('Nuevo nombre', branch.name)
@@ -432,7 +432,7 @@ export function GitPanel(): JSX.Element {
             }}
           >
             <ProductIcon id="refresh" size={14} />
-            Re-detectar
+            {t('git.re.detectar')}
           </button>
           <button
             type="button"
@@ -772,7 +772,7 @@ export function GitPanel(): JSX.Element {
                         {t('git.revert')}
                       </button>
                       <button type="button" className={styles.mini} onClick={() => withRoot((root) => cherryPickCommit(root, commit.sha))}>
-                        Cherry-pick
+                        {t('git.cherry.pick')}
                       </button>
                       <button
                         type="button"
@@ -1377,7 +1377,7 @@ function AccountLoginForm(props: {
       <div className={styles.loginActions}>
         <button type="button" className={styles.primary} disabled={props.busy} onClick={props.onLogin}>
           <ProductIcon id="key" size={14} />
-          {props.busy ? 'Ingresando…' : t('git.login')}
+          {props.busy ? t('git.ingresando') : t('git.login')}
         </button>
         {auth.detected?.ghLoggedIn ? (
           <button type="button" className={styles.ghost} disabled={props.busy} onClick={props.onLogout}>
@@ -1537,7 +1537,7 @@ function PrSection(props: {
                         ])
                       }}
                     >
-                      Merge…
+                      {t('git.merge-2')}
                     </button>
                   </div>
                 </div>

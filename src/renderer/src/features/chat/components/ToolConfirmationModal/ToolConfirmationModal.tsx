@@ -41,7 +41,7 @@ function ConfirmationCard({
   const risk = request.riskLevel ?? 'unknown'
   return (
     <div className={styles.body}>
-      <div className={[styles.risk, styles[risk]].join(' ')}>Riesgo: {risk}</div>
+      <div className={[styles.risk, styles[risk]].join(' ')}>{t('chat.riesgo')} {risk}</div>
       <p className={styles.reason}>{request.reason}</p>
       {request.detail ? <p className={styles.detail}>{request.detail}</p> : null}
 

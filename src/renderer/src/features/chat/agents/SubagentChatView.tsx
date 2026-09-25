@@ -33,7 +33,7 @@ export function SubagentChatView({ sessionId, texts, onClose }: SubagentChatView
   const status = session?.status ?? 'running'
   const statusText =
     status === 'running'
-      ? (texts?.working ?? 'Trabajando…')
+      ? (texts?.working ?? t('chat.trabajando'))
       : status === 'done'
         ? (texts?.done ?? t('chat.listo'))
         : (texts?.error ?? t('chat.error'))

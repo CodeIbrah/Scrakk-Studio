@@ -74,7 +74,7 @@ export function InfoSection(): JSX.Element {
             onClick={() => void handleCheck()}
             disabled={checking || downloading}
           >
-            {checking ? 'Buscando…' : t('settings.buscar.actualizaciones')}
+            {checking ? t('settings.buscando') : t('settings.buscar.actualizaciones')}
           </button>
 
           {downloaded && (

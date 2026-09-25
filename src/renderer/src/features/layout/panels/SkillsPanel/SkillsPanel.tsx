@@ -272,7 +272,7 @@ export function SkillsPanel(): JSX.Element {
                 variant="accent"
                 shape="rounded"
                 size="sm"
-                label={busy ? 'Guardando…' : t('layout.guardar.skill')}
+                label={busy ? t('layout.guardando') : t('layout.guardar.skill')}
                 disabled={!canSave}
               >
                 <ProductIcon id="check" size={14} aria-hidden="true" />

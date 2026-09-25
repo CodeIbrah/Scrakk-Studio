@@ -135,7 +135,7 @@ export function SearchPanel(): JSX.Element {
       ) : !query.trim() ? (
         <p className={styles.empty}>{t('layout.escribe.para.buscar.en.el')}</p>
       ) : searching && matches.length === 0 ? (
-        <p className={styles.empty}>Buscando…</p>
+        <p className={styles.empty}>{t('layout.buscando')}</p>
       ) : error ? (
         <p className={styles.empty}>{error}</p>
       ) : matches.length === 0 ? (

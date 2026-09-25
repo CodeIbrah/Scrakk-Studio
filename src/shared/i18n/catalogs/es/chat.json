@@ -26,6 +26,7 @@
   "chat.incluir.herramientas.en.la.exportacion": "Incluir herramientas en la exportación",
   "chat.listo": "Listo",
   "chat.mensaje": "Mensaje",
+  "chat.modo": "Modo:",
   "chat.no.forzar.effort.default.del": "No forzar effort (default del proveedor)",
   "chat.no.hay.proveedor.activo": "No hay proveedor activo",
   "chat.nuevo.chat": "Nuevo chat",
@@ -35,11 +36,13 @@
   "chat.rechazar": "Rechazar",
   "chat.regenerar": "Regenerar",
   "chat.regenerar.respuesta": "Regenerar respuesta",
+  "chat.riesgo": "Riesgo:",
   "chat.siempre.aprobar": "Siempre aprobar",
   "chat.subagente": "Subagente",
   "chat.subagentes": "Subagentes",
   "chat.thinking": "Thinking",
   "chat.thought.for": "Thought for",
+  "chat.trabajando": "Trabajando…",
   "chat.usechats.debe.usarse.dentro.de": "useChats debe usarse dentro de <ChatsProvider>",
   "chat.variante.a.aplicar.o.auto": "Variante a aplicar (o \"auto\" para limpiar)"
 }

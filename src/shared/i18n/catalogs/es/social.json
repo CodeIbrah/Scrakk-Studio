@@ -41,6 +41,7 @@
   "social.enlace.de.la.foto": "Enlace de la foto",
   "social.entra.o.crea.tu.cuenta": "Entra o crea tu cuenta",
   "social.enviada": "Enviada",
+  "social.enviando": "Enviando…",
   "social.enviar": "Enviar",
   "social.enviar.codigo": "Enviar código",
   "social.escribe.el.codigo": "Escribe el código",
@@ -51,6 +52,7 @@
   "social.formato.no.soportado.png.jpg": "Formato no soportado (png, jpg, webp, gif, avif).",
   "social.foto.cargada.desde.tu.equipo": "Foto cargada desde tu equipo.",
   "social.genero": "Género",
+  "social.guardando": "Guardando…",
   "social.guardar": "Guardar",
   "social.hombre": "Hombre",
   "social.hoy": "Hoy",
@@ -100,6 +102,7 @@
   "social.sin.resultados.prueba.con.otro": "Sin resultados. Prueba con otro @usuario o nombre.",
   "social.slowmode.deja.que.el.server": "Slowmode: deja que el server respire",
   "social.solicitud.enviada": "solicitud enviada",
+  "social.subiendo": "Subiendo…",
   "social.subir.foto": "Subir foto",
   "social.te.mandamos.un.codigo.al": "Te mandamos un código al email. La misma cuenta sirve para el IDE y el CLI.",
   "social.te.mandamos.un.codigo.de": "Te mandamos un código de 6 dígitos a",
@@ -113,6 +116,7 @@
   "social.usesocial.debe.usarse.dentro.de": "useSocial debe usarse dentro de <SocialProvider>",
   "social.usuario": "Usuario",
   "social.ver.perfil.completo": "Ver perfil completo",
+  "social.verificando": "Verificando…",
   "social.volver": "Volver",
   "social.ya.tienes.sesion.elige.como": "Ya tienes sesión. Elige cómo te verán en Scrakk."
 }

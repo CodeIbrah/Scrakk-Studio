@@ -41,6 +41,7 @@
   "social.enlace.de.la.foto": "Photo link",
   "social.entra.o.crea.tu.cuenta": "Log in or create an account",
   "social.enviada": "Submitted",
+  "social.enviando": "Sending…",
   "social.enviar": "Send",
   "social.enviar.codigo": "Submit code",
   "social.escribe.el.codigo": "Write the code",
@@ -51,6 +52,7 @@
   "social.formato.no.soportado.png.jpg": "Unsupported format (png, jpg, webp, gif, avif)",
   "social.foto.cargada.desde.tu.equipo": "Photo uploaded from your computer",
   "social.genero": "Genre",
+  "social.guardando": "Saving…",
   "social.guardar": "Save",
   "social.hombre": "Man",
   "social.hoy": "Today",
@@ -100,6 +102,7 @@
   "social.sin.resultados.prueba.con.otro": "No results. Try another @username or name.",
   "social.slowmode.deja.que.el.server": "Slowmode: Give the server some breathing room",
   "social.solicitud.enviada": "Request sent",
+  "social.subiendo": "Uploading…",
   "social.subir.foto": "Upload photo",
   "social.te.mandamos.un.codigo.al": "We'll send you a code via email. The same account works for both the IDE and the CLI.",
   "social.te.mandamos.un.codigo.de": "We'll send you a 6-digit code to",
@@ -113,6 +116,7 @@
   "social.usesocial.debe.usarse.dentro.de": "useSocial must be used within <socialprovider></socialprovider>",
   "social.usuario": "User",
   "social.ver.perfil.completo": "View full profile",
+  "social.verificando": "Verifying…",
   "social.volver": "Back",
   "social.ya.tienes.sesion.elige.como": "You're already logged in. Choose how you'd like to be seen in Scrakk."
 }

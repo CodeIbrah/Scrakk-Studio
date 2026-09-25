@@ -167,7 +167,7 @@ function OptionsList({ id, spec }: { id: string; spec: OptionsModalSpec }): JSX.
           <input
             className={styles.search}
             autoFocus
-            placeholder="Filtrar…"
+            placeholder={t('modals.filtrar')}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             spellCheck={false}

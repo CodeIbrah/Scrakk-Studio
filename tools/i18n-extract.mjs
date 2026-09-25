@@ -90,8 +90,11 @@ function isUi(text) {
   if (CODEISH.test(t)) return false
   if (/&[a-z]+;|&#/.test(t)) return false
   if (!/\s/.test(t)) {
-    if (/[áéíóúñÁÉÍÓÚÑ¿¡]/.test(t)) return true
-    return /^[A-ZÀ-Þ][a-zà-ÿ]{2,}$/.test(t)
+    if (/[áéíóúñüÁÉÍÓÚÑÜ¿¡]/.test(t)) return true
+    // Una sola palabra: se ignoran los signos de los bordes ("Comandos…",
+    // "¿Guardar?", "Cerrar:"), que antes hacían fallar el test.
+    const core = t.replace(/[^\p{L}]/gu, '')
+    return /^\p{Lu}\p{Ll}{2,}$/u.test(core)
   }
   return t.split(' ').length <= 44
 }

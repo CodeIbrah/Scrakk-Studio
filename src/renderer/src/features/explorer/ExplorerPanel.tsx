@@ -625,7 +625,7 @@ export function ExplorerPanel({
           style={{ height: ROW_HEIGHT, paddingLeft: 8 + level * 12 }}
         >
           <span className={styles.arrowPlaceholder} style={{ width: 16, height: 16 }} />
-          <span className={styles.name}>Cargando…</span>
+          <span className={styles.name}>{t('explorer.cargando')}</span>
         </div>
       )
     }
@@ -759,7 +759,7 @@ export function ExplorerPanel({
         {workspace.isLoadingRoot && visibleFlat.length === 0 ? (
           <div className={styles.loadingRoot}>
             <span className={styles.spinner} />
-            Cargando…
+            {t('explorer.cargando')}
           </div>
         ) : null}
 

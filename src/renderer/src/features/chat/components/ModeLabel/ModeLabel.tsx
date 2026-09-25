@@ -17,6 +17,7 @@ import { applyMode, getModeId, getModeLabel, getModeColor } from '@services/ai/p
 import { modeRegistry } from '@services/ai/policy/modeRegistry'
 import styles from './ModeLabel.module.css'
 
+import { t } from '@core/i18n'
 const ALIAS_MODE_IDS = new Set(['auto_edit', 'all_allow'])
 
 export function ModeLabel(): JSX.Element {
@@ -45,7 +46,7 @@ export function ModeLabel(): JSX.Element {
 
   return (
     <button type="button" className={styles.label} aria-haspopup="menu" onClick={openMenu}>
-      Modo:{' '}
+      {t('chat.modo')}{' '}
       <span className={styles.mode} style={{ color: getModeColor(modeId) }}>
         {getModeLabel(modeId)}
       </span>

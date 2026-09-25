@@ -24,7 +24,7 @@ export function SearchBar(): JSX.Element {
       aria-label={t('statusbar.abrir.paleta.de.comandos')}
     >
       <ProductIcon id="search" size={12} className={styles.icon} aria-hidden="true" />
-      <span className={styles.label}>Comandos…</span>
+      <span className={styles.label}>{t('statusbar.comandos')}</span>
     </button>
   )
 }

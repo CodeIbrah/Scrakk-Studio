@@ -37,7 +37,7 @@ import { t } from '@core/i18n'
 const SOURCE_OPTIONS: Array<{ id: EditorHighlightSource; label: string; desc: string }> = [
   {
     id: 'treesitter',
-    label: 'Tree-sitter',
+    get label() { return t('settings.tree.sitter') },
     desc: 'Gramáticas locales. Rápido, sin servidor.'
   },
   {

@@ -75,7 +75,7 @@ export function DeleteModal({ target, onCancel, onConfirm }: DeleteModalProps): 
             onClick={() => void handleConfirm()}
             disabled={busy}
           >
-            {busy ? 'Eliminando…' : t('explorer.eliminar')}
+            {busy ? t('explorer.eliminando') : t('explorer.eliminar')}
           </button>
         </div>
       </div>

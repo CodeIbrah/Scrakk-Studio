@@ -372,7 +372,7 @@ export function ChatPanel(): JSX.Element {
         appendMessage(targetId, {
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: result.ok ? (result.message ?? 'Listo.') : `⚠ ${result.error ?? t('layout.error')}`,
+          content: result.ok ? (result.message ?? t('layout.listo')) : `⚠ ${result.error ?? t('layout.error')}`,
           timestamp: Date.now()
         })
         return

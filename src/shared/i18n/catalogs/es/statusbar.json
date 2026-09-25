@@ -6,6 +6,7 @@
   "statusbar.codificacion.del.archivo": "Codificación del archivo",
   "statusbar.codificacion.del.archivo.activo.click": "Codificación del archivo activo (click para cambiar)",
   "statusbar.col": "Col",
+  "statusbar.comandos": "Comandos…",
   "statusbar.convertir.saltos.de.linea": "Convertir saltos de línea",
   "statusbar.crlf.windows.r.n": "CRLF — Windows (\\r\\n)",
   "statusbar.estado.de.language.servers": "Estado de language servers",

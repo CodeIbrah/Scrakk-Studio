@@ -6,6 +6,7 @@
   "main.base.uri.none": "base-uri 'none'",
   "main.binario.no.encontrado": "binario no encontrado",
   "main.c.program.files": "C:\\Program Files",
+  "main.cargo.toml": "Cargo.toml",
   "main.codigo.invalido.o.expirado": "Código inválido o expirado",
   "main.corre.rustup.component.add.rust": "corre: rustup component add rust-analyzer",
   "main.cuenta.no.encontrada": "Cuenta no encontrada",

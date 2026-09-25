@@ -423,7 +423,7 @@ export function MessageComposer({
           type="submit"
           variant="accent"
           shape="rounded"
-          label={sending ? 'Enviando…' : t('social.enviar')}
+          label={sending ? t('social.enviando') : t('social.enviar')}
           disabled={!canSend}
           size="sm"
           className={styles.send}

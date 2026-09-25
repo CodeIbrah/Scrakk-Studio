@@ -91,7 +91,7 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
 
         <button type="submit" className={styles.primaryBtn} disabled={!emailValid || busy}>
           <ProductIcon id={busy ? 'refresh' : 'arrow-right'} size={14} />
-          {busy ? 'Enviando…' : t('social.enviar.codigo')}
+          {busy ? t('social.enviando') : t('social.enviar.codigo')}
         </button>
       </form>
     )
@@ -137,7 +137,7 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
       </div>
 
       {error ? <p className={styles.error}>{error}</p> : null}
-      {busy ? <p className={styles.status}>Verificando…</p> : null}
+      {busy ? <p className={styles.status}>{t('social.verificando')}</p> : null}
 
       <div className={styles.footerLinks}>
         <button
