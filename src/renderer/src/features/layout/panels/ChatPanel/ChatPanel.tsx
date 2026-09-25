@@ -28,6 +28,7 @@ import { isSkillsViewOpen, setSkillsViewOpen, subscribeToSkillsView } from '../S
 import { ComposerFooter } from './ComposerFooter'
 import styles from './ChatPanel.module.css'
 
+import { t } from '@core/i18n'
 /**
  * Panel de chat: usa las sesiones reales del ChatsProvider (el historial
  * refleja lo que pasa aquí) y delega el "backend" al módulo services. El LLM
@@ -91,7 +92,7 @@ export function ChatPanel(): JSX.Element {
           <HeaderActionButton
             key="chat.skills-back"
             id="chat.skills-back"
-            label="Volver al chat"
+            label={t('layout.volver.al.chat')}
             icon="chevron-right"
             iconRotation={180}
             size="sm"
@@ -107,7 +108,7 @@ export function ChatPanel(): JSX.Element {
           <HeaderActionButton
             key="chat.history-back"
             id="chat.history-back"
-            label="Volver al chat"
+            label={t('layout.volver.al.chat')}
             icon="chevron-right"
             iconRotation={180}
             size="sm"
@@ -122,7 +123,7 @@ export function ChatPanel(): JSX.Element {
           <HeaderActionButton
             key="chat.history"
             id="chat.history"
-            label="Historial de chats"
+            label={t('layout.historial.de.chats')}
             icon="history"
             size="sm"
             className={styles.headerActionEnter}
@@ -134,7 +135,7 @@ export function ChatPanel(): JSX.Element {
           />
           <HeaderActionButton
             id="chat.new-session"
-            label="Nuevo chat"
+            label={t('layout.nuevo.chat')}
             icon="plus"
             size="sm"
             onClick={() => createSession()}
@@ -442,7 +443,7 @@ export function ChatPanel(): JSX.Element {
       <div className={styles.emptyLayout}>
         <div
           role="img"
-          aria-label="Scrakk Studio"
+          aria-label={t('layout.scrakk.studio')}
           className={styles.emptyLogo}
           style={{ WebkitMaskImage: `url("${scrakkLogoUrl}")`, maskImage: `url("${scrakkLogoUrl}")` }}
         />

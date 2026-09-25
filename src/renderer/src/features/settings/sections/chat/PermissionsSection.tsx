@@ -25,6 +25,7 @@ import { modeRegistry } from '@services/ai/policy/modeRegistry'
 import { applyMode, getModeId } from '@services/ai/prompts/modes'
 import styles from './ChatSections.module.css'
 
+import { t } from '@core/i18n'
 const FILE = 'permissions.json'
 const ACTIONS = ['allow', 'ask', 'deny'] as const
 type Action = (typeof ACTIONS)[number]
@@ -255,20 +256,20 @@ export function PermissionsSection(): JSX.Element {
           }
         >
           <span className={styles.selectLabel}>
-            Modo inicial: {modes.find((mode) => mode.id === defaultMode)?.label ?? defaultMode}
+            {t('settings.modo.inicial')} {modes.find((mode) => mode.id === defaultMode)?.label ?? defaultMode}
           </span>
           <ProductIcon id="chevron-down" size={12} className={styles.selectChevron} />
         </button>
       </div>
 
       {scope === 'project' && !scrakkProjectRoot() ? (
-        <p className={styles.empty}>No hay proyecto abierto: usa la capa de usuario.</p>
+        <p className={styles.empty}>{t('settings.no.hay.proyecto.abierto.usa')}</p>
       ) : null}
 
       <div className={styles.group}>
-        <span className={styles.groupLabel}>Reglas</span>
+        <span className={styles.groupLabel}>{t('settings.reglas')}</span>
         {rules.length === 0 ? (
-          <span className={styles.rowDesc}>Sin reglas.</span>
+          <span className={styles.rowDesc}>{t('settings.sin.reglas')}</span>
         ) : (
           <div className={styles.list}>
             {rules.map((row, index) => (
@@ -299,14 +300,14 @@ export function PermissionsSection(): JSX.Element {
       </div>
 
       <div className={styles.field}>
-        <span className={styles.fieldLabel}>Aplica a</span>
+        <span className={styles.fieldLabel}>{t('settings.aplica.a')}</span>
         <div className={styles.chips}>
           <button
             type="button"
             className={`${styles.chip} ${selectedModes.length === 0 ? styles.chipActive : ''}`}
             onClick={() => setSelectedModes([])}
           >
-            Todos los modos
+            {t('settings.todos.los.modos')}
           </button>
           {modes.map((mode) => (
             <button
@@ -354,7 +355,7 @@ export function PermissionsSection(): JSX.Element {
             )
           }
         >
-          <span className={styles.selectLabel}>Herramienta</span>
+          <span className={styles.selectLabel}>{t('settings.herramienta')}</span>
           <ProductIcon id="chevron-down" size={12} className={styles.selectChevron} />
         </button>
       </div>
@@ -363,7 +364,7 @@ export function PermissionsSection(): JSX.Element {
         <input
           className={styles.input}
           value={ruleDraft}
-          placeholder="Bash(git push:*) o Read(src/**)"
+          placeholder={t('settings.bash.git.push.o.read')}
           spellCheck={false}
           onChange={(event) => setRuleDraft(event.target.value)}
           onKeyDown={(event) => {
@@ -372,14 +373,14 @@ export function PermissionsSection(): JSX.Element {
         />
         <button type="button" className={styles.saveBtn} onClick={addRule}>
           <ProductIcon id="plus" size={12} />
-          Agregar
+          {t('settings.agregar')}
         </button>
       </div>
 
       <div className={styles.formRow}>
         <button type="button" className={styles.saveBtn} onClick={() => void save()}>
           <ProductIcon id="check" size={12} />
-          Guardar y aplicar
+          {t('settings.guardar.y.aplicar')}
         </button>
       </div>
 

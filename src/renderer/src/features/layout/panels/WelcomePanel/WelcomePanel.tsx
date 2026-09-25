@@ -10,6 +10,7 @@ import { markSeen, useUpdates } from '@services/updates'
 import type { ReleaseInfo } from '@shared/updates'
 import { loadTips } from "./tips";
 import { loadAnnouncement, parseLatestEntry, changelogHasNews, markChangelogSeen, type WelcomeAnnouncement } from "./changelog";
+import { t } from '@core/i18n'
 import "./WelcomePanel.css";
 
 /** Consejos desde `tips/*.json` (agregar JSON = agregar consejo). */
@@ -123,7 +124,7 @@ export function WelcomePanel({
                 <ProductIcon id="file" size={24} aria-hidden="true" />
               </div>
               <div className="action-content">
-                <span className="action-title">Nuevo archivo</span>
+                <span className="action-title">{t('layout.nuevo.archivo')}</span>
               </div>
             </button>
           </div>
@@ -143,7 +144,7 @@ export function WelcomePanel({
                 <ProductIcon id="new-file" size={24} aria-hidden="true" />
               </div>
               <div className="action-content">
-                <span className="action-title">Abrir archivo</span>
+                <span className="action-title">{t('layout.abrir.archivo')}</span>
               </div>
             </button>
           </div>
@@ -151,7 +152,7 @@ export function WelcomePanel({
           <div className="welcome-action-wrapper">
             <span className="action-badge">
               <ProductIcon id="keyboard" size={10} aria-hidden="true" />
-              Ctrl+K O
+              {t('layout.ctrl.k.o')}
             </span>
             <button
               className={`welcome-action-card ${hoveredAction === "folder" ? "hovered" : ""}`}
@@ -163,7 +164,7 @@ export function WelcomePanel({
                 <ProductIcon id="new-folder" size={24} aria-hidden="true" />
               </div>
               <div className="action-content">
-                <span className="action-title">Abrir carpeta</span>
+                <span className="action-title">{t('layout.abrir.carpeta')}</span>
               </div>
             </button>
           </div>
@@ -173,7 +174,7 @@ export function WelcomePanel({
         {workspaces.length > 0 && (
           <div className="welcome-recent-section">
             <div className="recent-header">
-              <h2 className="recent-title">Workspaces</h2>
+              <h2 className="recent-title">{t('layout.workspaces')}</h2>
             </div>
 
             <div className="recent-list">
@@ -211,7 +212,7 @@ export function WelcomePanel({
 
         {/* Info: split consejos | anuncios en un contenedor surface */}
         <div className="welcome-info-container">
-          <div className="info-tabs" role="tablist" aria-label="Información">
+          <div className="info-tabs" role="tablist" aria-label={t('layout.informacion')}>
             <button
               type="button"
               role="tab"
@@ -219,7 +220,7 @@ export function WelcomePanel({
               className={`info-tab ${infoTab === 'tips' ? "active" : ""}`}
               onClick={() => setInfoTab('tips')}
             >
-              Consejos
+              {t('layout.consejos')}
             </button>
             <button
               type="button"
@@ -235,8 +236,8 @@ export function WelcomePanel({
                 }
               }}
             >
-              Anuncios
-              {hasNews && <span className="info-badge" aria-label="Hay novedades" />}
+              {t('layout.anuncios')}
+              {hasNews && <span className="info-badge" aria-label={t('layout.hay.novedades')} />}
             </button>
             {infoTab === 'tips' && TIPS.length > 0 && (
               <div className="tips-indicators">
@@ -310,7 +311,7 @@ export function WelcomePanel({
                           className="ad-release-link"
                           onClick={() => window.open(updates.latest?.htmlUrl, '_blank')}
                         >
-                          Ver release en GitHub
+                          {t('layout.ver.release.en.github')}
                         </button>
                       )}
                     </div>
@@ -319,8 +320,8 @@ export function WelcomePanel({
               ) : (
                 <div className="ad-card">
                   <div className="ad-content">
-                    <h3 className="ad-title">Sin anuncios</h3>
-                    <p className="ad-description">Todavía no hay un changelog publicado.</p>
+                    <h3 className="ad-title">{t('layout.sin.anuncios')}</h3>
+                    <p className="ad-description">{t('layout.todavia.no.hay.un.changelog')}</p>
                   </div>
                 </div>
               )}

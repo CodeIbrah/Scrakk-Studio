@@ -11,6 +11,7 @@ import { showContextMenu } from '@features/editor/engines/innerta/menuHost'
 import { ExportChatDialog } from '@features/chat/components/ChatExport/ExportChatDialog'
 import styles from './HistoryPanel.module.css'
 
+import { t } from '@core/i18n'
 /**
  * Historial de chats — sesiones REALES del ChatsProvider (nada hardcodeado):
  * Nuevo chat → búsqueda → sesiones recientes.
@@ -69,7 +70,7 @@ export function HistoryPanel({ onPick }: { onPick?: () => void } = {}): JSX.Elem
     <div className={styles.history}>
       <button type="button" className={styles.newChat} onClick={handleNewChat}>
         <ProductIcon id="plus" size={15} />
-        Nuevo chat
+        {t('layout.nuevo.chat')}
       </button>
 
       <div className={styles.search}>
@@ -78,12 +79,12 @@ export function HistoryPanel({ onPick }: { onPick?: () => void } = {}): JSX.Elem
           className={styles.searchInput}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Buscar chats…"
-          aria-label="Buscar chats"
+          placeholder={t('layout.buscar.chats')}
+          aria-label={t('layout.buscar.chats-2')}
         />
       </div>
 
-      <nav className={styles.list} aria-label="Historial de chats">
+      <nav className={styles.list} aria-label={t('layout.historial.de.chats')}>
         {filteredSessions.length === 0 ? (
           <p className={styles.empty}>
             {sessions.length === 0 ? 'Sin chats todavía' : 'Sin resultados'}
@@ -112,7 +113,7 @@ export function HistoryPanel({ onPick }: { onPick?: () => void } = {}): JSX.Elem
                 <button
                   type="button"
                   className={styles.itemMenu}
-                  title="Más acciones"
+                  title={t('layout.mas.acciones')}
                   aria-label={`Más acciones para ${session.title}`}
                   onClick={(event) => openSessionMenu(event, session.id)}
                 >

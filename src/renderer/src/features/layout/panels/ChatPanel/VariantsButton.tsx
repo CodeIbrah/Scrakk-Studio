@@ -11,6 +11,7 @@ import { EffortSlider } from '@features/chat/components/EffortSlider/EffortSlide
 import styles from '@features/providers/components/ModelPicker/ModelPicker.module.css'
 import popStyles from './VariantsButton.module.css'
 
+import { t } from '@core/i18n'
 interface VariantsButtonProps {
   /** Variante actual del proveedor ('' = automática). */
   variant: string
@@ -81,16 +82,16 @@ export function VariantsButton({ variant }: VariantsButtonProps): JSX.Element {
           ref={popRef}
           className={popStyles.popover}
           role="dialog"
-          aria-label="Esfuerzo de pensamiento"
+          aria-label={t('layout.esfuerzo.de.pensamiento')}
           style={{
             left: Math.max(8, Math.min(rect.left, window.innerWidth - 248 - 8)),
             bottom: window.innerHeight - rect.top + 8
           }}
         >
           {!info.catalogReady ? (
-            <p className={popStyles.empty}>Cargando catálogo…</p>
+            <p className={popStyles.empty}>{t('layout.cargando.catalogo')}</p>
           ) : info.options.length === 0 ? (
-            <p className={popStyles.empty}>Este modelo no declara variantes de esfuerzo</p>
+            <p className={popStyles.empty}>{t('layout.este.modelo.no.declara.variantes')}</p>
           ) : (
             <EffortSlider
               steps={info.options}

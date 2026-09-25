@@ -11,6 +11,7 @@ import { ResizeHandle } from '../ResizeHandle/ResizeHandle'
 import { flushLayoutPersist } from '../../state/LayoutContext'
 import styles from './SplitView.module.css'
 
+import { t } from '@core/i18n'
 const RATIO_MIN = 0.15
 const RATIO_MAX = 0.85
 const RATIO_STEP = 0.05
@@ -86,7 +87,7 @@ function SplitNode({
         <SplitNode node={node.children[0]} slot={slot} nested onAddTab={onAddTab} actions={actions} />
       </div>
       <ResizeHandle
-        label="Redimensionar split"
+        label={t('layout.redimensionar.split')}
         value={node.ratio}
         min={RATIO_MIN}
         max={RATIO_MAX}

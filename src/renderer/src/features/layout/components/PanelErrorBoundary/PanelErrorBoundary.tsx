@@ -5,6 +5,7 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 import styles from './PanelErrorBoundary.module.css'
 
+import { t } from '@core/i18n'
 interface PanelErrorBoundaryProps {
   children: ReactNode
 }
@@ -41,10 +42,10 @@ export class PanelErrorBoundary extends Component<
     if (error) {
       return (
         <div className={styles.wrapper} role="alert">
-          <p className={styles.title}>Este panel falló</p>
+          <p className={styles.title}>{t('layout.este.panel.fallo')}</p>
           <p className={styles.message}>{error.message || 'Error desconocido'}</p>
           <button type="button" className={styles.retry} onClick={this.handleRetry}>
-            Reintentar
+            {t('layout.reintentar')}
           </button>
         </div>
       )

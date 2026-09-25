@@ -7,6 +7,7 @@ import { skillRegistry } from '@services/skills'
 import { toggleSkillsView } from '../SkillsPanel/viewState'
 import styles from './ChatPanel.module.css'
 
+import { t } from '@core/i18n'
 /**
  * Botón "skills: N" debajo del input. Muestra cuántas skills hay cargadas y
  * abre/cierra la vista de skills dentro del propio panel de chat.
@@ -24,7 +25,7 @@ export function SkillsButton(): JSX.Element {
       type="button"
       className={styles.skillsBtn}
       onClick={() => toggleSkillsView()}
-      title="Ver y administrar skills"
+      title={t('layout.ver.y.administrar.skills')}
     >
       skills: {count}
     </button>

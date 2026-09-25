@@ -43,6 +43,7 @@ import {
 import type { InstalledExtensionInfo } from '@shared/extensions'
 import styles from './ExtensionsSection.module.css'
 
+import { t } from '@core/i18n'
 type Status = { kind: 'ok' | 'error'; text: string } | null
 
 function contributionsText(extensionId: string, enabled: boolean): string {
@@ -312,7 +313,7 @@ export function ExtensionsSection(): JSX.Element {
       <div className={styles.header}>
         <ProductIcon id="extensions" size={16} />
         <div className={styles.headerText}>
-          <h3>Extensiones</h3>
+          <h3>{t('settings.extensiones')}</h3>
           <p>
             Extensiones del usuario instaladas desde disco (.sef o .vsix
             convertidas).
@@ -324,7 +325,7 @@ export function ExtensionsSection(): JSX.Element {
         {allExtensions.length === 0 && (
           <li className={styles.empty}>
             <ProductIcon id="box" size={16} />
-            No hay extensiones cargadas.
+            {t('settings.no.hay.extensiones.cargadas')}
           </li>
         )}
         {allExtensions.map((extension) => {
@@ -372,7 +373,7 @@ export function ExtensionsSection(): JSX.Element {
                   <button
                     type="button"
                     className={styles.iconButton}
-                    title="Desinstalar"
+                    title={t('settings.desinstalar')}
                     disabled={busy}
                     onClick={() => {
                       const entry = installed.find((item) => item.id === extension.id)
@@ -396,7 +397,7 @@ export function ExtensionsSection(): JSX.Element {
           onClick={() => void handleInstall()}
         >
           <ProductIcon id="download" size={14} />
-          Instalar .sef
+          {t('settings.instalar.sef')}
         </button>
         <button
           type="button"
@@ -405,7 +406,7 @@ export function ExtensionsSection(): JSX.Element {
           onClick={() => void handleInstallVsix()}
         >
           <ProductIcon id="download" size={14} />
-          Instalar .vsix
+          {t('settings.instalar.vsix')}
         </button>
         {status && (
           <span className={status.kind === 'ok' ? styles.statusOk : styles.statusError}>
@@ -417,8 +418,8 @@ export function ExtensionsSection(): JSX.Element {
       {iconThemes.length > 0 && (
         <div className={styles.header} style={{ marginTop: 16 }}>
           <div className={styles.headerText}>
-            <h3>Iconos de archivos</h3>
-            <p>El explorer y las tabs usan el tema activo.</p>
+            <h3>{t('settings.iconos.de.archivos')}</h3>
+            <p>{t('settings.el.explorer.y.las.tabs')}</p>
           </div>
         </div>
       )}
@@ -445,14 +446,14 @@ export function ExtensionsSection(): JSX.Element {
 
       <div className={styles.header} style={{ marginTop: 16 }}>
         <div className={styles.headerText}>
-          <h3>Iconos de la interfaz</h3>
+          <h3>{t('settings.iconos.de.la.interfaz')}</h3>
           <p>Botones, tabs y chevrons usan el tema activo (Scrakk = ProIcons).</p>
         </div>
       </div>
       <ul className={styles.list}>
         <li className={styles.row}>
           <div className={styles.rowInfo}>
-            <span className={styles.rowName}>Scrakk</span>
+            <span className={styles.rowName}>{t('settings.scrakk')}</span>
             <span className={styles.rowMeta}>{SCRAKK_PRODUCT_ICON_THEME_ID}</span>
           </div>
           <button

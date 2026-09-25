@@ -16,6 +16,7 @@ import {
 } from './terminalNodesModel'
 import styles from './TerminalNodesView.module.css'
 
+import { t } from '@core/i18n'
 interface NodePos { x: number; y: number }
 interface NodeSize { w: number; h: number }
 interface Cam { x: number; y: number; k: number }
@@ -584,7 +585,7 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
                   className={styles.edgeHit}
                   onClick={(e) => { e.stopPropagation(); removeLink(link.id) }}
                 >
-                  <title>Clic para desenlazar</title>
+                  <title>{t('layout.clic.para.desenlazar')}</title>
                 </line>
                 <line ref={setEdgeLineEl(link.id, 1)} x1={a.x} y1={a.y} x2={b.x} y2={b.y} className={styles.edgeLine} />
               </g>
@@ -618,7 +619,7 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
                 onPointerDown={(e) => onNodeHeaderPointerDown(e, tab.id)}
                 onPointerMove={onNodeHeaderPointerMove}
                 onPointerUp={onNodeHeaderPointerUp}
-                title="Arrastrar para mover"
+                title={t('layout.arrastrar.para.mover')}
               >
                 <ProductIcon id="terminal" size={14} aria-hidden="true" />
                 <span className={styles.nodeTitle}>{tab.label ?? 'Terminal'}</span>
@@ -626,7 +627,7 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
                   type="button"
                   className={styles.nodeClose}
                   aria-label={`Cerrar ${tab.label ?? 'terminal'}`}
-                  title="Cerrar terminal"
+                  title={t('layout.cerrar.terminal')}
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={() => closeNode(tab)}
                 >
@@ -647,7 +648,7 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
                     className={styles.port}
                     style={{ left: p.x, top: p.y }}
                     aria-label={`Unir ${tab.label ?? 'terminal'} (punto ${i + 1} de ${ports.length})`}
-                    title="Arrastra hasta otra terminal para unir · o clic aquí y luego en la otra"
+                    title={t('layout.arrastra.hasta.otra.terminal.para')}
                     onPointerDown={(e) => onPortPointerDown(e, tab.id, i)}
                     onKeyDown={(e) => onPortKeyDown(e, tab.id, i)}
                   />
@@ -682,30 +683,30 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
       {tabs.length === 0 ? (
         <div className={styles.empty} data-nopan="1">
           <ProductIcon id="share" size={28} aria-hidden="true" />
-          <p>Sin terminales en el lienzo</p>
+          <p>{t('layout.sin.terminales.en.el.lienzo')}</p>
           <button type="button" className={styles.emptyAction} onClick={() => openNewTerminalTab('bottom')}>
-            Crear terminal
+            {t('layout.crear.terminal')}
           </button>
         </div>
       ) : null}
 
-      <div className={styles.toolbar} data-nopan="1" role="toolbar" aria-label="Controles del lienzo">
-        <button type="button" className={styles.toolButton} title="Volver a las tabs" aria-label="Volver a las tabs" onClick={onBack}>
+      <div className={styles.toolbar} data-nopan="1" role="toolbar" aria-label={t('layout.controles.del.lienzo')}>
+        <button type="button" className={styles.toolButton} title={t('layout.volver.a.las.tabs')} aria-label={t('layout.volver.a.las.tabs')} onClick={onBack}>
           <ProductIcon id="chevron-down" size={15} aria-hidden="true" />
         </button>
         <span className={styles.toolDivider} aria-hidden="true" />
-        <button type="button" className={styles.toolButton} title="Nueva terminal en el lienzo" aria-label="Nueva terminal en el lienzo" onClick={() => openNewTerminalTab('bottom')}>
+        <button type="button" className={styles.toolButton} title={t('layout.nueva.terminal.en.el.lienzo')} aria-label={t('layout.nueva.terminal.en.el.lienzo')} onClick={() => openNewTerminalTab('bottom')}>
           <ProductIcon id="plus" size={15} aria-hidden="true" />
         </button>
-        <button type="button" className={styles.toolButton} title="Restablecer vista" aria-label="Restablecer vista" onClick={resetView}>
+        <button type="button" className={styles.toolButton} title={t('layout.restablecer.vista')} aria-label={t('layout.restablecer.vista')} onClick={resetView}>
           <ProductIcon id="history" size={14} aria-hidden="true" />
         </button>
         <span className={styles.toolDivider} aria-hidden="true" />
-        <button type="button" className={styles.toolButton} title="Reducir zoom" aria-label="Reducir zoom" onClick={() => zoomBy(1 / 1.15)}>
+        <button type="button" className={styles.toolButton} title={t('layout.reducir.zoom')} aria-label={t('layout.reducir.zoom')} onClick={() => zoomBy(1 / 1.15)}>
           <ProductIcon id="minus" size={14} aria-hidden="true" />
         </button>
         <span className={styles.zoomLabel}>{Math.round(cam.k * 100)}%</span>
-        <button type="button" className={styles.toolButton} title="Ampliar zoom" aria-label="Ampliar zoom" onClick={() => zoomBy(1.15)}>
+        <button type="button" className={styles.toolButton} title={t('layout.ampliar.zoom')} aria-label={t('layout.ampliar.zoom')} onClick={() => zoomBy(1.15)}>
           <ProductIcon id="plus" size={14} aria-hidden="true" />
         </button>
       </div>

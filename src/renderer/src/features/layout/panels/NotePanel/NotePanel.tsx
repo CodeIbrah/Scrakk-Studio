@@ -16,6 +16,7 @@ import {
 } from '@services/notes'
 import styles from './NotePanel.module.css'
 
+import { t } from '@core/i18n'
 function formatDate(epochMs: number): string {
   const date = new Date(epochMs)
   const today = new Date()
@@ -56,7 +57,7 @@ export function NotePanel(): JSX.Element {
     setActions(() => (
       <HeaderActionButton
         id="notes.new-note"
-        label="Nueva nota"
+        label={t('layout.nueva.nota')}
         icon="plus"
         size="sm"
         onClick={handleNewNote}
@@ -88,15 +89,15 @@ export function NotePanel(): JSX.Element {
       {notes.length === 0 ? (
         <div className={styles.placeholder}>
           <ProductIcon id="note" size={24} className={styles.icon} aria-hidden="true" />
-          <p className={styles.empty}>Sin notas todavía.</p>
+          <p className={styles.empty}>{t('layout.sin.notas.todavia')}</p>
           <button type="button" className={styles.create} onClick={handleNewNote}>
             <ProductIcon id="plus" size={14} />
-            Nueva nota
+            {t('layout.nueva.nota')}
           </button>
         </div>
       ) : (
         <>
-          <nav className={styles.list} aria-label="Historial de notas">
+          <nav className={styles.list} aria-label={t('layout.historial.de.notas')}>
             {notes.map((note) => {
               const selected = note.id === activeId
               return (
@@ -137,8 +138,8 @@ export function NotePanel(): JSX.Element {
                 key={active.id}
                 className={styles.editorInput}
                 defaultValue={active.content}
-                placeholder="Escribe tu nota…"
-                aria-label="Contenido de la nota"
+                placeholder={t('layout.escribe.tu.nota')}
+                aria-label={t('layout.contenido.de.la.nota')}
                 spellCheck={false}
                 onChange={(event) => updateNote(active.id, event.target.value)}
               />

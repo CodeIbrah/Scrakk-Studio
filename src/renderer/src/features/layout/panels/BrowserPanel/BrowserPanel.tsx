@@ -7,6 +7,7 @@ import { ProductIcon } from '@services/productIcons/components'
 import { usePanelTitle } from '@features/layout'
 import styles from './BrowserPanel.module.css'
 
+import { t } from '@core/i18n'
 /**
  * Panel de browser — APARTADO FALSO por el momento: placeholder sin
  * backend real (aún no implementado). Solo aporta su contenido; el
@@ -23,7 +24,7 @@ export function BrowserPanel(): JSX.Element {
     <div className={styles.browser}>
       <div className={styles.placeholder}>
         <ProductIcon id="browser" size={24} className={styles.icon} aria-hidden="true" />
-        <p className={styles.empty}>Browser no implementado todavía.</p>
+        <p className={styles.empty}>{t('layout.browser.no.implementado.todavia')}</p>
       </div>
     </div>
   )

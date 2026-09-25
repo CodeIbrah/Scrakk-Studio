@@ -20,6 +20,7 @@ import {
 } from '@services/updates'
 import styles from './InfoSection.module.css'
 
+import { t } from '@core/i18n'
 export function InfoSection(): JSX.Element {
   const updates = useUpdates()
   const [checking, setChecking] = useState(false)
@@ -59,10 +60,10 @@ export function InfoSection(): JSX.Element {
 
   return (
     <div className={styles.info}>
-      <p><strong>Scrakk Studio</strong> — Editor de código.</p>
-      <p>React + TypeScript + Electron. Sistema de paneles resizables y extensiones.</p>
+      <p><strong>{t('settings.scrakk.studio')}</strong> {t('settings.editor.de.codigo')}</p>
+      <p>{t('settings.react.typescript.electron.sistema.de')}</p>
       <p className={styles.version}>
-        v{updates.currentVersion} · build {typeof __BUILD_ID__ === 'string' ? __BUILD_ID__ : 'dev'}
+        v{updates.currentVersion} {t('settings.build')} {typeof __BUILD_ID__ === 'string' ? __BUILD_ID__ : 'dev'}
       </p>
 
       <div className={styles.updates}>
@@ -82,7 +83,7 @@ export function InfoSection(): JSX.Element {
               className={styles.actionBtnPrimary}
               onClick={() => void installUpdate()}
             >
-              Reiniciar y actualizar
+              {t('settings.reiniciar.y.actualizar')}
             </button>
           )}
 
@@ -92,7 +93,7 @@ export function InfoSection(): JSX.Element {
               className={styles.actionBtnPrimary}
               onClick={() => void downloadUpdate()}
             >
-              Descargar v{updater.version}
+              {t('settings.descargar.v')}{updater.version}
             </button>
           )}
 
@@ -102,7 +103,7 @@ export function InfoSection(): JSX.Element {
               className={styles.actionBtn}
               onClick={() => openReleasePage()}
             >
-              Ver release v{updates.latest?.version}
+              {t('settings.ver.release.v')}{updates.latest?.version}
             </button>
           )}
         </div>

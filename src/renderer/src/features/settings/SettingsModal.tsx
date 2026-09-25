@@ -19,6 +19,7 @@ import { ProductIcon } from '@services/productIcons/components'
 import { SETTINGS_SECTIONS, type SettingsSectionId } from './sections'
 import styles from './SettingsModal.module.css'
 
+import { t } from '@core/i18n'
 interface SettingsModalProps {
   open: boolean
   onClose: () => void
@@ -79,9 +80,9 @@ export function SettingsModal({ open, onClose, initialSection }: SettingsModalPr
     (SETTINGS_SECTIONS.find((section) => section.id === active) ?? SETTINGS_SECTIONS[0]).component
 
   return (
-    <Modal open={open} onClose={onClose} title="Ajustes" size="xl">
+    <Modal open={open} onClose={onClose} title={t('settings.ajustes')} size="xl">
       <div className={styles.body}>
-        <nav className={styles.nav} aria-label="Secciones de ajustes">
+        <nav className={styles.nav} aria-label={t('settings.secciones.de.ajustes')}>
           {topSections.map((section) => {
             const children = childrenOf(section.id)
             if (children.length === 0) {
@@ -162,7 +163,7 @@ export function SettingsModal({ open, onClose, initialSection }: SettingsModalPr
             className={[styles.scrollTop, showScrollTop ? styles.scrollTopVisible : null]
               .filter(Boolean)
               .join(' ')}
-            aria-label="Volver arriba"
+            aria-label={t('settings.volver.arriba')}
             aria-hidden={!showScrollTop}
             tabIndex={showScrollTop ? 0 : -1}
             onClick={scrollToTop}

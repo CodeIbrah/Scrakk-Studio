@@ -40,6 +40,7 @@ import {
 import type { LspDiagnostic } from '@shared/lsp'
 import styles from './ProblemsPanel.module.css'
 
+import { t } from '@core/i18n'
 /** Severidades del LSP, con su icono y su color (1 = error … 4 = hint). */
 const SEVERITIES = [
   { id: 1, label: 'Errores', icon: 'close', color: 'var(--color-danger, #f14c4c)' },
@@ -191,8 +192,8 @@ export function ProblemsPanel(): JSX.Element {
         <input
           className={styles.query}
           value={query}
-          placeholder="Filtrar problemas…"
-          aria-label="Filtrar problemas"
+          placeholder={t('layout.filtrar.problemas')}
+          aria-label={t('layout.filtrar.problemas-2')}
           onChange={(event) => setQuery(event.target.value)}
         />
       </div>

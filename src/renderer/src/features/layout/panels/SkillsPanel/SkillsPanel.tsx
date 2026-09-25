@@ -16,6 +16,7 @@ import { insertSkillIntoChat } from '@services/chat'
 import { showModal } from '@services/modals'
 import styles from './SkillsPanel.module.css'
 
+import { t } from '@core/i18n'
 const SOURCE_LABEL: Record<SkillInfo['source'], string> = {
   project: 'proyecto',
   user: 'usuario',
@@ -165,7 +166,7 @@ export function SkillsPanel(): JSX.Element {
           </p>
           <div className={styles.confirmActions}>
             <button type="button" className={styles.confirmCancel} onClick={close}>
-              Cancelar
+              {t('layout.cancelar')}
             </button>
             <button
               type="button"
@@ -175,7 +176,7 @@ export function SkillsPanel(): JSX.Element {
                 void handleDelete(skill)
               }}
             >
-              Eliminar
+              {t('layout.eliminar')}
             </button>
           </div>
         </div>
@@ -235,20 +236,20 @@ export function SkillsPanel(): JSX.Element {
                 ref={nameRef}
                 className={styles.field}
                 value={name}
-                placeholder="nombre (ej. release-notes)"
+                placeholder={t('layout.nombre.ej.release.notes')}
                 spellCheck={false}
                 onChange={(event) => setName(event.target.value)}
               />
               <input
                 className={styles.field}
                 value={description}
-                placeholder="descripción: cuándo usarla"
+                placeholder={t('layout.descripcion.cuando.usarla')}
                 onChange={(event) => setDescription(event.target.value)}
               />
               <textarea
                 className={styles.body}
                 value={body}
-                placeholder="Instrucciones (markdown)…"
+                placeholder={t('layout.instrucciones.markdown')}
                 rows={4}
                 onChange={(event) => setBody(event.target.value)}
               />
@@ -298,14 +299,14 @@ export function SkillsPanel(): JSX.Element {
 
       {skills.length > 0 ? (
         <p className={styles.counter}>
-          Tienes {skills.length} {skills.length === 1 ? 'skill' : 'skills'}
+          {t('layout.tienes')} {skills.length} {skills.length === 1 ? 'skill' : 'skills'}
         </p>
       ) : null}
 
       {/* Lista de skills. */}
       {skills.length === 0 ? (
         <div className={styles.empty}>
-          <p className={styles.emptyText}>Todavía no hay skills.</p>
+          <p className={styles.emptyText}>{t('layout.todavia.no.hay.skills')}</p>
         </div>
       ) : (
         <div className={styles.list} role="list">

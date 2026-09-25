@@ -12,6 +12,7 @@
  */
 
 import type { ComponentType } from 'react'
+import { t, type MessageKey } from '@core/i18n'
 import { AppearanceSection } from './AppearanceSection'
 import { EditorSection } from './EditorSection/EditorSection'
 import { ExtensionsSection } from './ExtensionsSection'
@@ -46,18 +47,38 @@ export interface SettingsSectionDef {
   component: ComponentType
 }
 
+/** Definición corta de una sección: id + clave de label + icono + componente. */
+function section(
+  id: SettingsSectionId,
+  labelKey: MessageKey,
+  icon: string,
+  component: ComponentType,
+  parent?: SettingsSectionId
+): SettingsSectionDef {
+  return {
+    id,
+    icon,
+    parent,
+    component,
+    // Getter: el label sigue al idioma activo sin tocar los consumidores.
+    get label() {
+      return t(labelKey)
+    }
+  }
+}
+
 export const SETTINGS_SECTIONS: SettingsSectionDef[] = [
-  { id: 'appearance', label: 'Apariencia', icon: 'grid', component: AppearanceSection },
-  { id: 'editor', label: 'Editor', icon: 'code', component: EditorSection },
-  { id: 'extensions', label: 'Extensiones', icon: 'extensions', component: ExtensionsSection },
-  { id: 'performance', label: 'Rendimiento', icon: 'chart', component: PerformanceSection },
-  { id: 'servers', label: 'Servidores', icon: 'server', component: ServersSection },
-  { id: 'highlight', label: 'Resaltado', icon: 'code', parent: 'servers', component: HighlightSection },
-  { id: 'chat', label: 'Chat', icon: 'chat', component: ChatSection },
-  { id: 'chatProviders', label: 'Proveedores', icon: 'server', parent: 'chat', component: ProvidersSection },
-  { id: 'chatTools', label: 'Herramientas', icon: 'grid', parent: 'chat', component: ToolsSection },
-  { id: 'chatSkills', label: 'Skills', icon: 'layers', parent: 'chat', component: SkillsSection },
-  { id: 'chatAgents', label: 'Agentes', icon: 'people', parent: 'chat', component: AgentsSection },
-  { id: 'chatPermissions', label: 'Permisos', icon: 'shield-check', parent: 'chat', component: PermissionsSection },
-  { id: 'info', label: 'Acerca de', icon: 'info', component: InfoSection }
+  section('appearance', 'settings.nav.appearance', 'grid', AppearanceSection),
+  section('editor', 'settings.nav.editor', 'code', EditorSection),
+  section('extensions', 'settings.nav.extensions', 'extensions', ExtensionsSection),
+  section('performance', 'settings.nav.performance', 'chart', PerformanceSection),
+  section('servers', 'settings.nav.servers', 'server', ServersSection),
+  section('highlight', 'settings.nav.highlight', 'code', HighlightSection, 'servers'),
+  section('chat', 'settings.nav.chat', 'chat', ChatSection),
+  section('chatProviders', 'settings.nav.providers', 'server', ProvidersSection, 'chat'),
+  section('chatTools', 'settings.nav.tools', 'grid', ToolsSection, 'chat'),
+  section('chatSkills', 'settings.nav.skills', 'layers', SkillsSection, 'chat'),
+  section('chatAgents', 'settings.nav.agents', 'people', AgentsSection, 'chat'),
+  section('chatPermissions', 'settings.nav.permissions', 'shield-check', PermissionsSection, 'chat'),
+  section('info', 'settings.nav.info', 'info', InfoSection)
 ]

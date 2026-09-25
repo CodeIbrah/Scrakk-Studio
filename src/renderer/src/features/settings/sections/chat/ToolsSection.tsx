@@ -20,6 +20,7 @@ import { toolCatalog, DEFAULT_TOOL_TYPE } from '@services/ai/tools/catalog'
 import { toolSettingsService } from '@services/ai/toolSettings'
 import styles from './ChatSections.module.css'
 
+import { t } from '@core/i18n'
 type ToolRow = ReturnType<typeof toolSettingsService.getAllTools>[number]
 
 export function ToolsSection(): JSX.Element {
@@ -46,9 +47,9 @@ export function ToolsSection(): JSX.Element {
       <div className={styles.rowMain}>
         <span className={styles.rowTitle}>
           {tool.meta.label}
-          {tool.extensionId ? <span className={styles.badge}>extensión</span> : null}
+          {tool.extensionId ? <span className={styles.badge}>{t('settings.extension')}</span> : null}
           {tool.meta.dangerLevel === 'high' ? (
-            <span className={`${styles.badge} ${styles.badgeDanger}`}>riesgo alto</span>
+            <span className={`${styles.badge} ${styles.badgeDanger}`}>{t('settings.riesgo.alto')}</span>
           ) : null}
         </span>
         <span className={styles.rowDesc}>{tool.meta.description || tool.name}</span>
@@ -66,7 +67,7 @@ export function ToolsSection(): JSX.Element {
 
   return (
     <div className={styles.section}>
-      <p className={styles.hint}>Elige qué herramientas puede usar la IA.</p>
+      <p className={styles.hint}>{t('settings.elige.que.herramientas.puede.usar')}</p>
 
       {toolCatalog.listFamilies().map((family) => {
         const groups = toolCatalog
@@ -106,7 +107,7 @@ export function ToolsSection(): JSX.Element {
 
       {orphans.length > 0 ? (
         <div className={styles.group}>
-          <span className={styles.groupLabel}>Sin grupo</span>
+          <span className={styles.groupLabel}>{t('settings.sin.grupo')}</span>
           <div className={styles.list}>{orphans.map(renderTool)}</div>
         </div>
       ) : null}

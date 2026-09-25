@@ -18,6 +18,7 @@ import { ProductIcon } from '@services/productIcons/components'
 import { TerminalNodesView } from '../TerminalNodes/TerminalNodesView'
 import styles from './PanelLayout.module.css'
 
+import { t } from '@core/i18n'
 const LEFT_DEFAULT = 260
 const LEFT_MIN = 200
 const LEFT_MAX = 440
@@ -216,7 +217,7 @@ export function PanelLayout(): JSX.Element {
     return (
       <div className={styles.layout}>
         <p className={styles.empty} role="status" aria-live="polite">
-          No hay panel activo
+          {t('layout.no.hay.panel.activo')}
         </p>
       </div>
     )
@@ -237,7 +238,7 @@ export function PanelLayout(): JSX.Element {
 
       {showLeftHandle && !showSplitHandle ? (
         <ResizeHandle
-          label="Redimensionar panel izquierdo"
+          label={t('layout.redimensionar.panel.izquierdo')}
           value={leftWidth}
           min={LEFT_MIN}
           max={LEFT_MAX}
@@ -259,14 +260,14 @@ export function PanelLayout(): JSX.Element {
             <div className={styles.bottomHandleRow}>
               {showBottomLeftCorner ? (
                 <CornerResizeHandle
-                  label="Redimensionar panel izquierdo e inferior"
+                  label={t('layout.redimensionar.panel.izquierdo.e.inferior')}
                   corner="left"
                   onLive={cornerLeftLive}
                   onCommit={cornerLeftCommit}
                 />
               ) : null}
               <ResizeHandle
-                label="Redimensionar panel inferior"
+                label={t('layout.redimensionar.panel.inferior')}
                 value={bottomHeight}
                 min={BOTTOM_MIN}
                 max={BOTTOM_MAX}
@@ -278,7 +279,7 @@ export function PanelLayout(): JSX.Element {
               />
               {showBottomRightCorner ? (
                 <CornerResizeHandle
-                  label="Redimensionar panel derecho e inferior"
+                  label={t('layout.redimensionar.panel.derecho.e.inferior')}
                   corner="right"
                   onLive={cornerRightLive}
                   onCommit={cornerRightCommit}
@@ -321,7 +322,7 @@ export function PanelLayout(): JSX.Element {
 
       {showRightHandle && !showSplitHandle ? (
         <ResizeHandle
-          label="Redimensionar panel derecho"
+          label={t('layout.redimensionar.panel.derecho')}
           value={rightWidth}
           min={RIGHT_MIN}
           max={RIGHT_MAX}
@@ -334,7 +335,7 @@ export function PanelLayout(): JSX.Element {
 
       {showSplitHandle ? (
         <ResizeHandle
-          label="Redimensionar paneles laterales"
+          label={t('layout.redimensionar.paneles.laterales')}
           value={leftWidth}
           min={LEFT_MIN}
           max={LEFT_MAX}

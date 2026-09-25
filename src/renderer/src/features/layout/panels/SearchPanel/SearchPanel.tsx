@@ -9,6 +9,7 @@ import { openFileInEditor } from '@features/editor'
 import type { GrepMatch } from '@shared/fs'
 import styles from './SearchPanel.module.css'
 
+import { t } from '@core/i18n'
 const ROOT_KEY = 'scrakk-studio:root-path'
 const DEBOUNCE_MS = 250
 const MAX_RESULTS = 100
@@ -123,24 +124,24 @@ export function SearchPanel(): JSX.Element {
           className={styles.boxInput}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Buscar en archivos…"
-          aria-label="Buscar en archivos"
+          placeholder={t('layout.buscar.en.archivos')}
+          aria-label={t('layout.buscar.en.archivos-2')}
           spellCheck={false}
         />
       </div>
 
       {!root ? (
-        <p className={styles.empty}>Abre una carpeta para buscar en el workspace.</p>
+        <p className={styles.empty}>{t('layout.abre.una.carpeta.para.buscar')}</p>
       ) : !query.trim() ? (
-        <p className={styles.empty}>Escribe para buscar en el workspace.</p>
+        <p className={styles.empty}>{t('layout.escribe.para.buscar.en.el')}</p>
       ) : searching && matches.length === 0 ? (
         <p className={styles.empty}>Buscando…</p>
       ) : error ? (
         <p className={styles.empty}>{error}</p>
       ) : matches.length === 0 ? (
-        <p className={styles.empty}>Sin resultados para “{query.trim()}”.</p>
+        <p className={styles.empty}>{t('layout.sin.resultados.para')}{query.trim()}”.</p>
       ) : (
-        <div className={styles.results} role="list" aria-label="Resultados de búsqueda">
+        <div className={styles.results} role="list" aria-label={t('layout.resultados.de.busqueda')}>
           <p className={styles.count}>
             {matches.length} resultado{matches.length === 1 ? '' : 's'}
             {matches.length >= MAX_RESULTS ? ' (tope)' : ''}

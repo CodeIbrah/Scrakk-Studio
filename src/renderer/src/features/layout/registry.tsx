@@ -3,6 +3,7 @@
 // Licencia completa en LICENSE (Apache License 2.0).
 
 import type { ComponentType } from 'react'
+import { t, type MessageKey } from '@core/i18n'
 import { ExtensionRegistry } from '@services/extensions'
 import {
   loadedPanel,
@@ -26,24 +27,33 @@ import type { PanelEntry, PanelId } from './types'
  * promesa resuelve, y `preloadPanel` lo deja listo ANTES del click.
  */
 
-/** Definición corta de un panel built-in: id + título + import dinámico. */
+/** Definición corta de un panel built-in: id + título (clave i18n) + import dinámico. */
 function panel(
   id: PanelId,
-  title: string,
+  titleKey: MessageKey,
   load: () => Promise<ComponentType>,
   extra?: { closable?: boolean }
 ): PanelEntry {
-  return { id, title, load, ...extra }
+  // `title` es un getter: se resuelve en cada acceso, así el título del panel
+  // sigue al idioma activo sin que los consumidores cambien nada.
+  return {
+    id,
+    get title() {
+      return t(titleKey)
+    },
+    load,
+    ...extra
+  }
 }
 
 export const PANEL_REGISTRY: Record<PanelId, PanelEntry> = {
-  editor: panel('editor', 'Editor', () =>
+  editor: panel('editor', 'layout.panel.editor', () =>
     import('@features/editor').then((module) => module.EditorPanel)
   ),
   // El chat es permanente: el + de nuevo chat vive en su header.
   chat: panel(
     'chat',
-    'Chat',
+    'layout.panel.chat',
     () => import('./panels/ChatPanel/ChatPanel').then((module) => module.ChatPanel),
     { closable: false }
   ),
@@ -53,40 +63,40 @@ export const PANEL_REGISTRY: Record<PanelId, PanelEntry> = {
   // de paneles montables y varios tests lo usan como panel de ejemplo; sin
   // entrada en la barra ni comando que lo spawnee, no hay forma de abrirlo
   // aparte.
-  history: panel('history', 'Historial', () =>
+  history: panel('history', 'layout.panel.history', () =>
     import('./panels/HistoryPanel/HistoryPanel').then((module) => module.HistoryPanel)
   ),
-  welcome: panel('welcome', 'Bienvenida', () =>
+  welcome: panel('welcome', 'layout.panel.welcome', () =>
     import('./panels/WelcomePanel/WelcomePanel').then((module) => module.WelcomePanel)
   ),
   // El explorador es permanente: sin X en el header.
   explorer: panel(
     'explorer',
-    'Explorador',
+    'layout.panel.explorer',
     () => import('@features/explorer').then((module) => module.ExplorerPanel),
     { closable: false }
   ),
-  search: panel('search', 'Búsqueda', () =>
+  search: panel('search', 'layout.panel.search', () =>
     import('./panels/SearchPanel/SearchPanel').then((module) => module.SearchPanel)
   ),
-  git: panel('git', 'Git', () =>
+  git: panel('git', 'layout.panel.git', () =>
     import('./panels/GitPanel/GitPanel').then((module) => module.GitPanel)
   ),
-  browser: panel('browser', 'Browser', () =>
+  browser: panel('browser', 'layout.panel.browser', () =>
     import('./panels/BrowserPanel/BrowserPanel').then((module) => module.BrowserPanel)
   ),
-  notes: panel('notes', 'Notas', () =>
+  notes: panel('notes', 'layout.panel.notes', () =>
     import('./panels/NotePanel/NotePanel').then((module) => module.NotePanel)
   ),
-  debug: panel('debug', 'Debug', () =>
+  debug: panel('debug', 'layout.panel.debug', () =>
     import('./panels/DebugPanel/DebugPanel').then((module) => module.DebugPanel)
   ),
   // Problemas: los diagnósticos de language servers Y de extensiones en una
   // sola lista (es el panel que abre el chip de la barra de estado).
-  problems: panel('problems', 'Problemas', () =>
+  problems: panel('problems', 'layout.panel.problems', () =>
     import('./panels/ProblemsPanel/ProblemsPanel').then((module) => module.ProblemsPanel)
   ),
-  social: panel('social', 'Social', () =>
+  social: panel('social', 'layout.panel.social', () =>
     import('./panels/SocialPanel/SocialPanel').then((module) => module.SocialPanel)
   )
 }

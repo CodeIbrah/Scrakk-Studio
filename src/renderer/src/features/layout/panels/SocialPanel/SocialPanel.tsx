@@ -22,6 +22,7 @@ import {
 } from '@features/social'
 import styles from './SocialPanel.module.css'
 
+import { t } from '@core/i18n'
 /**
  * Panel Social. Cada instancia tiene su PROPIO estado y SU propia cuenta
  * (multi-cuenta por panel): cambiar de cuenta aquí no afecta a otros paneles.
@@ -81,7 +82,7 @@ function SocialPanelInner(): JSX.Element {
         return (
           <HeaderActionButton
             id="social.back"
-            label="Volver"
+            label={t('layout.volver')}
             size="sm"
             shape="rounded"
             onClick={() => setView('home')}
@@ -95,7 +96,7 @@ function SocialPanelInner(): JSX.Element {
         <>
           <HeaderActionButton
             id="social.accounts"
-            label="Cuentas"
+            label={t('layout.cuentas')}
             size="sm"
             shape="rounded"
             onClick={() => setView('accounts')}
@@ -104,7 +105,7 @@ function SocialPanelInner(): JSX.Element {
           </HeaderActionButton>
           <HeaderActionButton
             id="social.profile"
-            label="Mi perfil"
+            label={t('layout.mi.perfil')}
             size="sm"
             shape="rounded"
             onClick={() => setView('profile')}
@@ -259,7 +260,7 @@ function SocialPanelInner(): JSX.Element {
         </div>
         {isTyping ? (
           <div className={styles.typing}>
-            <span>{typingName} está escribiendo</span>
+            <span>{typingName} {t('layout.esta.escribiendo')}</span>
             <span className={styles.typingDots}>
               <span />
               <span />
@@ -303,13 +304,13 @@ function SocialPanelInner(): JSX.Element {
 
         {requests.length > 0 ? (
           <section className={styles.section}>
-            <h3 className={styles.sectionTitle}>Solicitudes</h3>
+            <h3 className={styles.sectionTitle}>{t('layout.solicitudes')}</h3>
             <RequestsList requests={requests} onRespond={respondRequest} />
           </section>
         ) : null}
 
         <section className={styles.section}>
-          <h3 className={styles.sectionTitle}>Amigos</h3>
+          <h3 className={styles.sectionTitle}>{t('layout.amigos')}</h3>
           <FriendList
             friends={friends}
             activeId={activePeer?.id ?? null}
@@ -320,7 +321,7 @@ function SocialPanelInner(): JSX.Element {
         </section>
 
         <section className={styles.section}>
-          <h3 className={styles.sectionTitle}>Agregar amigo</h3>
+          <h3 className={styles.sectionTitle}>{t('layout.agregar.amigo')}</h3>
           <AddFriend search={searchUsers} onSend={sendRequest} />
         </section>
       </div>

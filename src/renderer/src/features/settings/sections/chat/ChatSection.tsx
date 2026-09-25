@@ -14,6 +14,7 @@ import type { JSX } from 'react'
 import type { SettingsSectionId } from '../index'
 import styles from './ChatSections.module.css'
 
+import { t } from '@core/i18n'
 /** Abre Ajustes en una sección (evento global, sin acoplarse al feature). */
 function goTo(section: SettingsSectionId): void {
   window.dispatchEvent(new CustomEvent('open-settings', { detail: { section } }))
@@ -22,74 +23,74 @@ function goTo(section: SettingsSectionId): void {
 export function ChatSection(): JSX.Element {
   return (
     <div className={styles.section}>
-      <p className={styles.hint}>Preferencias del chat con IA.</p>
+      <p className={styles.hint}>{t('settings.preferencias.del.chat.con.ia')}</p>
 
       <div className={styles.intro}>
-        <span className={styles.introTitle}>Proveedores</span>
-        <span className={styles.hint}>Modelos y claves de API.</span>
+        <span className={styles.introTitle}>{t('settings.proveedores')}</span>
+        <span className={styles.hint}>{t('settings.modelos.y.claves.de.api')}</span>
         <div className={styles.linkRow}>
           <button
             type="button"
             className={styles.linkBtn}
             onClick={() => goTo('chatProviders')}
           >
-            Abrir proveedores
+            {t('settings.abrir.proveedores')}
           </button>
         </div>
       </div>
 
       <div className={styles.intro}>
-        <span className={styles.introTitle}>Herramientas</span>
-        <span className={styles.hint}>Qué puede usar la IA.</span>
+        <span className={styles.introTitle}>{t('settings.herramientas')}</span>
+        <span className={styles.hint}>{t('settings.que.puede.usar.la.ia')}</span>
         <div className={styles.linkRow}>
           <button
             type="button"
             className={styles.linkBtn}
             onClick={() => goTo('chatTools')}
           >
-            Abrir herramientas
+            {t('settings.abrir.herramientas')}
           </button>
         </div>
       </div>
 
       <div className={styles.intro}>
-        <span className={styles.introTitle}>Skills</span>
-        <span className={styles.hint}>Flujos de trabajo reutilizables.</span>
+        <span className={styles.introTitle}>{t('settings.skills')}</span>
+        <span className={styles.hint}>{t('settings.flujos.de.trabajo.reutilizables')}</span>
         <div className={styles.linkRow}>
           <button
             type="button"
             className={styles.linkBtn}
             onClick={() => goTo('chatSkills')}
           >
-            Abrir skills
+            {t('settings.abrir.skills')}
           </button>
         </div>
       </div>
 
       <div className={styles.intro}>
-        <span className={styles.introTitle}>Agentes</span>
-        <span className={styles.hint}>Perfiles, permisos y subagentes.</span>
+        <span className={styles.introTitle}>{t('settings.agentes')}</span>
+        <span className={styles.hint}>{t('settings.perfiles.permisos.y.subagentes')}</span>
         <div className={styles.linkRow}>
           <button
             type="button"
             className={styles.linkBtn}
             onClick={() => goTo('chatAgents')}
           >
-            Abrir agentes
+            {t('settings.abrir.agentes')}
           </button>
         </div>
       </div>
 
       <div className={styles.intro}>
-        <span className={styles.introTitle}>Permisos</span>
-        <span className={styles.hint}>Qué se permite, se pregunta o se niega.</span>
+        <span className={styles.introTitle}>{t('settings.permisos')}</span>
+        <span className={styles.hint}>{t('settings.que.se.permite.se.pregunta')}</span>
         <div className={styles.linkRow}>
           <button
             type="button"
             className={styles.linkBtn}
             onClick={() => goTo('chatPermissions')}
           >
-            Abrir permisos
+            {t('settings.abrir.permisos')}
           </button>
         </div>
       </div>

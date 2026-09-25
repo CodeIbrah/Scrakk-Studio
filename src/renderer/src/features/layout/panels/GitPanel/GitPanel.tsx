@@ -58,6 +58,7 @@ import type { ShownCommit } from '@shared/git-parse'
 import type { PullRequest } from '@shared/git'
 import styles from './GitPanel.module.css'
 
+import { t } from '@core/i18n'
 const ROOT_KEY = 'scrakk-studio:root-path'
 
 function useWorkspaceRoot(): string | null {
@@ -228,7 +229,7 @@ export function GitPanel(): JSX.Element {
       <>
         <HeaderActionButton
           id="git.refresh"
-          label="Actualizar"
+          label={t('git.actualizar')}
           icon="refresh"
           size="sm"
           onClick={() => {
@@ -241,7 +242,7 @@ export function GitPanel(): JSX.Element {
         />
         <HeaderActionButton
           id="git.new-branch"
-          label="Nueva rama"
+          label={t('git.nueva.rama')}
           icon="plus"
           size="sm"
           onClick={() => setShowNewBranch((v) => !v)}
@@ -412,7 +413,7 @@ export function GitPanel(): JSX.Element {
   if (!workspaceRoot) {
     return (
       <div className={styles.git}>
-        <p className={styles.empty}>Abre una carpeta para usar git.</p>
+        <p className={styles.empty}>{t('git.abre.una.carpeta.para.usar')}</p>
       </div>
     )
   }
@@ -422,7 +423,7 @@ export function GitPanel(): JSX.Element {
       <div className={styles.git}>
         <div className={styles.placeholder}>
           <ProductIcon id="source-control" size={24} className={styles.icon} aria-hidden="true" />
-          <p className={styles.empty}>Sin repos git bajo este workspace.</p>
+          <p className={styles.empty}>{t('git.sin.repos.git.bajo.este')}</p>
           <button
             type="button"
             className={styles.primary}
@@ -439,7 +440,7 @@ export function GitPanel(): JSX.Element {
             onClick={() => void initRepo(workspaceRoot)}
           >
             <ProductIcon id="plus" size={14} />
-            Inicializar repo aquí
+            {t('git.inicializar.repo.aqui')}
           </button>
         </div>
       </div>
@@ -449,7 +450,7 @@ export function GitPanel(): JSX.Element {
   if (!state) {
     return (
       <div className={styles.git}>
-        <p className={styles.empty}>Cargando git…</p>
+        <p className={styles.empty}>{t('git.cargando.git')}</p>
       </div>
     )
   }
@@ -484,34 +485,34 @@ export function GitPanel(): JSX.Element {
             type="button"
             className={styles.syncBtn}
             disabled={syncing !== null}
-            title="Fetch --all --prune"
-            aria-label="Fetch"
+            title={t('git.fetch.all.prune')}
+            aria-label={t('git.fetch')}
             onClick={() => void doSync('fetch')}
           >
             <ProductIcon id="refresh" size={13} />
-            Fetch
+            {t('git.fetch')}
           </button>
           <button
             type="button"
             className={styles.syncBtn}
             disabled={syncing !== null}
-            title="Pull --ff-only"
-            aria-label="Pull"
+            title={t('git.pull.ff.only')}
+            aria-label={t('git.pull')}
             onClick={() => void doSync('pull')}
           >
             <ProductIcon id="download" size={13} />
-            Pull
+            {t('git.pull')}
           </button>
           <button
             type="button"
             className={styles.syncBtn}
             disabled={syncing !== null}
             title={state.upstream ? 'Push' : 'Push --set-upstream'}
-            aria-label="Push"
+            aria-label={t('git.push')}
             onClick={() => void doSync('push')}
           >
             <ProductIcon id="arrow-up" size={13} />
-            Push
+            {t('git.push')}
           </button>
         </span>
       </div>
@@ -523,7 +524,7 @@ export function GitPanel(): JSX.Element {
       ) : null}
 
       <Section
-        title="Cambios"
+        title={t('git.cambios')}
         count={state.staged.length + state.unstaged.length + state.untracked.length}
         open={sections.changes}
         onToggle={() => toggleSection('changes')}
@@ -533,8 +534,8 @@ export function GitPanel(): JSX.Element {
             className={styles.commitInput}
             value={commitMessage}
             onChange={(event) => setCommitMessage(event.target.value)}
-            placeholder="Mensaje de commit…"
-            aria-label="Mensaje de commit"
+            placeholder={t('git.mensaje.de.commit')}
+            aria-label={t('git.mensaje.de.commit-2')}
             rows={2}
             spellCheck={false}
           />
@@ -546,16 +547,16 @@ export function GitPanel(): JSX.Element {
               onClick={() => void doCommit(false)}
             >
               <ProductIcon id="check" size={14} />
-              Commit
+              {t('git.commit')}
             </button>
             <button
               type="button"
               className={styles.ghost}
               disabled={committing || !commitMessage.trim() || !hasChanges}
-              title="Stage todo + commit"
+              title={t('git.stage.todo.commit')}
               onClick={() => void doCommit(true)}
             >
-              Todo
+              {t('git.todo')}
             </button>
           </div>
         </div>
@@ -572,10 +573,10 @@ export function GitPanel(): JSX.Element {
         ) : null}
       </Section>
 
-      <div className={styles.zone}>Repositorio</div>
+      <div className={styles.zone}>{t('git.repositorio')}</div>
 
       <Section
-        title="Ramas"
+        title={t('git.ramas')}
         count={localBranches.length}
         open={sections.branches}
         onToggle={() => toggleSection('branches')}
@@ -597,12 +598,12 @@ export function GitPanel(): JSX.Element {
               value={newBranchName}
               onChange={(event) => setNewBranchName(event.target.value)}
               placeholder="nombre-rama"
-              aria-label="Nombre de rama"
+              aria-label={t('git.nombre.de.rama')}
               autoFocus
               spellCheck={false}
             />
             <button type="submit" className={styles.primary} disabled={!newBranchName.trim()}>
-              Crear
+              {t('git.crear')}
             </button>
           </form>
         ) : null}
@@ -630,7 +631,7 @@ export function GitPanel(): JSX.Element {
                 type="button"
                 className={styles.rowBtn}
                 aria-label={`Opciones de ${branch.name}`}
-                title="Opciones"
+                title={t('git.opciones')}
                 onClick={(event) => {
                   event.stopPropagation()
                   openBranchMenu(event, branch)
@@ -642,7 +643,7 @@ export function GitPanel(): JSX.Element {
           ))}
         {remoteBranches.length > 0 ? (
           <>
-            <h4 className={styles.subTitle}>Remotas</h4>
+            <h4 className={styles.subTitle}>{t('git.remotas')}</h4>
             {remoteBranches.map((branch) => (
               <div key={branch.name} className={[styles.row, styles.rowRemote].join(' ')} role="button" tabIndex={0}
                 title={`Checkout ${branch.name} (tracking)`}
@@ -661,7 +662,7 @@ export function GitPanel(): JSX.Element {
 
       {state.deletedBranches.length > 0 ? (
         <Section
-          title="Eliminadas"
+          title={t('git.eliminadas')}
           count={state.deletedBranches.length}
           open={sections.branches}
           onToggle={() => toggleSection('branches')}
@@ -677,7 +678,7 @@ export function GitPanel(): JSX.Element {
                 title={`Restaurar ${deleted.name} en ${deleted.sha.slice(0, 7)}`}
                 onClick={() => withRoot((root) => createBranch(root, deleted.name, deleted.sha))}
               >
-                Restaurar
+                {t('git.restaurar')}
               </button>
             </div>
           ))}
@@ -685,7 +686,7 @@ export function GitPanel(): JSX.Element {
       ) : null}
 
       <Section
-        title="Historial"
+        title={t('git.historial')}
         count={state.log.length}
         open={sections.history}
         onToggle={() => toggleSection('history')}
@@ -694,7 +695,7 @@ export function GitPanel(): JSX.Element {
           <button
             type="button"
             className={styles.mini}
-            title="Elegir ref del historial"
+            title={t('git.elegir.ref.del.historial')}
             onClick={(event) => {
               const options: Array<{ name: string; ref?: string }> = [{ name: 'HEAD' }]
                 .concat(localBranches.map((b) => ({ name: b.name, ref: b.name })))
@@ -718,7 +719,7 @@ export function GitPanel(): JSX.Element {
           </button>
         </div>
         {state.log.length === 0 ? (
-          <p className={styles.empty}>Sin commits (¿repo vacío?).</p>
+          <p className={styles.empty}>{t('git.sin.commits.repo.vacio')}</p>
         ) : (
           <div className={styles.logList}>
             {state.log.map((commit) => {
@@ -760,7 +761,7 @@ export function GitPanel(): JSX.Element {
                         ))}
                       </ul>
                     ) : (
-                      <p className={styles.rowMeta}>Cargando archivos…</p>
+                      <p className={styles.rowMeta}>{t('git.cargando.archivos')}</p>
                     )}
                     <div className={styles.commitActions}>
                       <button type="button" className={styles.mini} onClick={() => copyText(commit.sha, 'SHA copiado')}>
@@ -768,7 +769,7 @@ export function GitPanel(): JSX.Element {
                         SHA
                       </button>
                       <button type="button" className={styles.mini} onClick={() => withRoot((root) => revertCommit(root, commit.sha))}>
-                        Revert
+                        {t('git.revert')}
                       </button>
                       <button type="button" className={styles.mini} onClick={() => withRoot((root) => cherryPickCommit(root, commit.sha))}>
                         Cherry-pick
@@ -784,7 +785,7 @@ export function GitPanel(): JSX.Element {
                           })()
                         }
                       >
-                        Reset --hard
+                        {t('git.reset.hard')}
                       </button>
                     </div>
                   </div>
@@ -797,7 +798,7 @@ export function GitPanel(): JSX.Element {
       </Section>
 
       <Section
-        title="Stash"
+        title={t('git.stash')}
         count={state.stashes.length}
         open={sections.stash}
         onToggle={() => toggleSection('stash')}
@@ -817,22 +818,22 @@ export function GitPanel(): JSX.Element {
               className={styles.input}
               value={stashMessage}
               onChange={(event) => setStashMessage(event.target.value)}
-              placeholder="Mensaje (opcional)"
-              aria-label="Mensaje del stash"
+              placeholder={t('git.mensaje.opcional')}
+              aria-label={t('git.mensaje.del.stash')}
               spellCheck={false}
             />
             <button type="submit" className={styles.primary}>
-              Guardar
+              {t('git.guardar')}
             </button>
           </form>
         ) : (
           <button type="button" className={styles.add} onClick={() => setShowStashForm(true)}>
             <ProductIcon id="plus" size={13} />
-            Guardar stash
+            {t('git.guardar.stash')}
           </button>
         )}
         {state.stashes.length === 0 ? (
-          <p className={styles.empty}>Sin stashes.</p>
+          <p className={styles.empty}>{t('git.sin.stashes')}</p>
         ) : (
           state.stashes.map((stash) => (
             <div key={stash.index} className={styles.row}>
@@ -843,8 +844,8 @@ export function GitPanel(): JSX.Element {
                 </span>
                 {stash.branch ? <span className={styles.rowMeta}>{stash.branch}</span> : null}
               </span>
-              <button type="button" className={styles.mini} title="Pop" onClick={() => withRoot((root) => stashPop(root, stash.index))}>
-                Pop
+              <button type="button" className={styles.mini} title={t('git.pop')} onClick={() => withRoot((root) => stashPop(root, stash.index))}>
+                {t('git.pop')}
               </button>
               <button
                 type="button"
@@ -878,7 +879,7 @@ export function GitPanel(): JSX.Element {
       </Section>
 
       <Section
-        title="Tags"
+        title={t('git.tags')}
         count={state.tags.length}
         open={sections.tags}
         onToggle={() => toggleSection('tags')}
@@ -900,21 +901,21 @@ export function GitPanel(): JSX.Element {
               value={tagName}
               onChange={(event) => setTagName(event.target.value)}
               placeholder="v1.0.0"
-              aria-label="Nombre del tag"
+              aria-label={t('git.nombre.del.tag')}
               spellCheck={false}
             />
             <button type="submit" className={styles.primary} disabled={!tagName.trim()}>
-              Crear
+              {t('git.crear')}
             </button>
           </form>
         ) : (
           <button type="button" className={styles.add} onClick={() => setShowTagForm(true)}>
             <ProductIcon id="plus" size={13} />
-            Nuevo tag
+            {t('git.nuevo.tag')}
           </button>
         )}
         {state.tags.length === 0 ? (
-          <p className={styles.empty}>Sin tags.</p>
+          <p className={styles.empty}>{t('git.sin.tags')}</p>
         ) : (
           state.tags.map((tag) => (
             <div key={tag.name} className={styles.row}>
@@ -941,7 +942,7 @@ export function GitPanel(): JSX.Element {
       </Section>
 
       <Section
-        title="Remotos"
+        title={t('git.remotos')}
         count={state.remotes.length}
         open={sections.remotes}
         onToggle={() => toggleSection('remotes')}
@@ -964,7 +965,7 @@ export function GitPanel(): JSX.Element {
               value={remoteName}
               onChange={(event) => setRemoteName(event.target.value)}
               placeholder="origin"
-              aria-label="Nombre del remoto"
+              aria-label={t('git.nombre.del.remoto')}
               spellCheck={false}
             />
             <input
@@ -972,21 +973,21 @@ export function GitPanel(): JSX.Element {
               value={remoteUrl}
               onChange={(event) => setRemoteUrl(event.target.value)}
               placeholder="https://… o git@…"
-              aria-label="URL del remoto"
+              aria-label={t('git.url.del.remoto')}
               spellCheck={false}
             />
             <button type="submit" className={styles.primary} disabled={!remoteName.trim() || !remoteUrl.trim()}>
-              Agregar
+              {t('git.agregar')}
             </button>
           </form>
         ) : (
           <button type="button" className={styles.add} onClick={() => setShowRemoteForm(true)}>
             <ProductIcon id="plus" size={13} />
-            Agregar remoto
+            {t('git.agregar.remoto')}
           </button>
         )}
         {state.remotes.length === 0 ? (
-          <p className={styles.empty}>Sin remotos.</p>
+          <p className={styles.empty}>{t('git.sin.remotos')}</p>
         ) : (
           state.remotes.map((remote) => (
             <div key={remote.name} className={styles.row}>
@@ -1016,10 +1017,10 @@ export function GitPanel(): JSX.Element {
         )}
       </Section>
 
-      <div className={styles.zone}>Integración</div>
+      <div className={styles.zone}>{t('git.integracion')}</div>
 
       <Section
-        title="Cuenta"
+        title={t('git.cuenta')}
         open={sections.account}
         onToggle={() => toggleSection('account')}
       >
@@ -1060,7 +1061,7 @@ export function GitPanel(): JSX.Element {
       </Section>
 
       <Section
-        title="Pull requests"
+        title={t('git.pull.requests')}
         count={state.prs.length}
         open={sections.prs}
         onToggle={() => toggleSection('prs')}
@@ -1099,17 +1100,17 @@ export function GitPanel(): JSX.Element {
         />
       </Section>
 
-      <div className={styles.zone}>Workspace</div>
+      <div className={styles.zone}>{t('git.workspace')}</div>
 
       <Section
-        title="Archivos (solo lectura)"
+        title={t('git.archivos.solo.lectura')}
         open={sections.files}
         onToggle={() => toggleSection('files')}
       >
         <div className={styles.embeddedTree}>
           <ExplorerView key={activeRoot} root={activeRoot} interactive={false} />
         </div>
-        <p className={styles.hint}>Con badges de git (A/M/??/D/R).</p>
+        <p className={styles.hint}>{t('git.con.badges.de.git.a')}</p>
       </Section>
     </div>
   )
@@ -1196,7 +1197,7 @@ function ChangedTree({
   const total = staged.length + unstaged.length + untracked.length
 
   if (total === 0) {
-    return <p className={styles.empty}>Árbol limpio.</p>
+    return <p className={styles.empty}>{t('git.arbol.limpio')}</p>
   }
 
   return (
@@ -1207,13 +1208,13 @@ function ChangedTree({
           {toStage.length > 0 ? (
             <button type="button" className={styles.mini} onClick={() => onStage(toStage.map(toRel))}>
               <ProductIcon id="plus" size={12} />
-              Stage ({toStage.length})
+              {t('git.stage')}{toStage.length})
             </button>
           ) : null}
           {toUnstage.length > 0 ? (
             <button type="button" className={styles.mini} onClick={() => onUnstage(toUnstage.map(toRel))}>
               <ProductIcon id="x" size={12} />
-              Unstage ({toUnstage.length})
+              {t('git.unstage')}{toUnstage.length})
             </button>
           ) : null}
           <button
@@ -1228,7 +1229,7 @@ function ChangedTree({
             }
           >
             <ProductIcon id="trash" size={12} />
-            Descartar
+            {t('git.descartar')}
           </button>
         </div>
       )}
@@ -1243,13 +1244,13 @@ function ChangedTree({
       </div>
       {!badgesOn ? (
         <p className={styles.hint}>
-          Badges apagados.{' '}
+          {t('git.badges.apagados')}{' '}
           <button
             type="button"
             className={styles.linkBtn}
             onClick={() => setGitDecorationsVisible(true)}
           >
-            Mostrar estados
+            {t('git.mostrar.estados')}
           </button>
         </p>
       ) : null}
@@ -1260,27 +1261,27 @@ function ChangedTree({
 function AuthSection(): JSX.Element {
   const auth = getAuthState()
   if (auth.loading && !auth.detected) {
-    return <p className={styles.rowMeta}>Detectando auth…</p>
+    return <p className={styles.rowMeta}>{t('git.detectando.auth')}</p>
   }
   const detected = auth.detected
   if (!detected) {
-    return <p className={styles.rowMeta}>Auth no detectada todavía.</p>
+    return <p className={styles.rowMeta}>{t('git.auth.no.detectada.todavia')}</p>
   }
   return (
     <ul className={styles.authList}>
       <AuthRow
         ok={detected.ghAvailable}
-        label="gh CLI"
+        label={t('git.gh.cli')}
         detail={detected.ghAvailable ? 'instalado' : 'no instalado (cli.github.com)'}
       />
       <AuthRow
         ok={detected.ghLoggedIn}
-        label="Sesión gh"
+        label={t('git.sesion.gh')}
         detail={detected.ghLoggedIn ? (detected.ghUser ?? 'logueado') : 'sin sesión'}
       />
       <AuthRow
         ok={detected.credentialHelper !== null}
-        label="Credential helper"
+        label={t('git.credential.helper')}
         detail={detected.credentialHelper ?? 'ninguno'}
       />
     </ul>
@@ -1317,7 +1318,7 @@ function AccountLoginForm(props: {
   const auth = getAuthState()
   return (
     <div className={styles.loginBox}>
-      <div className={styles.loginTabs} role="tablist" aria-label="Método de login">
+      <div className={styles.loginTabs} role="tablist" aria-label={t('git.metodo.de.login')}>
         {(['gh', 'https'] as const).map((mode) => (
           <button
             key={mode}
@@ -1340,15 +1341,15 @@ function AccountLoginForm(props: {
             value={props.host}
             onChange={(event) => props.setHost(event.target.value)}
             placeholder="github.com"
-            aria-label="Host"
+            aria-label={t('git.host')}
             spellCheck={false}
           />
           <input
             className={styles.input}
             value={props.user}
             onChange={(event) => props.setUser(event.target.value)}
-            placeholder="Usuario"
-            aria-label="Usuario"
+            placeholder={t('git.usuario')}
+            aria-label={t('git.usuario')}
             spellCheck={false}
           />
         </>
@@ -1358,7 +1359,7 @@ function AccountLoginForm(props: {
           value={props.host}
           onChange={(event) => props.setHost(event.target.value)}
           placeholder="Host (vacío = github.com, enterprise opcional)"
-          aria-label="Host de GitHub Enterprise (opcional)"
+          aria-label={t('git.host.de.github.enterprise.opcional')}
           spellCheck={false}
         />
       )}
@@ -1368,7 +1369,7 @@ function AccountLoginForm(props: {
         value={props.token}
         onChange={(event) => props.setToken(event.target.value)}
         placeholder={props.mode === 'gh' ? 'ghp_… o github_pat_…' : 'Token / password'}
-        aria-label="Token"
+        aria-label={t('git.token')}
         spellCheck={false}
         autoComplete="off"
       />
@@ -1380,17 +1381,17 @@ function AccountLoginForm(props: {
         </button>
         {auth.detected?.ghLoggedIn ? (
           <button type="button" className={styles.ghost} disabled={props.busy} onClick={props.onLogout}>
-            Logout gh
+            {t('git.logout.gh')}
           </button>
         ) : null}
-        <button type="button" className={styles.ghost} onClick={props.onValidate} title="git ls-remote origin">
-          Validar
+        <button type="button" className={styles.ghost} onClick={props.onValidate} title={t('git.git.ls.remote.origin')}>
+          {t('git.validar')}
         </button>
         <button
           type="button"
           className={styles.ghost}
           onClick={props.onSshProbe}
-          title="ssh -T git@github.com en batch"
+          title={t('git.ssh.t.git.github.com')}
         >
           SSH: {props.sshState === 'idle' ? 'probar' : props.sshState === 'checking' ? '…' : props.sshState === 'ok' ? 'OK' : 'falló'}
         </button>
@@ -1427,11 +1428,11 @@ function PrSection(props: {
       <div className={styles.prToolbar}>
         <button type="button" className={styles.add} onClick={() => props.setShowForm(!props.showForm)}>
           <ProductIcon id="plus" size={13} />
-          Nuevo PR
+          {t('git.nuevo.pr')}
         </button>
-        <button type="button" className={styles.mini} onClick={props.onRefresh} title="gh pr list">
+        <button type="button" className={styles.mini} onClick={props.onRefresh} title={t('git.gh.pr.list')}>
           <ProductIcon id="refresh" size={12} />
-          Actualizar
+          {t('git.actualizar')}
         </button>
       </div>
       {props.showForm ? (
@@ -1440,16 +1441,16 @@ function PrSection(props: {
             className={styles.input}
             value={props.title}
             onChange={(event) => props.setTitle(event.target.value)}
-            placeholder="Título del PR"
-            aria-label="Título del PR"
+            placeholder={t('git.titulo.del.pr')}
+            aria-label={t('git.titulo.del.pr')}
             spellCheck={false}
           />
           <textarea
             className={styles.commitInput}
             value={props.body}
             onChange={(event) => props.setBody(event.target.value)}
-            placeholder="Descripción (opcional)"
-            aria-label="Descripción del PR"
+            placeholder={t('git.descripcion.opcional')}
+            aria-label={t('git.descripcion.del.pr')}
             rows={3}
             spellCheck={false}
           />
@@ -1459,7 +1460,7 @@ function PrSection(props: {
               value={props.base}
               onChange={(event) => props.setBase(event.target.value)}
               placeholder={`Base (default: main) · head: ${props.currentBranch ?? '?'}`}
-              aria-label="Rama base"
+              aria-label={t('git.rama.base')}
               spellCheck={false}
               list="git-pr-bases"
             />
@@ -1469,14 +1470,14 @@ function PrSection(props: {
               ))}
             </datalist>
             <button type="button" className={styles.primary} disabled={!props.title.trim()} onClick={props.onCreate}>
-              Crear
+              {t('git.crear')}
             </button>
           </div>
-          <p className={styles.hint}>Ejecuta gh pr create real (requiere gh + sesión).</p>
+          <p className={styles.hint}>{t('git.ejecuta.gh.pr.create.real')}</p>
         </div>
       ) : null}
       {props.prs.length === 0 ? (
-        <p className={styles.empty}>Sin PRs abiertos (¿gh instalado y logueado?).</p>
+        <p className={styles.empty}>{t('git.sin.prs.abiertos.gh.instalado')}</p>
       ) : (
         props.prs.map((pr) => {
           const expanded = props.expandedPr === pr.number
@@ -1523,7 +1524,7 @@ function PrSection(props: {
                   <div className={styles.commitActions}>
                     <a className={styles.mini} href={pr.url} target="_blank" rel="noreferrer">
                       <ProductIcon id="link-external" size={12} />
-                      Abrir
+                      {t('git.abrir')}
                     </a>
                     <button
                       type="button"

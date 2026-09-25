@@ -14,6 +14,7 @@ import { ResizeHandle } from '../ResizeHandle/ResizeHandle'
 import { TabContentView } from '../TabContentView/TabContentView'
 import styles from '../PanelLayout/PanelLayout.module.css'
 
+import { t } from '@core/i18n'
 /** Título por defecto de una tab (para el PanelFrame / header). */
 function titleFor(tab: TabSpec): string {
   if (tab.label) return tab.label
@@ -87,16 +88,16 @@ export function SlotBody({ stripId, alwaysStrip = false, onAddTab, actions }: Sl
         onDrop={resourceDrop.onDrop}
       >
         <div className={styles.emptySlot}>
-          <p className={styles.emptySlotTitle}>Slot vacío</p>
-          <p className={styles.emptySlotHint}>Arrastrá una tab o un panel aquí</p>
+          <p className={styles.emptySlotTitle}>{t('layout.slot.vacio')}</p>
+          <p className={styles.emptySlotHint}>{t('layout.arrastra.una.tab.o.un')}</p>
           <button
             type="button"
             className={styles.emptySlotClose}
-            title="Cerrar este slot"
+            title={t('layout.cerrar.este.slot')}
             onClick={() => splitTreeStore.removeStrip(stripId)}
           >
             <ProductIcon id="close" size={12} aria-hidden="true" />
-            Cerrar slot
+            {t('layout.cerrar.slot')}
           </button>
         </div>
       </div>
@@ -221,7 +222,7 @@ function SplitPanes({ stripId, tabs, dir, zoneRef }: SplitPanesProps): JSX.Eleme
       panes.push(
         <ResizeHandle
           key={`gap-${tab.id}`}
-          label="Redimensionar vista"
+          label={t('layout.redimensionar.vista')}
           value={gapFraction(gap)}
           min={0.15}
           max={0.85}

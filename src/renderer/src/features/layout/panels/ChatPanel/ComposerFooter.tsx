@@ -27,6 +27,7 @@ import { SkillsButton } from './SkillsButton'
 import { VariantsButton } from './VariantsButton'
 import styles from './ChatPanel.module.css'
 
+import { t } from '@core/i18n'
 /** Umbrales de ancho del footer (px) por debajo de los cuales se oculta. */
 const HIDE_SKILLS = 400
 const HIDE_VARIANTS = 350
@@ -143,7 +144,7 @@ export function ComposerFooter({ variant }: { variant: string }): JSX.Element {
           className={styles.moreBtn}
           aria-haspopup="menu"
           aria-expanded={anchor !== null}
-          title="Más opciones"
+          title={t('layout.mas.opciones')}
           onPointerDown={(event) => event.stopPropagation()}
           onClick={openMore}
         >

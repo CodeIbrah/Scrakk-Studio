@@ -22,6 +22,7 @@ import {
 import type { TabDragPayload } from '@features/dnd'
 import styles from './PanelFrame.module.css'
 
+import { t } from '@core/i18n'
 /**
  * Aplana los hijos de las acciones a una lista de botones.
  *
@@ -159,7 +160,7 @@ function PanelFrameInner({
         ) : null}
         {onClose ? (
           <div className={styles.actions}>
-            <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Cerrar">
+            <button type="button" className={styles.closeBtn} onClick={onClose} aria-label={t('layout.cerrar')}>
               <ProductIcon id="close" size={14} />
             </button>
           </div>

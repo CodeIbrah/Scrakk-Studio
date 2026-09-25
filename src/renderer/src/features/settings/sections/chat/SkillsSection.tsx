@@ -12,6 +12,7 @@ import { ToggleSwitch } from '@ui'
 import { skillRegistry, type SkillInfo } from '@services/skills'
 import styles from './ChatSections.module.css'
 
+import { t } from '@core/i18n'
 const SOURCE_LABEL: Record<SkillInfo['source'], string> = {
   project: 'proyecto',
   user: 'usuario',
@@ -28,12 +29,12 @@ export function SkillsSection(): JSX.Element {
 
   return (
     <div className={styles.section}>
-      <p className={styles.hint}>Activa o desactiva las skills instaladas.</p>
+      <p className={styles.hint}>{t('settings.activa.o.desactiva.las.skills')}</p>
 
       {skills.length === 0 ? (
         <p className={styles.empty}>
-          No hay skills todavía. Crea <code className={styles.code}>.scrakk/skills/mi-skill/SKILL.md</code>{' '}
-          con un frontmatter <code className={styles.code}>name</code> y{' '}
+          {t('settings.no.hay.skills.todavia.crea')} <code className={styles.code}>.scrakk/skills/mi-skill/SKILL.md</code>{' '}
+          {t('settings.con.un.frontmatter')} <code className={styles.code}>name</code> y{' '}
           <code className={styles.code}>description</code>.
         </p>
       ) : (

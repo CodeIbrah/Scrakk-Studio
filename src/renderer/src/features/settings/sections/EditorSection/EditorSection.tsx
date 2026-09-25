@@ -19,6 +19,7 @@ import {
 } from '@features/editor/engines/innerta/InnertaEngine'
 import styles from './EditorSection.module.css'
 
+import { t } from '@core/i18n'
 /** Evento de broadcast del toggle (mismo canal que el engine). */
 const MINIMAP_EVENT = 'innerta-minimap-changed'
 
@@ -43,7 +44,7 @@ export function EditorSection(): JSX.Element {
   return (
     <div className={styles.section}>
       <div className={styles.headerText}>
-        <h3>Editor</h3>
+        <h3>{t('settings.editor')}</h3>
         <p>
           Opciones del editor de código (Innerta). Los cambios aplican al
           instante en todos los archivos abiertos.
@@ -52,7 +53,7 @@ export function EditorSection(): JSX.Element {
 
       <div className={styles.row}>
         <div className={styles.rowInfo}>
-          <span className={styles.rowName}>Minimapa</span>
+          <span className={styles.rowName}>{t('settings.minimapa')}</span>
           <span className={styles.rowMeta}>
             Vista previa del archivo a la derecha del editor, con desplazamiento
             continuo y clic para navegar.

@@ -11,6 +11,7 @@ import { PanelProfiler } from '@core/perf/panelHealth'
 import { loadPanelComponent, loadedPanel } from './panelModules'
 import styles from './PanelHost.module.css'
 
+import { t } from '@core/i18n'
 interface PanelHostProps {
   panelId: PanelId | null
 }
@@ -71,7 +72,7 @@ export function PanelModule({ entry }: { entry: PanelEntry }): JSX.Element | nul
   if (error) {
     return (
       <div className={styles.error} role="alert">
-        <p className={styles.errorTitle}>No se pudo cargar el panel</p>
+        <p className={styles.errorTitle}>{t('layout.no.se.pudo.cargar.el')}</p>
         <p className={styles.errorDetail}>{error}</p>
         <button
           type="button"
@@ -81,13 +82,13 @@ export function PanelModule({ entry }: { entry: PanelEntry }): JSX.Element | nul
             setAttempt((value) => value + 1)
           }}
         >
-          Reintentar
+          {t('layout.reintentar')}
         </button>
       </div>
     )
   }
 
-  if (!Component) return <div className={styles.loading}>Cargando panel…</div>
+  if (!Component) return <div className={styles.loading}>{t('layout.cargando.panel')}</div>
 
   return (
     <PanelProfiler id={entry.id}>

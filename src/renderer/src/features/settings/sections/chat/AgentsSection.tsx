@@ -34,6 +34,7 @@ import {
 } from '@services/ai/agents'
 import styles from './ChatSections.module.css'
 
+import { t } from '@core/i18n'
 const MAX_TOOL_OPTIONS = 40
 const BUILTIN_BASE_IDS = ['default', 'plan', 'acceptEdits', 'auto', 'dontAsk', 'bypassPermissions']
 const COLORS = ['#6366f1', '#0ea5e9', '#22c55e', '#eab308', '#f97316', '#a855f7', '#ef4444', '#14b8a6']
@@ -241,7 +242,7 @@ export function AgentsSection(): JSX.Element {
         Perfiles de IA: prompt, permisos, herramientas y modelo. Los primarios
         son el agente activo del chat; los subagentes se invocan con la tool
         &nbsp;<code className={styles.code}>task</code> o escribiendo
-        &nbsp;<code className={styles.code}>@nombre</code> en el input.
+        &nbsp;<code className={styles.code}>@nombre</code> {t('settings.en.el.input')}
       </p>
 
       <SegmentedTabs
@@ -278,7 +279,7 @@ export function AgentsSection(): JSX.Element {
       </div>
 
       {scope === 'project' && !scrakkProjectRoot() ? (
-        <p className={styles.empty}>No hay proyecto abierto: usa la capa de usuario.</p>
+        <p className={styles.empty}>{t('settings.no.hay.proyecto.abierto.usa')}</p>
       ) : null}
 
       <div className={styles.group}>
@@ -286,7 +287,7 @@ export function AgentsSection(): JSX.Element {
           {kind === 'primary' ? 'Tus primarios' : 'Tus subagentes'}
         </span>
         {entries.length === 0 ? (
-          <span className={styles.rowDesc}>Todavía no creaste ninguno.</span>
+          <span className={styles.rowDesc}>{t('settings.todavia.no.creaste.ninguno')}</span>
         ) : (
           <div className={styles.list}>
             {entries.map((entry) => (
@@ -340,7 +341,7 @@ export function AgentsSection(): JSX.Element {
           </span>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Nombre</span>
+            <span className={styles.fieldLabel}>{t('settings.nombre')}</span>
             <input
               className={styles.input}
               value={draft.label}
@@ -350,17 +351,17 @@ export function AgentsSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Descripción</span>
+            <span className={styles.fieldLabel}>{t('settings.descripcion')}</span>
             <input
               className={styles.input}
               value={draft.description ?? ''}
-              placeholder="Para qué sirve este agente"
+              placeholder={t('settings.para.que.sirve.este.agente')}
               onChange={(event) => update({ description: event.target.value })}
             />
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Parte de</span>
+            <span className={styles.fieldLabel}>{t('settings.parte.de')}</span>
             <button
               type="button"
               className={styles.select}
@@ -395,7 +396,7 @@ export function AgentsSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Color</span>
+            <span className={styles.fieldLabel}>{t('settings.color')}</span>
             <div className={styles.swatches}>
               {COLORS.map((color) => (
                 <button
@@ -411,7 +412,7 @@ export function AgentsSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Modelo</span>
+            <span className={styles.fieldLabel}>{t('settings.modelo')}</span>
             <input
               className={styles.input}
               value={draft.model ?? AGENT_MODEL_INHERIT}
@@ -425,7 +426,7 @@ export function AgentsSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Ediciones de archivos</span>
+            <span className={styles.fieldLabel}>{t('settings.ediciones.de.archivos')}</span>
             <button
               type="button"
               className={styles.select}
@@ -450,7 +451,7 @@ export function AgentsSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Comandos de shell</span>
+            <span className={styles.fieldLabel}>{t('settings.comandos.de.shell')}</span>
             <button
               type="button"
               className={styles.select}
@@ -475,7 +476,7 @@ export function AgentsSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Cuando algo pida confirmación</span>
+            <span className={styles.fieldLabel}>{t('settings.cuando.algo.pida.confirmacion')}</span>
             <button
               type="button"
               className={styles.select}
@@ -499,7 +500,7 @@ export function AgentsSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Herramientas</span>
+            <span className={styles.fieldLabel}>{t('settings.herramientas')}</span>
             <div className={styles.list}>
               {tools.map((tool) => (
                 <div key={tool.name} className={styles.row}>
@@ -519,10 +520,10 @@ export function AgentsSection(): JSX.Element {
 
           {kind === 'primary' ? (
             <div className={styles.field}>
-              <span className={styles.fieldLabel}>Subagentes permitidos</span>
+              <span className={styles.fieldLabel}>{t('settings.subagentes.permitidos')}</span>
               {availableSubagents.length === 0 ? (
                 <span className={styles.rowDesc}>
-                  Todavía no hay subagentes. Creá uno en la tab Subagentes.
+                  {t('settings.todavia.no.hay.subagentes.crea')}
                 </span>
               ) : (
                 <div className={styles.list}>
@@ -545,11 +546,11 @@ export function AgentsSection(): JSX.Element {
           ) : null}
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Prompt</span>
+            <span className={styles.fieldLabel}>{t('settings.prompt')}</span>
             <textarea
               className={styles.textarea}
               value={draft.prompt ?? ''}
-              placeholder="Instrucciones del agente"
+              placeholder={t('settings.instrucciones.del.agente')}
               onChange={(event) => update({ prompt: event.target.value })}
             />
           </div>
@@ -557,7 +558,7 @@ export function AgentsSection(): JSX.Element {
           <div className={styles.actions}>
             <button type="button" className={styles.saveBtn} onClick={() => void save()}>
               <ProductIcon id="check" size={12} />
-              Guardar agente
+              {t('settings.guardar.agente')}
             </button>
             <button
               type="button"
@@ -567,7 +568,7 @@ export function AgentsSection(): JSX.Element {
                 setEditingId(null)
               }}
             >
-              Cancelar
+              {t('settings.cancelar')}
             </button>
           </div>
         </div>

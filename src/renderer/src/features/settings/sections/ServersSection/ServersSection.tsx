@@ -28,6 +28,7 @@ import { withMinLoading } from '@core/feedback'
 import { LoadingBar, LoadingButton } from '@ui'
 import styles from './ServersSection.module.css'
 
+import { t } from '@core/i18n'
 interface ServersSectionProps {
   /** Solo refrescar en vivo cuando el modal está visible. El Modal
       desmonta al cerrarse, así que el default true cubre el caso normal. */
@@ -218,7 +219,7 @@ function ServerRow({ server, onRefresh }: ServerRowProps): JSX.Element {
             loadingLabel={installLabel}
             disabled={busy !== null}
             onClick={() => void handleInstall()}
-            title="Instalar receta del servidor"
+            title={t('settings.instalar.receta.del.servidor')}
           >
             Instalar
           </LoadingButton>
@@ -274,7 +275,7 @@ export function ServersSection({ visible = true }: ServersSectionProps): JSX.Ele
           'No hay servers registrados para este workspace.'
         ) : (
           <>
-            <strong>{aggregate.total}</strong> servers ·{' '}
+            <strong>{aggregate.total}</strong> {t('settings.servers')}{' '}
             {aggregate.counts['ready'] ?? 0} activos
             {(aggregate.counts['failed'] ?? 0) > 0
               ? ` · ${aggregate.counts['failed']} con error`
@@ -287,7 +288,7 @@ export function ServersSection({ visible = true }: ServersSectionProps): JSX.Ele
 
       {!loading && servers.length === 0 ? (
         <p className={styles.empty}>
-          Abre una carpeta con código o instala una extensión con{" "}
+          {t('settings.abre.una.carpeta.con.codigo')}{" "}
           <code>lspServers</code>.
         </p>
       ) : (

@@ -33,6 +33,7 @@ import {
 import { openTokenInspector } from '@features/editor/inspect'
 import styles from './HighlightSection.module.css'
 
+import { t } from '@core/i18n'
 const SOURCE_OPTIONS: Array<{ id: EditorHighlightSource; label: string; desc: string }> = [
   {
     id: 'treesitter',
@@ -113,7 +114,7 @@ export function HighlightSection(): JSX.Element {
         ))}
       </div>
 
-      <span className={styles.groupLabel}>Motor de gramática</span>
+      <span className={styles.groupLabel}>{t('settings.motor.de.gramatica')}</span>
       <p className={styles.hint}>
         Un paquete puede traer gramática TextMate y parser tree-sitter para el
         mismo lenguaje. Aquí se decide cuál manda (los dos a la vez pintarían dos
@@ -139,7 +140,7 @@ export function HighlightSection(): JSX.Element {
           scope y el color del tema. Es la forma de saber si el culpable es la
           gramática, el server o el tema. */}
       <button type="button" className={styles.diagnose} onClick={openTokenInspector}>
-        Inspeccionar tokens del archivo activo
+        {t('settings.inspeccionar.tokens.del.archivo.activo')}
       </button>
     </div>
   )

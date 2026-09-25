@@ -24,6 +24,7 @@ import {
 } from '@features/editor/fileSession'
 import styles from './PerformanceSection.module.css'
 
+import { t } from '@core/i18n'
 function formatMB(bytes: number): string {
   if (bytes <= 0) return '0 MB'
   const mb = bytes / (1024 * 1024)
@@ -64,9 +65,9 @@ export function PerformanceSection(): JSX.Element {
     <div className={styles.section}>
       <div className={styles.header}>
         <div className={styles.headerText}>
-          <h3>Rendimiento</h3>
+          <h3>{t('settings.rendimiento')}</h3>
           <p>
-            El editor usa un motor WASM por <strong>panel</strong>: cada archivo
+            {t('settings.el.editor.usa.un.motor')} <strong>panel</strong>: cada archivo
             abierto es una sesión dentro de él, con su undo, cursor y scroll.
           </p>
         </div>
@@ -74,7 +75,7 @@ export function PerformanceSection(): JSX.Element {
 
       <div className={styles.row}>
         <div className={styles.rowInfo}>
-          <span className={styles.rowName}>Modo PC mala</span>
+          <span className={styles.rowName}>{t('settings.modo.pc.mala')}</span>
           <span className={styles.rowMeta}>
             Menos trabajo de fondo (tokens semánticos y hover) para PCs
             modestas. Editar no pierde nada.
@@ -89,9 +90,9 @@ export function PerformanceSection(): JSX.Element {
 
       <div className={styles.row}>
         <div className={styles.rowInfo}>
-          <span className={styles.rowName}>Memoria del editor</span>
+          <span className={styles.rowName}>{t('settings.memoria.del.editor')}</span>
           <span className={styles.rowMeta}>
-            {formatMB(heap)} en heaps WASM · {background} motor(es) de panel
+            {formatMB(heap)} {t('settings.en.heaps.wasm')} {background} {t('settings.motor.es.de.panel')}
           </span>
         </div>
       </div>

@@ -30,6 +30,7 @@ import { registry } from '@services/ai/tools'
 import { toolSettingsService } from '@services/ai/toolSettings'
 import styles from './ChatSections.module.css'
 
+import { t } from '@core/i18n'
 const MAX_TOOL_OPTIONS = 40
 const BUILTIN_BASE_IDS = ['default', 'plan', 'acceptEdits', 'auto', 'dontAsk', 'bypassPermissions']
 const COLORS = ['#6366f1', '#0ea5e9', '#22c55e', '#eab308', '#f97316', '#a855f7', '#ef4444', '#14b8a6']
@@ -230,7 +231,7 @@ export function ModesSection(): JSX.Element {
   return (
     <div className={styles.section}>
       <p className={styles.hint}>
-        Crea modos propios a partir de uno integrado.
+        {t('settings.crea.modos.propios.a.partir')}
       </p>
 
       <div className={styles.formRow}>
@@ -260,18 +261,18 @@ export function ModesSection(): JSX.Element {
         </button>
         <button type="button" className={styles.saveBtn} onClick={() => startCreate()}>
           <ProductIcon id="plus" size={12} />
-          Nuevo modo
+          {t('settings.nuevo.modo')}
         </button>
       </div>
 
       {scope === 'project' && !scrakkProjectRoot() ? (
-        <p className={styles.empty}>No hay proyecto abierto: usa la capa de usuario.</p>
+        <p className={styles.empty}>{t('settings.no.hay.proyecto.abierto.usa')}</p>
       ) : null}
 
       <div className={styles.group}>
-        <span className={styles.groupLabel}>Tus modos</span>
+        <span className={styles.groupLabel}>{t('settings.tus.modos')}</span>
         {entries.length === 0 ? (
-          <span className={styles.rowDesc}>Todavía no creaste ninguno.</span>
+          <span className={styles.rowDesc}>{t('settings.todavia.no.creaste.ninguno')}</span>
         ) : (
           <div className={styles.list}>
             {entries.map((entry) => (
@@ -321,27 +322,27 @@ export function ModesSection(): JSX.Element {
           </span>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Nombre</span>
+            <span className={styles.fieldLabel}>{t('settings.nombre')}</span>
             <input
               className={styles.input}
               value={draft.label}
-              placeholder="Shell segura"
+              placeholder={t('settings.shell.segura')}
               onChange={(event) => update({ label: event.target.value })}
             />
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Descripción</span>
+            <span className={styles.fieldLabel}>{t('settings.descripcion')}</span>
             <input
               className={styles.input}
               value={draft.description ?? ''}
-              placeholder="Para qué sirve este modo"
+              placeholder={t('settings.para.que.sirve.este.modo')}
               onChange={(event) => update({ description: event.target.value })}
             />
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Parte de</span>
+            <span className={styles.fieldLabel}>{t('settings.parte.de')}</span>
             <button
               type="button"
               className={styles.select}
@@ -363,7 +364,7 @@ export function ModesSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Color</span>
+            <span className={styles.fieldLabel}>{t('settings.color')}</span>
             <div className={styles.swatches}>
               {COLORS.map((color) => (
                 <button
@@ -379,7 +380,7 @@ export function ModesSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Ediciones de archivos</span>
+            <span className={styles.fieldLabel}>{t('settings.ediciones.de.archivos')}</span>
             <button
               type="button"
               className={styles.select}
@@ -404,7 +405,7 @@ export function ModesSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Comandos de shell</span>
+            <span className={styles.fieldLabel}>{t('settings.comandos.de.shell')}</span>
             <button
               type="button"
               className={styles.select}
@@ -429,7 +430,7 @@ export function ModesSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Cuando algo pida confirmación</span>
+            <span className={styles.fieldLabel}>{t('settings.cuando.algo.pida.confirmacion')}</span>
             <button
               type="button"
               className={styles.select}
@@ -453,7 +454,7 @@ export function ModesSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Herramientas habilitadas en este modo</span>
+            <span className={styles.fieldLabel}>{t('settings.herramientas.habilitadas.en.este.modo')}</span>
             <div className={styles.list}>
               {tools.map((tool) => (
                 <div key={tool.name} className={styles.row}>
@@ -472,11 +473,11 @@ export function ModesSection(): JSX.Element {
           </div>
 
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Prompt (opcional)</span>
+            <span className={styles.fieldLabel}>{t('settings.prompt.opcional')}</span>
             <textarea
               className={styles.textarea}
               value={draft.prompt ?? ''}
-              placeholder="Instrucciones extra para el modelo en este modo"
+              placeholder={t('settings.instrucciones.extra.para.el.modelo')}
               onChange={(event) => update({ prompt: event.target.value })}
             />
           </div>
@@ -484,7 +485,7 @@ export function ModesSection(): JSX.Element {
           <div className={styles.actions}>
             <button type="button" className={styles.saveBtn} onClick={() => void save()}>
               <ProductIcon id="check" size={12} />
-              Guardar modo
+              {t('settings.guardar.modo')}
             </button>
             <button
               type="button"
@@ -494,14 +495,14 @@ export function ModesSection(): JSX.Element {
                 setEditingId(null)
               }}
             >
-              Cancelar
+              {t('settings.cancelar')}
             </button>
           </div>
         </div>
       ) : null}
 
       <div className={styles.group}>
-        <span className={styles.groupLabel}>Modos integrados</span>
+        <span className={styles.groupLabel}>{t('settings.modos.integrados')}</span>
         <div className={styles.list}>
           {builtins.map((mode) => (
             <div key={mode.id} className={styles.row}>
@@ -524,7 +525,7 @@ export function ModesSection(): JSX.Element {
                 className={styles.linkBtn}
                 onClick={() => startCreate(mode.id)}
               >
-                Duplicar
+                {t('settings.duplicar')}
               </button>
             </div>
           ))}
