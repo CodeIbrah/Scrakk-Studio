@@ -45,6 +45,10 @@ jobs:
       - name: Tests
         run: npm test
 
+      # Un release NO sale con traducciones incompletas o sin revisar.
+      - name: i18n (bloqueante)
+        run: node tools/i18n.mjs --check --strict
+
       - name: Build
         run: npm run build
 

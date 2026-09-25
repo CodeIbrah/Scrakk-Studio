@@ -35,5 +35,10 @@ jobs:
       - name: Tests
         run: npm test
 
+      # Aviso (no bloquea) mientras el catálogo se migra. Cuando la cobertura
+      # sea completa, pasar a --strict para exigir traducciones al día.
+      - name: i18n (cobertura de traducciones)
+        run: node tools/i18n.mjs --check
+
       - name: Build
         run: npm run build
