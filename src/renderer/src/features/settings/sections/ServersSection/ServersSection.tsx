@@ -63,17 +63,17 @@ const SOURCE_LABELS: Record<string, string> = {
 function installProgressText(progress: LspInstallProgressPayload): string {
   switch (progress.stage) {
     case 'resolving':
-      return 'Preparando…'
+      return t('settings.preparando')
     case 'downloading':
       return progress.percentage !== undefined
         ? `Descargando… ${progress.percentage}%`
-        : 'Descargando…'
+        : t('settings.descargando')
     case 'installing':
-      return progress.message ? `Instalando · ${progress.message}` : 'Instalando…'
+      return progress.message ? `Instalando · ${progress.message}` : t('settings.instalando')
     case 'extracting':
-      return progress.message ? `Extrayendo · ${progress.message}` : 'Extrayendo…'
+      return progress.message ? `Extrayendo · ${progress.message}` : t('settings.extrayendo')
     case 'done':
-      return 'Finalizando…'
+      return t('settings.finalizando')
   }
 }
 
@@ -151,7 +151,7 @@ function ServerRow({ server, onRefresh }: ServerRowProps): JSX.Element {
 
   // Fase a mostrar como tooltip del botón que carga (el % sólo existe en la
   // descarga real; el resto es texto de fase).
-  const installLabel = progress ? installProgressText(progress) : 'Instalando…'
+  const installLabel = progress ? installProgressText(progress) : t('settings.instalando')
 
   return (
     <div className={[styles.row, disabled ? styles.rowDisabled : null].filter(Boolean).join(' ')}>
@@ -192,7 +192,7 @@ function ServerRow({ server, onRefresh }: ServerRowProps): JSX.Element {
         */}
         <LoadingButton
           loading={busy === 'toggle'}
-          loadingLabel={disabled ? 'Apagando…' : 'Encendiendo…'}
+          loadingLabel={disabled ? t('settings.apagando') : t('settings.encendiendo')}
           disabled={busy !== null}
           onClick={() => void handleToggle()}
           title={

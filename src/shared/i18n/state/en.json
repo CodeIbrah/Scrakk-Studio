@@ -10543,6 +10543,70 @@
       "needsReview": false,
       "at": "2026-09-25T18:24:40.396Z",
       "approvedAt": "2026-09-25T18:24:40.591Z"
+    },
+    "settings.apagando": {
+      "src": "29e916fc8cbd7e55",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T19:54:36.682Z",
+      "approvedAt": "2026-09-25T19:54:36.800Z"
+    },
+    "settings.cargando.servidores": {
+      "src": "3194a32e2d96afe9",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T19:54:36.683Z",
+      "approvedAt": "2026-09-25T19:54:36.800Z"
+    },
+    "settings.descargando": {
+      "src": "6f5e38837d3851c4",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T19:54:36.683Z",
+      "approvedAt": "2026-09-25T19:54:36.800Z"
+    },
+    "settings.encendiendo": {
+      "src": "e79b59a44d21679e",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T19:54:36.683Z",
+      "approvedAt": "2026-09-25T19:54:36.800Z"
+    },
+    "settings.extrayendo": {
+      "src": "965c5ee08a7c347f",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T19:54:36.683Z",
+      "approvedAt": "2026-09-25T19:54:36.800Z"
+    },
+    "settings.finalizando": {
+      "src": "a051e0a8fd3fbb1d",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T19:54:36.683Z",
+      "approvedAt": "2026-09-25T19:54:36.800Z"
+    },
+    "settings.instalando": {
+      "src": "eff4000bcf5b7642",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T19:54:36.683Z",
+      "approvedAt": "2026-09-25T19:54:36.800Z"
+    },
+    "settings.preparando": {
+      "src": "d2b925965ea8d2b9",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T19:54:36.683Z",
+      "approvedAt": "2026-09-25T19:54:36.800Z"
     }
   },
   "version": 1
