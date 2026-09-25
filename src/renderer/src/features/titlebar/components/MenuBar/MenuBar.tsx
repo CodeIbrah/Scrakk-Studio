@@ -18,6 +18,7 @@ import { setWorkspaceRoot } from '@features/explorer'
 import { useTheme } from '@core/theme/ThemeProvider'
 import styles from './MenuBar.module.css'
 
+import { t, useLocale } from '@core/i18n'
 type MenuId = 'file' | 'edit' | 'view' | 'help'
 
 const MENU_IDS: MenuId[] = ['file', 'edit', 'view', 'help']
@@ -90,29 +91,30 @@ export function MenuBar(): JSX.Element {
     if (activePath) requestCloseFile(activePath)
   }, [])
 
+  const locale = useLocale()
   const menuDefinitions = useMemo<Record<MenuId, { label: string; items: ContextMenuItem[] }>>(() => {
     return {
       file: {
-        label: 'Archivo',
+        label: t('menu.file'),
         items: [
           {
-            label: 'Abrir archivo…',
+            label: t('menu.file.openFile'),
             shortcut: 'Ctrl+O',
             onClick: () => void openFilesViaDialog()
           },
           {
-            label: 'Abrir carpeta…',
+            label: t('menu.file.openFolder'),
             shortcut: 'Ctrl+Shift+O',
             onClick: () => void openFolderViaDialog()
           },
           {
-            label: 'Cerrar archivo',
+            label: t('menu.file.closeFile'),
             shortcut: 'Ctrl+W',
             separatorBefore: true,
             onClick: closeActiveFile
           },
           {
-            label: 'Cerrar ventana',
+            label: t('menu.file.closeWindow'),
             shortcut: 'Alt+F4',
             separatorBefore: true,
             onClick: () => window.api?.windowControls.close()
@@ -120,20 +122,20 @@ export function MenuBar(): JSX.Element {
         ]
       },
       edit: {
-        label: 'Editar',
+        label: t('menu.edit'),
         items: [
           {
-            label: 'Copiar',
+            label: t('menu.edit.copy'),
             shortcut: 'Ctrl+C',
             onClick: () => runCommand('copy')
           },
           {
-            label: 'Pegar',
+            label: t('menu.edit.paste'),
             shortcut: 'Ctrl+V',
             onClick: () => runCommand('paste')
           },
           {
-            label: 'Seleccionar todo',
+            label: t('menu.edit.selectAll'),
             shortcut: 'Ctrl+A',
             separatorBefore: true,
             onClick: () => runCommand('selectAll')
@@ -141,20 +143,20 @@ export function MenuBar(): JSX.Element {
         ]
       },
       view: {
-        label: 'Ver',
+        label: t('menu.view'),
         items: [
           {
-            label: theme === 'dark' ? 'Modo claro' : 'Modo oscuro',
+            label: theme === 'dark' ? t('menu.view.lightMode') : t('menu.view.darkMode'),
             onClick: toggleTheme
           },
           {
-            label: 'Panel de chat',
+            label: t('menu.view.chatPanel'),
             checked: slots.right === 'chat',
             separatorBefore: true,
             onClick: () => toggleSlotPanel('right', 'chat')
           },
           {
-            label: 'Historial de chats',
+            label: t('menu.view.chatHistory'),
             checked: historyOpen,
             onClick: () => {
               openPanelTab('right', 'chat')
@@ -164,23 +166,24 @@ export function MenuBar(): JSX.Element {
             }
           },
           {
-            label: 'Panel de explorador',
+            label: t('menu.view.explorerPanel'),
             checked: slots.left === 'explorer',
             onClick: () => toggleSlotPanel('left', 'explorer')
           }
         ]
       },
       help: {
-        label: 'Ayuda',
+        label: t('menu.help'),
         items: [
           {
-            label: 'Acerca de Scrakk Studio',
+            label: t('menu.help.about'),
             onClick: () => setAboutOpen(true)
           }
         ]
       }
     }
   }, [
+    locale,
     theme,
     toggleTheme,
     slots,
@@ -234,7 +237,7 @@ export function MenuBar(): JSX.Element {
       ref={rootRef}
       className={styles.menubar}
       role="menubar"
-      aria-label="Menú de la aplicación"
+      aria-label={t('titlebar.menu.de.la.aplicacion')}
     >
       {MENU_IDS.map((menuId) => {
         const menu = menuDefinitions[menuId]
@@ -271,7 +274,7 @@ export function MenuBar(): JSX.Element {
           className={styles.button}
           onClick={() => toggleSlotPanel('bottom', 'innerta-terminal')}
         >
-          Terminal
+          {t('titlebar.terminal')}
         </button>
       </div>
 
@@ -284,10 +287,10 @@ export function MenuBar(): JSX.Element {
         />
       ) : null}
 
-      <Modal open={aboutOpen} onClose={() => setAboutOpen(false)} title="Acerca de Scrakk Studio">
+      <Modal open={aboutOpen} onClose={() => setAboutOpen(false)} title={t('titlebar.acerca.de.scrakk.studio')}>
         <div className={styles.about}>
           <p>
-            <strong>Scrakk Studio</strong> — chat modular para agentes IA.
+            <strong>{t('titlebar.scrakk.studio')}</strong> {t('titlebar.chat.modular.para.agentes.ia')}
           </p>
           <p>
             React + TypeScript + Electron. Sistema de paneles resizables con

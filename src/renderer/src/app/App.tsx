@@ -3,6 +3,7 @@
 // Licencia completa en LICENSE (Apache License 2.0).
 
 import { useEffect, useState } from 'react'
+import { useLocale } from '@core/i18n'
 import { AppShell } from '@layout/AppShell'
 import { ChatsProvider, ToolConfirmationModal, registerChatCommands } from '@features/chat'
 import {
@@ -133,6 +134,10 @@ const APP_COMMANDS: Command[] = [
  *   ajustes).
  */
 export function App() {
+  // Suscripción al idioma: al cambiarlo, App re-renderiza y con él todo el
+  // árbol (los `t()` de los hijos se re-evalúan). Es lo que hace que el IDE
+  // entero cambie de idioma sin remontar (no se pierde estado de paneles).
+  useLocale()
   // TEMP-ERROR-DEMO (borrar tras probar): crash intencional para ver el
   // AppErrorBoundary. Prender: localStorage.setItem('scrakk:boom','1') + reload.
   if (typeof localStorage !== 'undefined' && localStorage.getItem('scrakk:boom') === '1') {

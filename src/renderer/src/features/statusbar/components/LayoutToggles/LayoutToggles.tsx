@@ -22,6 +22,7 @@ import { useLayout } from '@features/layout'
 import type { SlotId } from '@features/layout'
 import styles from './LayoutToggles.module.css'
 
+import { t } from '@core/i18n'
 /**
  * Por slot: ícono del estado inactivo (panel cerrado) y del estado activo
  * (panel abierto). El central usa el custom CenterPanelViewIcon con su prop
@@ -35,25 +36,33 @@ const TOGGLES: Array<{
 }> = [
   {
     slot: 'left',
-    label: 'Panel izquierdo',
+    get label() {
+      return t('statusbar.toggle.left')
+    },
     Icon: productIcon('panel-left'),
     OpenIcon: productIcon('panel-left-open')
   },
   {
     slot: 'bottom',
-    label: 'Panel inferior',
+    get label() {
+      return t('statusbar.toggle.bottom')
+    },
     Icon: productIcon('panel-bottom'),
     OpenIcon: productIcon('panel-bottom-open')
   },
   {
     slot: 'center',
-    label: 'Panel central',
+    get label() {
+      return t('statusbar.toggle.center')
+    },
     Icon: productIcon('center-panel'),
     OpenIcon: productIcon('center-panel')
   },
   {
     slot: 'right',
-    label: 'Panel derecho',
+    get label() {
+      return t('statusbar.toggle.right')
+    },
     Icon: productIcon('panel-right'),
     OpenIcon: productIcon('panel-right-open')
   }
@@ -71,7 +80,7 @@ export function LayoutToggles(): JSX.Element {
   const { isSlotOpen, setSlotPanel, toggleSlotPanel } = useLayout()
 
   return (
-    <div className={styles.group} role="group" aria-label="Visibilidad de paneles">
+    <div className={styles.group} role="group" aria-label={t('statusbar.visibilidad.de.paneles')}>
       {TOGGLES.map(({ slot, label, Icon, OpenIcon }) => {
         const open = isSlotOpen(slot)
         return (

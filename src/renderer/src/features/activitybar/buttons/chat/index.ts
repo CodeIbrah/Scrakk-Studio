@@ -5,10 +5,13 @@
 import type { ActivityBarButton } from '../../types'
 import { productIcon } from '@services/productIcons/components'
 
+import { t } from '@core/i18n'
 /** Botón del chat — barra derecha, slot derecho. */
 const chat: ActivityBarButton = {
   id: 'chat',
-  label: 'Chat',
+  get label() {
+    return t('layout.panel.chat')
+  },
   icon: productIcon('chat'),
   side: 'right',
   target: 'right',

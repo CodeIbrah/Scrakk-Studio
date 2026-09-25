@@ -5,10 +5,13 @@
 import type { ActivityBarButton } from '../../types'
 import { productIcon } from '@services/productIcons/components'
 
+import { t } from '@core/i18n'
 /** Botón de búsqueda — barra izquierda, slot izquierdo. */
 const search: ActivityBarButton = {
   id: 'search',
-  label: 'Búsqueda',
+  get label() {
+    return t('layout.panel.search')
+  },
   icon: productIcon('search'),
   side: 'left',
   target: 'left',

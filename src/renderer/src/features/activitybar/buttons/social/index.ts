@@ -5,10 +5,13 @@
 import type { ActivityBarButton } from '../../types'
 import { productIcon } from '@services/productIcons/components'
 
+import { t } from '@core/i18n'
 /** Botón del panel Social — barra derecha, slot derecho. */
 const social: ActivityBarButton = {
   id: 'social',
-  label: 'Social',
+  get label() {
+    return t('layout.panel.social')
+  },
   icon: productIcon('people'),
   side: 'right',
   target: 'right',

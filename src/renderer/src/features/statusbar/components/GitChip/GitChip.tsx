@@ -13,6 +13,7 @@ import {
 } from '@services/git'
 import styles from './GitChip.module.css'
 
+import { t } from '@core/i18n'
 const ROOT_KEY = 'scrakk-studio:root-path'
 
 /**
@@ -65,7 +66,7 @@ export function GitChip(): JSX.Element | null {
       className={styles.chip}
       onClick={() => toggleSlotPanel('right', 'git')}
       title={title}
-      aria-label="Git: abrir panel"
+      aria-label={t('statusbar.git.abrir.panel')}
     >
       <span
         className={[styles.dot, dirty ? styles.dotDirty : styles.dotClean].join(' ')}

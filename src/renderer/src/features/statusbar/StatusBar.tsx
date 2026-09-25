@@ -21,6 +21,7 @@ import {
 } from '@services/modals'
 import styles from './StatusBar.module.css'
 
+import { t } from '@core/i18n'
 interface StatusBarProps {
   onOpenSettings: () => void
 }
@@ -67,7 +68,7 @@ export function StatusBar({ onOpenSettings }: StatusBarProps): JSX.Element {
   }
 
   return (
-    <footer className={styles.bar} aria-label="Barra de estado">
+    <footer className={styles.bar} aria-label={t('statusbar.barra.de.estado')}>
       <div className={styles.group}>
         <LspChip />
         {/* Errores/advertencias: click = panel de Problemas (como VS Code). */}
@@ -93,9 +94,9 @@ export function StatusBar({ onOpenSettings }: StatusBarProps): JSX.Element {
           ref={bellRef}
           type="button"
           className={styles.chipBtn}
-          aria-label="Historial de notificaciones"
+          aria-label={t('statusbar.historial.de.notificaciones')}
           aria-expanded={popoverOpen}
-          title="Notificaciones"
+          title={t('statusbar.notificaciones')}
           onClick={toggleNotifications}
         >
           <ProductIcon id="bell" size={14} />
@@ -103,8 +104,8 @@ export function StatusBar({ onOpenSettings }: StatusBarProps): JSX.Element {
         <button
           type="button"
           className={styles.chipBtn}
-          aria-label="Ajustes"
-          title="Ajustes"
+          aria-label={t('statusbar.ajustes')}
+          title={t('statusbar.ajustes')}
           onClick={onOpenSettings}
         >
           <ProductIcon id="settings-gear" size={14} />

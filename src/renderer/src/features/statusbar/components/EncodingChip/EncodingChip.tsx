@@ -25,6 +25,7 @@ import { getEditorFiles, subscribeToEditorFiles } from '@features/editor/editorB
 import { reloadFileContent } from '@features/editor/fileSession'
 import styles from './EncodingChip.module.css'
 
+import { t } from '@core/i18n'
 function labelOf(doc: DocumentEncoding | undefined): string | null {
   if (!doc) return null
   const base = labelForId(doc.encoding)
@@ -110,8 +111,8 @@ export function EncodingChip(): JSX.Element | null {
       type="button"
       className={styles.chip}
       onClick={() => void openPicker()}
-      title="Codificación del archivo activo (click para cambiar)"
-      aria-label="Codificación del archivo"
+      title={t('statusbar.codificacion.del.archivo.activo.click')}
+      aria-label={t('statusbar.codificacion.del.archivo')}
     >
       <span className={doc?.lossy ? styles.lossy : styles.label}>{label}</span>
     </button>

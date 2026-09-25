@@ -5,10 +5,13 @@
 import type { ActivityBarButton } from '../../types'
 import { productIcon } from '@services/productIcons/components'
 
+import { t } from '@core/i18n'
 /** Botón de notas — barra derecha, slot derecho. */
 const notes: ActivityBarButton = {
   id: 'notes',
-  label: 'Notas',
+  get label() {
+    return t('layout.panel.notes')
+  },
   icon: productIcon('note'),
   side: 'right',
   target: 'right',

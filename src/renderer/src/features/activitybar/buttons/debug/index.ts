@@ -5,10 +5,13 @@
 import type { ActivityBarButton } from '../../types'
 import { productIcon } from '@services/productIcons/components'
 
+import { t } from '@core/i18n'
 /** Botón de debug — barra izquierda, slot izquierdo. */
 const debug: ActivityBarButton = {
   id: 'debug',
-  label: 'Debug',
+  get label() {
+    return t('layout.panel.debug')
+  },
   icon: productIcon('debug'),
   side: 'left',
   target: 'left',

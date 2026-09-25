@@ -13,14 +13,15 @@ import type { JSX } from 'react'
 import { openCommandPalette } from '@services/commands'
 import styles from './SearchBar.module.css'
 
+import { t } from '@core/i18n'
 export function SearchBar(): JSX.Element {
   return (
     <button
       type="button"
       className={styles.wrapper}
       onClick={() => openCommandPalette()}
-      title="Paleta de comandos (mod+shift+p)"
-      aria-label="Abrir paleta de comandos"
+      title={t('statusbar.paleta.de.comandos.mod.shift')}
+      aria-label={t('statusbar.abrir.paleta.de.comandos')}
     >
       <ProductIcon id="search" size={12} className={styles.icon} aria-hidden="true" />
       <span className={styles.label}>Comandos…</span>

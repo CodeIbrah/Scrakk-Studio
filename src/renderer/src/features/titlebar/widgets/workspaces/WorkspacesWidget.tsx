@@ -22,6 +22,7 @@ import {
 import { WorkspacesHistoryPanel } from './WorkspacesHistoryPanel'
 import styles from './WorkspacesWidget.module.css'
 
+import { t } from '@core/i18n'
 /** Key del popover de workspaces en el registry de modales (para toggle). */
 const WORKSPACES_POPOVER_KEY = 'workspaces-history'
 
@@ -96,11 +97,11 @@ export function WorkspacesWidget(): JSX.Element {
   const label = current ? baseNameOf(current) : 'Sin workspace'
 
   return (
-    <div className={styles.widget} role="group" aria-label="Workspaces">
+    <div className={styles.widget} role="group" aria-label={t('titlebar.workspaces')}>
       <button
         type="button"
         className={styles.nav}
-        aria-label="Workspace anterior"
+        aria-label={t('titlebar.workspace.anterior')}
         title={prev ? `Ir a ${baseNameOf(prev)}` : 'Sin workspace anterior'}
         disabled={!prev}
         onClick={() => goTo(prev)}
@@ -122,7 +123,7 @@ export function WorkspacesWidget(): JSX.Element {
         <button
           type="button"
           className={styles.nav}
-          aria-label="Workspace siguiente"
+          aria-label={t('titlebar.workspace.siguiente')}
           title={`Ir a ${baseNameOf(next)}`}
           onClick={() => goTo(next)}
         >
@@ -132,8 +133,8 @@ export function WorkspacesWidget(): JSX.Element {
         <button
           type="button"
           className={styles.nav}
-          aria-label="Agregar workspace"
-          title="Agregar workspace"
+          aria-label={t('titlebar.agregar.workspace')}
+          title={t('titlebar.agregar.workspace')}
           onClick={() => void addWorkspace()}
         >
           <ProductIcon id="plus" size={13} />

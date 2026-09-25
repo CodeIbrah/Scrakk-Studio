@@ -21,6 +21,7 @@ import {
 import { openSettingsModal } from '@features/settings'
 import styles from './LspChip.module.css'
 
+import { t } from '@core/i18n'
 export function LspChip(): JSX.Element {
   const [aggregate, setAggregate] = useState<AggregateLspState>({
     state: 'idle',
@@ -54,7 +55,7 @@ export function LspChip(): JSX.Element {
       className={styles.chip}
       onClick={() => openSettingsModal('servers')}
       title={title}
-      aria-label="Estado de language servers"
+      aria-label={t('statusbar.estado.de.language.servers')}
     >
       <span
         className={[styles.dot, styles[`dot_${aggregate.state}`] ?? null]

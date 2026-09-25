@@ -18,6 +18,7 @@ import { subscribeToEditorCursor } from '@features/editor/cursorBus'
 import { getEditorFiles, subscribeToEditorFiles } from '@features/editor/editorBus'
 import styles from './CursorPosition.module.css'
 
+import { t } from '@core/i18n'
 export function CursorPosition(): JSX.Element | null {
   const [cursor, setCursor] = useState<{ line: number; col: number } | null>(null)
   // Sin archivos abiertos no hay editor: ocultar el contador (no "Ln —, Col —").
@@ -38,13 +39,13 @@ export function CursorPosition(): JSX.Element | null {
     <span
       className={styles.indicator}
       data-empty={hasValue ? 'false' : 'true'}
-      aria-label="Posición del cursor en el editor"
+      aria-label={t('statusbar.posicion.del.cursor.en.el')}
       title={hasValue ? 'Posición del cursor' : 'Sin editor activo'}
     >
       <span className={styles.label}>Ln</span>
       <span className={styles.value}>{hasValue ? cursor.line + 1 : '—'}</span>
       <span className={styles.sep}>,</span>
-      <span className={styles.label}>Col</span>
+      <span className={styles.label}>{t('statusbar.col')}</span>
       <span className={styles.value}>{hasValue ? cursor.col + 1 : '—'}</span>
     </span>
   )

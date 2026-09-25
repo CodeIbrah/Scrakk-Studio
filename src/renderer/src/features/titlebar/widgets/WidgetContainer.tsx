@@ -7,6 +7,7 @@ import { PanelErrorBoundary } from '@features/layout/components/PanelErrorBounda
 import { getTitlebarWidgets } from './registry'
 import styles from './WidgetContainer.module.css'
 
+import { t } from '@core/i18n'
 /**
  * WidgetContainer — pinta los widgets registrados de la titlebar.
  *
@@ -19,7 +20,7 @@ export function WidgetContainer(): JSX.Element {
   if (widgets.length === 0) return <></>
 
   return (
-    <div className={styles.container} role="group" aria-label="Widgets de la titlebar">
+    <div className={styles.container} role="group" aria-label={t('titlebar.widgets.de.la.titlebar')}>
       {widgets.map((widget) => {
         const Component = widget.component
         return (

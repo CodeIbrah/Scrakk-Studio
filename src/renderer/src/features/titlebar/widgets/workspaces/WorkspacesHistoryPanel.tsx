@@ -14,6 +14,7 @@ import {
 } from '@services/workspaces'
 import styles from './WorkspacesHistoryPanel.module.css'
 
+import { t } from '@core/i18n'
 interface WorkspacesHistoryPanelProps {
   /** Se llama al navegar (el host cierra el popover). */
   onNavigate?: () => void
@@ -64,9 +65,9 @@ export function WorkspacesHistoryPanel({ onNavigate }: WorkspacesHistoryPanelPro
   return (
     <div className={styles.panel}>
       {history.length === 0 ? (
-        <p className={styles.empty}>Sin workspaces todavía.</p>
+        <p className={styles.empty}>{t('titlebar.sin.workspaces.todavia')}</p>
       ) : (
-        <div className={styles.list} role="listbox" aria-label="Historial de workspaces">
+        <div className={styles.list} role="listbox" aria-label={t('titlebar.historial.de.workspaces')}>
           {history.map((path) => {
             const active = path === current
             return (
@@ -98,7 +99,7 @@ export function WorkspacesHistoryPanel({ onNavigate }: WorkspacesHistoryPanelPro
       )}
       <button type="button" className={styles.add} onClick={() => void addWorkspace()}>
         <ProductIcon id="plus" size={13} />
-        Agregar workspace
+        {t('titlebar.agregar.workspace')}
       </button>
     </div>
   )

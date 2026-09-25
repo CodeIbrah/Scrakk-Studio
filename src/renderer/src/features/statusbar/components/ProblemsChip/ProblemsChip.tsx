@@ -24,6 +24,7 @@ import { countProblems, subscribeToDiagnostics, type ProblemCounts } from '@serv
 import { toggleSlotPanel } from '@features/layout'
 import styles from './ProblemsChip.module.css'
 
+import { t } from '@core/i18n'
 export function ProblemsChip(): JSX.Element {
   const [counts, setCounts] = useState<ProblemCounts>(() => countProblems())
 
@@ -45,7 +46,7 @@ export function ProblemsChip(): JSX.Element {
       type="button"
       className={[styles.chip, clean ? styles.clean : null].filter(Boolean).join(' ')}
       title={title}
-      aria-label="Problemas"
+      aria-label={t('statusbar.problemas')}
       onClick={() => toggleSlotPanel('bottom', 'problems')}
     >
       <ProductIcon id="close" size={12} />

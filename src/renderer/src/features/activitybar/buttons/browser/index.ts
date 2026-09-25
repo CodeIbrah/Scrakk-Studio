@@ -5,10 +5,13 @@
 import type { ActivityBarButton } from '../../types'
 import { productIcon } from '@services/productIcons/components'
 
+import { t } from '@core/i18n'
 /** Botón del browser — barra izquierda, slot izquierdo. */
 const browser: ActivityBarButton = {
   id: 'browser',
-  label: 'Browser',
+  get label() {
+    return t('layout.panel.browser')
+  },
   icon: productIcon('browser'),
   side: 'left',
   target: 'left',
