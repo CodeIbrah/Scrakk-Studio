@@ -48,6 +48,7 @@ export {
 } from './storageService'
 export { getPersistedHighlightSource, persistHighlightSource } from './storageService'
 export { getPersistedGrammarEngine, persistGrammarEngine } from './storageService'
+export { getPersistedLocalePreference, persistLocalePreference } from './storageService'
 export {
   getPersistedChatSessions,
   persistChatSessions,

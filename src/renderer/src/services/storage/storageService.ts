@@ -15,6 +15,7 @@ import { STORAGE_KEYS } from './schema'
 import type { ChatSessionsData, OnboardingStatus } from './schema'
 import type { EditorFileTab } from '@features/editor'
 import type { EditorGrammarEngine, EditorHighlightSource } from './schema'
+import type { LocalePreference } from '@shared/i18n'
 
 // ── Validadores ─────────────────────────────────────────────────────────────
 
@@ -116,6 +117,32 @@ export function getPersistedGrammarEngine(): EditorGrammarEngine {
 
 export function persistGrammarEngine(engine: EditorGrammarEngine): void {
   lsSet(STORAGE_KEYS.EDITOR_GRAMMAR_ENGINE, JSON.stringify(engine))
+}
+
+// ── Idioma de la interfaz (i18n) ────────────────────────────────────────────
+
+/**
+ * Preferencia de idioma de la UI. `system` sigue al sistema operativo (se
+ * resuelve al idioma soportado más cercano). Un valor guardado desconocido
+ * cae a `system` en vez de dejar la app sin idioma.
+ */
+function isValidLocalePreference(value: unknown): value is LocalePreference {
+  return value === 'system' || value === 'es' || value === 'en'
+}
+
+export function getPersistedLocalePreference(): LocalePreference {
+  try {
+    const raw = lsGet(STORAGE_KEYS.I18N_LOCALE)
+    const parsed: unknown = typeof raw === 'string' && raw.length > 0 ? JSON.parse(raw) : undefined
+    if (isValidLocalePreference(parsed)) return parsed
+  } catch {
+    // caer al default
+  }
+  return 'system'
+}
+
+export function persistLocalePreference(preference: LocalePreference): void {
+  lsSet(STORAGE_KEYS.I18N_LOCALE, JSON.stringify(preference))
 }
 
 // ── Chat (sesiones + activa) ────────────────────────────────────────────────

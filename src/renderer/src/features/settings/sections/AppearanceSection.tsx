@@ -24,6 +24,13 @@ import {
   type RegisteredThemeEntry,
   type FontFallbackMode
 } from '@services/extensions'
+import { SegmentedTabs } from '@ui'
+import {
+  getLocalePreference,
+  setLocalePreference,
+  useT,
+  type LocalePreference
+} from '@core/i18n'
 import styles from './AppearanceSection.module.css'
 
 interface ThemeCardProps {
@@ -53,6 +60,7 @@ function ThemeSwatches({ theme }: { theme: RegisteredThemeEntry }): JSX.Element 
 }
 
 function ThemeCard({ theme, isActive, onActivate }: ThemeCardProps): JSX.Element {
+  const t = useT()
   const author = theme.isBuiltin
     ? 'Scrakk'
     : (ExtensionRegistry.getExtension(theme.extensionId)?.name ?? theme.extensionId)
@@ -72,7 +80,7 @@ function ThemeCard({ theme, isActive, onActivate }: ThemeCardProps): JSX.Element
         <span className={[styles.badge, theme.type === 'light' ? styles.badgeLight : null]
           .filter(Boolean)
           .join(' ')}>
-          {theme.type === 'light' ? 'Claro' : 'Oscuro'}
+          {theme.type === 'light' ? t('appearance.theme.light') : t('appearance.theme.dark')}
         </span>
         <span className={styles.author}>{author}</span>
       </span>
@@ -81,9 +89,11 @@ function ThemeCard({ theme, isActive, onActivate }: ThemeCardProps): JSX.Element
 }
 
 export function AppearanceSection(): JSX.Element {
+  const t = useT()
   const [themes, setThemes] = useState<RegisteredThemeEntry[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
   const [fallback, setFallback] = useState<FontFallbackMode>(() => getFontFallbackMode())
+  const [localePref, setLocalePref] = useState<LocalePreference>(() => getLocalePreference())
 
   const refresh = useCallback((): void => {
     setThemes(listRegisteredThemes())
@@ -124,6 +134,11 @@ export function AppearanceSection(): JSX.Element {
     setFallback(mode)
   }
 
+  const pickLocale = (preference: LocalePreference): void => {
+    setLocalePreference(preference)
+    setLocalePref(preference)
+  }
+
   const [query, setQuery] = useState('')
   const q = query.trim().toLowerCase()
   const visibleThemes = q
@@ -134,15 +149,37 @@ export function AppearanceSection(): JSX.Element {
       )
     : allThemes
 
+  // El aviso menciona `.sef` en medio del texto: se parte por ese token para
+  // conservar el `<code>` sin meter HTML en el catálogo.
+  const [hintBefore, hintAfter] = t('appearance.hint').split('.sef')
+
   return (
     <div className={styles.section}>
+      <div className={styles.fontBox}>
+        <div className={styles.fontHead}>
+          <span className={styles.fontName}>{t('appearance.language.label')}</span>
+        </div>
+        <SegmentedTabs
+          ariaLabel={t('appearance.language.aria')}
+          activeId={localePref}
+          onChange={(id) => pickLocale(id as LocalePreference)}
+          items={[
+            { id: 'system', label: t('common.system') },
+            { id: 'es', label: 'Español' },
+            { id: 'en', label: 'English' }
+          ]}
+        />
+        <p className={styles.hint}>{t('appearance.language.hint')}</p>
+      </div>
+
       <p className={styles.hint}>
-        Todos los temas: los que viajan con la app y los que aporten extensiones{' '}
-        <code>.sef</code> (aparecen solos al instalarse).
+        {hintBefore}
+        <code>.sef</code>
+        {hintAfter ?? ''}
       </p>
 
       {allThemes.length === 0 ? (
-        <p className={styles.empty}>No hay temas registrados todavía.</p>
+        <p className={styles.empty}>{t('appearance.empty')}</p>
       ) : (
         <div className={styles.browser}>
           <div className={styles.themeSearchWrap}>
@@ -150,13 +187,15 @@ export function AppearanceSection(): JSX.Element {
               className={styles.themeSearchInput}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Buscar temas…"
-              aria-label="Buscar temas"
+              placeholder={t('appearance.search.placeholder')}
+              aria-label={t('appearance.search.aria')}
               spellCheck={false}
             />
           </div>
           {visibleThemes.length === 0 ? (
-            <p className={styles.empty}>Sin resultados para “{query.trim()}”.</p>
+            <p className={styles.empty}>
+              {t('appearance.search.noResults', { query: query.trim() })}
+            </p>
           ) : (
             <div className={styles.grid}>
               {visibleThemes.map((theme) => (
@@ -176,10 +215,14 @@ export function AppearanceSection(): JSX.Element {
         <div className={styles.fontBox}>
           <div className={styles.fontHead}>
             <span className={styles.fontName}>{activeFontFamily}</span>
-            <span className={styles.fontTag}>Fuente del tema</span>
+            <span className={styles.fontTag}>{t('appearance.font.source')}</span>
           </div>
-          <p className={styles.hint}>Respaldo si no carga (sin internet):</p>
-          <div className={styles.fontTabs} role="tablist" aria-label="Respaldo de fuente">
+          <p className={styles.hint}>{t('appearance.font.fallbackHint')}</p>
+          <div
+            className={styles.fontTabs}
+            role="tablist"
+            aria-label={t('appearance.font.fallbackAria')}
+          >
             {(['system', 'original'] as const).map((mode) => (
               <button
                 key={mode}
@@ -191,7 +234,7 @@ export function AppearanceSection(): JSX.Element {
                   .join(' ')}
                 onClick={() => pickFallback(mode)}
               >
-                {mode === 'system' ? 'Sistema' : 'Original'}
+                {mode === 'system' ? t('common.system') : t('common.original')}
               </button>
             ))}
           </div>
@@ -201,15 +244,15 @@ export function AppearanceSection(): JSX.Element {
       {activeId !== null ? (
         <div className={styles.activeRow}>
           <span className={styles.activeText}>
-            Tema de extensión activo:{' '}
+            {t('appearance.active.prefix')}{' '}
             <strong>{themes.find((theme) => theme.id === activeId)?.name ?? activeId}</strong>
           </span>
           <button type="button" className={styles.resetBtn} onClick={handleReset}>
-            Restaurar tema base
+            {t('appearance.active.reset')}
           </button>
         </div>
       ) : (
-        <p className={styles.baseNote}>Usando el tema base de la app.</p>
+        <p className={styles.baseNote}>{t('appearance.base.note')}</p>
       )}
     </div>
   )

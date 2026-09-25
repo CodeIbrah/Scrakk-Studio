@@ -16,6 +16,7 @@
 import type { PanelId, SlotId } from '@features/layout'
 import type { EditorFileTab } from '@features/editor'
 import type { ChatMessage } from '@services/chat'
+import type { LocalePreference } from '@shared/i18n'
 
 // ── Claves del storage ──────────────────────────────────────────────────────
 
@@ -54,7 +55,10 @@ export const STORAGE_KEYS = {
   TELEMETRY_ENABLED: 'telemetry.enabled',
 
   /** Epoch ms de la primera vez que se preguntó por telemetría (null = nunca). */
-  TELEMETRY_ASKED_AT: 'telemetry.askedAt'
+  TELEMETRY_ASKED_AT: 'telemetry.askedAt',
+
+  /** Idioma de la interfaz ('system' sigue al SO). Default: system. */
+  I18N_LOCALE: 'i18n.locale'
 } as const
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS]
@@ -201,4 +205,5 @@ export interface StorageSchema {
   [STORAGE_KEYS.ONBOARDING_STEP]: number
   [STORAGE_KEYS.TELEMETRY_ENABLED]: boolean
   [STORAGE_KEYS.TELEMETRY_ASKED_AT]: number | null
+  [STORAGE_KEYS.I18N_LOCALE]: LocalePreference
 }

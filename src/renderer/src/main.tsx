@@ -7,6 +7,7 @@ import { createRoot } from 'react-dom/client'
 import { App } from './app/App'
 import { AppErrorBoundary } from './components/layout/AppErrorBoundary/AppErrorBoundary'
 import { ThemeProvider } from '@core/theme/ThemeProvider'
+import { initI18n } from '@core/i18n'
 import { applyStartupTheme } from '@services/extensions/types/themes/bootstrap'
 import { bootExtensions } from '@services/extensions/boot'
 import { initDiagnosticsDecorations, initLspFileSync, initLspWorkspaceSync } from '@services/lsp'
@@ -19,6 +20,9 @@ import './styles/global.css'
 
 // Aplicar el tema JSON (persistido o default) antes del primer paint (sin flash).
 applyStartupTheme()
+
+// Idioma de la interfaz (persistido o 'system') antes del primer render.
+initI18n()
 
 // Sistema de extensiones SEF: carga builtin + extensiones del usuario.
 void bootExtensions()
