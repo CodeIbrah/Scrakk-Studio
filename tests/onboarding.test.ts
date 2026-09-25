@@ -237,10 +237,10 @@ describe('catálogo builtin (steps/index.ts)', () => {
 // ── Pureza: la maqueta no puede tocar la app real ──────────────────────────
 
 /** Imports de un paso FAKE: UI propia, iconos y React. Nada más. */
-const FAKE_ALLOWED = [/^react$/, /^\.\.?\//, /\.css$/, /^@services\/productIcons(\/|$)/]
+const FAKE_ALLOWED = [/^react$/, /^\.\.?\//, /\.css$/, /^@services\/productIcons(\/|$)/, /^@core\/i18n$/]
 
 /** Un paso REAL sí toca servicios, primitivas UI y storage. */
-const REAL_ALLOWED = [/^react$/, /^\.\.?\//, /\.css$/, /^@ui(\/|$)/, /^@services\//]
+const REAL_ALLOWED = [/^react$/, /^\.\.?\//, /\.css$/, /^@ui(\/|$)/, /^@services\//, /^@core\/i18n$/]
 
 function sourceFiles(dir: string): string[] {
   if (!fs.existsSync(dir)) return []
