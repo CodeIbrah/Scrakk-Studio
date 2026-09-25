@@ -240,6 +240,12 @@ publicadas no se editan. El archivo va por versión:
 - **Nav de Ajustes**: **Servidores** y **Resaltado** pasan a ser **hijos de
   Editor** (antes Servidores era de primer nivel y Resaltado colgaba de
   Servidores), para que la jerarquía refleje que son ajustes del editor.
+- **Editor → Resaltado (Fuente)**: el cambio ahora **aplica al instante** sobre
+  el archivo abierto. El ajuste existía y se guardaba, pero el motor Innerta
+  **no escuchaba** su evento (`highlight-source-changed`): recién se notaba al
+  reabrir el archivo. Además la sección muestra un **estado en vivo** (modo
+  efectivo + tokens de LSP / tree-sitter / TextMate) para poder **verificar**
+  quién está pintando, junto al inspector de tokens.
 - **Botón "volver arriba"** en el contenido de Ajustes: aparece al bajar con una
   animación de **150ms** (fade + deslizamiento) y sube el contenido de forma
   **suave**; respeta `prefers-reduced-motion` (salto directo) y al cambiar de
