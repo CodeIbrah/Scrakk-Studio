@@ -234,6 +234,34 @@ publicadas no se editan. El archivo va por versión:
   **suave**; respeta `prefers-reduced-motion` (salto directo) y al cambiar de
   sección el contenido vuelve arriba.
 
+### i18n — Internacionalización (UI)
+- **Motor propio y tipado**: `t()` con interpolación (`{nombre}`), plurales
+  (`count` → `.one`/`.other`) y caída al idioma base. Sin traducción en runtime:
+  las claves se resuelven contra catálogos estáticos y un typo en `t('...')` no
+  compila (la unión `MessageKey` se deriva del catálogo base).
+- **El español es la base** (`es`) y el **inglés** se traduce una sola vez y se
+  guarda. Cada clave recuerda el **hash del texto base**: si el `es` no cambió
+  nunca se re-traduce; si cambió, queda `stale`.
+- **Selector de idioma** en Ajustes → Apariencia (`Sistema` / `Español` /
+  `English`), persistido y aplicado al instante (incluido el `<html lang>`).
+  Al cambiarlo, el **IDE entero** se vuelve a renderizar con el idioma nuevo
+  (sin remontar paneles: no se pierde estado).
+- **Interfaz migrada al catálogo**: menú superior, barra de estado, activity
+  bar, títulos de paneles y pestañas, Ajustes (nav + secciones), paneles
+  (Explorador, Git, Problemas, Notas, Social, Chat…), onboarding y diálogos.
+  Los títulos de panel y los labels de los registries se resuelven con
+  *getters* (`get title() { return t(...) }`), así siguen al idioma sin tocar
+  a los consumidores.
+- **`tools/i18n.mjs`** (`npm run i18n`): `--status`, `--extract`, `--sync`,
+  `--translate <lang>` (motor **DeepL** por defecto; `argos` local como
+  alternativa), `--review`, `--approve`, `--check [--strict]` y `--doctor`.
+  Incluye **glosario curado** (coincidencia exacta) para las strings cortas que
+  el motor no desambigua sin contexto, y **protección de `{placeholders}`** con
+  verificación posterior.
+- **Flujo de release**: `release.yml` corre `--check --strict` y **bloquea** el
+  paquete si hay claves faltantes, desactualizadas o sin revisar; `ci.yml` avisa
+  sin bloquear mientras la migración avanza.
+
 ### Correcciones
 - **Emoji: ancho de 2 celdas y nítidos**: el layout era `x = columna × ancho`
   puro, así que un emoji avanzaba **una** celda y se pisaba con el vecino (y el
