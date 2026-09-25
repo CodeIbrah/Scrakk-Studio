@@ -17,7 +17,7 @@ export function DebugPanel(): JSX.Element {
   const { setTitle } = usePanelTitle()
 
   useEffect(() => {
-    setTitle('Debug')
+    setTitle(t('layout.panel.debug'))
   }, [setTitle])
 
   return (

@@ -6,6 +6,7 @@ import { ipcMain, type WebContents } from 'electron'
 import { LLM_IPC, type LlmStreamRequest, type LlmToolCall } from '@shared/llm'
 import { buildThinkingBody, type ThinkingMode } from '@shared/thinking'
 
+import { t } from '@shared/i18n'
 interface OpenAiStreamToolCallDelta {
   index?: number
   id?: string
@@ -136,7 +137,7 @@ async function runStream(sender: WebContents, request: LlmStreamRequest): Promis
     if (!response.body) {
       sendEvent(sender, LLM_IPC.chatStreamError, {
         requestId,
-        error: 'El proveedor no devolvió un stream.'
+        error: t('main.el.proveedor.no.devolvio.un')
       })
       return
     }
@@ -260,7 +261,7 @@ async function runStream(sender: WebContents, request: LlmStreamRequest): Promis
     if (idleTimedOut) {
       sendEvent(sender, LLM_IPC.chatStreamError, {
         requestId,
-        error: 'El proveedor dejó de enviar datos (2 min sin respuesta).'
+        error: t('main.el.proveedor.dejo.de.enviar')
       })
       return
     }
@@ -268,7 +269,7 @@ async function runStream(sender: WebContents, request: LlmStreamRequest): Promis
     if (connectTimedOut) {
       sendEvent(sender, LLM_IPC.chatStreamError, {
         requestId,
-        error: 'El proveedor no respondió (2 min).'
+        error: t('main.el.proveedor.no.respondio.2')
       })
       return
     }
@@ -280,7 +281,7 @@ async function runStream(sender: WebContents, request: LlmStreamRequest): Promis
     if (error instanceof Error && error.name === 'TimeoutError') {
       sendEvent(sender, LLM_IPC.chatStreamError, {
         requestId,
-        error: 'El proveedor tardó demasiado en responder.'
+        error: t('main.el.proveedor.tardo.demasiado.en')
       })
     } else {
       const message = error instanceof Error ? error.message : String(error)
@@ -297,7 +298,7 @@ async function runStream(sender: WebContents, request: LlmStreamRequest): Promis
 export function registerLlmIpc(): void {
   ipcMain.handle(LLM_IPC.chatStreamStart, (event, request: unknown) => {
     if (!isValidRequest(request)) {
-      return { ok: false, error: 'Request inválido' }
+      return { ok: false, error: t('main.request.invalido') }
     }
     // Arranca el stream en background; los deltas llegan por eventos.
     void runStream(event.sender, request)

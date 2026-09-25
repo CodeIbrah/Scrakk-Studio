@@ -17,7 +17,7 @@ export function BrowserPanel(): JSX.Element {
   const { setTitle } = usePanelTitle()
 
   useEffect(() => {
-    setTitle('Browser')
+    setTitle(t('layout.panel.browser'))
   }, [setTitle])
 
   return (

@@ -18,5 +18,6 @@
   "features.sin.actividad.registrada.todavia": "No activity recorded yet",
   "features.sin.marcadores.click.derecho.sobre": "No bookmarks. Right-click in the editor → “Add Bookmark.”",
   "features.sin.notificaciones.todavia": "No notifications yet",
-  "features.tabs.abiertas": "Open tabs"
+  "features.tabs.abiertas": "Open tabs",
+  "features.usetooldockhost.fuera.de.tooldockhostprovider": "useToolDockHost outside of <tooldockhostprovider></tooldockhostprovider>"
 }

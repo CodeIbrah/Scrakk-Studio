@@ -15,6 +15,7 @@ import type { ThinkingMode } from '@shared/thinking'
 import { getProvider, getProviders, subscribeProviderCatalog, type ProviderConfig } from '@services/providers'
 import { PROVIDERS_STORAGE_KEY } from '../settings'
 
+import { t } from '@core/i18n'
 const STORAGE_KEY = PROVIDERS_STORAGE_KEY
 
 interface StoredProvidersState {
@@ -276,7 +277,7 @@ export function ProvidersProvider({ children }: { children: ReactNode }) {
 export function useProviders(): ProvidersContextValue {
   const context = useContext(ProvidersContext)
   if (!context) {
-    throw new Error('useProviders debe usarse dentro de <ProvidersProvider>')
+    throw new Error(t('providers.useproviders.debe.usarse.dentro.de'))
   }
   return context
 }

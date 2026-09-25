@@ -8,6 +8,7 @@
 
 import { BOM_UTF16LE, BOM_UTF16BE, type EncodingId, type IEncodingCodec } from '@shared/encodings'
 
+import { t } from '@shared/i18n'
 /** Utilidad compartida: anteponer bytes de BOM a un cuerpo codificado. */
 export function concatBom(bom: readonly number[], body: Uint8Array): Uint8Array {
   const out = new Uint8Array(bom.length + body.length)
@@ -82,18 +83,18 @@ function makeUtf16WithBom(
   }
 }
 
-export const utf16LeCodec: IEncodingCodec = makeUtf16('utf16le', 'UTF-16 LE', 'utf-16le', false)
+export const utf16LeCodec: IEncodingCodec = makeUtf16('utf16le', t('main.utf.16.le'), 'utf-16le', false)
 export const utf16LeBomCodec: IEncodingCodec = makeUtf16WithBom(
   'utf16le-bom',
-  'UTF-16 LE con BOM',
+  t('main.utf.16.le.con.bom'),
   'utf-16le',
   false,
   BOM_UTF16LE
 )
-export const utf16BeCodec: IEncodingCodec = makeUtf16('utf16be', 'UTF-16 BE', 'utf-16be', true)
+export const utf16BeCodec: IEncodingCodec = makeUtf16('utf16be', t('main.utf.16.be'), 'utf-16be', true)
 export const utf16BeBomCodec: IEncodingCodec = makeUtf16WithBom(
   'utf16be-bom',
-  'UTF-16 BE con BOM',
+  t('main.utf.16.be.con.bom'),
   'utf-16be',
   true,
   BOM_UTF16BE

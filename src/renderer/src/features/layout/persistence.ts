@@ -39,6 +39,7 @@ import {
 import { splitTreeStore, type SlotRoots, type SplitTreeNode } from './splitTree'
 import type { SlotId } from './types'
 
+import { t } from '@core/i18n'
 export const SLOT_IDS: SlotId[] = ['left', 'center', 'right', 'bottom']
 
 /** Id de la sesión de terminal por defecto (la del slot bottom inicial). */
@@ -58,12 +59,12 @@ export function defaultSlots(): Record<SlotId, StripState | null> {
     activeId: 'welcome'
   }
   return {
-    left: { stripId: 'left', tabs: [panelTab('explorer', 'Explorador')], activeId: 'panel:explorer' },
+    left: { stripId: 'left', tabs: [panelTab('explorer', t('layout.panel.explorer'))], activeId: 'panel:explorer' },
     center,
-    right: { stripId: 'right', tabs: [panelTab('chat', 'Chat')], activeId: 'panel:chat' },
+    right: { stripId: 'right', tabs: [panelTab('chat', t('layout.panel.chat'))], activeId: 'panel:chat' },
     bottom: {
       stripId: 'bottom',
-      tabs: [terminalTab(MAIN_TERMINAL_SESSION, 'Terminal')],
+      tabs: [terminalTab(MAIN_TERMINAL_SESSION, t('layout.terminal'))],
       activeId: `term:${MAIN_TERMINAL_SESSION}`
     }
   }
@@ -213,7 +214,7 @@ function migrateSlotV1(slot: SlotId, panelId: string | null): StripState | null 
     return center
   }
   if (panelId === 'innerta-terminal') {
-    const tab = terminalTab(MAIN_TERMINAL_SESSION, 'Terminal')
+    const tab = terminalTab(MAIN_TERMINAL_SESSION, t('layout.terminal'))
     return { stripId: slot, tabs: [tab], activeId: tab.id }
   }
   const tab = panelTab(panelId)

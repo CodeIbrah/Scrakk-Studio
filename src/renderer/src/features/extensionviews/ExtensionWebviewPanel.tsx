@@ -48,7 +48,7 @@ export function ExtensionWebviewPanel(): JSX.Element {
     if (rawId === null || extensionId === null) return
     const host = getHostBridge()
     if (!host) {
-      setError('El puente nativo no está disponible en este entorno.')
+      setError(t('extensionviews.el.puente.nativo.no.esta'))
       return
     }
     let cancelled = false

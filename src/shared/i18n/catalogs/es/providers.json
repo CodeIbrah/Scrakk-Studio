@@ -17,5 +17,6 @@
   "providers.proveedores": "Proveedores",
   "providers.quitar.key": "Quitar key",
   "providers.se.detecta.segun.el.modelo": "Se detecta según el modelo (o1/o3/gpt-5, Claude, Gemini, DeepSeek R1…).",
-  "providers.sugeridos.del.catalogo.models.dev": "Sugeridos del catálogo (models.dev):"
+  "providers.sugeridos.del.catalogo.models.dev": "Sugeridos del catálogo (models.dev):",
+  "providers.useproviders.debe.usarse.dentro.de": "useProviders debe usarse dentro de <ProvidersProvider>"
 }

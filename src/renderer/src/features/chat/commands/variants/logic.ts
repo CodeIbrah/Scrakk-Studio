@@ -65,8 +65,8 @@ export function getAvailableVariants(): VariantInfo {
 /** Aplica (o restablece) la variante del modelo activo. */
 export function applyVariant(value: string): SlashCommandResult {
   const info = getAvailableVariants()
-  if (!info.providerId) return { ok: false, error: 'No hay proveedor activo' }
-  if (!info.catalogReady) return { ok: false, error: 'El catálogo de modelos todavía no cargó' }
+  if (!info.providerId) return { ok: false, error: t('chat.no.hay.proveedor.activo') }
+  if (!info.catalogReady) return { ok: false, error: t('chat.el.catalogo.de.modelos.todavia') }
   if (info.options.length === 0) {
     return { ok: false, error: `El modelo ${info.model} no declara variantes de razonamiento` }
   }
@@ -91,7 +91,7 @@ export function applyVariant(value: string): SlashCommandResult {
  */
 export async function openVariantsPicker(): Promise<SlashCommandResult> {
   const info = getAvailableVariants()
-  if (!info.providerId) return { ok: false, error: 'No hay proveedor activo' }
+  if (!info.providerId) return { ok: false, error: t('chat.no.hay.proveedor.activo') }
   if (!info.catalogReady) {
     return { ok: false, error: 'El catálogo de modelos todavía no cargó; espera un segundo.' }
   }

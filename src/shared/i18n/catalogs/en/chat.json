@@ -8,6 +8,7 @@
   "chat.confirmar.accion": "Confirm action",
   "chat.copiar.al.portapapeles": "Copy to clipboard",
   "chat.detener.generacion": "Stop generation",
+  "chat.el.catalogo.de.modelos.todavia": "The model catalog has not yet been loaded.",
   "chat.elige.la.variante.de.razonamiento": "Select the reasoning variant (effort) of the active model.",
   "chat.enviar": "Send",
   "chat.exportar.como.md": "Export as .md",
@@ -17,6 +18,7 @@
   "chat.incluir.herramientas.en.la.exportacion": "Include tools in the export",
   "chat.mensaje": "Message",
   "chat.no.forzar.effort.default.del": "Do not force effort (vendor default)",
+  "chat.no.hay.proveedor.activo": "No active provider",
   "chat.nuevo.chat": "New chat",
   "chat.procesando": "Processing",
   "chat.profundo": "Deep",
@@ -28,5 +30,6 @@
   "chat.subagentes": "Subagents",
   "chat.thinking": "Thinking",
   "chat.thought.for": "Thought for",
+  "chat.usechats.debe.usarse.dentro.de": "useChats must be used within <chatsprovider></chatsprovider>",
   "chat.variante.a.aplicar.o.auto": "Variant to apply (or \"auto\" to clean up)"
 }

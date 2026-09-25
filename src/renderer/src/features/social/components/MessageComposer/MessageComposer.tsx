@@ -134,19 +134,19 @@ export function MessageComposer({
     try {
       list = Array.from(files).filter((f) => f.type.startsWith('image/'))
     } catch {
-      setAttachError('No se pudo leer el portapapeles.')
+      setAttachError(t('social.no.se.pudo.leer.el'))
       return
     }
     if (list.length === 0) return
     const room = 8 - pending.length
     if (room <= 0) {
-      setAttachError('Máximo 8 imágenes por mensaje.')
+      setAttachError(t('social.maximo.8.imagenes.por.mensaje'))
       return
     }
     const accepted: PendingImage[] = []
     for (const file of list.slice(0, room)) {
       if (!ALLOWED.includes(file.type)) {
-        setAttachError('Formato no soportado (png, jpg, webp, gif, avif).')
+        setAttachError(t('social.formato.no.soportado.png.jpg'))
         continue
       }
       if (file.size > IMAGE_RULES.maxBytes) {
@@ -156,7 +156,7 @@ export function MessageComposer({
       try {
         const dataUrl = await fileToDataUrl(file)
         if (!dataUrl.startsWith('data:image/')) {
-          setAttachError('No se pudo procesar esa imagen.')
+          setAttachError(t('social.no.se.pudo.procesar.esa'))
           continue
         }
         const dims = await dimsOf(dataUrl)
@@ -171,7 +171,7 @@ export function MessageComposer({
           height: dims.height
         })
       } catch {
-        setAttachError('No se pudo procesar esa imagen.')
+        setAttachError(t('social.no.se.pudo.procesar.esa'))
       }
     }
     if (accepted.length > 0) setPending((prev) => [...prev, ...accepted])
@@ -207,7 +207,7 @@ export function MessageComposer({
         setValue('')
         setShowMentions(false)
       } catch {
-        setAttachError('No se pudo leer la imagen.')
+        setAttachError(t('social.no.se.pudo.leer.la'))
         setPending(current)
       } finally {
         setSending(false)

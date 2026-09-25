@@ -24,6 +24,7 @@ import type {
 } from '@shared/lsp'
 import { getProblems } from './diagnosticsStore'
 
+import { t } from '@core/i18n'
 // ── Workspace ──────────────────────────────────────────────────────────────
 
 /** Setea el root del proyecto (debe llamarse al abrir/cambiar carpeta). */
@@ -76,7 +77,7 @@ export async function lspRequest(
   params?: unknown,
   options?: { filePath?: string; broadcast?: boolean; timeoutMs?: number; serverName?: string }
 ): Promise<LspRequestResponse> {
-  if (!window.api?.lsp) return { ok: false, results: [], error: 'sin puente LSP' }
+  if (!window.api?.lsp) return { ok: false, results: [], error: t('services.sin.puente.lsp') }
   return window.api.lsp.request({
     method,
     params,
@@ -662,11 +663,11 @@ function flattenLocations(res: LspRequestResponse): Array<{ uri: string; range: 
 // ── Acciones por server (modal LSP) ────────────────────────────────────────
 
 export async function lspRestartServer(serverName: string): Promise<LspServerActionResult> {
-  if (!window.api?.lsp) return { ok: false, error: 'sin puente LSP' }
+  if (!window.api?.lsp) return { ok: false, error: t('services.sin.puente.lsp') }
   return window.api.lsp.restartServer(serverName)
 }
 
 export async function lspInstallServer(serverName: string): Promise<LspServerActionResult> {
-  if (!window.api?.lsp) return { ok: false, error: 'sin puente LSP' }
+  if (!window.api?.lsp) return { ok: false, error: t('services.sin.puente.lsp') }
   return window.api.lsp.installServer(serverName)
 }

@@ -25,6 +25,15 @@ export const WINDOW_CONTROLS_IPC = {
   setTitleBarOverlay: 'window-controls:set-titlebar-overlay'
 } as const
 
+/** i18n: el renderer sincroniza el idioma activo con el proceso main. */
+export const I18N_IPC = {
+  setLocale: 'i18n:setLocale'
+} as const
+
+export interface I18nApi {
+  setLocale: (locale: import('./i18n').Locale) => void
+}
+
 /** Estilo del overlay donde el OS dibuja los botones nativos (min/max/close). */
 export interface TitleBarOverlayOptions {
   color?: string
@@ -67,6 +76,8 @@ export interface EncodingsApi {
 
 /** API global que el preload expone en `window.api`. */
 export interface WindowApi {
+  /** i18n: mantiene el idioma del proceso main en sync con el renderer. */
+  i18n: I18nApi
   windowControls: WindowControlsApi
   /** Capturas de pantalla (las hace el main: el canvas es WebGL). */
   screenshot: import('./screenshot').ScreenshotApi

@@ -11,6 +11,7 @@ import { WEB_IPC, type WebFetchRequest, type WebFetchResponse, type WebSearchReq
 import { searchWeb } from './search'
 import { fetchUrl } from './fetch'
 
+import { t } from '@shared/i18n'
 export function registerWebIpc(): void {
   ipcMain.handle(WEB_IPC.search, async (_event, request: WebSearchRequest): Promise<WebSearchResponse> => {
     try {
@@ -24,7 +25,7 @@ export function registerWebIpc(): void {
 
   ipcMain.handle(WEB_IPC.fetch, async (_event, request: WebFetchRequest): Promise<WebFetchResponse> => {
     const url = String(request?.url ?? '')
-    if (!url) return { ok: false, error: 'Falta la URL' }
+    if (!url) return { ok: false, error: t('main.falta.la.url') }
     return fetchUrl(url)
   })
 }

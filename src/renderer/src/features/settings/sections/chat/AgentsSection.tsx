@@ -185,12 +185,12 @@ export function AgentsSection(): JSX.Element {
     if (!draft) return
     const label = draft.label.trim()
     if (!label) {
-      setError('Ponle un nombre al agente.')
+      setError(t('settings.ponle.un.nombre.al.agente'))
       return
     }
     let id = editingId ?? slugifyModeId(label)
     if (!id) {
-      setError('El nombre no genera un id válido.')
+      setError(t('settings.el.nombre.no.genera.un'))
       return
     }
     if (BUILTIN_BASE_IDS.includes(id)) id = `custom-${id}`
@@ -214,7 +214,7 @@ export function AgentsSection(): JSX.Element {
     setEntries(next)
     setDraft(null)
     setEditingId(null)
-    setStatus('Guardado')
+    setStatus(t('settings.guardado'))
     setError(null)
   }
 
@@ -222,7 +222,7 @@ export function AgentsSection(): JSX.Element {
     const next = entries.filter((entry) => entry.id !== id)
     const ok = await writeAgentEntries(scope, kind, next)
     if (!ok) {
-      setError('No se pudo guardar')
+      setError(t('settings.no.se.pudo.guardar'))
       return
     }
     await loadAgentSettings()

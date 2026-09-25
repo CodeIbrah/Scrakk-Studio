@@ -12,6 +12,7 @@
 
 import type { WebSearchRequest, WebSearchResult } from '@shared/web'
 
+import { t } from '@shared/i18n'
 const UA =
   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36'
 
@@ -83,7 +84,7 @@ function matchesDomains(result: WebSearchResult, domains: string[]): boolean {
 /** Ejecuta la búsqueda y devuelve hasta 10 resultados. */
 export async function searchWeb(request: WebSearchRequest): Promise<WebSearchResult[]> {
   const query = request.query.trim()
-  if (!query) throw new Error('Falta la consulta')
+  if (!query) throw new Error(t('main.falta.la.consulta'))
   const domains = (request.allowedDomains ?? []).map((d) => d.trim()).filter(Boolean)
   const siteFilter = domains.length > 0 ? ` ${domains.map((d) => `site:${d}`).join(' OR ')}` : ''
   const results = await requestResults(`${query}${siteFilter}`)

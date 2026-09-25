@@ -36,6 +36,7 @@ import { tokenizeText } from '../extensions/tokenize'
 import { treeSitterManager } from '../extensions/treeSitter/manager'
 import { resolveLangsDir } from '../langs'
 
+import { t } from '@shared/i18n'
 const EXTENSION_ID_RE = /^[a-z0-9][a-z0-9._-]*$/i
 
 async function extensionsRoot(): Promise<string> {
@@ -63,7 +64,7 @@ interface ParsedSef {
 function parseSef(buffer: Uint8Array): ParsedSef {
   const entries = unzipSync(buffer)
   const manifestPath = Object.keys(entries).find((key) => key.endsWith('manifest.json'))
-  if (!manifestPath) throw new Error('El .sef no contiene manifest.json')
+  if (!manifestPath) throw new Error(t('main.el.sef.no.contiene.manifest'))
 
   const root = path.posix.dirname(manifestPath)
   const strip = root === '.' ? '' : root + '/'
@@ -82,7 +83,7 @@ function parseSef(buffer: Uint8Array): ParsedSef {
     if (!relative) continue
     files.set(relative, data)
   }
-  if (files.size === 0) throw new Error('El .sef está vacío')
+  if (files.size === 0) throw new Error(t('main.el.sef.esta.vacio'))
 
   return { manifest, id, files }
 }
@@ -263,7 +264,7 @@ export function registerExtensionsIpc(): void {
 
   ipcMain.handle(EXTENSIONS_IPC.pickSef, async (): Promise<PickSefResponse> => {
     const result = await dialog.showOpenDialog({
-      title: 'Instalar extensión',
+      title: t('main.instalar.extension'),
       properties: ['openFile'],
       filters: [{ name: 'Scrakk Extension (SEF)', extensions: ['sef'] }]
     })
@@ -275,7 +276,7 @@ export function registerExtensionsIpc(): void {
 
   ipcMain.handle(EXTENSIONS_IPC.pickVsix, async (): Promise<PickVsixResponse> => {
     const result = await dialog.showOpenDialog({
-      title: 'Instalar extensión VS Code (.vsix)',
+      title: t('main.instalar.extension.vs.code.vsix'),
       properties: ['openFile'],
       filters: [{ name: 'VS Code Extension', extensions: ['vsix', 'zip'] }]
     })

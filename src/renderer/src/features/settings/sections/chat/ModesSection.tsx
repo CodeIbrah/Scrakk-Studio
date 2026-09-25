@@ -178,12 +178,12 @@ export function ModesSection(): JSX.Element {
     if (!draft) return
     const label = draft.label.trim()
     if (!label) {
-      setError('Ponle un nombre al modo.')
+      setError(t('settings.ponle.un.nombre.al.modo'))
       return
     }
     let id = editingId ?? slugifyModeId(label)
     if (!id) {
-      setError('El nombre no genera un id válido.')
+      setError(t('settings.el.nombre.no.genera.un'))
       return
     }
     if (BUILTIN_BASE_IDS.includes(id)) id = `custom-${id}`
@@ -200,14 +200,14 @@ export function ModesSection(): JSX.Element {
 
     const ok = await writeCustomModes(scope, next)
     if (!ok) {
-      setError('No se pudo guardar modes.json')
+      setError(t('settings.no.se.pudo.guardar.modes'))
       return
     }
     await loadModeSettings()
     setEntries(next)
     setDraft(null)
     setEditingId(null)
-    setStatus('Guardado')
+    setStatus(t('settings.guardado'))
     setError(null)
   }
 
@@ -215,7 +215,7 @@ export function ModesSection(): JSX.Element {
     const next = entries.filter((entry) => entry.id !== id)
     const ok = await writeCustomModes(scope, next)
     if (!ok) {
-      setError('No se pudo guardar modes.json')
+      setError(t('settings.no.se.pudo.guardar.modes'))
       return
     }
     await loadModeSettings()

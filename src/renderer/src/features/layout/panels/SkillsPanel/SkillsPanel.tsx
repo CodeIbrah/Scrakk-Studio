@@ -133,7 +133,7 @@ export function SkillsPanel(): JSX.Element {
     setDescription('')
     setBody('')
     closeComposer()
-    setStatus('Skill guardada')
+    setStatus(t('layout.skill.guardada'))
   }
 
   const handleInsert = async (skill: SkillInfo): Promise<void> => {

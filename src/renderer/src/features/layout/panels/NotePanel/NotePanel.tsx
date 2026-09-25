@@ -41,7 +41,7 @@ export function NotePanel(): JSX.Element {
   const [activeId, setActiveId] = useState<string | null>(() => listNotes()[0]?.id ?? null)
 
   useEffect(() => {
-    setTitle('Notas')
+    setTitle(t('layout.panel.notes'))
   }, [setTitle])
 
   useEffect(() => subscribeToNotes(() => setNotes(listNotes())), [])

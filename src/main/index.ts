@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Licencia completa en LICENSE (Apache License 2.0).
 
-import { app, BrowserWindow, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { I18N_IPC } from '@shared/window-controls'
+import { setLocale } from '@shared/i18n'
 import { registerLlmIpc } from './ipc/llm'
 import { registerFsIpc } from './ipc/fs'
 import { registerWindowControlsIpc } from './ipc/window-controls'
@@ -73,6 +75,11 @@ if (!gotTheLock) {
   app.whenReady().then(() => {
     // .env local (R2 y dev): el entorno real siempre gana.
     loadLocalEnv()
+    // Idioma activo: lo persiste el renderer y lo aplica el main, para que
+    // los mensajes/errores del proceso principal salgan en el idioma elegido.
+    ipcMain.on(I18N_IPC.setLocale, (_event, locale: unknown) => {
+      if (locale === 'es' || locale === 'en') setLocale(locale)
+    })
     registerWindowControlsIpc()
     registerScreenshotIpc()
     registerLlmIpc()

@@ -34,6 +34,8 @@ export type TFunction = (key: MessageKey, vars?: Vars) => string
 function applyPreference(preference: LocalePreference): void {
   setLocale(resolveLocale(preference))
   if (typeof document !== 'undefined') document.documentElement.lang = getLocale()
+  // El proceso main también traduce (errores, diálogos): se lo avisamos.
+  window.api?.i18n?.setLocale(getLocale())
 }
 
 /** Hook de traducción: `const t = useT()` → `t('clave')`. */

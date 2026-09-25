@@ -7,6 +7,7 @@ import { existsSync } from 'node:fs'
 import { app, BrowserWindow, shell } from 'electron'
 import { WINDOW_CONTROLS_IPC } from '@shared/window-controls'
 
+import { t } from '@shared/i18n'
 /** Debe coincidir con --titlebar-height en core/theme/tokens.css. */
 const TITLEBAR_HEIGHT = 38
 
@@ -71,7 +72,7 @@ export function createMainWindow(): BrowserWindow {
     minHeight: 560,
     show: false,
     backgroundColor: '#000000',
-    title: 'Scrakk Studio',
+    title: t('main.scrakk.studio'),
     icon: getAppIcon(),
     titleBarStyle: 'hidden',
     titleBarOverlay: {

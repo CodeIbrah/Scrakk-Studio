@@ -47,6 +47,7 @@ import {
   type StatResponse
 } from '@shared/fs'
 
+import { t } from '@shared/i18n'
 const execAsync = promisify(execCb)
 
 // ── Directory watchers ───────────────────────────────────────────────────
@@ -249,11 +250,11 @@ export function registerFsIpc(): void {
   // ── Pick Folder (diálogo nativo) ────────────────────────────────────────
   ipcMain.handle(FS_IPC.pickFolder, async (): Promise<PickFolderResponse> => {
     const result = await dialog.showOpenDialog({
-      title: 'Abrir carpeta',
+      title: t('main.abrir.carpeta'),
       properties: ['openDirectory', 'createDirectory']
     })
     if (result.canceled || result.filePaths.length === 0) {
-      return { success: false, error: 'Operación cancelada' }
+      return { success: false, error: t('main.operacion.cancelada') }
     }
     return { success: true, path: result.filePaths[0] }
   })
@@ -261,11 +262,11 @@ export function registerFsIpc(): void {
   // ── Pick File (diálogo nativo, selección múltiple) ──────────────────────
   ipcMain.handle(FS_IPC.pickFile, async (): Promise<PickFileResponse> => {
     const result = await dialog.showOpenDialog({
-      title: 'Abrir archivo',
+      title: t('main.abrir.archivo'),
       properties: ['openFile', 'multiSelections']
     })
     if (result.canceled || result.filePaths.length === 0) {
-      return { success: false, error: 'Operación cancelada' }
+      return { success: false, error: t('main.operacion.cancelada') }
     }
     return { success: true, paths: result.filePaths }
   })

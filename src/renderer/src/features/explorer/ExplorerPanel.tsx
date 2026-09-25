@@ -320,7 +320,7 @@ export function ExplorerPanel({
     if (!creating) return
     const name = editValue.trim()
     if (!isValidName(name)) {
-      setEditError('Nombre inválido.')
+      setEditError(t('explorer.nombre.invalido'))
       return
     }
     const res = await workspace.createEntry(creating.parentPath, name, creating.isDirectory)
@@ -335,7 +335,7 @@ export function ExplorerPanel({
     if (!renamingPath) return
     const name = editValue.trim()
     if (!isValidName(name)) {
-      setEditError('Nombre inválido.')
+      setEditError(t('explorer.nombre.invalido'))
       return
     }
     const res = await workspace.renameEntry(renamingPath, name)

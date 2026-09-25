@@ -81,7 +81,7 @@ export function AvatarPicker({ value, onChange, name, accountId }: AvatarPickerP
     if (!file) return
     setError(null)
     if (!file.type.startsWith('image/')) {
-      setError('Ese archivo no es una imagen.')
+      setError(t('social.ese.archivo.no.es.una'))
       return
     }
     // Con cuenta: subir el original al Storage (cualquier formato/peso ≤10 MB).
@@ -106,7 +106,7 @@ export function AvatarPicker({ value, onChange, name, accountId }: AvatarPickerP
     }
     const dataUrl = await fileToAvatarDataUrl(file)
     if (!dataUrl) {
-      setError('No pudimos procesar esa imagen (prueba con PNG/JPG/WebP).')
+      setError(t('social.no.pudimos.procesar.esa.imagen'))
       return
     }
     onChange(dataUrl)

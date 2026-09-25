@@ -44,6 +44,7 @@ import { downloadsDisabled, install, resolveManagedCommand, managedNpmDir, type 
 import { loadConfiguredServers } from './config'
 import { resolveServers } from './routing'
 
+import { t } from '@shared/i18n'
 const INSTALL_TIMEOUT_MS = 300_000
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
@@ -762,7 +763,7 @@ export class LspManager {
       targets = [...this.clients.values()]
     } else {
       if (!payload.filePath) {
-        return { ok: false, results: [], error: 'filePath requerido (o broadcast: true)' }
+        return { ok: false, results: [], get error() { return t('main.filepath.requerido.o.broadcast.true') } }
       }
       try {
         targets = await this.ensureFileOpen(payload.filePath)
@@ -880,7 +881,7 @@ export class LspManager {
 
     const budgetBefore = this.restartBudget.get(clientKey) ?? 0
     if (budgetBefore <= 0) {
-      this.emitEvent({ serverName, state: 'failed', error: 'presupuesto de reinicios agotado' })
+      this.emitEvent({ serverName, state: 'failed', get error() { return t('main.presupuesto.de.reinicios.agotado') } })
       return
     }
     this.restartBudget.set(clientKey, budgetBefore - 1)
@@ -958,7 +959,7 @@ export class LspManager {
         if (key.startsWith(`${serverName}@`)) this.autoStartBlocked.delete(key)
       })
       const started = await this.ensureServerReady(serverName)
-      return started ? { ok: true } : { ok: false, error: 'server no configurado' }
+      return started ? { ok: true } : { ok: false, get error() { return t('main.server.no.configurado') } }
     }
     for (const key of keys) {
       const client = this.clients.get(key)
@@ -976,16 +977,16 @@ export class LspManager {
    */
   async installNow(serverName: string): Promise<{ ok: boolean; error?: string }> {
     const root = this.roots.find((r) => this.serversByRoot.get(r)?.[serverName])
-    if (!root) return { ok: false, error: 'server no registrado' }
+    if (!root) return { ok: false, get error() { return t('main.server.no.registrado') } }
     const config = this.serversByRoot.get(root)![serverName]
     if (await commandResolves(config.command)) return { ok: true }
 
-    if (downloadsDisabled()) return { ok: false, error: 'descargas deshabilitadas (SCRAKK_DISABLE_LSP_DOWNLOAD)' }
+    if (downloadsDisabled()) return { ok: false, get error() { return t('main.descargas.deshabilitadas.scrakk.disable.lsp') } }
 
     const def =
       BUILTIN_SERVERS.find((candidate) => candidate.id === serverName) ??
       this.allDynamicDefs().find((candidate) => candidate.id === serverName)
-    if (!def?.install) return { ok: false, error: 'sin receta de instalación' }
+    if (!def?.install) return { ok: false, get error() { return t('main.sin.receta.de.instalacion') } }
 
     // Progreso: la instalación es larga (hasta 300 s). El callback del
     // instalador no conoce el server; aquí se le pega la clave para que la UI

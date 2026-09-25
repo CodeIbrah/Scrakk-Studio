@@ -44,6 +44,7 @@ import { ExtensionHostManager, type RendererInvoker } from '../extensions/hostMa
 import { flattenConfigurationDefaults } from '../extensions/host/vscodeApi'
 import { setExtensionProvidersQueryFn } from '../extensions/providerBridge'
 
+import { t } from '@shared/i18n'
 export const EXTENSION_SCHEME = 'scrakk-ext'
 
 /** Segmento reservado de URL para el documento de una vista. */
@@ -209,7 +210,7 @@ let uiBridgeReady = false
 const rendererInvoker: RendererInvoker = {
   invoke(method, params, timeoutMs = 30_000) {
     const contents = uiContents()
-    if (!contents) return Promise.reject(new Error('no hay ventana para atender la petición'))
+    if (!contents) return Promise.reject(new Error(t('main.no.hay.ventana.para.atender')))
     if (!uiBridgeReady) {
       return Promise.reject(
         new Error(

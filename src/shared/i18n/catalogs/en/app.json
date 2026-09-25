@@ -3,6 +3,7 @@
   "app.abrir.carpeta": "Open folder…",
   "app.abrir.proveedores.llm": "Open LLM providers",
   "app.alternar.minimapa": "Toggle minimap",
+  "app.boom.intencional.esto.es.una": "Intentional crash: this is a test of the global boundary",
   "app.capturar.el.editor.png": "Screenshot of the editor (PNG)",
   "app.cerrar.archivo.activo": "Close active file",
   "app.expandir.seleccion.objeto.de.texto": "Expand selection (text object)",

@@ -15,8 +15,10 @@
   "explorer.explorador.de.archivos": "Explorador de archivos",
   "explorer.mas.acciones": "Más acciones",
   "explorer.mostrar.en.explorador": "Mostrar en explorador",
+  "explorer.nombre.invalido": "Nombre inválido.",
   "explorer.nueva.carpeta": "Nueva carpeta",
   "explorer.nuevo.archivo": "Nuevo archivo",
   "explorer.renombrar": "Renombrar",
-  "explorer.sin.workspace": "Sin workspace"
+  "explorer.sin.workspace": "Sin workspace",
+  "explorer.ya.existe.un.archivo.o": "Ya existe un archivo o carpeta con ese nombre."
 }

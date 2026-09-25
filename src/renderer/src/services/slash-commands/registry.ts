@@ -14,6 +14,7 @@
 import type { SlashCommand, SlashCommandContext, SlashCommandResult } from './types'
 import { parseSlashCommand } from './parse'
 
+import { t } from '@core/i18n'
 class SlashCommandRegistry {
   private commands = new Map<string, SlashCommand>()
   private listeners = new Set<() => void>()
@@ -74,7 +75,7 @@ class SlashCommandRegistry {
     ctx: { source: string; sessionId?: string | null }
   ): Promise<SlashCommandResult> {
     const parsed = parseSlashCommand(input)
-    if (!parsed) return { ok: false, error: 'No es un comando (falta la barra)' }
+    if (!parsed) return { ok: false, get error() { return t('services.no.es.un.comando.falta') } }
     const command = this.get(parsed.name)
     if (!command) {
       return { ok: false, error: `Comando desconocido: /${parsed.name}` }

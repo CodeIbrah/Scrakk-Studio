@@ -79,7 +79,7 @@ export function SearchPanel(): JSX.Element {
   const genRef = useRef(0)
 
   useEffect(() => {
-    setTitle('Búsqueda')
+    setTitle(t('layout.panel.search'))
   }, [setTitle])
 
   useEffect(() => {

@@ -17,11 +17,12 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from './account/config'
 import { getAccount, updateTokens } from './account/session'
 
+import { t } from '@shared/i18n'
 const clients = new Map<string, Promise<SupabaseClient>>()
 
 function build(accountId: string): Promise<SupabaseClient> {
   const account = getAccount(accountId)
-  if (!account) return Promise.reject(new Error('cuenta no guardada'))
+  if (!account) return Promise.reject(new Error(t('main.cuenta.no.guardada')))
   const client = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     auth: {
       persistSession: false,

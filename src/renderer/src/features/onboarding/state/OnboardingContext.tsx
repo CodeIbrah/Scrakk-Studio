@@ -183,6 +183,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }): JSX.E
 
 export function useOnboarding(): OnboardingContextValue {
   const ctx = useContext(OnboardingContext)
-  if (!ctx) throw new Error('useOnboarding fuera de <OnboardingProvider>')
+  if (!ctx) throw new Error(t('onboarding.useonboarding.fuera.de.onboardingprovider'))
   return ctx
 }

@@ -51,7 +51,7 @@ export function InfoSection(): JSX.Element {
       } else if (state.status === 'error') {
         setMessage(state.error ?? 'No se pudo comprobar.')
       } else {
-        setMessage('No se pudo comprobar.')
+        setMessage(t('settings.no.se.pudo.comprobar'))
       }
     } finally {
       setChecking(false)

@@ -61,7 +61,7 @@ export function ExtensionTreeView({
   const loadChildren = useCallback(
     async (elementId: string | null): Promise<TreeNodeModel[]> => {
       const host = getHostBridge()
-      if (!host) throw new Error('El puente nativo no está disponible en este entorno.')
+      if (!host) throw new Error(t('extensionviews.el.puente.nativo.no.esta'))
       const response = await host.treeChildren({ id: extensionId, viewId, elementId })
       if (!response.success) throw new Error(response.error ?? 'La extensión no devolvió nodos.')
       return response.nodes ?? []

@@ -43,7 +43,7 @@ import {
   type SetWorkspaceResponse,
   type WorkspaceRootRequest
 } from '@shared/lsp'
-import { WINDOW_CONTROLS_IPC, type WindowApi } from '@shared/window-controls'
+import { WINDOW_CONTROLS_IPC, I18N_IPC, type WindowApi } from '@shared/window-controls'
 import { SCREENSHOT_IPC } from '@shared/screenshot'
 import { ACCOUNT_IPC } from '@shared/account'
 import { MODELS_DEV_IPC, type ModelsDevCatalog } from '@shared/modelsDev'
@@ -112,6 +112,9 @@ import {
  * El renderer corre con contextIsolation + sandbox, sin nodeIntegration.
  */
 const api: WindowApi = {
+  i18n: {
+    setLocale: (locale) => ipcRenderer.send(I18N_IPC.setLocale, locale)
+  },
   windowControls: {
     minimize: () => ipcRenderer.send(WINDOW_CONTROLS_IPC.minimize),
     toggleMaximize: () => ipcRenderer.send(WINDOW_CONTROLS_IPC.toggleMaximize),

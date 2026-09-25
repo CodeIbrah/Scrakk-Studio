@@ -29,6 +29,7 @@ import type {
 } from '@shared/social'
 import { SOCIAL_RULES } from '@shared/social'
 
+import { t } from '@shared/i18n'
 function ok<T>(data: T): SocialResult<T> {
   return { ok: true, data }
 }
@@ -154,7 +155,7 @@ async function clientOf(accountId: string): Promise<SupabaseClient | null> {
 
 export async function listFriends(accountId: string): Promise<SocialResult<Friend[]>> {
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const { data, error } = await supabase.rpc('list_friends')
   if (error) return fail(cleanError(error.message))
   return ok(((data ?? []) as FriendRow[]).map((row) => ({ ...mapUser(row), since: row.since })))
@@ -168,7 +169,7 @@ export async function searchUsers(
   const q = query.trim().replace(/^@+/, '')
   if (q.length < SOCIAL_RULES.searchMin) return ok([])
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const { data, error } = await supabase.rpc('search_users', { q })
   if (error) return fail(cleanError(error.message))
   return ok(((data ?? []) as UserRow[]).map(mapUser))
@@ -176,7 +177,7 @@ export async function searchUsers(
 
 export async function listRequests(accountId: string): Promise<SocialResult<FriendRequest[]>> {
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const { data, error } = await supabase.rpc('list_requests')
   if (error) return fail(cleanError(error.message))
   return ok(
@@ -194,7 +195,7 @@ export async function listRequests(accountId: string): Promise<SocialResult<Frie
 
 export async function sendRequest(accountId: string, targetId: string): Promise<SocialResult<string>> {
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const { data, error } = await supabase.rpc('send_friend_request', { target: targetId })
   if (error) return fail(cleanError(error.message))
   return ok(String(data ?? 'pending'))
@@ -206,7 +207,7 @@ export async function respondRequest(
   accept: boolean
 ): Promise<SocialResult<string>> {
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const { data, error } = await supabase.rpc('respond_friend_request', { req: requestId, accept })
   if (error) return fail(cleanError(error.message))
   return ok(String(data ?? (accept ? 'accepted' : 'rejected')))
@@ -214,7 +215,7 @@ export async function respondRequest(
 
 export async function removeFriend(accountId: string, otherId: string): Promise<SocialResult<boolean>> {
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const { data, error } = await supabase.rpc('remove_friend', { other: otherId })
   if (error) return fail(cleanError(error.message))
   return ok(Boolean(data))
@@ -227,7 +228,7 @@ export async function listMessages(
   limit = 50
 ): Promise<SocialResult<DirectMessage[]>> {
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const uid = accountId
   const pageSize = Math.min(Math.max(limit, 10), 100)
   let query = supabase
@@ -280,20 +281,20 @@ function extFor(mime: string): string {
 
 function validateImage(image: ImageUpload): { ok: true; bytes: Buffer } | { ok: false; error: string } {
   const allowed = IMAGE_RULES.allowedMime as readonly string[]
-  if (!allowed.includes(image.mime)) return { ok: false, error: 'Formato no soportado (png, jpg, webp, gif, avif)' }
+  if (!allowed.includes(image.mime)) return { ok: false, error: t('main.formato.no.soportado.png.jpg') }
   let bytes: Buffer
   try {
     bytes = Buffer.from(image.base64, 'base64')
   } catch {
-    return { ok: false, error: 'Imagen inválida' }
+    return { ok: false, error: t('main.imagen.invalida') }
   }
   if (bytes.length === 0 || bytes.length > IMAGE_RULES.maxBytes) {
-    return { ok: false, error: 'La imagen supera los 10 MB' }
+    return { ok: false, error: t('main.la.imagen.supera.los.10') }
   }
   // El mime declarado tiene que coincidir con los bytes reales.
   const sniffed = sniffMime(bytes)
-  if (sniffed === null) return { ok: false, error: 'El archivo no es una imagen válida' }
-  if (sniffed !== image.mime) return { ok: false, error: 'La imagen no coincide con su formato' }
+  if (sniffed === null) return { ok: false, error: t('main.el.archivo.no.es.una') }
+  if (sniffed !== image.mime) return { ok: false, error: t('main.la.imagen.no.coincide.con') }
   return { ok: true, bytes }
 }
 
@@ -307,7 +308,7 @@ export async function uploadImage(
   image: ImageUpload
 ): Promise<SocialResult<UploadedImage>> {
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const valid = validateImage(image)
   if (!valid.ok) return fail(valid.error)
   // Camino R2 (buckets scrakk-chat-images / scrakk-avatars).
@@ -337,11 +338,11 @@ export async function sendMessage(
   attachments: ImageUpload[] = []
 ): Promise<SocialResult<DirectMessage>> {
   const text = body.trim() || (attachments.length > 0 ? '📷' : '')
-  if (!text) return fail('El mensaje está vacío')
-  if (text.length > SOCIAL_RULES.messageMax) return fail('Mensaje demasiado largo')
-  if (attachments.length > 8) return fail('Máximo 8 imágenes por mensaje')
+  if (!text) return fail(t('main.el.mensaje.esta.vacio'))
+  if (text.length > SOCIAL_RULES.messageMax) return fail(t('main.mensaje.demasiado.largo'))
+  if (attachments.length > 8) return fail(t('main.maximo.8.imagenes.por.mensaje'))
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   // Validate reply_to belongs to same DM if provided
   if (replyTo) {
     const { data: parent, error: parentErr } = await supabase
@@ -349,12 +350,12 @@ export async function sendMessage(
       .select('id,sender_id,recipient_id')
       .eq('id', replyTo)
       .maybeSingle()
-    if (parentErr || !parent) return fail('Mensaje citado no existe')
+    if (parentErr || !parent) return fail(t('main.mensaje.citado.no.existe'))
     const p = parent as { sender_id: string; recipient_id: string }
     const isSameDm =
       (p.sender_id === accountId && p.recipient_id === toUserId) ||
       (p.sender_id === toUserId && p.recipient_id === accountId)
-    if (!isSameDm) return fail('No puedes citar un mensaje de otro chat')
+    if (!isSameDm) return fail(t('main.no.puedes.citar.un.mensaje'))
   }
   // 1) Subir imágenes ANTES de crear el mensaje: si falla, no queda huérfano.
   const uploads: Array<{ url: string; path: string; mime: string; sizeBytes: number; width: number | null; height: number | null }> = []
@@ -377,7 +378,7 @@ export async function sendMessage(
     .select('id,sender_id,recipient_id,body,created_at,read_at,reply_to,edited_at')
     .single()
   if (error) {
-    if (error.code === '42501') return fail('Solo puedes escribirle a tus amigos')
+    if (error.code === '42501') return fail(t('main.solo.puedes.escribirle.a.tus'))
     if (error.message.includes('msg_ratelimited')) return fail('msg_ratelimited')
     return fail(cleanError(error.message))
   }
@@ -419,10 +420,10 @@ export async function editMessage(
   body: string
 ): Promise<SocialResult<DirectMessage>> {
   const text = body.trim()
-  if (!text) return fail('El mensaje está vacío')
-  if (text.length > SOCIAL_RULES.messageMax) return fail('Mensaje demasiado largo')
+  if (!text) return fail(t('main.el.mensaje.esta.vacio'))
+  if (text.length > SOCIAL_RULES.messageMax) return fail(t('main.mensaje.demasiado.largo'))
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const { data, error } = await supabase
     .from('messages')
     .update({ body: text, edited_at: new Date().toISOString() })
@@ -431,7 +432,7 @@ export async function editMessage(
     .select('id,sender_id,recipient_id,body,created_at,read_at,reply_to,edited_at')
     .single()
   if (error) return fail(cleanError(error.message))
-  if (!data) return fail('Mensaje no encontrado')
+  if (!data) return fail(t('main.mensaje.no.encontrado'))
   const edited = mapMessage(data as MessageRow)
   const attachMap = await hydrateAttachments(supabase, [edited.id])
   return ok({ ...edited, attachments: attachMap.get(edited.id) ?? [] })
@@ -442,7 +443,7 @@ export async function deleteMessage(
   messageId: string
 ): Promise<SocialResult<null>> {
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const { error } = await supabase.from('messages').delete().eq('id', messageId).eq('sender_id', accountId)
   if (error) return fail(cleanError(error.message))
   return ok(null)
@@ -450,7 +451,7 @@ export async function deleteMessage(
 
 export async function markRead(accountId: string, withUserId: string): Promise<SocialResult<null>> {
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const { error } = await supabase
     .from('messages')
     .update({ read_at: new Date().toISOString() })
@@ -490,7 +491,7 @@ function mapPresence(row: PresenceRow): UserPresence {
 /** Presencia de la cuenta + sus amigos (RLS ya limita). */
 export async function getPresence(accountId: string): Promise<SocialResult<UserPresence[]>> {
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const { data, error } = await supabase
     .from('presence')
     .select('user_id,status,activity,updated_at')
@@ -505,7 +506,7 @@ export async function setPresence(
   activity: PresenceActivity
 ): Promise<SocialResult<null>> {
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail('Cuenta no encontrada')
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
   const cleanActivity: PresenceActivity = {}
   if (activity?.project) cleanActivity.project = String(activity.project).slice(0, 80)
   if (activity?.file) cleanActivity.file = String(activity.file).slice(0, 120)

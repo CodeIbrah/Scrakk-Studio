@@ -77,14 +77,14 @@ export function EncodingChip(): JSX.Element | null {
     const available = (await listEncodings()) ?? []
     const current = doc?.encoding
     const chosen = await pickOption(
-      'Reabrir con encoding',
+      t('statusbar.reabrir.con.encoding'),
       available.map((e) => ({
         id: e.id,
         label: e.label,
         hint: e.id === current ? 'actual' : undefined,
         disabled: e.id === current
       })),
-      'Sin codificaciones disponibles'
+      t('statusbar.sin.codificaciones.disponibles')
     )
     if (!chosen || chosen === current) return
 
@@ -96,7 +96,7 @@ export function EncodingChip(): JSX.Element | null {
     reloadFileContent(activePath, res.text)
 
     // 3) Ofrecer convertir EOL también (opcional).
-    const eol = await pickOption('Convertir saltos de línea', [
+    const eol = await pickOption(t('statusbar.convertir.saltos.de.linea'), [
       { id: 'LF', label: t('statusbar.lf.unix.macos.n'), disabled: doc?.lineEnding === 'LF' },
       { id: 'CRLF', label: t('statusbar.crlf.windows.r.n'), disabled: doc?.lineEnding === 'CRLF' }
     ])

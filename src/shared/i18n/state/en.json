@@ -6719,6 +6719,1502 @@
       "needsReview": false,
       "at": "2026-09-25T17:45:38.275Z",
       "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "app.boom.intencional.esto.es.una": {
+      "src": "f4ab6b02e67d8cda",
+      "area": "app",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:35.679Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "chat.el.catalogo.de.modelos.todavia": {
+      "src": "51523356e1f9e9e4",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:36.729Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "chat.no.hay.proveedor.activo": {
+      "src": "801b994cd6c56caf",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:36.729Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "chat.usechats.debe.usarse.dentro.de": {
+      "src": "1e3b260c9c7c9516",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:36.729Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "core.usetheme.debe.usarse.dentro.de": {
+      "src": "00dc3c397d174255",
+      "area": "core",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:38.038Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "explorer.ya.existe.un.archivo.o": {
+      "src": "6bdc1dfec6ea997e",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:39.108Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "extensionviews.el.puente.nativo.no.esta": {
+      "src": "c68faffd4abcc590",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:40.014Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "features.usetooldockhost.fuera.de.tooldockhostprovider": {
+      "src": "da3bcdb647d87984",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:40.890Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "layout.uselayout.debe.usarse.dentro.de": {
+      "src": "54299709a6ac29e6",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:41.855Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "layout.usepanelid.debe.usarse.dentro.de": {
+      "src": "c9496ceb55347e4f",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:41.856Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "layout.usepaneltitle.debe.usarse.dentro.de": {
+      "src": "44c98d1a4883275d",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:41.856Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "main.abrir.archivo": {
+      "src": "a1e205334c0df09c",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.447Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "main.abrir.carpeta": {
+      "src": "3c9eb629c102503a",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.447Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "main.cuenta.no.guardada": {
+      "src": "6789038146ca61a3",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.447Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "main.demasiados.redirects": {
+      "src": "cb61e6fb3b162c8d",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.447Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "main.descargas.deshabilitadas.scrakk.disable.lsp": {
+      "src": "787119ed5c7235f4",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.447Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "main.descripcion.demasiado.larga": {
+      "src": "b65f7fb92f67c2ed",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "main.el.archivo.no.es.una": {
+      "src": "51be20ade0688026",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.913Z"
+    },
+    "main.el.archivo.parece.binario.y": {
+      "src": "6d564214b4be7e33",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.el.proveedor.dejo.de.enviar": {
+      "src": "d5d579af6a606a90",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.el.proveedor.no.devolvio.un": {
+      "src": "299ea4f43edca27e",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.el.proveedor.no.respondio.2": {
+      "src": "ff652bb3ae795ed8",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.el.proveedor.tardo.demasiado.en": {
+      "src": "1d816ddfac79107f",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.el.sef.esta.vacio": {
+      "src": "c4987281b1e11e9c",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.el.sef.no.contiene.manifest": {
+      "src": "260773be1f9b41bf",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.el.usuario.3.24.caracteres": {
+      "src": "23416a87832a7126",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.emoji.demasiado.largo": {
+      "src": "cd6c169fcd72184b",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.estado.demasiado.largo": {
+      "src": "d49dd43200058677",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.este.encoding.pertenece.a.una": {
+      "src": "95d6f519173049da",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.falta.la.consulta": {
+      "src": "84682f8446f63b32",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.falta.la.url": {
+      "src": "628334d2212e9d05",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.falta.path": {
+      "src": "101500c72b7564b7",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.filepath.requerido.o.broadcast.true": {
+      "src": "aa85380337659600",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.formato.de.imagen.no.soportado": {
+      "src": "84b31c505eef38fc",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.formato.no.soportado.png.jpg": {
+      "src": "8d79fa77d3e24cb4",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.genero.invalido": {
+      "src": "bba5902f05831c70",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.imagen.invalida": {
+      "src": "a1e61e3280a5134e",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.imagen.vacia": {
+      "src": "bf640327c185bb4e",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.instalar.extension": {
+      "src": "66d4f5523efa3f56",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.instalar.extension.vs.code.vsix": {
+      "src": "7a7caa80b0171e92",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.la.app.corre.desde.el": {
+      "src": "d8d53daef887590a",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.la.captura.salio.vacia": {
+      "src": "8ade474af556944c",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.la.foto.debe.ser.un": {
+      "src": "ddec101b58bd8a28",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.la.foto.es.demasiado.pesada": {
+      "src": "97a19d78d197b1f8",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.la.imagen.no.coincide.con": {
+      "src": "35af6ed6eea500c7",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.la.imagen.supera.los.10": {
+      "src": "4899bfc2e7c1ddea",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.missing.id": {
+      "src": "e22210a8b3e3c484",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.no.hay.ventana.para.atender": {
+      "src": "c1582a1c414fba93",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.no.hay.ventana.para.capturar": {
+      "src": "7a8214e9b77c6781",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.no.se.pudo.codificar.el": {
+      "src": "ba3fe8449ca4976a",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.nombre.demasiado.largo": {
+      "src": "49d9f8b312773ac6",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.operacion.cancelada": {
+      "src": "8f3e480ecb6febe2",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.payload.incompleto": {
+      "src": "1c38f89bce5f4d8f",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.448Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.payload.incompleto.path.text.encoding": {
+      "src": "8b240a6f299d2fc1",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.449Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.pon.tu.nombre": {
+      "src": "fea76e35aeea43a8",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.449Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.presupuesto.de.reinicios.agotado": {
+      "src": "83a01499faae4e20",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.449Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.r2.no.configurado": {
+      "src": "8747be23d562cca6",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.449Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.release.sin.tag": {
+      "src": "f27cc41e77f3da15",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.449Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.request.invalido": {
+      "src": "070233f78f6710d4",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.449Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.scrakk.studio": {
+      "src": "0f5d91ba2e304fe9",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.449Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.server.no.configurado": {
+      "src": "67a0c3ef806bee1a",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:43.449Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.server.no.registrado": {
+      "src": "df41d7f7eeccf13f",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:44.352Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.sin.receta.de.instalacion": {
+      "src": "2695ebf07aea4c2f",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:44.352Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.sin.release": {
+      "src": "d41c869ae59ce950",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:44.352Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.solo.el.appimage.se.actualiza": {
+      "src": "1d9fe7a77c915aae",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:44.352Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.solo.se.permite.http.s": {
+      "src": "4981cdedf5015b1b",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:44.352Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.url.invalida": {
+      "src": "696247157534db48",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:44.352Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.utf.8.con.bom": {
+      "src": "a4ccbe51976bdea1",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:44.352Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "main.western.windows.1252": {
+      "src": "6693500afecb16e5",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:44.352Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "onboarding.useonboarding.fuera.de.onboardingprovider": {
+      "src": "0c32890891a92725",
+      "area": "onboarding",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:45.149Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "providers.useproviders.debe.usarse.dentro.de": {
+      "src": "b80e5f97ac1e6c22",
+      "area": "providers",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:45.986Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "services.no.es.un.comando.falta": {
+      "src": "f391e081ddfb29c9",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:46.904Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "services.no.hay.ningun.panel.abierto": {
+      "src": "5136455fcf2e3e13",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:46.904Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "services.no.hay.proveedor.activo.abre": {
+      "src": "fcc5a5edab22e398",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:46.905Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "services.no.hay.proyecto.abierto": {
+      "src": "38ebd0d628acaace",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:46.905Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "services.nombre.invalido": {
+      "src": "84b9f3abd554d6ac",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:46.905Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "services.nombre.invalido.letras.numeros.punto": {
+      "src": "970418b5228b226c",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:46.905Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "services.sin.puente.lsp": {
+      "src": "b7707333d58370e2",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:46.905Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "services.vscode.open.necesita.la.uri": {
+      "src": "24ccb2ddd9ee8b5d",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:46.905Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "services.vscode.openwith.necesita.la.uri": {
+      "src": "a617ccd60f9e24f5",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:46.905Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "services.workbench.view.extension.necesita.el": {
+      "src": "ee06506d82a32366",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:46.905Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "social.no.hay.conversacion.abierta": {
+      "src": "8ea8c2894d324daf",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:47.733Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "social.sin.cuenta": {
+      "src": "b4c10bd2c2fc581a",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:47.733Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "social.usesocial.debe.usarse.dentro.de": {
+      "src": "ba664b16221bc5c4",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:48:47.733Z",
+      "approvedAt": "2026-09-25T17:48:47.914Z"
+    },
+    "explorer.nombre.invalido": {
+      "src": "b36b2b5f4b367e91",
+      "area": "explorer",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:50.626Z",
+      "approvedAt": "2026-09-25T17:50:58.931Z"
+    },
+    "extensionviews.el.proceso.de.la.extension": {
+      "src": "d1b1cfbc97d5d17b",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:51.473Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "extensionviews.el.puente.nativo.no.esta-2": {
+      "src": "d3cb001be10582d0",
+      "area": "extensionviews",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:51.473Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "git.credenciales.guardadas.en.el.helper": {
+      "src": "2dd3f816a7b6ca25",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:52.384Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "git.eliminar": {
+      "src": "c9894cf002f90bd0",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:52.384Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "git.git": {
+      "src": "b949c922b6ef9ffb",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:52.384Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "git.host.usuario.y.token.son": {
+      "src": "83930c2e1d33e44a",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:52.384Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "git.pega.un.token.ghp.o": {
+      "src": "d14a1886ab556869",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:52.384Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "git.quitar": {
+      "src": "f039f4a8c9759318",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:52.384Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "git.sesion.gh.cerrada": {
+      "src": "28bff6e8e17d1e8c",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:52.384Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "git.sha.copiado": {
+      "src": "fab5e056b3cc9213",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:52.384Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "git.validando.contra.origin": {
+      "src": "e491816bafe8b723",
+      "area": "git",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:52.384Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "layout.skill.guardada": {
+      "src": "bbe1d6c3d1a1d32e",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:53.204Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "layout.terminal": {
+      "src": "e0926fdac700b094",
+      "area": "layout",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:53.204Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.base.invalida": {
+      "src": "bf9afb373e20ca96",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.cuenta.no.encontrada": {
+      "src": "8daa990493d26722",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.directorio.invalido": {
+      "src": "0015c8f9572f8bb7",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.el.codigo.son.6.digitos": {
+      "src": "bedac65e6db6d558",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.el.mensaje.esta.vacio": {
+      "src": "156733861de5b7ee",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.email.invalido": {
+      "src": "833766bf69045859",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.esa.cuenta.no.esta.guardada": {
+      "src": "5d04f07a6a948aa1",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.ese.usuario.esta.reservado": {
+      "src": "d849acd4a38b2dc7",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.ese.usuario.ya.esta.tomado": {
+      "src": "e39b14ac2df439e6",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.gh.auth.login": {
+      "src": "aad51ea2fd1268aa",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.gh.auth.logout": {
+      "src": "6ea7f52001f8ad0b",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.gh.cli.no.instalado": {
+      "src": "43ba88723ffe9dfa",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.gh.cli.no.instalado.https": {
+      "src": "142cea450b124b79",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.gh.pr.create": {
+      "src": "b5979aa0eae8f46d",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.gh.pr.list": {
+      "src": "ca55e364e0fcdf6f",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.gh.pr.merge": {
+      "src": "f99c64b6687105e3",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.gh.pr.view": {
+      "src": "f5f70cec3e101b99",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.git.add": {
+      "src": "379bc1254ce0412d",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.git.checkout": {
+      "src": "a0c05e5f065a9b6b",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.git.credential": {
+      "src": "e0bf435d42e60529",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.git.init": {
+      "src": "0e3151390f8442d7",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.git.log": {
+      "src": "fa7b080f3e54dea0",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.git.ls.remote": {
+      "src": "5d855541caab4d1f",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.git.no.esta.instalado.o": {
+      "src": "957be3c14e42844e",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.424Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.git.reflog": {
+      "src": "beb05cb91404ecc7",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.425Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.git.reset": {
+      "src": "9a2ff1c8db2c2221",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.425Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.git.version": {
+      "src": "e85ae04a9104019a",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.425Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.head.invalido": {
+      "src": "f380fd952277366f",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.425Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.host.invalido": {
+      "src": "b578b3bc369660dd",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.425Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.host.invalido.o.sin.ssh": {
+      "src": "b8eee772088867ea",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.425Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.indice.invalido": {
+      "src": "4eef5c568aa5fb98",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.425Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.maximo.8.imagenes.por.mensaje": {
+      "src": "25726e1efffc625e",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.425Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.mensaje.citado.no.existe": {
+      "src": "cffdb7e798d7cac5",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.mensaje.demasiado.largo": {
+      "src": "5377cc83fd0f0b5e",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.mensaje.muy.largo": {
+      "src": "3eb2263d2abd14d0",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.mensaje.no.encontrado": {
+      "src": "f54ecd02ebf6f8c1",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.mensaje.vacio": {
+      "src": "55a3c7fbefde2491",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.modo.invalido": {
+      "src": "6cf078b0d6e82233",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.no.es.un.repositorio.git": {
+      "src": "f5bd33b891d2a13e",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.no.hay.proyecto.abierto": {
+      "src": "38ebd0d628acaace",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.no.pudimos.contactar.el.servidor": {
+      "src": "44b1bf61cfcb4987",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.no.puedes.citar.un.mensaje": {
+      "src": "ed12ee9a5a2af21b",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.no.se.pudo.abrir.la": {
+      "src": "5f937f7200ebcc24",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.no.se.pudo.identificar.la": {
+      "src": "7923bd400d3493fc",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.no.se.pudo.leer.el": {
+      "src": "a7e137fd10ab567e",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.nombre.de.rama.invalido": {
+      "src": "d58bda23b87e8966",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.nombre.de.remoto.invalido": {
+      "src": "4376c56ff6a7d0a9",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.426Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.nombre.de.tag.invalido": {
+      "src": "7c8ead54ee9ba1c0",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.428Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.numero.invalido": {
+      "src": "f45e2e4b2b37bafe",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.428Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.raiz.invalida": {
+      "src": "fbdba511f18676de",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:54.428Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.rama.invalida": {
+      "src": "4e4fb2c53d2f73f8",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.ref.invalida": {
+      "src": "25ff7607d20558ab",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.remoto.invalido": {
+      "src": "499255e9bed70543",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.ruta.fuera.de.scrakk": {
+      "src": "9cd20ed857c4cedb",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.ruta.fuera.del.repo": {
+      "src": "e8299cf432c7a84b",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.ruta.invalida": {
+      "src": "1ab8d625dfcecdbb",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.sha.invalido": {
+      "src": "f540fc74200723e0",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.sin.remoto.origin": {
+      "src": "f93da193e34d3e78",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.solo.puedes.escribirle.a.tus": {
+      "src": "8309c612c54fd5eb",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.titulo.vacio": {
+      "src": "0e1c09d5c1821847",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.token.invalido": {
+      "src": "f0bd101ade1cc66d",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.tu.sesion.expiro.vuelve.a": {
+      "src": "a7d970fdf4b8522c",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.423Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.usuario.invalido": {
+      "src": "f15fbe14b407d13c",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.424Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.utf.16.be": {
+      "src": "20fc244d1109c7fe",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.424Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.utf.16.be.con.bom": {
+      "src": "2d6d22f215d12153",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.424Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.utf.16.le": {
+      "src": "87560d85e9f09437",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.424Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "main.utf.16.le.con.bom": {
+      "src": "730e394d5f376ffb",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:55.424Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "services.renombrar.rama": {
+      "src": "5462190ae423062c",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:56.176Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "services.stash.apply": {
+      "src": "e1d2504f39a69867",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:56.176Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "services.stash.drop": {
+      "src": "e554a5d1e6f6c51a",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:56.176Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "services.stash.pop": {
+      "src": "332e48c34b62690c",
+      "area": "services",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:56.176Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "settings.el.nombre.no.genera.un": {
+      "src": "8f98c8d4944c8845",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:57.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "settings.guardado": {
+      "src": "3a660ff5fb7c1989",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:57.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "settings.guardado.y.aplicado": {
+      "src": "76b8ca5bae7d3323",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:57.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "settings.no.se.pudo.comprobar": {
+      "src": "c0191bccec2220c4",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:57.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "settings.no.se.pudo.guardar": {
+      "src": "1634cfd2df7fc57c",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:57.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "settings.no.se.pudo.guardar.modes": {
+      "src": "e20fdbb25e0aed0b",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:57.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "settings.ponle.un.nombre.al.agente": {
+      "src": "66c45001066ffe99",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:57.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "settings.ponle.un.nombre.al.modo": {
+      "src": "4497604d1028775f",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:57.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "social.ese.archivo.no.es.una": {
+      "src": "5d2dcb015921d38b",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:58.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "social.formato.no.soportado.png.jpg": {
+      "src": "07c4a8b8c9f03d29",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:58.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "social.maximo.8.imagenes.por.mensaje": {
+      "src": "e4f492702533adb7",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:58.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "social.no.pudimos.procesar.esa.imagen": {
+      "src": "b9878a103a37b705",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:58.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "social.no.se.pudo.leer.el": {
+      "src": "448e02fd10a54d6f",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:58.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "social.no.se.pudo.leer.la": {
+      "src": "502e1e3756200dc9",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:58.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "social.no.se.pudo.procesar.esa": {
+      "src": "b3e08a786f50816f",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:58.036Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "statusbar.convertir.saltos.de.linea": {
+      "src": "d824a109aa4e0580",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:58.760Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "statusbar.reabrir.con.encoding": {
+      "src": "ced53af820830d1e",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:58.760Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
+    },
+    "statusbar.sin.codificaciones.disponibles": {
+      "src": "4ef9f98c88ca4633",
+      "area": "statusbar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-25T17:50:58.760Z",
+      "approvedAt": "2026-09-25T17:50:58.932Z"
     }
   },
   "version": 1

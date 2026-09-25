@@ -205,7 +205,7 @@ export function PermissionsSection(): JSX.Element {
     }
     policyEngine.setPermissionRules([...base.rules, ...scoped.rules])
     applyMode(defaultMode)
-    setStatus('Guardado y aplicado')
+    setStatus(t('settings.guardado.y.aplicado'))
   }
 
   return (

@@ -21,6 +21,7 @@
 
 import { createHash, createHmac } from 'node:crypto'
 
+import { t } from '@shared/i18n'
 export type R2Kind = 'chat' | 'avatar'
 
 interface R2Config {
@@ -138,14 +139,14 @@ export async function uploadToR2(
   name: string
 ): Promise<{ ok: true; url: string; key: string } | { ok: false; error: string }> {
   const cfg = cfgFor(kind)
-  if (!cfg) return { ok: false, error: 'R2 no configurado' }
+  if (!cfg) return { ok: false, error: t('main.r2.no.configurado') }
   let body: Buffer
   try {
     body = Buffer.from(base64, 'base64')
   } catch {
-    return { ok: false, error: 'Imagen inválida' }
+    return { ok: false, error: t('main.imagen.invalida') }
   }
-  if (body.length === 0) return { ok: false, error: 'Imagen vacía' }
+  if (body.length === 0) return { ok: false, error: t('main.imagen.vacia') }
   const rawName = (name || 'img').replace(/\.[A-Za-z0-9]{1,8}$/, '')
   const safeName = rawName.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 40) || 'img'
   const d = new Date()

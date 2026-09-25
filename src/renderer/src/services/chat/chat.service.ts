@@ -10,6 +10,7 @@ import { buildSystemMessages } from '../ai/chatContextBuilder'
 import { getEnabledToolDefinitions } from '../ai/tools'
 import { executeTools } from '../ai/toolExecutor'
 
+import { t } from '@core/i18n'
 /** Entrada de un envío: el proveedor se resuelve en la UI (ProvidersProvider). */
 export interface SendMessageInput {
   provider: ProviderConfig | null
@@ -74,7 +75,7 @@ export function createLlmChatService(): ChatService {
 
       return new Promise((resolve, reject) => {
         if (!provider) {
-          reject(new Error('No hay proveedor activo. Abre el menú de Proveedores y configura uno.'))
+          reject(new Error(t('services.no.hay.proveedor.activo.abre')))
           return
         }
         if (!apiKey.trim()) {

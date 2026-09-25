@@ -36,6 +36,7 @@ import { getPanel } from './registry'
 import { splitTreeStore } from './splitTree'
 import type { PanelId, SlotId } from './types'
 
+import { t } from '@core/i18n'
 /** PanelId histórico de la terminal (el extension contribuía así el panel). */
 export const TERMINAL_PANEL_ID = 'innerta-terminal'
 
@@ -154,7 +155,7 @@ export function openTerminalTab(slot: SlotId): void {
     }
   }
   const sessionId = nextTerminalSessionId()
-  tabsStore.spawnTab(stripId, terminalTab(sessionId, 'Terminal'))
+  tabsStore.spawnTab(stripId, terminalTab(sessionId, t('layout.terminal')))
 }
 
 /**
@@ -163,7 +164,7 @@ export function openTerminalTab(slot: SlotId): void {
  */
 export function openNewTerminalTab(slot: SlotId): void {
   const stripId = targetStripOf(slot)
-  tabsStore.spawnTab(stripId, terminalTab(nextTerminalSessionId(), 'Terminal'))
+  tabsStore.spawnTab(stripId, terminalTab(nextTerminalSessionId(), t('layout.terminal')))
 }
 
 /**

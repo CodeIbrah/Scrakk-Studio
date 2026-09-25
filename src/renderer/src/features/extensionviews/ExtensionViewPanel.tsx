@@ -219,7 +219,7 @@ function ExtensionView({
     const host = getHostBridge()
     if (!host) {
       setStatus('error')
-      setError('El puente nativo no está disponible en este entorno (¿build web?).')
+      setError(t('extensionviews.el.puente.nativo.no.esta-2'))
       return
     }
 
@@ -306,7 +306,7 @@ function ExtensionView({
           break
         case 'exit':
           setStatus('error')
-          setError('El proceso de la extensión terminó.')
+          setError(t('extensionviews.el.proceso.de.la.extension'))
           break
         default:
           break

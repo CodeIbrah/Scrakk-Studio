@@ -23,6 +23,7 @@ import type {
   ScrakkScope
 } from '@shared/scrakk'
 
+import { t } from '@shared/i18n'
 function ok<T>(data: T): ScrakkResult<T> {
   return { ok: true, data }
 }
@@ -75,9 +76,9 @@ function toEntry(root: string, abs: string, isDir: boolean, size: number, mtimeM
 
 export async function listEntries(op: ScrakkOp): Promise<ScrakkResult<ScrakkEntry[]>> {
   const root = rootFor(op.scope, op.projectRoot)
-  if (!root) return fail('No hay proyecto abierto')
+  if (!root) return fail(t('main.no.hay.proyecto.abierto'))
   const abs = resolveInside(root, op.relative)
-  if (!abs) return fail('Ruta fuera de .scrakk')
+  if (!abs) return fail(t('main.ruta.fuera.de.scrakk'))
   try {
     const dirents = await fs.readdir(abs, { withFileTypes: true })
     const entries: ScrakkEntry[] = []
@@ -105,9 +106,9 @@ export async function listEntries(op: ScrakkOp): Promise<ScrakkResult<ScrakkEntr
 
 export async function readText(op: ScrakkOp): Promise<ScrakkResult<string | null>> {
   const root = rootFor(op.scope, op.projectRoot)
-  if (!root) return fail('No hay proyecto abierto')
+  if (!root) return fail(t('main.no.hay.proyecto.abierto'))
   const abs = resolveInside(root, op.relative)
-  if (!abs) return fail('Ruta fuera de .scrakk')
+  if (!abs) return fail(t('main.ruta.fuera.de.scrakk'))
   try {
     return ok(await fs.readFile(abs, 'utf-8'))
   } catch (error) {
@@ -119,9 +120,9 @@ export async function readText(op: ScrakkOp): Promise<ScrakkResult<string | null
 
 export async function writeText(op: ScrakkOp & { content: string }): Promise<ScrakkResult<string>> {
   const root = rootFor(op.scope, op.projectRoot)
-  if (!root) return fail('No hay proyecto abierto')
+  if (!root) return fail(t('main.no.hay.proyecto.abierto'))
   const abs = resolveInside(root, op.relative)
-  if (!abs || abs === path.resolve(root)) return fail('Ruta inválida')
+  if (!abs || abs === path.resolve(root)) return fail(t('main.ruta.invalida'))
   try {
     await fs.mkdir(path.dirname(abs), { recursive: true })
     await fs.writeFile(abs, op.content, 'utf-8')
@@ -150,9 +151,9 @@ export async function writeJson(op: ScrakkOp & { data: Record<string, unknown> }
 
 export async function removeEntry(op: ScrakkOp): Promise<ScrakkResult<null>> {
   const root = rootFor(op.scope, op.projectRoot)
-  if (!root) return fail('No hay proyecto abierto')
+  if (!root) return fail(t('main.no.hay.proyecto.abierto'))
   const abs = resolveInside(root, op.relative)
-  if (!abs || abs === path.resolve(root)) return fail('Ruta inválida')
+  if (!abs || abs === path.resolve(root)) return fail(t('main.ruta.invalida'))
   try {
     await fs.rm(abs, { recursive: true, force: true })
     return ok(null)
@@ -163,9 +164,9 @@ export async function removeEntry(op: ScrakkOp): Promise<ScrakkResult<null>> {
 
 export async function makeDir(op: ScrakkOp): Promise<ScrakkResult<string>> {
   const root = rootFor(op.scope, op.projectRoot)
-  if (!root) return fail('No hay proyecto abierto')
+  if (!root) return fail(t('main.no.hay.proyecto.abierto'))
   const abs = resolveInside(root, op.relative)
-  if (!abs) return fail('Ruta fuera de .scrakk')
+  if (!abs) return fail(t('main.ruta.fuera.de.scrakk'))
   try {
     await fs.mkdir(abs, { recursive: true })
     return ok(abs)
@@ -189,9 +190,9 @@ export async function entryExists(op: ScrakkOp): Promise<boolean> {
 
 export async function statEntry(op: ScrakkOp): Promise<ScrakkResult<ScrakkEntry | null>> {
   const root = rootFor(op.scope, op.projectRoot)
-  if (!root) return fail('No hay proyecto abierto')
+  if (!root) return fail(t('main.no.hay.proyecto.abierto'))
   const abs = resolveInside(root, op.relative)
-  if (!abs) return fail('Ruta fuera de .scrakk')
+  if (!abs) return fail(t('main.ruta.fuera.de.scrakk'))
   try {
     const st = await fs.stat(abs)
     return ok(toEntry(root, abs, st.isDirectory(), st.size, st.mtimeMs))
@@ -226,9 +227,9 @@ export function watchDir(
   onEvent: (sender: WebContents, event: { scope: ScrakkScope; relative: string }) => void
 ): ScrakkResult<null> {
   const root = rootFor(op.scope, op.projectRoot)
-  if (!root) return fail('No hay proyecto abierto')
+  if (!root) return fail(t('main.no.hay.proyecto.abierto'))
   const dir = resolveInside(root, op.relative)
-  if (!dir) return fail('Ruta fuera de .scrakk')
+  if (!dir) return fail(t('main.ruta.fuera.de.scrakk'))
   const key = watchKey(sender.id, dir)
   if (watchers.has(key)) return ok(null)
   try {

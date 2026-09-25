@@ -13,6 +13,7 @@
 import { scrakkHandle, scrakkProjectRoot, type ScrakkScope } from '../scrakk'
 import { skillRegistry } from './registry'
 
+import { t } from '@core/i18n'
 const NAME_RE = /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/
 
 export interface InstallSkillInput {
@@ -28,11 +29,11 @@ export interface InstallSkillInput {
 export async function installSkill(input: InstallSkillInput): Promise<{ ok: boolean; error?: string }> {
   const name = input.name.trim()
   if (!NAME_RE.test(name)) {
-    return { ok: false, error: 'Nombre inválido: letras, números, punto, guion y guion bajo' }
+    return { ok: false, error: t('services.nombre.invalido.letras.numeros.punto') }
   }
   const scope: ScrakkScope = input.scope ?? 'project'
   if (scope === 'project' && !scrakkProjectRoot()) {
-    return { ok: false, error: 'No hay proyecto abierto' }
+    return { ok: false, error: t('services.no.hay.proyecto.abierto') }
   }
   const content = [
     '---',
@@ -55,7 +56,7 @@ export async function removeSkill(
   name: string,
   scope: ScrakkScope = 'project'
 ): Promise<{ ok: boolean; error?: string }> {
-  if (!NAME_RE.test(name.trim())) return { ok: false, error: 'Nombre inválido' }
+  if (!NAME_RE.test(name.trim())) return { ok: false, error: t('services.nombre.invalido') }
   const handle = scrakkHandle(scope, 'skills')
   const removed = await handle.remove(name.trim())
   if (!removed.ok) return { ok: false, error: removed.error }

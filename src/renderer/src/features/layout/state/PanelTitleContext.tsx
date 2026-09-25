@@ -37,6 +37,7 @@ import {
 } from 'react'
 import { setTabHeader } from '@features/tabs/tabHeaders'
 
+import { t } from '@core/i18n'
 interface PanelHeaderValue {
   title: string
   setTitle: (title: string) => void
@@ -87,7 +88,7 @@ export function PanelTitleProvider({
 export function usePanelTitle(): PanelHeaderValue {
   const context = useContext(PanelHeaderContext)
   if (!context) {
-    throw new Error('usePanelTitle debe usarse dentro de <PanelTitleProvider>')
+    throw new Error(t('layout.usepaneltitle.debe.usarse.dentro.de'))
   }
   return context
 }

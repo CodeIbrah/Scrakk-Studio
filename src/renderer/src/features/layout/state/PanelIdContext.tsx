@@ -18,6 +18,7 @@
 import { createContext, useContext, type JSX, type ReactNode } from 'react'
 import type { PanelId } from '../types'
 
+import { t } from '@core/i18n'
 const PanelIdContext = createContext<PanelId | null>(null)
 
 export function PanelIdProvider({
@@ -39,7 +40,7 @@ export function usePanelIdOptional(): PanelId | null {
 export function usePanelId(): PanelId {
   const panelId = useContext(PanelIdContext)
   if (panelId === null) {
-    throw new Error('usePanelId() debe usarse dentro de un panel montado por PanelHost')
+    throw new Error(t('layout.usepanelid.debe.usarse.dentro.de'))
   }
   return panelId
 }

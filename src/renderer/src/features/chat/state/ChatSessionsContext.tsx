@@ -245,7 +245,7 @@ export function ChatsProvider({ children }: { children: ReactNode }) {
 export function useChats(): ChatsContextValue {
   const context = useContext(ChatsContext)
   if (!context) {
-    throw new Error('useChats debe usarse dentro de <ChatsProvider>')
+    throw new Error(t('chat.usechats.debe.usarse.dentro.de'))
   }
   return context
 }

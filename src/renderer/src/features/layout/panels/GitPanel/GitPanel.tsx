@@ -178,7 +178,7 @@ export function GitPanel(): JSX.Element {
   const [sshState, setSshState] = useState<'idle' | 'checking' | 'ok' | 'fail'>('idle')
 
   useEffect(() => {
-    setTitle('Git')
+    setTitle(t('git.git'))
   }, [setTitle])
 
   // Boot: detectar repos + refresh pesado + auth.
@@ -286,7 +286,7 @@ export function GitPanel(): JSX.Element {
       showContextMenu(event.clientX, event.clientY, [
         {
           label: t('git.copiar.sha'),
-          onClick: () => copyText(branch.sha, 'SHA copiado')
+          onClick: () => copyText(branch.sha, t('git.sha.copiado'))
         },
         {
           label: 'Renombrar…',
@@ -304,7 +304,7 @@ export function GitPanel(): JSX.Element {
                 danger: true,
                 onClick: () =>
                   void (async () => {
-                    if (await confirmDanger(`Eliminar rama ${branch.name}`, 'Eliminar')) {
+                    if (await confirmDanger(`Eliminar rama ${branch.name}`, t('git.eliminar'))) {
                       await deleteBranch(root, branch.name)
                     }
                   })()
@@ -374,7 +374,7 @@ export function GitPanel(): JSX.Element {
     try {
       if (loginMode === 'gh') {
         if (!loginToken.trim()) {
-          setLoginMessage('Pega un token (ghp_… o github_pat_…).')
+          setLoginMessage(t('git.pega.un.token.ghp.o'))
           return
         }
         const res = await gitApi.authLoginGh({
@@ -389,7 +389,7 @@ export function GitPanel(): JSX.Element {
         }
       } else {
         if (!loginHost.trim() || !loginUser.trim() || !loginToken) {
-          setLoginMessage('Host, usuario y token son obligatorios.')
+          setLoginMessage(t('git.host.usuario.y.token.son'))
           return
         }
         const res = await gitApi.authLoginHttps({
@@ -398,7 +398,7 @@ export function GitPanel(): JSX.Element {
           token: loginToken
         })
         if (res.ok) {
-          setLoginMessage('Credenciales guardadas en el helper del sistema.')
+          setLoginMessage(t('git.credenciales.guardadas.en.el.helper'))
           setLoginToken('')
         } else {
           setLoginMessage(`Error: ${res.error.message}`)
@@ -764,7 +764,7 @@ export function GitPanel(): JSX.Element {
                       <p className={styles.rowMeta}>{t('git.cargando.archivos')}</p>
                     )}
                     <div className={styles.commitActions}>
-                      <button type="button" className={styles.mini} onClick={() => copyText(commit.sha, 'SHA copiado')}>
+                      <button type="button" className={styles.mini} onClick={() => copyText(commit.sha, t('git.sha.copiado'))}>
                         <ProductIcon id="copy" size={12} />
                         SHA
                       </button>
@@ -779,7 +779,7 @@ export function GitPanel(): JSX.Element {
                         className={[styles.mini, styles.miniDanger].join(' ')}
                         onClick={() =>
                           void (async () => {
-                            if (await confirmDanger(`Reset --hard a ${commit.shortSha} (pierde cambios)`, 'Reset --hard')) {
+                            if (await confirmDanger(`Reset --hard a ${commit.shortSha} (pierde cambios)`, t('git.reset.hard'))) {
                               await withRoot((root) => resetRepo(root, 'hard', commit.sha))
                             }
                           })()
@@ -863,7 +863,7 @@ export function GitPanel(): JSX.Element {
                       separatorBefore: true,
                       onClick: () =>
                         void (async () => {
-                          if (await confirmDanger(`Eliminar stash@{${stash.index}}`, 'Eliminar')) {
+                          if (await confirmDanger(`Eliminar stash@{${stash.index}}`, t('git.eliminar'))) {
                             await withRoot((root) => stashDrop(root, stash.index))
                           }
                         })()
@@ -928,7 +928,7 @@ export function GitPanel(): JSX.Element {
                 aria-label={`Eliminar tag ${tag.name}`}
                 onClick={() =>
                   void (async () => {
-                    if (await confirmDanger(`Eliminar tag ${tag.name}`, 'Eliminar')) {
+                    if (await confirmDanger(`Eliminar tag ${tag.name}`, t('git.eliminar'))) {
                       await withRoot((root) => deleteTag(root, tag.name))
                     }
                   })()
@@ -1004,7 +1004,7 @@ export function GitPanel(): JSX.Element {
                 aria-label={`Quitar remoto ${remote.name}`}
                 onClick={() =>
                   void (async () => {
-                    if (await confirmDanger(`Quitar remoto ${remote.name}`, 'Quitar')) {
+                    if (await confirmDanger(`Quitar remoto ${remote.name}`, t('git.quitar'))) {
                       await withRoot((root) => removeRemote(root, remote.name))
                     }
                   })()
@@ -1040,7 +1040,7 @@ export function GitPanel(): JSX.Element {
           onLogout={async () => {
             const res = await gitApi.authLogoutGh({})
             if (!res.ok) setLoginMessage(`Error: ${res.error.message}`)
-            else setLoginMessage('Sesión gh cerrada.')
+            else setLoginMessage(t('git.sesion.gh.cerrada'))
             void refreshAuth()
           }}
           sshState={sshState}
@@ -1052,7 +1052,7 @@ export function GitPanel(): JSX.Element {
           }}
           onValidate={() => {
             if (!activeRoot) return
-            setLoginMessage('Validando contra origin…')
+            setLoginMessage(t('git.validando.contra.origin'))
             void gitApi.authValidate({ cwd: activeRoot }).then((res) => {
               setLoginMessage(res.ok ? 'Acceso OK.' : `Error: ${res.error.message}`)
             })
@@ -1222,7 +1222,7 @@ function ChangedTree({
             className={[styles.mini, styles.miniDanger].join(' ')}
             onClick={() =>
               void (async () => {
-                if (await confirmDanger(`Descartar cambios de ${selected.length} archivos`, 'Descartar')) {
+                if (await confirmDanger(`Descartar cambios de ${selected.length} archivos`, t('git.descartar'))) {
                   onDiscard(selected.map(toRel))
                 }
               })()

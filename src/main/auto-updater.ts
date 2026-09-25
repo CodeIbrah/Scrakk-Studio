@@ -20,6 +20,7 @@ import { autoUpdater } from 'electron-updater'
 import { UPDATES_IPC, type UpdaterState } from '@shared/updates'
 import { broadcast } from './broadcast'
 
+import { t } from '@shared/i18n'
 let state: UpdaterState = { status: 'idle' }
 let initialized = false
 
@@ -32,10 +33,10 @@ function emit(next: Partial<UpdaterState> & { status: UpdaterState['status'] }):
 /** ¿Se puede auto-actualizar esta instalación? */
 function canAutoUpdate(): { ok: true } | { ok: false; reason: string } {
   if (!app.isPackaged) {
-    return { ok: false, reason: 'La app corre desde el código fuente, no se auto-actualiza.' }
+    return { ok: false, reason: t('main.la.app.corre.desde.el') }
   }
   if (process.platform === 'linux' && !process.env.APPIMAGE) {
-    return { ok: false, reason: 'Sólo el AppImage se actualiza solo (esta instalación no lo es).' }
+    return { ok: false, reason: t('main.solo.el.appimage.se.actualiza') }
   }
   return { ok: true }
 }

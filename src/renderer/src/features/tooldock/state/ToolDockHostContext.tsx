@@ -29,6 +29,7 @@ import { getEditorFiles, subscribeToEditorFiles } from '@features/editor'
 import { lsGet, lsSet } from '@services/storage'
 import type { ToolDockHostInfo } from '../types'
 
+import { t } from '@core/i18n'
 interface ToolDockHostState {
   hostId: string
   /** Info de contexto para items/filtros (se recalcula con el archivo activo). */
@@ -149,7 +150,7 @@ export function ToolDockHostProvider({
 
 export function useToolDockHost(): ToolDockHostState {
   const ctx = useContext(ToolDockHostContext)
-  if (!ctx) throw new Error('useToolDockHost fuera de <ToolDockHostProvider>')
+  if (!ctx) throw new Error(t('features.usetooldockhost.fuera.de.tooldockhostprovider'))
   return ctx
 }
 

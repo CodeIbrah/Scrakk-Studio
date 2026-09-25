@@ -32,6 +32,7 @@ import type {
 import { SOCIAL_RULES } from '@shared/social'
 import type { MyProfile, SocialView } from './types'
 
+import { t } from '@core/i18n'
 /** Frases del slowmode (estilo Discord), en español neutro. */
 const SLOWMODE_MESSAGES = [
   'Tranquilo, se te va a quemar el teclado 🔥',
@@ -576,7 +577,7 @@ export function SocialProvider({
 
   const updateProfile = useCallback(
     async (patch: Partial<CreateProfileInput>): Promise<AccountActionResult> => {
-      if (!accountId) return { ok: false, error: 'Sin cuenta' }
+      if (!accountId) return { ok: false, error: t('social.sin.cuenta') }
       const result = await accountService.update(accountId, {
         displayName: patch.name,
         handle: patch.handle,
@@ -656,7 +657,7 @@ export function SocialProvider({
 
   const sendRequest = useCallback(
     async (target: string): Promise<AccountActionResult & { status?: string }> => {
-      if (!accountId) return { ok: false, error: 'Sin cuenta' }
+      if (!accountId) return { ok: false, error: t('social.sin.cuenta') }
       const result = await social.sendRequest(accountId, target)
       if (!result.ok) return { ok: false, error: result.error }
       await refresh()
@@ -667,7 +668,7 @@ export function SocialProvider({
 
   const respondRequest = useCallback(
     async (requestId: string, accept: boolean): Promise<AccountActionResult> => {
-      if (!accountId) return { ok: false, error: 'Sin cuenta' }
+      if (!accountId) return { ok: false, error: t('social.sin.cuenta') }
       const result = await social.respondRequest(accountId, requestId, accept)
       if (!result.ok) return { ok: false, error: result.error }
       await refresh()
@@ -678,7 +679,7 @@ export function SocialProvider({
 
   const removeFriend = useCallback(
     async (otherId: string): Promise<AccountActionResult> => {
-      if (!accountId) return { ok: false, error: 'Sin cuenta' }
+      if (!accountId) return { ok: false, error: t('social.sin.cuenta') }
       const result = await social.removeFriend(accountId, otherId)
       if (!result.ok) return { ok: false, error: result.error }
       await refresh()
@@ -750,7 +751,7 @@ export function SocialProvider({
     async (body: string, attachments: ImageUpload[] = []): Promise<AccountActionResult> => {
       const peer = activePeerRef.current
       const id = accountIdRef.current
-      if (!peer || !id) return { ok: false, error: 'No hay conversación abierta' }
+      if (!peer || !id) return { ok: false, error: t('social.no.hay.conversacion.abierta') }
       // Slowmode: se evalúa antes de tocar la red.
       const slow = slowmodeMessage()
       if (slow) return { ok: false, error: slow }
@@ -775,7 +776,7 @@ export function SocialProvider({
 
   const editMessage = useCallback(
     async (messageId: string, body: string): Promise<AccountActionResult> => {
-      if (!accountId) return { ok: false, error: 'Sin cuenta' }
+      if (!accountId) return { ok: false, error: t('social.sin.cuenta') }
       const result = await social.editMessage(accountId, messageId, body)
       if (!result.ok) return { ok: false, error: result.error }
       setMessages((prev) => prev.map((m) => (m.id === messageId ? result.data : m)))
@@ -786,7 +787,7 @@ export function SocialProvider({
 
   const deleteMessage = useCallback(
     async (messageId: string): Promise<AccountActionResult> => {
-      if (!accountId) return { ok: false, error: 'Sin cuenta' }
+      if (!accountId) return { ok: false, error: t('social.sin.cuenta') }
       const result = await social.deleteMessage(accountId, messageId)
       if (!result.ok) return { ok: false, error: result.error }
       setMessages((prev) => prev.filter((m) => m.id !== messageId))
@@ -890,7 +891,7 @@ export function SocialProvider({
 export function useSocial(): SocialContextValue {
   const context = useContext(SocialContext)
   if (!context) {
-    throw new Error('useSocial debe usarse dentro de <SocialProvider>')
+    throw new Error(t('social.usesocial.debe.usarse.dentro.de'))
   }
   return context
 }

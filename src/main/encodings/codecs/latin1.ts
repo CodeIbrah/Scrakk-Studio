@@ -11,9 +11,10 @@
 
 import type { IEncodingCodec } from '@shared/encodings'
 
+import { t } from '@shared/i18n'
 export const latin1Codec: IEncodingCodec = {
   id: 'latin1',
-  label: 'Western (Windows 1252)',
+  get label() { return t('main.western.windows.1252') },
   decode(bytes) {
     try {
       return new TextDecoder('windows-1252').decode(bytes)

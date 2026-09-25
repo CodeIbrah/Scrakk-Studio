@@ -21,6 +21,7 @@ import type { ReaddirEntry } from '@shared/fs'
 import { BATCH_SIZE } from '../constants'
 import { joinPath, parentPathOf } from '../utils/fileUtils'
 
+import { t } from '@core/i18n'
 export interface FileNode {
   name: string
   /** Ruta absoluta. */
@@ -352,7 +353,7 @@ export function useWorkspaceState(rootOverride?: string): WorkspaceApi {
       // No sobrescribir: si ya existe algo con ese nombre, fallar antes.
       const existing = await window.api.fs.exists(full)
       if (existing.exists) {
-        return { ok: false, error: 'Ya existe un archivo o carpeta con ese nombre.' }
+        return { ok: false, error: t('explorer.ya.existe.un.archivo.o') }
       }
       const res = isDirectory
         ? await window.api.fs.mkdir(full)
@@ -372,7 +373,7 @@ export function useWorkspaceState(rootOverride?: string): WorkspaceApi {
       if (newPath !== oldPath) {
         const existing = await window.api.fs.exists(newPath)
         if (existing.exists) {
-          return { ok: false, error: 'Ya existe un archivo o carpeta con ese nombre.' }
+          return { ok: false, error: t('explorer.ya.existe.un.archivo.o') }
         }
       }
       const res = await window.api.fs.moveFile(oldPath, newPath)

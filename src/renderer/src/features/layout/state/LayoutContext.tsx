@@ -30,6 +30,7 @@ import type { PanelId, SlotId } from '../types'
 
 import { installDragHeaderDetection } from '@features/dnd'
 
+import { t } from '@core/i18n'
 // Persistencia DEBOUNCEADA (trailing 200ms) a nivel módulo — no dentro del
 // efecto — para poder forzarla con flushLayoutPersist() al soltar un resize
 // ghost (un solo write inmediato en vez de ~60/s durante el drag; antes el
@@ -219,7 +220,7 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
 export function useLayout(): LayoutContextValue {
   const context = useContext(LayoutContext)
   if (!context) {
-    throw new Error('useLayout debe usarse dentro de <LayoutProvider>')
+    throw new Error(t('layout.uselayout.debe.usarse.dentro.de'))
   }
   return context
 }

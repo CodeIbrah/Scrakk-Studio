@@ -49,6 +49,7 @@ import {
 } from '@shared/compatibility/vscode/commands/builtin'
 import { argToPath, baseNameOfPath } from '@shared/compatibility/vscode/commands/args'
 
+import { t } from '@core/i18n'
 /** Prefijo con el que VS Code auto-genera el id de un contenedor. */
 const VIEW_EXTENSION_PREFIX = 'workbench.view.extension.'
 
@@ -114,14 +115,14 @@ const HANDLERS: Record<BuiltinHandlerKey, (args: unknown[]) => void | Promise<vo
 
   'panel.close': () => {
     if (!closeActivePanel()) {
-      throw new Error('no hay ningún panel abierto para cerrar')
+      throw new Error(t('services.no.hay.ningun.panel.abierto'))
     }
   },
 
   'view.container.reveal': (args) => {
     const wanted = typeof args[0] === 'string' ? args[0] : ''
     if (wanted.length === 0) {
-      throw new Error('workbench.view.extension necesita el id del contenedor')
+      throw new Error(t('services.workbench.view.extension.necesita.el'))
     }
     const sides = ['left', 'right'] as const
     for (const side of sides) {
@@ -143,7 +144,7 @@ const HANDLERS: Record<BuiltinHandlerKey, (args: unknown[]) => void | Promise<vo
     const path = argToPath(args[0])
     if (!path) {
       throw new Error(
-        'vscode.open necesita la URI del archivo (llegó un argumento sin path de disco)'
+        t('services.vscode.open.necesita.la.uri')
       )
     }
     openFileInEditor(path, baseNameOfPath(path))
@@ -152,7 +153,7 @@ const HANDLERS: Record<BuiltinHandlerKey, (args: unknown[]) => void | Promise<vo
   'file.openWith': (args) => {
     const path = argToPath(args[0])
     if (!path) {
-      throw new Error('vscode.openWith necesita la URI del archivo')
+      throw new Error(t('services.vscode.openwith.necesita.la.uri'))
     }
     // El editor pedido se ignora: Scrakk abre con su editor nativo. Se dice en
     // el log en vez de fingir que se respetó.

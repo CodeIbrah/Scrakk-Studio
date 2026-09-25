@@ -22,6 +22,7 @@ import {
 import { detectEncoding } from './detect'
 import { getCodec, isRendererDelegated } from './registry'
 
+import { t } from '@shared/i18n'
 export interface ReadEncodedOptions {
   /** Encoding a forzar (ignora detección). Para "Reabrir con…". */
   overrideEncoding?: EncodingId
@@ -50,7 +51,7 @@ export async function readFileEncoded(
   if (detected.binary) {
     return {
       success: false,
-      error: 'El archivo parece binario y no se puede abrir como texto.'
+      error: t('main.el.archivo.parece.binario.y')
     }
   }
 
@@ -103,7 +104,7 @@ export async function writeFileEncoded(
     return {
       success: false,
       error:
-        'Este encoding pertenece a una extensión y se convierte en el renderer. Usa writeEncodedDelegated.'
+        t('main.este.encoding.pertenece.a.una')
     }
   }
 

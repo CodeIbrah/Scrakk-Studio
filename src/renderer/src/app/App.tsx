@@ -141,7 +141,7 @@ export function App() {
   // TEMP-ERROR-DEMO (borrar tras probar): crash intencional para ver el
   // AppErrorBoundary. Prender: localStorage.setItem('scrakk:boom','1') + reload.
   if (typeof localStorage !== 'undefined' && localStorage.getItem('scrakk:boom') === '1') {
-    throw new Error('Boom intencional: esto es una prueba del boundary global')
+    throw new Error(t('app.boom.intencional.esto.es.una'))
   }
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [settingsSection, setSettingsSection] = useState<SettingsSectionId | undefined>()

@@ -16,6 +16,7 @@ import type { WebFetchResponse } from '@shared/web'
 import { assertPublicHost } from './ssrf'
 import { htmlToMarkdown } from './html'
 
+import { t } from '@shared/i18n'
 const UA =
   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36'
 
@@ -29,11 +30,11 @@ function normalizeUrl(raw: string): URL {
   try {
     url = new URL(raw.trim())
   } catch {
-    throw new Error('URL inválida')
+    throw new Error(t('main.url.invalida'))
   }
   // Igual que scrakk-cli: http se sube a https.
   if (url.protocol === 'http:') url.protocol = 'https:'
-  if (url.protocol !== 'https:') throw new Error('Solo se permite http(s)')
+  if (url.protocol !== 'https:') throw new Error(t('main.solo.se.permite.http.s'))
   return url
 }
 
@@ -85,7 +86,7 @@ export async function fetchUrl(rawUrl: string): Promise<WebFetchResponse> {
       return { ok: true, url: rawUrl, finalUrl: response.url || current.toString(), title, content, truncated }
     }
 
-    throw new Error('Demasiados redirects')
+    throw new Error(t('main.demasiados.redirects'))
   } catch (error) {
     return { ok: false, error: error instanceof Error ? error.message : String(error) }
   }

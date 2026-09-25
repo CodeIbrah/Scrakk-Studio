@@ -34,6 +34,7 @@ import {
   upsertAccount
 } from './session'
 
+import { t } from '@shared/i18n'
 const PROFILE_COLUMNS =
   'id,email,handle,display_name,avatar_url,bio,gender,custom_status,custom_status_emoji,custom_status_expires_at,created_at'
 
@@ -82,7 +83,7 @@ function mapApiError(status: number, message: string | undefined): AccountErrorC
 /** Pide el código OTP (la API del CLI envía el email con Resend). */
 export async function requestCode(req: RequestCodeRequest): Promise<AccountResult<null>> {
   const email = req.email.trim().toLowerCase()
-  if (!ACCOUNT_RULES.email.test(email)) return fail('invalid_input', 'Email inválido')
+  if (!ACCOUNT_RULES.email.test(email)) return fail('invalid_input', t('main.email.invalido'))
 
   try {
     const { status, data } = await callCliApi<{ ok?: boolean; error?: string; message?: string }>(
@@ -92,7 +93,7 @@ export async function requestCode(req: RequestCodeRequest): Promise<AccountResul
     if (status >= 200 && status < 300 && data?.ok !== false) return { ok: true, data: null }
     return fail(mapApiError(status, data?.error), data?.error ?? 'No se pudo enviar el código')
   } catch {
-    return fail('network', 'No pudimos contactar el servidor. Revisa tu conexión.')
+    return fail('network', t('main.no.pudimos.contactar.el.servidor'))
   }
 }
 
@@ -111,8 +112,8 @@ function emptyProfile(id: string, email: string): AccountProfile {
 export async function verifyCode(req: VerifyCodeRequest): Promise<AccountResult<AccountProfile>> {
   const email = req.email.trim().toLowerCase()
   const code = req.code.trim()
-  if (!ACCOUNT_RULES.email.test(email)) return fail('invalid_input', 'Email inválido')
-  if (!ACCOUNT_RULES.code.test(code)) return fail('invalid_input', 'El código son 6 dígitos')
+  if (!ACCOUNT_RULES.email.test(email)) return fail('invalid_input', t('main.email.invalido'))
+  if (!ACCOUNT_RULES.code.test(code)) return fail('invalid_input', t('main.el.codigo.son.6.digitos'))
 
   let login: LoginResponse | null = null
   try {
@@ -122,11 +123,11 @@ export async function verifyCode(req: VerifyCodeRequest): Promise<AccountResult<
     }
     login = data
   } catch {
-    return fail('network', 'No pudimos contactar el servidor. Revisa tu conexión.')
+    return fail('network', t('main.no.pudimos.contactar.el.servidor'))
   }
 
   const userId = login.user?.id
-  if (!userId) return fail('unknown', 'No se pudo identificar la cuenta')
+  if (!userId) return fail('unknown', t('main.no.se.pudo.identificar.la'))
 
   // Guardar la cuenta (queda como default) y construir su cliente.
   upsertAccount(emptyProfile(userId, login.user?.email ?? email), {
@@ -134,7 +135,7 @@ export async function verifyCode(req: VerifyCodeRequest): Promise<AccountResult<
     refreshToken: login.refresh_token!
   })
   const client = await getClientFor(userId)
-  if (!client) return fail('unknown', 'No se pudo abrir la sesión')
+  if (!client) return fail('unknown', t('main.no.se.pudo.abrir.la'))
 
   const profile = (await fetchProfile(userId)) ?? emptyProfile(userId, login.user?.email ?? email)
   updateProfileSnapshot(profile)
@@ -158,10 +159,10 @@ function normalizeProfile(
 ): { ok: true; value: Normalized } | { ok: false; code: AccountErrorCode; error: string } {
   const displayName = (input.displayName ?? '').trim()
   if (opts.requireName && displayName.length === 0) {
-    return { ok: false, code: 'invalid_input', error: 'Pon tu nombre' }
+    return { ok: false, code: 'invalid_input', error: t('main.pon.tu.nombre') }
   }
   if (displayName.length > ACCOUNT_RULES.displayNameMax) {
-    return { ok: false, code: 'invalid_input', error: 'Nombre demasiado largo' }
+    return { ok: false, code: 'invalid_input', error: t('main.nombre.demasiado.largo') }
   }
 
   let handle: string | null = null
@@ -172,7 +173,7 @@ function normalizeProfile(
         return {
           ok: false,
           code: 'invalid_input',
-          error: 'El usuario: 3-24 caracteres, minúsculas, números o _'
+          error: t('main.el.usuario.3.24.caracteres')
         }
       }
       // La reserva de handles (p. ej. "scrakk") la decide la BASE, no el cliente.
@@ -182,7 +183,7 @@ function normalizeProfile(
 
   const bio = input.bio !== undefined ? input.bio.trim() || null : null
   if (bio && bio.length > ACCOUNT_RULES.bioMax) {
-    return { ok: false, code: 'invalid_input', error: 'Descripción demasiado larga' }
+    return { ok: false, code: 'invalid_input', error: t('main.descripcion.demasiado.larga') }
   }
 
   let avatarUrl: string | null = null
@@ -190,18 +191,18 @@ function normalizeProfile(
     const v = input.avatarUrl.trim()
     if (v.length > 0) {
       if (v.length > ACCOUNT_RULES.avatarMaxBytes) {
-        return { ok: false, code: 'invalid_input', error: 'La foto es demasiado pesada' }
+        return { ok: false, code: 'invalid_input', error: t('main.la.foto.es.demasiado.pesada') }
       }
       if (v.startsWith('data:image/')) {
         if (!/^data:image\/(png|jpe?g|webp);base64,[a-z0-9+/=]+$/i.test(v)) {
-          return { ok: false, code: 'invalid_input', error: 'Formato de imagen no soportado' }
+          return { ok: false, code: 'invalid_input', error: t('main.formato.de.imagen.no.soportado') }
         }
       } else {
         try {
           const url = new URL(v)
           if (url.protocol !== 'http:' && url.protocol !== 'https:') throw new Error()
         } catch {
-          return { ok: false, code: 'invalid_input', error: 'La foto debe ser un enlace válido' }
+          return { ok: false, code: 'invalid_input', error: t('main.la.foto.debe.ser.un') }
         }
       }
       avatarUrl = v
@@ -213,7 +214,7 @@ function normalizeProfile(
     const g = input.gender?.trim() ?? ''
     if (g) {
       if (!(ACCOUNT_RULES.gender as readonly string[]).includes(g)) {
-        return { ok: false, code: 'invalid_input', error: 'Género inválido' }
+        return { ok: false, code: 'invalid_input', error: t('main.genero.invalido') }
       }
       gender = g
     }
@@ -226,7 +227,7 @@ function normalizeProfile(
     const cs = input.customStatus?.trim() ?? ''
     if (cs) {
       if (cs.length > ACCOUNT_RULES.customStatusMax) {
-        return { ok: false, code: 'invalid_input', error: 'Estado demasiado largo' }
+        return { ok: false, code: 'invalid_input', error: t('main.estado.demasiado.largo') }
       }
       customStatus = cs
     }
@@ -235,7 +236,7 @@ function normalizeProfile(
     const ce = input.customStatusEmoji?.trim() ?? ''
     if (ce) {
       if (ce.length > ACCOUNT_RULES.customStatusEmojiMax) {
-        return { ok: false, code: 'invalid_input', error: 'Emoji demasiado largo' }
+        return { ok: false, code: 'invalid_input', error: t('main.emoji.demasiado.largo') }
       }
       customStatusEmoji = ce
     }
@@ -276,7 +277,7 @@ async function applyProfile(
   fields: Normalized
 ): Promise<AccountResult<AccountProfile>> {
   const client = await getClientFor(accountId)
-  if (!client) return fail('session_expired', 'Tu sesión expiró. Vuelve a entrar.')
+  if (!client) return fail('session_expired', t('main.tu.sesion.expiro.vuelve.a'))
   const account = getAccount(accountId)
   const email = account?.profile.email ?? ''
 
@@ -300,19 +301,19 @@ async function applyProfile(
     if (error) {
       const code = (error as { code?: string }).code
       const message = error.message ?? ''
-      if (code === '23505') return fail('handle_taken', 'Ese usuario ya está tomado')
+      if (code === '23505') return fail('handle_taken', t('main.ese.usuario.ya.esta.tomado'))
       if (message.includes('handle_reservado') || code === '23514') {
-        return fail('invalid_input', 'Ese usuario está reservado')
+        return fail('invalid_input', t('main.ese.usuario.esta.reservado'))
       }
       if (message.includes('handle_invalido')) {
-        return fail('invalid_input', 'El usuario: 3-24 caracteres, minúsculas, números o _')
+        return fail('invalid_input', t('main.el.usuario.3.24.caracteres'))
       }
       return fail('unknown', message)
     }
   }
 
   const profile = await fetchProfile(accountId)
-  if (!profile) return fail('unknown', 'No se pudo leer el perfil')
+  if (!profile) return fail('unknown', t('main.no.se.pudo.leer.el'))
   updateProfileSnapshot(profile)
   return { ok: true, data: profile }
 }
@@ -339,7 +340,7 @@ export async function update(
   accountId: string,
   req: UpdateProfileRequest
 ): Promise<AccountResult<AccountProfile>> {
-  if (!getAccount(accountId)) return fail('session_expired', 'Esa cuenta no está guardada')
+  if (!getAccount(accountId)) return fail('session_expired', t('main.esa.cuenta.no.esta.guardada'))
   const normalized = normalizeProfile(req, { requireName: false })
   if (!normalized.ok) return fail(normalized.code, normalized.error)
   return applyProfile(accountId, normalized.value)

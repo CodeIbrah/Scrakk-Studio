@@ -331,7 +331,7 @@ export const deleteBranch = (root: string, name: string, force?: boolean): Promi
   mutate(root, `eliminar ${name}`, (r, a) => gitApi.branchDelete({ cwd: r, name: a.name, force: a.force }), { name, force }, { full: true })
 
 export const renameBranch = (root: string, oldName: string, newName: string): Promise<boolean> =>
-  mutate(root, 'renombrar rama', (r, a) => gitApi.branchRename({ cwd: r, oldName: a.oldName, newName: a.newName }), { oldName, newName }, { full: true })
+  mutate(root, t('services.renombrar.rama'), (r, a) => gitApi.branchRename({ cwd: r, oldName: a.oldName, newName: a.newName }), { oldName, newName }, { full: true })
 
 export const pushRepo = (root: string, opts?: { setUpstream?: boolean }): Promise<boolean> =>
   mutate(root, 'push', (r, a) => gitApi.push({ cwd: r, setUpstream: a.setUpstream }), { setUpstream: opts?.setUpstream }, { full: true })
@@ -352,13 +352,13 @@ export const stashSave = (root: string, message?: string, includeUntracked?: boo
   mutate(root, 'stash', (r, a) => gitApi.stashPush({ cwd: r, message: a.message, includeUntracked: a.includeUntracked }), { message, includeUntracked }, { full: true })
 
 export const stashPop = (root: string, index?: number): Promise<boolean> =>
-  mutate(root, 'stash pop', (r, a) => gitApi.stashPop({ cwd: r, index: a }), index, { full: true })
+  mutate(root, t('services.stash.pop'), (r, a) => gitApi.stashPop({ cwd: r, index: a }), index, { full: true })
 
 export const stashApply = (root: string, index?: number): Promise<boolean> =>
-  mutate(root, 'stash apply', (r, a) => gitApi.stashApply({ cwd: r, index: a }), index, { full: true })
+  mutate(root, t('services.stash.apply'), (r, a) => gitApi.stashApply({ cwd: r, index: a }), index, { full: true })
 
 export const stashDrop = (root: string, index: number): Promise<boolean> =>
-  mutate(root, 'stash drop', (r, a) => gitApi.stashDrop({ cwd: r, index: a }), index, { full: true })
+  mutate(root, t('services.stash.drop'), (r, a) => gitApi.stashDrop({ cwd: r, index: a }), index, { full: true })
 
 export const createTag = (root: string, name: string, message?: string): Promise<boolean> =>
   mutate(root, `tag ${name}`, (r, a) => gitApi.tagCreate({ cwd: r, name: a.name, message: a.message }), { name, message }, { full: true })

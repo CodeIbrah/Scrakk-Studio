@@ -8,6 +8,7 @@
   "chat.confirmar.accion": "Confirmar acción",
   "chat.copiar.al.portapapeles": "Copiar al portapapeles",
   "chat.detener.generacion": "Detener generación",
+  "chat.el.catalogo.de.modelos.todavia": "El catálogo de modelos todavía no cargó",
   "chat.elige.la.variante.de.razonamiento": "Elige la variante de razonamiento (effort) del modelo activo.",
   "chat.enviar": "Enviar",
   "chat.exportar.como.md": "Exportar como .md",
@@ -17,6 +18,7 @@
   "chat.incluir.herramientas.en.la.exportacion": "Incluir herramientas en la exportación",
   "chat.mensaje": "Mensaje",
   "chat.no.forzar.effort.default.del": "No forzar effort (default del proveedor)",
+  "chat.no.hay.proveedor.activo": "No hay proveedor activo",
   "chat.nuevo.chat": "Nuevo chat",
   "chat.procesando": "Procesando",
   "chat.profundo": "Profundo",
@@ -28,5 +30,6 @@
   "chat.subagentes": "Subagentes",
   "chat.thinking": "Thinking",
   "chat.thought.for": "Thought for",
+  "chat.usechats.debe.usarse.dentro.de": "useChats debe usarse dentro de <ChatsProvider>",
   "chat.variante.a.aplicar.o.auto": "Variante a aplicar (o \"auto\" para limpiar)"
 }

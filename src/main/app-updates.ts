@@ -29,6 +29,7 @@ import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from './account/config'
 import { broadcast } from './broadcast'
 import { initAutoUpdater, registerUpdaterIpc } from './auto-updater'
 
+import { t } from '@shared/i18n'
 declare const __APP_VERSION__: string
 
 /** Repo del proyecto (se puede overridear por entorno en tests/self-host). */
@@ -89,7 +90,7 @@ export function mapRelease(raw: RawRelease | null): ReleaseInfo | null {
 function toResponse(release: ReleaseInfo | null): UpdateCheckResponse {
   const currentVersion = __APP_VERSION__
   if (!release) {
-    return { ok: false, currentVersion, updateAvailable: false, error: 'sin release' }
+    return { ok: false, currentVersion, updateAvailable: false, error: t('main.sin.release') }
   }
   return {
     ok: true,
@@ -137,7 +138,7 @@ export async function fetchLatestRelease(repo: string = UPDATE_REPO): Promise<Up
     }
     const release = mapRelease((await response.json()) as RawRelease)
     if (!release) {
-      return { ok: false, currentVersion, updateAvailable: false, error: 'release sin tag' }
+      return { ok: false, currentVersion, updateAvailable: false, error: t('main.release.sin.tag') }
     }
     return toResponse(release)
   } catch (error) {

@@ -18,5 +18,6 @@
   "features.sin.actividad.registrada.todavia": "Sin actividad registrada todavía",
   "features.sin.marcadores.click.derecho.sobre": "Sin marcadores. Click derecho sobre el editor → “Añadir marcador”.",
   "features.sin.notificaciones.todavia": "Sin notificaciones todavía.",
-  "features.tabs.abiertas": "Tabs abiertas"
+  "features.tabs.abiertas": "Tabs abiertas",
+  "features.usetooldockhost.fuera.de.tooldockhostprovider": "useToolDockHost fuera de <ToolDockHostProvider>"
 }

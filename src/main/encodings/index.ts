@@ -26,12 +26,13 @@ import { readFileEncoded, writeFileEncoded } from './service'
 import { listEncodings, registerDynamic, removeDynamic, hasEncoding, getCodec } from './registry'
 import { isBuiltinEncoding } from './detect'
 
+import { t } from '@shared/i18n'
 export function registerEncodingsIpc(): void {
   ipcMain.handle(
     ENCODINGS_IPC.readEncoded,
     async (_event, request: unknown): Promise<ReadEncodedResponse> => {
       const req = request as ReadEncodedRequest
-      if (!req?.path) return { success: false, error: 'Falta path' }
+      if (!req?.path) return { success: false, error: t('main.falta.path') }
       try {
         const result = await readFileEncoded(req.path)
         if (result.success && result.detected) {
@@ -52,7 +53,7 @@ export function registerEncodingsIpc(): void {
     async (_event, request: unknown): Promise<WriteEncodedResponse> => {
       const req = request as WriteEncodedRequest
       if (!req?.path || typeof req.text !== 'string' || !req.encoding) {
-        return { success: false, error: 'Payload incompleto (path/text/encoding)' }
+        return { success: false, error: t('main.payload.incompleto.path.text.encoding') }
       }
       try {
         return await writeFileEncoded(req.path, req.text, {
@@ -76,7 +77,7 @@ export function registerEncodingsIpc(): void {
     (_event, request: unknown): RegisterDynamicCodecsResponse => {
       const req = request as RegisterDynamicCodecsRequest
       if (!req?.extensionId || !Array.isArray(req.codecs)) {
-        return { success: false, error: 'Payload incompleto' }
+        return { success: false, error: t('main.payload.incompleto') }
       }
       // Un codec dinámico no puede pisar un builtin.
       const filtered = req.codecs.filter((c) => c.id && !isBuiltinEncoding(c.id))

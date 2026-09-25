@@ -11,6 +11,7 @@
 
 import { BOM_UTF8, stripUtf8BomChar, type IEncodingCodec } from '@shared/encodings'
 
+import { t } from '@shared/i18n'
 /** UTF-8 puro (sin BOM). */
 export const utf8Codec: IEncodingCodec = {
   id: 'utf8',
@@ -26,7 +27,7 @@ export const utf8Codec: IEncodingCodec = {
 /** UTF-8 con BOM obligatorio al codificar; decodifica y lo quita. */
 export const utf8BomCodec: IEncodingCodec = {
   id: 'utf8-bom',
-  label: 'UTF-8 con BOM',
+  get label() { return t('main.utf.8.con.bom') },
   bom: BOM_UTF8,
   decode(bytes) {
     return stripUtf8BomChar(new TextDecoder('utf-8').decode(bytes))

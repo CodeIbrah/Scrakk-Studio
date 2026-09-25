@@ -40,6 +40,7 @@ import {
   parseGhPrList
 } from '@shared/git-parse'
 
+import { t } from '@shared/i18n'
 const DEFAULT_TIMEOUT = 30_000
 const NETWORK_TIMEOUT = 120_000
 const MAX_BUFFER = 16 * 1024 * 1024
@@ -144,7 +145,7 @@ function mapFailure<T>(res: RunFail, context: string): GitResult<T> {
   const tail = stderr.split('\n').slice(-3).join(' ').slice(0, 300)
   if (res.timedOut) return fail('timeout', `${context}: tiempo agotado`)
   if (/not a git repository|not a git repo/i.test(stderr)) {
-    return fail('not-a-repo', 'No es un repositorio git')
+    return fail('not-a-repo', t('main.no.es.un.repositorio.git'))
   }
   if (
     /authentication failed|could not read username|permission denied|401|403|invalid credentials|logon failed/i.test(
@@ -213,7 +214,7 @@ async function hasGit(): Promise<boolean> {
 
 async function needGit<T>(): Promise<GitResult<T> | null> {
   if (await hasGit()) return null
-  return fail('no-binary', 'git no está instalado o no está en el PATH')
+  return fail('no-binary', t('main.git.no.esta.instalado.o'))
 }
 
 let ghBinary: boolean | null = null
@@ -245,13 +246,13 @@ export function registerGitIpc(): void {
     const missing = await needGit<string>()
     if (missing) return missing
     const res = await run('git', ['--version'], undefined, {})
-    if (!res.ok) return mapFailure(res, 'git --version')
+    if (!res.ok) return mapFailure(res, t('main.git.version'))
     return { ok: true, data: res.stdout.trim() }
   })
 
   guarded(GIT_IPC.detectRepos, async (req: { root: string; maxDepth?: number }) => {
     const root = resolveCwd(req.root)
-    if (!root) return fail<GitRepoInfo[]>('invalid', 'Raíz inválida')
+    if (!root) return fail<GitRepoInfo[]>('invalid', t('main.raiz.invalida'))
     const maxDepth = Math.max(0, Math.min(req.maxDepth ?? MAX_SCAN_DEPTH, 8))
     const found: GitRepoInfo[] = []
     const walk = (dir: string, depth: number): void => {
@@ -308,7 +309,7 @@ export function registerGitIpc(): void {
     const missing = await needGit<T>()
     if (missing) return missing
     const dir = resolveCwd(cwd)
-    if (!dir) return fail<T>('invalid', 'Directorio inválido')
+    if (!dir) return fail<T>('invalid', t('main.directorio.invalido'))
     return dir
   }
 
@@ -353,7 +354,7 @@ export function registerGitIpc(): void {
     if (typeof ready !== 'string') return ready
     const res = await run('git', ['-c', 'color.ui=false', ...args], ready, {})
     if (!res.ok) {
-      return emptyRepoAs<import('@shared/git').GitCommit[]>([])(res) ?? mapFailure(res, 'git log')
+      return emptyRepoAs<import('@shared/git').GitCommit[]>([])(res) ?? mapFailure(res, t('main.git.log'))
     }
     return { ok: true, data: parseLog(res.stdout) }
   })
@@ -386,7 +387,7 @@ export function registerGitIpc(): void {
         emptyRepoAs<{ entries: import('@shared/git').ReflogEntry[]; deleted: import('@shared/git').DeletedBranch[] }>({
           entries: [],
           deleted: []
-        })(res) ?? mapFailure(res, 'git reflog')
+        })(res) ?? mapFailure(res, t('main.git.reflog'))
       )
     }
     return { ok: true, data: parseReflog(res.stdout) }
@@ -403,7 +404,7 @@ export function registerGitIpc(): void {
   })
 
   guarded(GIT_IPC.showCommit, async (req) => {
-    if (!/^[0-9a-f]{4,40}$/i.test(req.sha)) return fail('invalid', 'SHA inválido')
+    if (!/^[0-9a-f]{4,40}$/i.test(req.sha)) return fail('invalid', t('main.sha.invalido'))
     return git(
       req.cwd,
       [
@@ -422,9 +423,9 @@ export function registerGitIpc(): void {
     const ready = await needRepo<null>(req.cwd)
     if (typeof ready !== 'string') return ready
     const paths = ((req.paths ?? []) as string[]).map((p: string) => resolveInRepo(ready, p))
-    if (paths.some((p) => p === null)) return fail('invalid', 'Ruta fuera del repo')
+    if (paths.some((p) => p === null)) return fail('invalid', t('main.ruta.fuera.del.repo'))
     const res = await run('git', ['-c', 'color.ui=false', 'add', '--', ...(paths as string[])], ready, {})
-    if (!res.ok) return mapFailure(res, 'git add')
+    if (!res.ok) return mapFailure(res, t('main.git.add'))
     return { ok: true, data: null }
   })
 
@@ -432,9 +433,9 @@ export function registerGitIpc(): void {
     const ready = await needRepo<null>(req.cwd)
     if (typeof ready !== 'string') return ready
     const paths = ((req.paths ?? []) as string[]).map((p: string) => resolveInRepo(ready, p))
-    if (paths.some((p) => p === null)) return fail('invalid', 'Ruta fuera del repo')
+    if (paths.some((p) => p === null)) return fail('invalid', t('main.ruta.fuera.del.repo'))
     const res = await run('git', ['-c', 'color.ui=false', 'reset', 'HEAD', '--', ...(paths as string[])], ready, {})
-    if (!res.ok) return mapFailure(res, 'git reset')
+    if (!res.ok) return mapFailure(res, t('main.git.reset'))
     return { ok: true, data: null }
   })
 
@@ -443,20 +444,20 @@ export function registerGitIpc(): void {
     if (typeof ready !== 'string') return ready
     const paths = ((req.paths ?? []) as string[]).map((p: string) => resolveInRepo(ready, p))
     if (paths.length === 0) return { ok: true, data: null }
-    if (paths.some((p) => p === null)) return fail('invalid', 'Ruta fuera del repo')
+    if (paths.some((p) => p === null)) return fail('invalid', t('main.ruta.fuera.del.repo'))
     const list = paths as string[]
     // Trackeados → checkout; untracked → clean -f (cada uno ignora al otro).
     const [checkoutRes, cleanRes] = await Promise.all([
       run('git', ['-c', 'color.ui=false', 'checkout', '--', ...list], ready, {}),
       run('git', ['-c', 'color.ui=false', 'clean', '-f', '--', ...list], ready, {})
     ])
-    if (!checkoutRes.ok && !cleanRes.ok) return mapFailure(checkoutRes, 'git checkout')
+    if (!checkoutRes.ok && !cleanRes.ok) return mapFailure(checkoutRes, t('main.git.checkout'))
     return { ok: true, data: null }
   })
 
   guarded(GIT_IPC.commit, async (req) => {
-    if (!req.message || !req.message.trim()) return fail('invalid', 'Mensaje vacío')
-    if (req.message.length > 4000) return fail('invalid', 'Mensaje muy largo')
+    if (!req.message || !req.message.trim()) return fail('invalid', t('main.mensaje.vacio'))
+    if (req.message.length > 4000) return fail('invalid', t('main.mensaje.muy.largo'))
     const args = ['commit', '-m', req.message.trim()]
     if (req.amend) args.push('--amend', '--no-edit')
     if (req.stageAll) {
@@ -472,7 +473,7 @@ export function registerGitIpc(): void {
   guarded(GIT_IPC.checkout, async (req) => {
     const args = req.create ? ['checkout', '-b'] : ['checkout']
     if (req.create) {
-      if (!isSafeRefName(req.ref)) return fail('invalid', 'Nombre de rama inválido')
+      if (!isSafeRefName(req.ref)) return fail('invalid', t('main.nombre.de.rama.invalido'))
       args.push(req.ref)
     } else {
       args.push(req.ref)
@@ -481,20 +482,20 @@ export function registerGitIpc(): void {
   })
 
   guarded(GIT_IPC.branchCreate, async (req) => {
-    if (!isSafeRefName(req.name)) return fail('invalid', 'Nombre de rama inválido')
+    if (!isSafeRefName(req.name)) return fail('invalid', t('main.nombre.de.rama.invalido'))
     const args = ['branch', req.name]
     if (req.startPoint) args.push(req.startPoint)
     return git(req.cwd, args, { context: 'git branch' })
   })
 
   guarded(GIT_IPC.branchDelete, async (req) => {
-    if (!isSafeRefName(req.name)) return fail('invalid', 'Nombre de rama inválido')
+    if (!isSafeRefName(req.name)) return fail('invalid', t('main.nombre.de.rama.invalido'))
     return git(req.cwd, ['branch', req.force ? '-D' : '-d', req.name], { context: 'git branch -d' })
   })
 
   guarded(GIT_IPC.branchRename, async (req) => {
     if (!isSafeRefName(req.oldName) || !isSafeRefName(req.newName)) {
-      return fail('invalid', 'Nombre de rama inválido')
+      return fail('invalid', t('main.nombre.de.rama.invalido'))
     }
     return git(req.cwd, ['branch', '-m', req.oldName, req.newName], { context: 'git branch -m' })
   })
@@ -503,11 +504,11 @@ export function registerGitIpc(): void {
     const args = ['push']
     if (req.setUpstream) args.push('--set-upstream')
     if (req.remote) {
-      if (!isSafeRemoteName(req.remote) && req.remote !== '.') return fail('invalid', 'Remoto inválido')
+      if (!isSafeRemoteName(req.remote) && req.remote !== '.') return fail('invalid', t('main.remoto.invalido'))
       args.push(req.remote)
     }
     if (req.branch) {
-      if (!isSafeRefName(req.branch)) return fail('invalid', 'Rama inválida')
+      if (!isSafeRefName(req.branch)) return fail('invalid', t('main.rama.invalida'))
       args.push(req.branch)
     }
     return git<string>(req.cwd, args, {
@@ -520,11 +521,11 @@ export function registerGitIpc(): void {
   guarded(GIT_IPC.pull, async (req) => {
     const args = ['pull', '--ff-only']
     if (req.remote) {
-      if (!isSafeRemoteName(req.remote)) return fail('invalid', 'Remoto inválido')
+      if (!isSafeRemoteName(req.remote)) return fail('invalid', t('main.remoto.invalido'))
       args.push(req.remote)
     }
     if (req.branch) {
-      if (!isSafeRefName(req.branch)) return fail('invalid', 'Rama inválida')
+      if (!isSafeRefName(req.branch)) return fail('invalid', t('main.rama.invalida'))
       args.push(req.branch)
     }
     return git<string>(req.cwd, args, {
@@ -552,13 +553,13 @@ export function registerGitIpc(): void {
   )
 
   guarded(GIT_IPC.remoteAdd, async (req) => {
-    if (!isSafeRemoteName(req.name)) return fail('invalid', 'Nombre de remoto inválido')
-    if (!isSafeUrl(req.url)) return fail('invalid', 'URL inválida')
+    if (!isSafeRemoteName(req.name)) return fail('invalid', t('main.nombre.de.remoto.invalido'))
+    if (!isSafeUrl(req.url)) return fail('invalid', t('main.url.invalida'))
     return git(req.cwd, ['remote', 'add', req.name, req.url], { context: 'git remote add' })
   })
 
   guarded(GIT_IPC.remoteRemove, async (req) => {
-    if (!isSafeRemoteName(req.name)) return fail('invalid', 'Nombre de remoto inválido')
+    if (!isSafeRemoteName(req.name)) return fail('invalid', t('main.nombre.de.remoto.invalido'))
     return git(req.cwd, ['remote', 'remove', req.name], { context: 'git remote remove' })
   })
 
@@ -594,7 +595,7 @@ export function registerGitIpc(): void {
   )
 
   guarded(GIT_IPC.stashDrop, async (req) => {
-    if (!Number.isInteger(req.index) || req.index < 0) return fail('invalid', 'Índice inválido')
+    if (!Number.isInteger(req.index) || req.index < 0) return fail('invalid', t('main.indice.invalido'))
     return git(req.cwd, ['stash', 'drop', `stash@{${req.index}}`], { context: 'git stash drop' })
   })
 
@@ -606,18 +607,18 @@ export function registerGitIpc(): void {
   )
 
   guarded(GIT_IPC.tagCreate, async (req) => {
-    if (!isSafeRefName(req.name)) return fail('invalid', 'Nombre de tag inválido')
+    if (!isSafeRefName(req.name)) return fail('invalid', t('main.nombre.de.tag.invalido'))
     const args = req.message ? ['tag', '-a', req.name, '-m', req.message.slice(0, 500)] : ['tag', req.name]
     return git(req.cwd, args, { context: 'git tag' })
   })
 
   guarded(GIT_IPC.tagDelete, async (req) => {
-    if (!isSafeRefName(req.name)) return fail('invalid', 'Nombre de tag inválido')
+    if (!isSafeRefName(req.name)) return fail('invalid', t('main.nombre.de.tag.invalido'))
     return git(req.cwd, ['tag', '-d', req.name], { context: 'git tag -d' })
   })
 
   guarded(GIT_IPC.cherryPick, async (req) => {
-    if (!/^[0-9a-f]{4,40}$/i.test(req.sha)) return fail('invalid', 'SHA inválido')
+    if (!/^[0-9a-f]{4,40}$/i.test(req.sha)) return fail('invalid', t('main.sha.invalido'))
     return git<string>(req.cwd, ['cherry-pick', req.sha], {
       context: 'git cherry-pick',
       map: (out, err) => ({ ok: true, data: (out + err).trim() })
@@ -625,7 +626,7 @@ export function registerGitIpc(): void {
   })
 
   guarded(GIT_IPC.revert, async (req) => {
-    if (!/^[0-9a-f]{4,40}$/i.test(req.sha)) return fail('invalid', 'SHA inválido')
+    if (!/^[0-9a-f]{4,40}$/i.test(req.sha)) return fail('invalid', t('main.sha.invalido'))
     return git<string>(req.cwd, ['revert', '--no-edit', req.sha], {
       context: 'git revert',
       map: (out, err) => ({ ok: true, data: (out + err).trim() })
@@ -634,21 +635,21 @@ export function registerGitIpc(): void {
 
   guarded(GIT_IPC.reset, async (req) => {
     if (req.mode !== 'soft' && req.mode !== 'mixed' && req.mode !== 'hard') {
-      return fail('invalid', 'Modo inválido')
+      return fail('invalid', t('main.modo.invalido'))
     }
     if (!/^[0-9a-f]{4,40}$/i.test(req.ref) && req.ref !== 'HEAD' && !isSafeRefName(req.ref)) {
-      return fail('invalid', 'Ref inválida')
+      return fail('invalid', t('main.ref.invalida'))
     }
     return git(req.cwd, ['reset', `--${req.mode}`, req.ref], { context: 'git reset' })
   })
 
   guarded(GIT_IPC.init, async (req) => {
     const dir = resolveCwd(req.cwd)
-    if (!dir) return fail('invalid', 'Directorio inválido')
+    if (!dir) return fail('invalid', t('main.directorio.invalido'))
     const missing = await needGit<null>()
     if (missing) return missing
     const res = await run('git', ['init'], dir, {})
-    if (!res.ok) return mapFailure(res, 'git init')
+    if (!res.ok) return mapFailure(res, t('main.git.init'))
     return { ok: true, data: null }
   })
 
@@ -697,13 +698,13 @@ export function registerGitIpc(): void {
   }
 
   guarded(GIT_IPC.authLoginGh, async (req) => {
-    if (!(await hasGh())) return fail('invalid', 'gh CLI no instalado')
+    if (!(await hasGh())) return fail('invalid', t('main.gh.cli.no.instalado'))
     if (!req.token || req.token.length < 10 || req.token.length > 500 || /[\s]/.test(req.token)) {
-      return fail('invalid', 'Token inválido')
+      return fail('invalid', t('main.token.invalido'))
     }
     const env: Record<string, string> = {}
     if (req.host && req.host !== 'github.com') {
-      if (!/^[a-z0-9.-]+$/i.test(req.host)) return fail('invalid', 'Host inválido')
+      if (!/^[a-z0-9.-]+$/i.test(req.host)) return fail('invalid', t('main.host.invalido'))
       env.GH_HOST = req.host
       env.GITHUB_HOST = req.host
     }
@@ -712,7 +713,7 @@ export function registerGitIpc(): void {
       input: req.token.trim(),
       env
     })
-    if (!res.ok) return mapFailure(res, 'gh auth login')
+    if (!res.ok) return mapFailure(res, t('main.gh.auth.login'))
     ghBinary = true
     const st = await run('gh', ['auth', 'status'], undefined, { timeoutMs: 15000, env })
     const parsed = parseGhUser(st.stdout + st.stderr)
@@ -720,31 +721,31 @@ export function registerGitIpc(): void {
   })
 
   guarded(GIT_IPC.authLogoutGh, async (req) => {
-    if (!(await hasGh())) return fail('invalid', 'gh CLI no instalado')
+    if (!(await hasGh())) return fail('invalid', t('main.gh.cli.no.instalado'))
     const args = ['auth', 'logout']
     if (req.host && req.host !== 'github.com') {
-      if (!/^[a-z0-9.-]+$/i.test(req.host)) return fail('invalid', 'Host inválido')
+      if (!/^[a-z0-9.-]+$/i.test(req.host)) return fail('invalid', t('main.host.invalido'))
       args.push('--hostname', req.host)
     }
     const res = await run('gh', args, undefined, { timeoutMs: 30_000 })
-    if (!res.ok) return mapFailure(res, 'gh auth logout')
+    if (!res.ok) return mapFailure(res, t('main.gh.auth.logout'))
     return { ok: true, data: null }
   })
 
   guarded(GIT_IPC.authLoginHttps, async (req) => {
     const missing = await needGit<null>()
     if (missing) return missing
-    if (!/^[a-z0-9.-]+$/i.test(req.host)) return fail('invalid', 'Host inválido')
+    if (!/^[a-z0-9.-]+$/i.test(req.host)) return fail('invalid', t('main.host.invalido'))
     if (!req.username || /[\s:]/.test(req.username) || req.username.length > 256) {
-      return fail('invalid', 'Usuario inválido')
+      return fail('invalid', t('main.usuario.invalido'))
     }
     if (!req.token || req.token.length < 4 || req.token.length > 2000 || /[\r\n]/.test(req.token)) {
-      return fail('invalid', 'Token inválido')
+      return fail('invalid', t('main.token.invalido'))
     }
     // Guarda en el credential helper del sistema (keychain) vía protocolo.
     const block = `protocol=https\nhost=${req.host}\nusername=${req.username}\npassword=${req.token.trim()}\n\n`
     const res = await run('git', ['credential', 'approve'], undefined, { timeoutMs: 15000, input: block })
-    if (!res.ok) return mapFailure(res, 'git credential')
+    if (!res.ok) return mapFailure(res, t('main.git.credential'))
     return { ok: true, data: null }
   })
 
@@ -753,20 +754,20 @@ export function registerGitIpc(): void {
     let url = req.url
     if (!url) {
       const r = await run('git', ['-c', 'color.ui=false', 'remote', 'get-url', 'origin'], ready, {})
-      if (!r.ok || !r.stdout.trim()) return fail('invalid', 'Sin remoto origin')
+      if (!r.ok || !r.stdout.trim()) return fail('invalid', t('main.sin.remoto.origin'))
       url = r.stdout.trim().split('\n')[0]
     }
-    if (!isSafeUrl(url)) return fail('invalid', 'URL inválida')
+    if (!isSafeUrl(url)) return fail('invalid', t('main.url.invalida'))
     const res = await run('git', ['-c', 'color.ui=false', 'ls-remote', url, 'HEAD'], ready, {
       timeoutMs: 30_000
     })
-    if (!res.ok) return mapFailure(res, 'git ls-remote')
+    if (!res.ok) return mapFailure(res, t('main.git.ls.remote'))
     return { ok: true, data: res.stdout.trim().slice(0, 200) }
   })
 
   guarded(GIT_IPC.sshProbe, async (req) => {
     const result = await sshProbe(req.host)
-    if (result === null) return fail<boolean>('invalid', 'Host inválido o sin ssh')
+    if (result === null) return fail<boolean>('invalid', t('main.host.invalido.o.sin.ssh'))
     return { ok: true, data: result }
   })
 
@@ -774,7 +775,7 @@ export function registerGitIpc(): void {
 
   const needGh = async <T>(): Promise<GitResult<T> | null> => {
     if (await hasGh()) return null
-    return fail('invalid', 'gh CLI no instalado (https://cli.github.com)')
+    return fail('invalid', t('main.gh.cli.no.instalado.https'))
   }
 
   guarded(GIT_IPC.ghPrList, async (req) => {
@@ -791,7 +792,7 @@ export function registerGitIpc(): void {
       ready,
       { timeoutMs: 30_000 }
     )
-    if (!res.ok) return mapFailure(res, 'gh pr list')
+    if (!res.ok) return mapFailure(res, t('main.gh.pr.list'))
     try {
       return { ok: true, data: parseGhPrList(res.stdout) }
     } catch (error) {
@@ -804,14 +805,14 @@ export function registerGitIpc(): void {
     if (missing) return missing
     const ready = await needRepo<import('@shared/git').PullRequest>(req.cwd)
     if (typeof ready !== 'string') return ready
-    if (!Number.isInteger(req.number) || req.number <= 0) return fail('invalid', 'Número inválido')
+    if (!Number.isInteger(req.number) || req.number <= 0) return fail('invalid', t('main.numero.invalido'))
     const res = await run(
       'gh',
       ['pr', 'view', String(req.number), '--json', 'number,title,body,url,state,isDraft,headRefName,baseRefName,author,updatedAt,statusCheckRollup,comments,reviews'],
       ready,
       { timeoutMs: 30_000 }
     )
-    if (!res.ok) return mapFailure(res, 'gh pr view')
+    if (!res.ok) return mapFailure(res, t('main.gh.pr.view'))
     try {
       return { ok: true, data: parseGhPr(res.stdout) }
     } catch (error) {
@@ -824,20 +825,20 @@ export function registerGitIpc(): void {
     if (missing) return missing
     const ready = await needRepo<import('@shared/git').PullRequest>(req.cwd)
     if (typeof ready !== 'string') return ready
-    if (!req.title || !req.title.trim()) return fail('invalid', 'Título vacío')
+    if (!req.title || !req.title.trim()) return fail('invalid', t('main.titulo.vacio'))
     const args = ['pr', 'create', '--title', req.title.trim().slice(0, 300)]
     if (req.body) args.push('--body', req.body.slice(0, 8000))
     if (req.base) {
-      if (!isSafeRefName(req.base)) return fail('invalid', 'Base inválida')
+      if (!isSafeRefName(req.base)) return fail('invalid', t('main.base.invalida'))
       args.push('--base', req.base)
     }
     if (req.head) {
-      if (!/^[A-Za-z0-9_][A-Za-z0-9_./-]{0,200}$/.test(req.head)) return fail('invalid', 'Head inválido')
+      if (!/^[A-Za-z0-9_][A-Za-z0-9_./-]{0,200}$/.test(req.head)) return fail('invalid', t('main.head.invalido'))
       args.push('--head', req.head)
     }
     if (req.draft) args.push('--draft')
     const res = await run('gh', args, ready, { timeoutMs: 60_000 })
-    if (!res.ok) return mapFailure(res, 'gh pr create')
+    if (!res.ok) return mapFailure(res, t('main.gh.pr.create'))
     const url = res.stdout.trim().split('\n').pop() ?? ''
     return {
       ok: true,
@@ -862,10 +863,10 @@ export function registerGitIpc(): void {
     if (missing) return missing
     const ready = await needRepo<string>(req.cwd)
     if (typeof ready !== 'string') return ready
-    if (!Number.isInteger(req.number) || req.number <= 0) return fail('invalid', 'Número inválido')
+    if (!Number.isInteger(req.number) || req.number <= 0) return fail('invalid', t('main.numero.invalido'))
     const method = req.method === 'squash' ? '--squash' : req.method === 'rebase' ? '--rebase' : '--merge'
     const res = await run('gh', ['pr', 'merge', String(req.number), method], ready, { timeoutMs: 120_000 })
-    if (!res.ok) return mapFailure(res, 'gh pr merge')
+    if (!res.ok) return mapFailure(res, t('main.gh.pr.merge'))
     return { ok: true, data: res.stdout.trim().slice(0, 500) }
   })
 

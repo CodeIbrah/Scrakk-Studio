@@ -15,8 +15,10 @@
   "explorer.explorador.de.archivos": "File Explorer",
   "explorer.mas.acciones": "More actions",
   "explorer.mostrar.en.explorador": "View in browser",
+  "explorer.nombre.invalido": "Invalid name",
   "explorer.nueva.carpeta": "New Folder",
   "explorer.nuevo.archivo": "New file",
   "explorer.renombrar": "Rename",
-  "explorer.sin.workspace": "No workspace"
+  "explorer.sin.workspace": "No workspace",
+  "explorer.ya.existe.un.archivo.o": "A file or folder with that name already exists."
 }

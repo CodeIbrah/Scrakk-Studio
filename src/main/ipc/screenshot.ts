@@ -27,6 +27,7 @@ import {
   type ScreenshotResponse
 } from '@shared/screenshot'
 
+import { t } from '@shared/i18n'
 /** `innerta-20260917-153012` — ordenable y sin caracteres raros para un archivo. */
 function defaultName(): string {
   const now = new Date()
@@ -43,10 +44,10 @@ export function registerScreenshotIpc(): void {
     async (event, request: ScreenshotRequest = {}): Promise<ScreenshotResponse> => {
       try {
         const win = BrowserWindow.fromWebContents(event.sender)
-        if (!win) return { success: false, error: 'no hay ventana para capturar' }
+        if (!win) return { success: false, error: t('main.no.hay.ventana.para.capturar') }
 
         let image = await win.webContents.capturePage()
-        if (image.isEmpty()) return { success: false, error: 'la captura salió vacía' }
+        if (image.isEmpty()) return { success: false, error: t('main.la.captura.salio.vacia') }
 
         // El rect llega en px CSS (los de `getBoundingClientRect`). Si el
         // display tiene escala > 1, la imagen capturada tiene más píxeles: se
@@ -75,7 +76,7 @@ export function registerScreenshotIpc(): void {
         await fs.mkdir(dir, { recursive: true })
         const filePath = path.join(dir, `${request.name ?? defaultName()}.png`)
         const png = image.toPNG()
-        if (png.length === 0) return { success: false, error: 'no se pudo codificar el PNG' }
+        if (png.length === 0) return { success: false, error: t('main.no.se.pudo.codificar.el') }
         await fs.writeFile(filePath, png)
 
         const finalSize = image.getSize()

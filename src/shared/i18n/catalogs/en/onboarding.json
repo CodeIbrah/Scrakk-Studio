@@ -46,6 +46,7 @@
   "onboarding.tu.decides.que.se.comparte": "You decide what to share",
   "onboarding.un.editor.con.layout.libre": "An editor with a free-form layout, a real terminal, and an ecosystem of extensions.",
   "onboarding.una.sola.vez.sin.insistir": "Just once, no need to repeat: you can change it whenever you want in Settings.",
+  "onboarding.useonboarding.fuera.de.onboardingprovider": "useOnboarding outside of <onboardingprovider></onboardingprovider>",
   "onboarding.ver.configuracion.inicial": "View default settings",
   "onboarding.vim": "Vim",
   "onboarding.vs.code": "VS Code"

@@ -9,6 +9,7 @@ import * as path from 'path'
 import { execSync } from 'child_process'
 import { TERMINAL_IPC, type TerminalCreateRequest, type TerminalWriteRequest, type TerminalResizeRequest, type TerminalDestroyRequest } from '@shared/terminal'
 
+import { t } from '@shared/i18n'
 interface PtyProc {
   write: (d: string) => void
   resize: (cols: number, rows: number) => void
@@ -35,7 +36,7 @@ function getShell(shell?: string): string {
 export function registerTerminalIpc(): void {
   ipcMain.handle(TERMINAL_IPC.create, async (event, req: TerminalCreateRequest) => {
     const { id, shell, cwd, cols, rows } = req
-    if (!id) return { success: false, error: 'missing id' }
+    if (!id) return { success: false, error: t('main.missing.id') }
     if (terms.has(id)) return { success: true }
     const sh = getShell(shell)
     const work = cwd || process.env.HOME || '/'

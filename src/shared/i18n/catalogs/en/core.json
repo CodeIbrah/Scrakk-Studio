@@ -1,5 +1,6 @@
 {
   "core.cambiar.tema.claro.oscuro": "Switch between light and dark themes",
   "core.tema.claro": "Light theme",
-  "core.tema.oscuro": "Dark theme"
+  "core.tema.oscuro": "Dark theme",
+  "core.usetheme.debe.usarse.dentro.de": "`useTheme` must be used within `<themeprovider>`</themeprovider>"
 }
