@@ -105,7 +105,7 @@
   "main.nombre.de.tag.invalido": "Invalid tag name",
   "main.nombre.demasiado.largo": "Name is too long",
   "main.numero.invalido": "Invalid number",
-  "main.o.pon.su.directorio.en": "Or add its directory to your PATH (it also looks for ~/.local/bin, nvm, fnm, volta, snap, and linuxbrew).",
+  "main.o.pon.su.directorio.en": "Or add its directory to your PATH (it also checks for ~/.local/bin, nvm, fnm, volta, snap, and linuxbrew).",
   "main.operacion.cancelada": "Operation canceled",
   "main.payload.incompleto": "Incomplete payload",
   "main.payload.incompleto.path.text.encoding": "Incomplete payload (path/text/encoding)",

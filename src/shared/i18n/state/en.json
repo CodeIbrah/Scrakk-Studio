@@ -9797,128 +9797,120 @@
       "area": "layout",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:38.799Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:44.858Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "main.o.pon.su.directorio.en": {
       "src": "8928ac5338dbe35b",
       "area": "main",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:39.700Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:45.813Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "onboarding.apariencia.y.privacidad.ya.quedaron": {
       "src": "66b943e7d5cf1f9e",
       "area": "onboarding",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:40.665Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:46.835Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "onboarding.permite.que.las.extensiones.detecten": {
       "src": "28132ad934149d8e",
       "area": "onboarding",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:40.665Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:46.835Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "onboarding.tu.editor.ya.esta.listo": {
       "src": "1e1d16ec271f1130",
       "area": "onboarding",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:40.665Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:46.835Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "providers.modelos.puedes.escribir.otro.id": {
       "src": "0a0b59bede690289",
       "area": "providers",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:41.459Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:47.653Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "settings.cada.archivo.abierto.es.una": {
       "src": "bd62bc8c833e0ec7",
       "area": "settings",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:42.625Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:48.684Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "settings.cada.regla.permite.pregunta.o": {
       "src": "267c01a830284b16",
       "area": "settings",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:42.625Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
-    },
-    "settings.cargando.servidores": {
-      "src": "3194a32e2d96afe9",
-      "area": "settings",
-      "machine": true,
-      "needsReview": false,
-      "at": "2026-09-25T19:52:42.625Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:48.684Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "settings.extensiones.del.usuario.instaladas.desde": {
       "src": "12616e3204c72f4b",
       "area": "settings",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:42.625Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:48.684Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "settings.la.opcion.aplica.al.editor": {
       "src": "af1a0b136df9e799",
       "area": "settings",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:42.625Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:48.685Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "settings.menos.trabajo.de.fondo.tokens": {
       "src": "bb9170d3abbe3cf1",
       "area": "settings",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:42.625Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:48.685Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "settings.opciones.del.editor.de.codigo": {
       "src": "67b05b4927062fe1",
       "area": "settings",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:42.625Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:48.685Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "settings.un.paquete.puede.traer.gramatica": {
       "src": "8df38867b3e0424f",
       "area": "settings",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:42.625Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:48.685Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "settings.vista.previa.del.archivo.a": {
       "src": "8c3bd215c15fecc3",
       "area": "settings",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:42.625Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:48.685Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     },
     "titlebar.react.typescript.electron.sistema.de": {
       "src": "1f9ee8f229b7c373",
       "area": "titlebar",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T19:52:43.530Z",
-      "approvedAt": "2026-09-25T19:52:43.708Z"
+      "at": "2026-09-25T18:04:49.539Z",
+      "approvedAt": "2026-09-25T18:04:49.749Z"
     }
   },
   "version": 1
