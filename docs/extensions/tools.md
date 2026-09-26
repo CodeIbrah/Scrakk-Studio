@@ -13,6 +13,8 @@ mismo registry que las tools internas (`services/ai/tools`): aparecen en Ajustes
 
 ## Manifest
 
+Una tool declara su función (lo que ve el modelo) y el comando que la ejecuta:
+
 ```json
 {
   "contributes": {

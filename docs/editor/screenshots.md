@@ -58,6 +58,8 @@ y el mismo rectángulo.
 
 ## 3. Herramientas
 
+Dos utilidades, sin dependencias:
+
 ```bash
 # Mapa de color en texto (letra por clase: R/Y/G/C/M, g = gris, . = fondo)
 node tools/_look-png.mjs captura.png [columnas] [--bright] [--crop=x,y,w,h]
@@ -80,6 +82,8 @@ const shot = await evaluate(ws, `window.api.screenshot.capture(${JSON.stringify(
 ```
 
 ## 4. Ver el resultado
+
+De punta a punta (compila, arma el `.sef` de prueba y compara capturas):
 
 ```bash
 npm run build

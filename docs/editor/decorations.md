@@ -158,6 +158,8 @@ problema, arriba del hover del lenguaje (`diagnosticsAt` + `diagnosticHoverText`
 
 ## 4. Extensiones de VS Code (`editor.setDecorations`)
 
+Una extensión puede subrayar rangos con el API de VS Code; el host lo traduce:
+
 ```ts
 const type = vscode.window.createTextEditorDecorationType({
   textEditorDecorationType: 'underline wavy red'
@@ -235,6 +237,8 @@ Es la forma que se busca: baja hasta la base cada 6 px y vuelve a subir, 3 px de
 alto. Una raya recta daría **una sola fila** y `SUBEN=0 BAJAN=0`.
 
 ## 7. Cómo agrega alguien una fuente nueva
+
+Una fuente nueva es solo un id + sus rangos:
 
 ```ts
 import { setDecorations } from '@services/decorations'

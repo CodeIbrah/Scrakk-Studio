@@ -15,6 +15,8 @@ necesita.
 
 ## Manifest
 
+Cada skill apunta a un `SKILL.md` dentro del paquete:
+
 ```json
 {
   "contributes": {

@@ -19,6 +19,8 @@ los aportan vía `contributes.panels`:
 
 ## Estructura de un panel
 
+Un panel vive en su propia carpeta:
+
 ```
 panels/clock/
 ├── ClockPanel.tsx            # El componente (export default)

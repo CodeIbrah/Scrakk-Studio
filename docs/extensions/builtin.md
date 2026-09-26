@@ -14,6 +14,8 @@ resuelven **síncronamente** para que el primer paint ya tenga tema aplicado
 
 ## Dónde viven
 
+Cada builtin es una carpeta con su manifest y sus contribuciones:
+
 ```
 services/extensions/builtin/<ext-id>/
 ├── manifest.json

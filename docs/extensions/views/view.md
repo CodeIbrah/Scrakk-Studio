@@ -26,6 +26,8 @@ le pregunta al host qué es esa vista.
 
 ## Declaración
 
+Una vista es identidad + metadata (el contenido lo sirve el host):
+
 ```json
 {
   "views": [
