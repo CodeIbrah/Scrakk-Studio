@@ -16,6 +16,8 @@ Todo corre sobre el runtime del proceso main.
 
 ## Workspace y multi-root
 
+Abrir la raíz del workspace y sumar/quitar roots adicionales:
+
 ```ts
 import {
   setLspWorkspace,        // (rootPath) → servers del root
@@ -29,6 +31,8 @@ import {
 con la raíz que abre el Explorer (evento `workspace-changed`).
 
 ## Sync de archivos
+
+Avisarle a los servers que un archivo cambió o se cerró:
 
 ```ts
 lspNotifyFileChanged(path, content)  // didOpen | didChange | didSave
@@ -64,6 +68,8 @@ documento. En los servers de CSS/HTML/JSON eso es la diferencia entre su push
 streaming mientras tipeás en vez de uno solo al final.
 
 ## Diagnósticos
+
+Leer los diagnósticos que publicaron los servers (y esperar a los pendientes):
 
 ```ts
 // Espera a TODOS los servers pendientes (default 500 ms) y agrega.
@@ -106,6 +112,8 @@ tema y al pasar el puntero por encima aparece el mensaje.
 
 ### Bloque `<lsp-diagnostics>`
 
+Lo que el agente recibe después de editar (sync + drain + formateo):
+
 ```ts
 import { lspAfterEdit } from '@services/lsp/format'
 
@@ -119,6 +127,8 @@ con escape de tags de cierre dentro de mensajes.
 
 ## Requests genéricos
 
+Pedir cualquier método LSP a mano (el resto de la API son atajos de esto):
+
 ```ts
 const res = await lspRequest(method, params, {
   filePath?,     // enruta a los servers del archivo (abre si hace falta)
@@ -130,6 +140,8 @@ const res = await lspRequest(method, params, {
 ```
 
 ## Operaciones tipadas (posiciones 0-based, como el CLI)
+
+Atajos para las operaciones típicas del editor:
 
 | Función | Método LSP |
 |---|---|
@@ -148,6 +160,8 @@ const res = await lspRequest(method, params, {
 | `lspPrepareCallHierarchy / IncomingCallHierarchy / OutgoingCallHierarchy` | jerarquía de llamadas |
 
 ## Semantic tokens e inlay hints
+
+Datos extra con los que el editor pinta (color por token, hints):
 
 ```ts
 lspSemanticTokensFull(filePath)             // { data: number[], resultId? } | null
