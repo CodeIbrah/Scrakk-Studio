@@ -383,6 +383,8 @@ RAM en multi-editor.
 
 ## 8. Riesgos
 
+Los puntos donde la cosa se puede romper:
+
 | Riesgo | Por qué duele | Mitigación |
 | --- | --- | --- |
 | El WASM cargado no coincide con el header | ya hay 2 stubs vacíos que "existen" | F0: capabilities + test contra los símbolos reales del `Module` |

@@ -121,6 +121,8 @@ semantic tokens. Ni tree-sitter ni TextMate son casos especiales: son fuentes.
 
 ## 4. Las cuatro fuentes y su prioridad
 
+De dónde puede venir el color, y cuál gana:
+
 | # | Fuente | Dónde corre | Qué produce | Rol |
 | --- | --- | --- | --- | --- |
 | 1 | **tree-sitter compilado** (20 lenguajes dentro del `.wasm` del engine) | dentro del engine | spans con capture | fuente base de esos 20, sin costo de datos y sin worker |
@@ -302,6 +304,8 @@ Puntos de diseño:
 
 ## 9. Fases
 
+El plan por fases:
+
 | Fase | Qué | Destraba |
 | --- | --- | --- |
 | **L0** | Ordenar el terreno: sacar la ruta absoluta del loader, unificar la lista hardcodeada de lenguajes de `EditorWindow.cpp`, declarar el layout de `queries/` | nada visible; evita seguir apilando sobre deuda |
@@ -337,6 +341,8 @@ L5. Si se hace al final, hay que reescribir las tres.
 ---
 
 ## 11. Riesgos
+
+Lo que puede doler:
 
 | Riesgo | Por qué duele | Mitigación |
 | --- | --- | --- |
