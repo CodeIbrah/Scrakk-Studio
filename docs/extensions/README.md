@@ -37,7 +37,7 @@ los sistemas ya existentes de la app (layout, activity bar, tabs, temas).
 | | **SEF declarativa** | **SEF con código** |
 | --- | --- | --- |
 | De dónde sale la UI | del bundle del paquete (React) | del **Extension Host**: la extensión corre en su proceso Node y sirve su contenido por IPC |
-| Qué kinds usa | `panels`, `activityBar`, `centerTabs`, `themes`, `fileIcons`, `productIcons`, `encodings`, `notifications`, `lspServers`, `languages`, `tools`, `skills` | `views` (+ `runtime` en el manifest) |
+| Qué tipos usa | `panels`, `activityBar`, `centerTabs`, `themes`, `fileIcons`, `productIcons`, `encodings`, `notifications`, `lspServers`, `languages`, `tools`, `skills` | `views` (+ `runtime` en el manifest) |
 | Ejemplo | builtin `clock` | una extensión de VS Code convertida (Comment Anchors, Cline) |
 | ¿Necesita Node? | no | sí |
 

@@ -46,7 +46,7 @@ No es "un tipo": es un **kit**. Una extensión como `rust-analyzer` o
    extensión puede dar color ✓, outline ✓, LSP ✓ y debug ✗.
 2. Hay que modelar **activación por lenguaje** (`onLanguage:<id>`): el parser y
    las queries se cargan **lazy** al abrir el primer archivo de ese lenguaje.
-3. Un kit de lenguaje toca varios kinds SEF (lenguaje + `lspServers` +
+3. Un kit de lenguaje toca varios tipos SEF (lenguaje + `lspServers` +
    `commands` + `menus` + `editorUI`). El loader ya resuelve kind por kind; el
    "kit" es una **presentación** (una ficha, no veinte).
 
@@ -292,7 +292,7 @@ Puntos de diseño:
   su motivo cuando falta. Una extensión de lenguaje nunca es "soportada" o "no"
   en bloque.
 - **Composición**: `languages` + `lspServers` (ya existe) + `editorUI` +
-  `commands`/`menus` + `configuration` son kinds distintos que el loader ya
+  `commands`/`menus` + `configuration` son tipos distintos que el loader ya
   despacha por separado. El kit es la **ficha** que los agrupa.
 - **Activación**: `onLanguage:<id>` al abrir el primer archivo → cargar parser,
   queries y (si existe) arrancar el server. Sin eso, instalar 20 lenguajes

@@ -65,7 +65,7 @@ explica qué hay y en qué orden leerlo.
 | [Botones de la activity bar](extensions/activitybar/button.md) | Botón que abre un panel. |
 | [Tabs centrales](extensions/centerTabs/tab.md) | Tabs del strip central. |
 | [Vistas con código](extensions/views/view.md) | Paneles servidos por el Extension Host. |
-| [VSCode → SEF](extensions/vscode.md) | Pipeline VSIX → SEF y compatibilidad. |
+| [VS Code → SEF](extensions/vscode.md) | Pipeline VSIX → SEF y compatibilidad. |
 | [Skills](extensions/skills.md) | Paquetes de skills (estándar Agent Skills). |
 | [Tools](extensions/tools.md) | Herramientas de IA que aporta una extensión. |
 
@@ -92,7 +92,7 @@ explica qué hay y en qué orden leerlo.
 ## Rutas de lectura
 
 - **Usuario nuevo** → *Empezar rápido* (arriba) → [Modos y permisos](chat/permissions.md) → [Actualizaciones](updates.md).
-- **Autora de extensiones** → [Sistema de extensiones](extensions/README.md) → [Manifest](extensions/manifest.md) → [Contribuciones](extensions/contributions.md) → [Empaquetado `.sef`](extensions/sef.md). Si venís de VS Code: [VSCode → SEF](extensions/vscode.md).
+- **Autora de extensiones** → [Sistema de extensiones](extensions/README.md) → [Manifest](extensions/manifest.md) → [Contribuciones](extensions/contributions.md) → [Empaquetado `.sef`](extensions/sef.md). Si venís de VS Code: [VS Code → SEF](extensions/vscode.md).
 - **Autor de un lenguaje** → [Lenguajes](editor/languages.md) → [LSP](lsp/README.md) → [Extensión `lspServers`](lsp/extensions.md).
 - **Dev del IDE** → [Arquitectura LSP](lsp/architecture.md) → [Innerta](editor/innerta-bridge.md) → [Estructura de extensiones](extensions/structure.md).
 
