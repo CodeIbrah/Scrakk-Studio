@@ -13,6 +13,8 @@ en su propio proceso.
 
 ## Por qué existe (y en qué se diferencia de `panels`)
 
+La diferencia clave entre una vista y un panel:
+
 | | `panels` | `views` |
 | --- | --- | --- |
 | Componente | módulo del paquete (`component: "…/X.tsx"`) | `ExtensionViewPanel` **del core** |
@@ -78,6 +80,8 @@ Campos que el traductor agrega desde el VSIX:
   resueltas por el host.
 
 ## Estados del panel
+
+Los estados que puede reportar el host:
 
 | Estado | Qué se ve |
 | --- | --- |

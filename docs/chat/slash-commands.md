@@ -14,6 +14,8 @@ cómo mostrarlo.
 
 ## Ejecutar
 
+Desde cualquier input:
+
 ```ts
 import { slashCommands, isSlashInput } from '@services/slash-commands'
 

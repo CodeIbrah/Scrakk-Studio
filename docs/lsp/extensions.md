@@ -36,6 +36,8 @@ con el runtime LSP del proceso main vía IPC.
 
 ### Campos por server
 
+Lo que acepta cada entrada de `lspServers`:
+
 | Campo | Tipo | Notas |
 |---|---|---|
 | `id` | string | Único global; colisiona con builtin → gana la extensión sobre builtin, pierde contra user/project |

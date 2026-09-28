@@ -12,6 +12,8 @@ estado real del pipeline, no el objetivo.
 
 ## Las cinco capas (`shared/compatibility/vscode/pipeline.ts`)
 
+El pipeline hace cinco cosas, en orden:
+
 | Capa | Archivo | Qué hace |
 | --- | --- | --- |
 | 1. Validar | `validate.ts` | ¿Es un ZIP legible y con `package.json` válido? Límites anti-zip-bomb |
@@ -24,6 +26,8 @@ El id SEF se namespacea: `vscode-<publisher>.<name>` (sanitizado). El `.vsix`
 original se guarda para poder **re-traducir** cuando mejora un traductor.
 
 ## Qué se traduce hoy (tabla exacta de `kinds.ts`)
+
+Estado **real** (no el objetivo) por contribution point del `.vsix`:
 
 | `contributes.*` del VSIX | A dónde va | Estado |
 | --- | --- | --- |

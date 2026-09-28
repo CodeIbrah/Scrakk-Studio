@@ -27,6 +27,8 @@ son obligatorios.
 
 ## Campos
 
+Todos los campos del manifest:
+
 | Campo | Tipo | Requerido | Descripción |
 | --- | --- | --- | --- |
 | `id` | string | sí | Id único (kebab-case). Identifica la extensión y define la carpeta de instalación de un `.sef` |
@@ -45,6 +47,9 @@ código: si está, el Extension Host carga ese entry y le inyecta el API. Ver
 [views](views/view.md) y [VS Code](vscode.md).
 
 ## `contributes`
+
+Cada key agrega un tipo de contribución. El loader es genérico: itera las keys y
+le pide al `ExtensionTypeRegistry` el handler de cada una.
 
 | Key | Tipo del item | Definición |
 | --- | --- | --- |
