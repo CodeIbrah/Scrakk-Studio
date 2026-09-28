@@ -12,6 +12,8 @@ detecta solo.
 
 ## Flujo
 
+El recorrido de una release:
+
 ```
 npm run up ──► tag vX.Y.Z ──► release.yml ──► GitHub Release (notas = changelog)
                                    │

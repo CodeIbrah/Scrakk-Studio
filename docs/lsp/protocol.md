@@ -31,6 +31,8 @@ Después: `initialized` → `didChangeConfiguration` con `settings` si existen.
 
 ## Sync de documentos
 
+Los modos de sincronización:
+
 | Modo | Cuándo | Qué se envía |
 |---|---|---|
 | Incremental | server declara `textDocumentSync.change = 2` | UN range edit (diff prefijo/sufijo mínimo) |
@@ -74,6 +76,8 @@ queda cacheado en el cliente para calcular diffs.
 - Un server = un root por instancia (no servers compartidos entre roots).
 
 ## Timeouts y presupuestos
+
+Los números:
 
 | Concepto | Valor |
 |---|---|

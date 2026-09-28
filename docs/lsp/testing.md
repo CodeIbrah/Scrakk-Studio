@@ -16,6 +16,8 @@ npx vitest run tests/lsp/manager.test.ts   # un archivo
 
 ## Suites
 
+Qué cubre cada archivo:
+
 | Archivo | Cubre |
 |---|---|
 | `config.test.ts` | parse de lsp.json (aliases, normalización de extensiones), fusión usuario→proyecto, descarte de inválidos, defaults de timeouts |

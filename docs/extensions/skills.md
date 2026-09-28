@@ -42,6 +42,8 @@ Un “pack” es simplemente una extensión con varias entradas en
 
 ## Formato del SKILL.md
 
+Un `SKILL.md` es front-matter + los pasos:
+
 ```markdown
 ---
 name: release-notes

@@ -182,12 +182,16 @@ Tree-sitter o pintar semantic tokens del server.
 
 ## Progreso $/progress
 
+El progreso que reporta un server:
+
 ```ts
 onLspProgress(({ serverName, token, phase, title, message, percentage }) => {})
 // phase: 'begin' → 'report'* → 'end'
 ```
 
 ## Estado y eventos
+
+Estado del runtime y eventos a los que suscribirse:
 
 ```ts
 lspStatus()  // [{ id: 'name@root', name, root, state, available, source, extensions }]

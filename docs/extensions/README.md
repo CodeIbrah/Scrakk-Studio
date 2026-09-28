@@ -48,6 +48,8 @@ después, del host.
 
 ## Tu primera extensión
 
+Dos comandos:
+
 ```sh
 npm run sef:create -- "Mi Extensión"   # crea un esqueleto con un panel de ejemplo
 npm run sef:pack -- mi-extension        # valida y genera el .sef

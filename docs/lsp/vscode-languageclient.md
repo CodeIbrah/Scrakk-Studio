@@ -79,6 +79,8 @@ su causa).
 
 ## Cómo verificarlo
 
+Se verifica con un probe real sobre la app:
+
 ```bash
 npx vitest run tests/language-client-bridge.test.ts
 ```

@@ -68,6 +68,8 @@ disponible vía `window.api.lsp` (preload) y `@services/lsp` (renderer).
 
 ## Dónde vive el código
 
+El mapa de archivos:
+
 ```
 src/shared/lsp.ts                  # contrato IPC + tipos + parser compartido
 src/main/lsp/                      # runtime (proceso main)

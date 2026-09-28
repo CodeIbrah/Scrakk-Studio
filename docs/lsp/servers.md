@@ -54,6 +54,8 @@ Condiciones de seguridad:
 
 ## Recetas actuales
 
+Recetas de instalación ya incluidas:
+
 | Server | Receta |
 |---|---|
 | typescript | npm `typescript-language-server typescript` |

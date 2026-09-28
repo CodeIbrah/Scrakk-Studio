@@ -11,6 +11,8 @@ corre como un **proceso hijo** (o por TCP). Esta es la foto de conjunto.
 
 ## Capas
 
+Los procesos, de arriba hacia abajo:
+
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │ RENDERER (sandbox)                                            │
@@ -130,6 +132,8 @@ pasa por el handshake y muere ordenado. Los pasos:
 - Sin la flag: queda `crashed` hasta que el host vuelva a tocarlo.
 
 ## Requests
+
+Dos modos de pedir:
 
 | Modo | Cómo |
 |---|---|

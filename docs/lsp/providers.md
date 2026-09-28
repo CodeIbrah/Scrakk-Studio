@@ -21,6 +21,8 @@ compañía). Este documento explica cómo esos proveedores llegan al editor.
 
 ## El camino completo
 
+El recorrido, de punta a punta:
+
 ```
 editor (hover / ir a definición / formatear)
   └─ services/lsp (api.ts)                 renderer
@@ -40,6 +42,8 @@ la extensión**. El editor no distingue: pinta lo que llegue. Es exactamente lo
 que VS Code hace con varios providers sobre el mismo selector.
 
 ## Qué se consulta hoy
+
+Qué métodos responden hoy:
 
 | Tipo | Método del proveedor | Lo pinta el IDE |
 |---|---|---|
@@ -89,6 +93,8 @@ serialización **y** su consumidor, no sólo declararlo.
   camino cuando no hay ninguna extensión corriendo.
 
 ## Cómo probarlo
+
+Se prueba sobre la app compilada:
 
 ```bash
 # registro + serialización + consulta (host)

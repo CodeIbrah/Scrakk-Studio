@@ -12,6 +12,8 @@ con el runtime LSP del proceso main vía IPC.
 
 ## Manifest
 
+Se declara así dentro del `manifest.json`:
+
 ```jsonc
 // manifest.json
 {
@@ -82,6 +84,8 @@ ejecución — si no, va `node` como command y el script como arg.
 
 ## Prioridad final
 
+Quién gana entre las capas:
+
 ```
 project (<root>/.scrakk/lsp.json)
  > user (~/.scrakk/lsp.json)
@@ -114,6 +118,8 @@ project (<root>/.scrakk/lsp.json)
    no habría forma de volver a encenderlo desde la UI).
 
 ## Dónde vive
+
+El código del tipo `lspServers`:
 
 ```
 src/renderer/src/services/extensions/types/lsp/

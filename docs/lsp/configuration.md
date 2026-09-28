@@ -11,6 +11,8 @@ fusionan por nombre de server (el proyecto gana sobre el usuario).
 
 ## Capas y prioridad
 
+Quién gana cuando hay varias capas configuradas:
+
 | Prioridad | Capa | Ruta |
 |---|---|---|
 | 1 (más alta) | Proyecto | `<root>/.scrakk/lsp.json` |
@@ -26,6 +28,8 @@ Reglas:
 - El home de usuario es `~/.scrakk` — overrideable con `SCRAKK_HOME` (tests).
 
 ## Formato de un server
+
+Un server se ve así:
 
 ```jsonc
 // <root>/.scrakk/lsp.json
@@ -60,6 +64,8 @@ Normalizaciones:
 
 ## Defaults (idénticos al CLI)
 
+Los valores por defecto si no los cambiás:
+
 | Parámetro | Default |
 |---|---|
 | startupTimeout | 15 000 ms |
@@ -75,6 +81,8 @@ Con `"transport": "socket"` el campo `command` es `"host:port"` y el cliente
 conecta por TCP en vez de spawnear. Útil para servers ya corriendo fuera.
 
 ## Ejemplo multi-server
+
+Dos servers atendiendo los mismos archivos:
 
 ```jsonc
 {

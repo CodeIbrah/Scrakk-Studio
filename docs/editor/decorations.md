@@ -183,6 +183,8 @@ host) sus subrayados se van con ella.
 
 ## 5. Límites (dichos, no disimulados)
 
+Lo que todavía no se puede, sin disimulo:
+
 | Qué | Estado |
 | --- | --- |
 | Subrayado (4 estilos) + color | ✅ |
