@@ -99,6 +99,8 @@ node tools/_probe-languageclient.mjs
 
 ## Cómo añade alguien su language server (las tres vías)
 
+Tres caminos, sin tocar el core:
+
 | Vía | Quién la usa | Estado |
 |---|---|---|
 | `.scrakk/lsp.json` (proyecto o `~/.scrakk/lsp.json`) | quien no escribe una extensión | ✅ `command`/`args`/`extensions`/`rootMarkers` |
