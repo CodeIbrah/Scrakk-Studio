@@ -28,6 +28,70 @@ import * as path from 'path'
 const BIN = 'kolargrep'
 /** Servidores vivos por root. Se matan al salir la app. */
 const servers = new Map<string, ChildProcess>()
+/** Último uso por root, para el apagado por inactividad. */
+const lastUsed = new Map<string, number>()
+const idleTimers = new Map<string, NodeJS.Timeout>()
+
+/**
+ * Apagado por inactividad del sidecar: si no hay búsquedas durante este tiempo,
+ * se apaga y libera su RAM. El ÍNDICE queda en disco, así la próxima búsqueda
+ * reusa lo ya construido (re-arranca rápido).
+ *
+ * Override con `SCRAKK_SEARCH_IDLE_MS` (ms; 0 = desactivado).
+ */
+function idleShutdownMs(): number {
+  const raw = process.env.SCRAKK_SEARCH_IDLE_MS
+  if (raw === undefined) return 5 * 60_000
+  const parsed = Number(raw)
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 5 * 60_000
+}
+
+/** ¿Sigue vivo el proceso del sidecar? (`serve.json` puede quedar viejo). */
+function isProcessAlive(pid: number): boolean {
+  if (!pid) return false
+  try {
+    process.kill(pid, 0)
+    return true
+  } catch {
+    return false
+  }
+}
+
+/** Apaga el server de un root y limpia `serve.json` (así la próxima revive). */
+function stopServer(root: string): void {
+  const timer = idleTimers.get(root)
+  if (timer) {
+    clearTimeout(timer)
+    idleTimers.delete(root)
+  }
+  lastUsed.delete(root)
+  const child = servers.get(root)
+  servers.delete(root)
+  if (child?.pid) {
+    try {
+      process.kill(child.pid, 'SIGTERM')
+    } catch {
+      // ya estaba muerto
+    }
+  }
+  try {
+    fs.rmSync(path.join(indexDirFor(root), 'serve.json'), { force: true })
+  } catch {
+    // nada que limpiar
+  }
+}
+
+/** Marca actividad de un root y reprograma su apagado por inactividad. */
+function touch(root: string): void {
+  lastUsed.set(root, Date.now())
+  const existing = idleTimers.get(root)
+  if (existing) clearTimeout(existing)
+  const ms = idleShutdownMs()
+  if (ms <= 0) return
+  const timer = setTimeout(() => stopServer(root), ms)
+  if (typeof timer.unref === 'function') timer.unref()
+  idleTimers.set(root, timer)
+}
 
 function binaryName(): string {
   return process.platform === 'win32' ? `${BIN}.exe` : BIN
@@ -129,7 +193,16 @@ function rpc(indexDir: string, method: string, params: unknown, timeoutMs = 1500
 export async function ensureKolargrepServer(root: string): Promise<boolean> {
   if (!root) return false
   const indexDir = indexDirFor(root)
-  if (readServeInfo(indexDir)) return true
+  const info = readServeInfo(indexDir)
+  if (info && isProcessAlive(info.pid)) return true
+  if (info) {
+    // `serve.json` viejo (el proceso murió): limpiarlo para respawnear.
+    try {
+      fs.rmSync(path.join(indexDir, 'serve.json'), { force: true })
+    } catch {
+      // nada que limpiar
+    }
+  }
   if (servers.has(root)) return false
 
   const bin = findKolargrepBinary()
@@ -179,6 +252,7 @@ export async function sidecarGrep(
   maxResults: number
 ): Promise<SidecarMatch[] | null> {
   if (!(await ensureKolargrepServer(root))) return null
+  touch(root)
   const result = (await rpc(indexDirFor(root), 'search', {
     pattern,
     case_insensitive: !caseSensitive,
@@ -206,11 +280,15 @@ export async function sidecarGrep(
 /** Estado del índice/servidor (files, bytes, fase de indexado…). */
 export async function sidecarStatus(root: string): Promise<unknown> {
   if (!(await ensureKolargrepServer(root))) return null
+  touch(root)
   return rpc(indexDirFor(root), 'status', {})
 }
 
 /** Mata los servidores lanzados por esta app (al salir). */
 export function stopKolargrepServers(): void {
+  for (const timer of idleTimers.values()) clearTimeout(timer)
+  idleTimers.clear()
+  lastUsed.clear()
   for (const child of servers.values()) {
     try {
       if (child.pid) process.kill(child.pid, 'SIGTERM')
