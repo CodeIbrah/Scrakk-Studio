@@ -74,6 +74,7 @@ Los valores por defecto si no los cambiás:
 | drain diagnostics | 500 ms |
 | maxRestarts | 3 |
 | backoff restart | 1 s → 30 s exponencial |
+| idle shutdown | 5 min sin documentos abiertos (`SCRAKK_LSP_IDLE_MS`) |
 
 ## Transporte socket
 

@@ -60,6 +60,9 @@ pasa por el handshake y muere ordenado. Los pasos:
    documento entero, así que un cambio vacío lo BORRA en el server).
 6. **Shutdown ordenado**: didClose de todos → `shutdown` → `exit` con timeout
    (5 s default) → kill del hijo.
+7. **Apagado por inactividad**: si se queda sin documentos abiertos durante
+   5 min (`SCRAKK_LSP_IDLE_MS`), se apaga solo; el próximo archivo de ese
+   lenguaje lo vuelve a levantar (lazy).
 
 ## Multi-root
 
