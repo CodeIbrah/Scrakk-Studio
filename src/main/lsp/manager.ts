@@ -149,6 +149,8 @@ export class LspManager {
 
   /** Documentos abiertos por cliente (absPath → languageId) para el replay. */
   private openDocs = new Map<string, Map<string, string>>()
+  /** Timers de apagado por inactividad, por cliente (`server@root`). */
+  private idleTimers = new Map<string, NodeJS.Timeout>()
   private availabilityByRoot = new Map<string, Record<string, boolean>>()
   /** Último error por client-key: visible en status() aunque no haya cliente. */
   private lastErrorByKey = new Map<string, string>()
@@ -228,6 +230,7 @@ export class LspManager {
         this.monitored.delete(key)
         this.autoStartBlocked.delete(key)
         this.suddenDeaths.delete(key)
+        this.clearIdleTimer(key)
         await client.shutdown()
       }
     }
@@ -312,6 +315,7 @@ export class LspManager {
       if (removedIds.has(name) && !stillDefined) {
         this.clients.delete(key)
         this.pendingByClient.delete(key)
+        this.clearIdleTimer(key)
         await client.shutdown()
       }
     }
@@ -363,6 +367,7 @@ export class LspManager {
         this.pendingByClient.delete(key)
         this.openDocs.delete(key)
         this.autoStartBlocked.delete(key)
+        this.clearIdleTimer(key)
         await client.shutdown()
       }
     }
@@ -464,6 +469,8 @@ export class LspManager {
       this.clients.set(key, client)
       this.lastErrorByKey.delete(key)
       this.armRestartMonitor(serverName, key)
+      // Arrancó sin documentos abiertos: si nadie lo usa, se apagará solo.
+      this.armIdleTimer(key)
       return true
     } catch (error) {
       this.emitEvent({
@@ -576,6 +583,7 @@ export class LspManager {
       this.openDocs.set(clientKey, docs)
     }
     docs.set(path.resolve(filePath), languageId)
+    this.clearIdleTimer(clientKey)
   }
 
   private untrackDocEverywhere(filePath: string): void {
@@ -583,6 +591,55 @@ export class LspManager {
     for (const docs of this.openDocs.values()) {
       docs.delete(absolute)
     }
+  }
+
+  /** Cancela el apagado por inactividad de un cliente (hubo actividad). */
+  private clearIdleTimer(key: string): void {
+    const timer = this.idleTimers.get(key)
+    if (timer) {
+      clearTimeout(timer)
+      this.idleTimers.delete(key)
+    }
+  }
+
+  /**
+   * Programa el apagado por inactividad. Solo aplica si el cliente está vivo y
+   * NO tiene documentos abiertos: es el momento en que ya no hace falta.
+   */
+  private armIdleTimer(key: string): void {
+    this.clearIdleTimer(key)
+    if (this.shuttingDown || idleShutdownMs() <= 0) return
+    if (!this.clients.has(key)) return
+    if ((this.openDocs.get(key)?.size ?? 0) > 0) return
+    const serverName = key.slice(0, key.lastIndexOf('@'))
+    const timer = setTimeout(() => {
+      this.idleTimers.delete(key)
+      void this.stopIdleClient(key, serverName)
+    }, idleShutdownMs())
+    if (typeof timer.unref === 'function') timer.unref()
+    this.idleTimers.set(key, timer)
+  }
+
+  /** Apaga un cliente inactivo y limpia TODO su estado (se reelanza lazy). */
+  private async stopIdleClient(key: string, serverName: string): Promise<void> {
+    const client = this.clients.get(key)
+    if (!client) return
+    // Carrera: mientras el timer corría, alguien pudo abrir un archivo.
+    if ((this.openDocs.get(key)?.size ?? 0) > 0) return
+    this.clients.delete(key)
+    this.pendingByClient.delete(key)
+    this.openDocs.delete(key)
+    this.restartBudget.delete(key)
+    this.monitored.delete(key)
+    this.autoStartBlocked.delete(key)
+    this.suddenDeaths.delete(key)
+    this.clearIdleTimer(key)
+    try {
+      await client.shutdown()
+    } catch {
+      // El server ya estaba caído: no hay nada que apagar.
+    }
+    this.emitEvent({ serverName, state: 'stopped' })
   }
 
   // ── Sync desde el host ────────────────────────────────────────────────────
@@ -601,8 +658,13 @@ export class LspManager {
 
   async notifyFileClosed(filePath: string): Promise<void> {
     this.untrackDocEverywhere(filePath)
-    for (const client of this.clients.values()) {
+    for (const [key, client] of this.clients) {
       await client.notifyFileClosed(filePath)
+      // Sin documentos abiertos, el server entra en cuenta regresiva: si nadie
+      // lo usa en IDLE_SHUTDOWN_MS, se apaga solo (y el próximo archivo de ese
+      // lenguaje lo vuelve a levantar, lazy).
+      if ((this.openDocs.get(key)?.size ?? 0) === 0) this.armIdleTimer(key)
+      else this.clearIdleTimer(key)
     }
   }
 
@@ -965,6 +1027,7 @@ export class LspManager {
       const client = this.clients.get(key)
       this.clients.delete(key)
       this.pendingByClient.delete(key)
+      this.clearIdleTimer(key)
       await client?.shutdown()
     }
     // El próximo ensureServersForFile lo vuelve a levantar.
@@ -1017,6 +1080,8 @@ export class LspManager {
 
   async shutdownAll(): Promise<void> {
     this.shuttingDown = true
+    for (const timer of this.idleTimers.values()) clearTimeout(timer)
+    this.idleTimers.clear()
     const clients = [...this.clients.values()]
     this.clients.clear()
     this.pendingByClient.clear()
@@ -1045,6 +1110,21 @@ const RESTART_BACKOFF_INITIAL_MS = 1_000
 const RESTART_BACKOFF_MAX_MS = 30_000
 /** Espera máxima de settle en readDiagnostics (CLI: "briefly"). */
 const READ_DIAGNOSTICS_SETTLE_MS = 2_000
+
+/**
+ * Apagado por inactividad: si un server queda sin NINGÚN documento abierto
+ * durante este tiempo, se apaga solo (shutdown ordenado). El próximo archivo de
+ * ese lenguaje lo vuelve a levantar (lazy). Evita que servers pesados
+ * (tsserver, rust-analyzer…) queden vivos toda la sesión sin usarse.
+ *
+ * Override con `SCRAKK_LSP_IDLE_MS` (ms; 0 = desactivado).
+ */
+function idleShutdownMs(): number {
+  const raw = process.env.SCRAKK_LSP_IDLE_MS
+  if (raw === undefined) return 5 * 60_000
+  const parsed = Number(raw)
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 5 * 60_000
+}
 
 async function projectDeclaresDependency(root: string, dependency: string): Promise<boolean> {
   try {
