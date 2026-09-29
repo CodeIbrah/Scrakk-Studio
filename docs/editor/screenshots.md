@@ -6,6 +6,9 @@ summary: "El comando `editor.captureScreenshot` guarda un PNG de la zona del edi
 ---
 # Capturas del editor (y cómo se verifica que el editor PINTA)
 
+Sacar una foto del editor y, de paso, comprobar que **pinta** de verdad los
+tokens de una extensión.
+
 ## 1. La feature
 
 Comando **`editor.captureScreenshot`** — "Capturar el editor (PNG)" — en la paleta

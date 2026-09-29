@@ -6,6 +6,9 @@ summary: "Cómo Scrakk detecta, elige y (si hace falta) instala el language serv
 ---
 # Servidores builtin, detección y auto-instalación
 
+Scrakk trae un catálogo de servers (unos 26 lenguajes) y los elige solo; si
+falta el binario, lo instala.
+
 ## Detección
 
 Al cargar un root se descubren los builtins que cumplen TODO:
