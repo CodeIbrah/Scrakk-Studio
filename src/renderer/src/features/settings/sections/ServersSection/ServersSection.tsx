@@ -203,7 +203,7 @@ function ServerRow({ server, onRefresh }: ServerRowProps): JSX.Element {
         >
           {disabled ? t('settings.encender') : t('settings.apagar')}
         </LoadingButton>
-        {disabled ? null : (
+        {disabled || !server.available ? null : (
           <LoadingButton
             loading={busy === 'restart'}
             loadingLabel="Reiniciando…"
