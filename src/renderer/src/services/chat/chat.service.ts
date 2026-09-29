@@ -136,8 +136,22 @@ export function createLlmChatService(): ChatService {
                 },
                 onReasoning: (delta) => input.onReasoning?.(delta),
                 onToolCalls: (calls) => {
-                  toolCalls = calls
-                  input.onToolCalls?.(calls.map(toToolCallInfo))
+                  // Dedup por id TAMBIÉN acá (no solo al ejecutar): la card se
+                  // dibuja desde este evento, y un proveedor no-conformante
+                  // puede repetir la misma call en varios índices → N cards
+                  // idénticas con una sola ejecución.
+                  const seen = new Set<string>()
+                  const unique = calls.filter((call) => {
+                    // Sin nombre no es una tool call válida: card fantasma, no
+                    // ejecutable y no clickeable.
+                    if (!call.function?.name) return false
+                    if (!call.id) return true
+                    if (seen.has(call.id)) return false
+                    seen.add(call.id)
+                    return true
+                  })
+                  toolCalls = unique
+                  input.onToolCalls?.(unique.map(toToolCallInfo))
                 },
                 onDone: () => {
                   if (settled) return

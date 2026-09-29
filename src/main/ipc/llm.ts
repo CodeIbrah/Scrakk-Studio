@@ -5,6 +5,7 @@
 import { ipcMain, type WebContents } from 'electron'
 import { LLM_IPC, type LlmStreamRequest, type LlmToolCall } from '@shared/llm'
 import { buildThinkingBody, type ThinkingMode } from '@shared/thinking'
+import { accumulateToolCallDeltas, finalizedToolCalls } from '../llm/streamToolCalls'
 
 import { t } from '@shared/i18n'
 interface OpenAiStreamToolCallDelta {
@@ -154,6 +155,20 @@ async function runStream(sender: WebContents, request: LlmStreamRequest): Promis
     // Última emisión incremental (throttle) para pintar la tool EN VIVO.
     let lastToolEmit = 0
 
+    /**
+     * Emite las tool calls acumuladas, DEDUPLICADAS por `id` (ver
+     * `streamToolCalls.ts`): la card de cada tool se dibuja desde este evento,
+     * así que un id repetido en varios índices generaba N cards idénticas.
+     */
+    const emitToolCalls = (): void => {
+      const unique = finalizedToolCalls(streamedToolCalls)
+      if (unique.length === 0) return
+      sendEvent(sender, LLM_IPC.chatStreamToolCalls, {
+        requestId,
+        toolCalls: unique
+      })
+    }
+
     // Lectura con timeout de INACTIVIDAD: si no llega ningún byte en
     // IDLE_TIMEOUT_MS, se aborta. Cada byte recibido reinicia el reloj.
     const readWithIdleTimeout = async (): Promise<{ done: boolean; value?: Uint8Array }> => {
@@ -203,53 +218,20 @@ async function runStream(sender: WebContents, request: LlmStreamRequest): Promis
           sendEvent(sender, LLM_IPC.chatStreamChunk, { requestId, delta: delta.content })
         }
         if (Array.isArray(delta.tool_calls)) {
-          for (const tc of delta.tool_calls) {
-            const index = tc.index ?? 0
-            if (tc.id) {
-              // Primer chunk de esta tool call: crea la entrada.
-              streamedToolCalls[index] = {
-                id: tc.id,
-                type: 'function',
-                function: {
-                  name: tc.function?.name ?? '',
-                  arguments: tc.function?.arguments ?? ''
-                }
-              }
-            } else if (streamedToolCalls[index]) {
-              // Chunks siguientes: acumula name/arguments parciales.
-              const current = streamedToolCalls[index]!
-              if (tc.function?.name) current.function.name = tc.function.name
-              if (tc.function?.arguments) current.function.arguments += tc.function.arguments
-            }
-          }
+          // Identidad por `id`, no por `index` (ver streamToolCalls.ts).
+          accumulateToolCallDeltas(streamedToolCalls, delta.tool_calls)
           // Emisión INCREMENTAL (throttle ~50ms): la tool card se pinta
           // mientras el modelo la emite, no recién al terminar el stream.
           const now = Date.now()
           if (now - lastToolEmit > 50) {
             lastToolEmit = now
-            const partial = streamedToolCalls.filter(
-              (tc): tc is LlmToolCall => tc !== undefined
-            )
-            if (partial.length > 0) {
-              sendEvent(sender, LLM_IPC.chatStreamToolCalls, {
-                requestId,
-                toolCalls: partial
-              })
-            }
+            emitToolCalls()
           }
         }
       }
     }
 
-    const completedToolCalls = streamedToolCalls.filter(
-      (tc): tc is LlmToolCall => tc !== undefined
-    )
-    if (completedToolCalls.length > 0) {
-      sendEvent(sender, LLM_IPC.chatStreamToolCalls, {
-        requestId,
-        toolCalls: completedToolCalls
-      })
-    }
+    emitToolCalls()
 
     sendEvent(sender, LLM_IPC.chatStreamDone, {
       requestId,

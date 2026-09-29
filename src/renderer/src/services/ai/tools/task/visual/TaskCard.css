@@ -56,3 +56,15 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Progreso en vivo del subagente: última línea con contenido, en una sola
+   línea con ellipsis (el chat principal es angosto). */
+.task-card__live {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}

@@ -191,7 +191,21 @@ class SubagentSessionStore {
     this.sessions.set(id, session)
     this.emit()
 
+    // El mensaje de cada ronda se crea LAZY (al primer delta/tool call): una
+    // ronda que no produce nada no deja una burbuja vacía, y las rondas que
+    // solo traen tool calls no se ven como "mensajes duplicados".
     let segmentId = ''
+    const ensureSegment = (): string => {
+      if (segmentId) return segmentId
+      segmentId = crypto.randomUUID()
+      this.pushMessage(id, {
+        id: segmentId,
+        role: 'assistant',
+        content: '',
+        timestamp: Date.now()
+      })
+      return segmentId
+    }
     void (async () => {
       try {
         const result = await runHeadlessAgent({
@@ -199,24 +213,20 @@ class SubagentSessionStore {
           prompt,
           signal: options.signal,
           sessionId: options.sessionId,
+          // Ronda nueva: se cierra el segmento actual; el siguiente se abre
+          // recién cuando llega algo (contenido, razonamiento o tool call).
           onRoundStart: () => {
-            segmentId = crypto.randomUUID()
-            this.pushMessage(id, {
-              id: segmentId,
-              role: 'assistant',
-              content: '',
-              timestamp: Date.now()
-            })
+            segmentId = ''
           },
-          onContent: (delta) => this.buffer(id, segmentId, { content: delta }),
-          onReasoning: (delta) => this.buffer(id, segmentId, { reasoning: delta }),
+          onContent: (delta) => this.buffer(id, ensureSegment(), { content: delta }),
+          onReasoning: (delta) => this.buffer(id, ensureSegment(), { reasoning: delta }),
           onToolCalls: (calls) =>
-            this.patchMessage(id, segmentId, (message) => ({
+            this.patchMessage(id, ensureSegment(), (message) => ({
               ...message,
               tool_calls: [...(calls as ToolCallInfo[])]
             })),
           onToolResult: (toolCallId, result) =>
-            this.patchMessage(id, segmentId, (message) => ({
+            this.patchMessage(id, ensureSegment(), (message) => ({
               ...message,
               tool_results: {
                 ...(message.tool_results ?? {}),

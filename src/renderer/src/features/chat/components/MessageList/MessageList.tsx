@@ -66,6 +66,13 @@ export const MessageList = memo(function MessageList({
         const isLast = index === messages.length - 1
         const isPending = isLast && message.role === 'assistant' && isStreaming
         const hasReasoning = Boolean(message.role === 'assistant' && message.reasoning)
+        // Con tool calls el bubble SÍ se dibuja aunque no haya texto todavía:
+        // es lo único que muestra la card de la tool (y el subagente en vivo).
+        // Sin esto, mientras la tool corre el panel quedaba clavado en
+        // "Thinking" y la card recién aparecía al terminar la ronda (o al
+        // apretar Detener, que apaga isStreaming).
+        const hasToolCalls = Boolean(message.role === 'assistant' && message.tool_calls?.length)
+        const showThinking = isPending && !message.content && !hasToolCalls
         return (
           <div key={message.id} className={styles.messageWrap}>
             {hasReasoning ? (
@@ -74,10 +81,10 @@ export const MessageList = memo(function MessageList({
               // a "Thought for Ns" con el tiempo que pensó.
               <ThoughtBlock
                 reasoning={message.reasoning ?? ''}
-                thinking={isPending && !message.content}
+                thinking={isPending && !message.content && !hasToolCalls}
               />
             ) : null}
-            {isPending && !message.content ? (
+            {showThinking ? (
               // Sin razonamiento visible: el indicador Thinking va solo.
               hasReasoning ? null : <ThinkingState />
             ) : (

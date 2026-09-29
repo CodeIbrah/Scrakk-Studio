@@ -143,8 +143,19 @@ function streamOnce(input: {
           onReasoning?.(delta)
         },
         onToolCalls: (calls) => {
-          toolCalls = calls
-          onToolCalls?.(calls)
+          // Dedup por id: un proveedor no-conformante repite la misma call en
+          // varios índices. Se filtra acá para que ninguna capa (sesión del
+          // subagente o card) dibuje dos filas para la misma tool call.
+          const seen = new Set<string>()
+          toolCalls = calls.filter((call) => {
+            // Sin nombre no es una tool call válida (card fantasma).
+            if (!call.function?.name) return false
+            if (!call.id) return true
+            if (seen.has(call.id)) return false
+            seen.add(call.id)
+            return true
+          })
+          onToolCalls?.(toolCalls)
         },
         onDone: () => finish(() => resolve({ content, toolCalls })),
         onStopped: () => finish(() => resolve({ content, toolCalls })),
@@ -189,7 +200,8 @@ export async function runHeadlessAgent(input: RunAgentInput): Promise<RunAgentRe
       })
       full += content
       if (toolCalls.length === 0) break
-      input.onToolCalls?.(toolCalls as ToolCall[])
+      // `onToolCalls` YA se emitió en vivo desde streamOnce (y otra vez al
+      // cerrar el stream): re-emitir acá era un duplicado latente.
       messages.push({ role: 'assistant', content: content || null, tool_calls: toolCalls })
       const executions = await executeTools(
         toolCalls as ToolCall[],

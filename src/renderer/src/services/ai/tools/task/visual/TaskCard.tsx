@@ -34,6 +34,7 @@ export function TaskCard({ args, status, execution }: TaskCardProps): JSX.Elemen
   const runId =
     execution?.runId ??
     (execution?.toolCallId ? sessionIdForToolCall(execution.toolCallId) : undefined)
+  const session = runId ? subagentSessions.get(runId) : undefined
 
   const open = (): void => {
     if (!runId) return
@@ -43,13 +44,20 @@ export function TaskCard({ args, status, execution }: TaskCardProps): JSX.Elemen
   }
 
   if (status === 'pending' || status === 'streaming' || status === 'running') {
-    const shimmer = <ToolShimmerText text={`${label || 'Subagente'}…`} />
+    // Progreso EN VIVO en el chat principal: la última línea con contenido del
+    // subagente, sin necesidad de abrir el modal.
+    const live = lastContentLine(session?.messages)
+    const body = live ? (
+      <span className="task-card__live">{live}</span>
+    ) : (
+      <ToolShimmerText text={`${label || 'Subagente'}…`} />
+    )
     return runId ? (
       <button type="button" className="task-card" title={t('misc.abrir.el.subagente')} onClick={open}>
-        {shimmer}
+        {body}
       </button>
     ) : (
-      shimmer
+      body
     )
   }
   if (!id) return null
@@ -66,4 +74,25 @@ export function TaskCard({ args, status, execution }: TaskCardProps): JSX.Elemen
       {body}
     </button>
   )
+}
+
+/**
+ * Última línea con contenido del subagente (para el progreso en vivo de la
+ * card). Busca el assistant más reciente que tenga texto y devuelve su última
+ * línea no vacía, recortada para que entre en una sola línea.
+ */
+function lastContentLine(
+  messages: Array<{ role: string; content: string }> | undefined
+): string {
+  if (!messages) return ''
+  for (let i = messages.length - 1; i >= 0; i -= 1) {
+    if (messages[i].role !== 'assistant') continue
+    const lines = messages[i].content
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+    if (lines.length === 0) continue
+    return lines[lines.length - 1].slice(0, 140)
+  }
+  return ''
 }

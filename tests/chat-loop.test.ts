@@ -151,4 +151,34 @@ describe('ciclo agéntico (rondas con tools)', () => {
     expect(rounds).toEqual([0])
     expect(reply.content).toBe('respuesta simple')
   })
+
+  it('deduplica tool calls repetidas por id (provider no-conformante)', async () => {
+    // El provider repite el MISMO id en 3 índices distintos: antes la UI
+    // dibujaba 3 cards idénticas aunque la tool se ejecutara una sola vez.
+    const repeated = (index: number): Record<string, unknown> => ({
+      index,
+      id: 'call_dup',
+      type: 'function',
+      function: { name: 'read_file', arguments: '{"path":"a.ts"}' }
+    })
+    scriptedRounds.push(
+      { content: 'leo', toolCalls: [repeated(0), repeated(1), repeated(2)] },
+      { content: 'listo' }
+    )
+
+    const emitted: number[] = []
+    const resultIds: string[] = []
+    const service = createLlmChatService()
+    await service.sendMessage({
+      ...(baseInput() as Parameters<typeof service.sendMessage>[0]),
+      onToolCalls: (calls) => emitted.push(calls.length),
+      onToolResult: (id) => resultIds.push(id)
+    })
+
+    // Todas las emisiones traen 1 sola call, nunca 3.
+    expect(emitted.length).toBeGreaterThan(0)
+    expect(emitted.every((n) => n === 1)).toBe(true)
+    // Y se ejecuta una sola vez (un único tool result).
+    expect(resultIds).toEqual(['call_dup'])
+  })
 })

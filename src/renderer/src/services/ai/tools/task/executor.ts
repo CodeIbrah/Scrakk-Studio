@@ -53,7 +53,12 @@ export async function execute(
   }
   return {
     success: !failed,
-    content: content || (session.error ?? ''),
+    // Nunca vacío: un tool result '' hace que el modelo padre crea que la tool
+    // no devolvió nada y vuelva a llamar `task` (spawn duplicado).
+    content:
+      content ||
+      `Subagent "${name}" finished without a textual result.` +
+        (session.error ? ` Error: ${session.error}` : ''),
     runId: sessionId
   }
 }

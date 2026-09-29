@@ -101,6 +101,19 @@ publicadas no se editan. El archivo va por versión:
 - Se quitó el **tope de rondas de tools** por turno (era 12): el ciclo se cortaba
   en silencio después de varias herramientas. Ahora solo lo corta el usuario con
   **Detener**.
+- **Subagentes (`task`) ya no quedan "clavados en Thinking"**: mientras la tool
+  corre, la card del subagente ahora se dibuja (antes el bubble se ocultaba hasta
+  que hubiera texto, así que no se veía ni la card ni el progreso hasta terminar
+  la ronda o apretar **Detener**).
+- **Se acabaron las cards duplicadas**: un proveedor que repite el `id` del tool
+  call con el `index` incrementado en cada chunk generaba **varias cards
+  idénticas** para un solo spawn. Ahora la acumulación del stream identifica por
+  `id`, deduplica al emitir y descarta los chunks que llegan con un `id` nuevo
+  pero **sin nombre** (cards fantasma, no ejecutables ni clickeables).
+- **Progreso en vivo en el chat**: la card del subagente muestra la última línea
+  con contenido mientras corre, sin abrir el modal.
+- **Sin burbujas vacías por ronda** en el transcript del subagente y **sin tool
+  result vacío** que hiciera al modelo padre volver a llamar `task`.
 
 ### Panel de Git (UI)
 - **Rediseño del panel**: la rama y los botones **Fetch / Pull / Push** ahora
