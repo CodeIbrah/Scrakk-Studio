@@ -17,3 +17,9 @@ alter table public.messages
   drop constraint if exists messages_kind_check;
 alter table public.messages
   add constraint messages_kind_check check (kind in ('normal','codefile'));
+
+-- OJO: el INSERT de `messages` es un GRANT POR COLUMNA (convención de 0010:
+-- `grant insert (sender_id, recipient_id, body)`). Una columna nueva NO hereda
+-- ese permiso: sin esto, el INSERT de un `codefile` falla con
+-- "permission denied for table messages" (42501) aunque la RLS esté bien.
+grant insert (kind) on public.messages to authenticated;
