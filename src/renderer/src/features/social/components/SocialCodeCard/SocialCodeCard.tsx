@@ -8,12 +8,18 @@
  * El mensaje trae un SOBRE (metadatos + key de R2); el contenido se baja bajo
  * demanda con URL firmada y se verifica por sha256. El header muestra el
  * ícono según el tema de fileIcons activo (nada hardcodeado) + nombre + líneas
- * + vencimiento. El body es una vista de código read-only.
+ * + vencimiento.
+ *
+ * El body monta una SESIÓN de Innerta real: se instancia el motor aislado
+ * (WASM + canvas propios, uno por mensaje) y se abre el archivo con
+ * `loadFile(path, content)`. Al colapsar/desmontar se `destroy()` para liberar
+ * el módulo.
  */
 
-import { useCallback, useMemo, useState, type JSX } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type JSX } from 'react'
 import { ProductIcon } from '@services/productIcons/components'
 import { useFileIconUrl } from '@services/fileIcons'
+import { createIsolatedEditorEngine, type EditorEngine } from '@features/editor/engine'
 import type { DirectMessage, SocialResult } from '@shared/social'
 import {
   codeFileDaysLeft,
@@ -23,33 +29,12 @@ import {
   type SocialCodeFile
 } from '@shared/socialCodeFile'
 import { useSocial } from '../../state/SocialContext'
-import { Markdown } from '@features/chat/components/Markdown/Markdown'
 import styles from './SocialCodeCard.module.css'
 
 import { t } from '@core/i18n'
-/** Tope de líneas que se pintan de una (el resto queda para el editor). */
-const PREVIEW_LINES = 2_000
-
 interface SocialCodeCardProps {
   message: DirectMessage
   isOwn: boolean
-}
-
-/** Fence de markdown para que Prism resalte el código sin traer el WASM. */
-function fence(meta: SocialCodeFile, content: string): string {
-  const lang = meta.lang && meta.lang !== 'plaintext' ? meta.lang : ''
-  return `\`\`\`${lang}\n${content}\n\`\`\``
-}
-
-function truncate(content: string, maxLines: number): { text: string; cut: boolean } {
-  let seen = 0
-  for (let i = 0; i < content.length; i += 1) {
-    if (content.charCodeAt(i) === 10) {
-      seen += 1
-      if (seen >= maxLines) return { text: content.slice(0, i), cut: i < content.length - 1 }
-    }
-  }
-  return { text: content, cut: false }
 }
 
 export function SocialCodeCard({ message, isOwn }: SocialCodeCardProps): JSX.Element {
@@ -60,6 +45,9 @@ export function SocialCodeCard({ message, isOwn }: SocialCodeCardProps): JSX.Ele
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [gone, setGone] = useState(false)
+
+  const hostRef = useRef<HTMLDivElement | null>(null)
+  const engineRef = useRef<EditorEngine | null>(null)
 
   const iconUrl = useFileIconUrl(meta?.name ?? '', false, undefined, {
     path: meta?.name,
@@ -94,10 +82,38 @@ export function SocialCodeCard({ message, isOwn }: SocialCodeCardProps): JSX.Ele
 
   const remove = useCallback(async (): Promise<void> => {
     if (!accountId || !isOwn) return
-    const result = (await window.api.social.deleteCodeFile(accountId, message.id)) as SocialResult<boolean>
+    const result = (await window.api.social.deleteCodeFile(
+      accountId,
+      message.id
+    )) as SocialResult<boolean>
     if (!result.ok) setError(result.error ?? t('social.no.se.pudo.borrar.el.archivo'))
     else setGone(true)
   }, [accountId, isOwn, message.id])
+
+  // Sesión de Innerta: un motor AISLADO por mensaje (su WASM + canvas) que se
+  // abre con el archivo y se destruye al colapsar/desmontar (libera memoria).
+  useEffect(() => {
+    if (!open || content === null) return undefined
+    const host = hostRef.current
+    if (!host) return undefined
+    const name = meta?.name ?? 'archivo'
+
+    const engine = createIsolatedEditorEngine()
+    engineRef.current = engine
+    engine.attach(host)
+    engine.loadFile(name, content)
+    // loadFile() enfoca el canvas; en la card no queremos robarle el foco al
+    // compositor del chat. Se puede clickear igual para interactuar.
+    const raf = requestAnimationFrame(() => {
+      host.querySelector<HTMLCanvasElement>('canvas')?.blur()
+    })
+
+    return () => {
+      cancelAnimationFrame(raf)
+      engine.destroy?.()
+      engineRef.current = null
+    }
+  }, [open, content, meta?.name])
 
   if (!meta) {
     return <div className={styles.card}>{t('social.archivo.compartido.danado')}</div>
@@ -105,7 +121,7 @@ export function SocialCodeCard({ message, isOwn }: SocialCodeCardProps): JSX.Ele
 
   const expired = isCodeFileExpired(meta)
   const daysLeft = codeFileDaysLeft(meta)
-  const preview = content !== null ? truncate(content, PREVIEW_LINES) : null
+  const showEmbed = open && !gone && !error && content !== null
 
   return (
     <div className={styles.card} data-open={open ? '' : undefined}>
@@ -139,18 +155,7 @@ export function SocialCodeCard({ message, isOwn }: SocialCodeCardProps): JSX.Ele
           {busy ? <div className={styles.hint}>{t('social.descargando')}</div> : null}
           {gone ? <div className={styles.hint}>{t('social.archivo.borrado')}</div> : null}
           {!gone && error ? <div className={styles.error}>{error}</div> : null}
-          {!gone && preview ? (
-            <>
-              <div className={styles.code}>
-                <Markdown content={fence(meta, preview.text)} />
-              </div>
-              {preview.cut ? (
-                <div className={styles.hint}>
-                  {t('social.vista.recortada.a.lineas', { lines: String(PREVIEW_LINES) })}
-                </div>
-              ) : null}
-            </>
-          ) : null}
+          {showEmbed ? <div ref={hostRef} className={styles.embed} /> : null}
           {!gone && isOwn ? (
             <div className={styles.actions}>
               <button type="button" className={styles.action} onClick={() => void remove()}>
