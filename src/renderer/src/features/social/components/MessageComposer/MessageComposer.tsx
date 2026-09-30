@@ -14,7 +14,13 @@ import {
 } from 'react'
 import { ProductIcon } from '@services/productIcons/components'
 import { IconButton } from '@ui'
-import { IMAGE_RULES, type DirectMessage, type Friend, type ImageUpload } from '@shared/social'
+import {
+  IMAGE_RULES,
+  SOCIAL_RULES,
+  type DirectMessage,
+  type Friend,
+  type ImageUpload
+} from '@shared/social'
 import { EmojiPicker } from '../../emoji/EmojiPicker'
 import styles from './MessageComposer.module.css'
 
@@ -96,7 +102,15 @@ export function MessageComposer({
   const typingTimeout = useRef<number | null>(null)
   const lastTyping = useRef(false)
 
-  const canSend = !disabled && !sending && (value.trim().length > 0 || pending.length > 0)
+  // Contador estilo Discord: se muestra al acercarse al tope y avisa al pasarse.
+  const maxChars = SOCIAL_RULES.messageMax
+  const remaining = maxChars - value.length
+  const showCounter = value.length > 0 && remaining <= 300
+  const canSend =
+    !disabled &&
+    !sending &&
+    value.length <= maxChars &&
+    (value.trim().length > 0 || pending.length > 0)
 
   // Cerrar el selector de emojis al clickear afuera.
   useEffect(() => {
@@ -360,6 +374,11 @@ export function MessageComposer({
         </div>
       ) : null}
       {attachError ? <span className={styles.attachError}>{attachError}</span> : null}
+      {showCounter ? (
+        <span className={remaining <= 0 ? styles.counterOver : styles.counter}>
+          {remaining}
+        </span>
+      ) : null}
       {showMentions && filteredFriends.length > 0 ? (
         <div className={styles.mentionList}>
           {filteredFriends.map((f) => (
@@ -380,9 +399,7 @@ export function MessageComposer({
             onClick={() => setShowEmoji((prev) => !prev)}
             disabled={disabled}
           >
-            <span className={styles.emojiGlyph} aria-hidden="true">
-              😊
-            </span>
+            <ProductIcon id="emoji" size={14} />
           </IconButton>
           {showEmoji ? <EmojiPicker onPick={insertEmoji} /> : null}
         </div>

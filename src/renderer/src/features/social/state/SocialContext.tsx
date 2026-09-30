@@ -33,6 +33,7 @@ import { SOCIAL_RULES } from '@shared/social'
 import type { MyProfile, SocialView } from './types'
 
 import { t } from '@core/i18n'
+import { setActiveSocialSession } from '../actions/shareFile'
 /** Frases del slowmode (estilo Discord), en español neutro. */
 const SLOWMODE_MESSAGES = [
   t('social.tranquilo.se.te.va.a'),
@@ -232,6 +233,20 @@ export function SocialProvider({
   const activePeerRef = useRef<Friend | null>(activePeer)
   activePeerRef.current = activePeer
   const reloadRef = useRef<() => void>(() => {})
+
+  // Publica la conversación activa para la acción global "Compartir en Social"
+  // (el menú contextual del Explorer y de las tabs vive fuera de este panel).
+  useEffect(() => {
+    setActiveSocialSession(
+      accountId && activePeer
+        ? {
+            accountId,
+            peerId: activePeer.id,
+            peerName: activePeer.displayName ?? activePeer.handle ?? ''
+          }
+        : null
+    )
+  }, [accountId, activePeer])
 
   // Slowmode (como Discord): ventana deslizante de envíos por sesión.
   const sendTimesRef = useRef<number[]>([])

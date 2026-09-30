@@ -6,6 +6,8 @@ import { memo, useState, type JSX } from 'react'
 import { ProductIcon } from '@services/productIcons/components'
 import { showModal } from '@services/modals'
 import type { DirectMessage } from '@shared/social'
+import { decodeCodeFile } from '@shared/socialCodeFile'
+import { SocialCodeCard } from '../SocialCodeCard/SocialCodeCard'
 import { UserAvatar } from '../UserAvatar/UserAvatar'
 import { ProfileView } from '../ProfileView/ProfileView'
 import { showFloatingProfile } from '../ProfileFloating/ProfileFloating'
@@ -64,6 +66,13 @@ function emojiOnlyCount(body: string): number {
  * Discord-style message: avatar per group, no cards, hour only on leader.
  * Optimized with memo: only re-renders when props change.
  */
+/** Etiqueta de la cita: si el citado es un archivo, muestra su nombre. */
+function replyPreviewLabel(body: string): string {
+  const meta = decodeCodeFile(body)
+  if (meta) return `${meta.name} · ${t('social.archivo')}`
+  return body.slice(0, 80)
+}
+
 export const MessageBubble = memo(function MessageBubble({
   message,
   isOwn,
@@ -151,11 +160,13 @@ export const MessageBubble = memo(function MessageBubble({
           <div className={styles.replyQuote}>
             <span className={styles.replyBar} />
             <span className={styles.replyName}>{replySenderName ?? t('social.mensaje')}</span>
-            <span className={styles.replyBody}>{message.replyPreview.body.slice(0, 80)}</span>
+            <span className={styles.replyBody}>{replyPreviewLabel(message.replyPreview.body)}</span>
           </div>
         ) : null}
 
-        {editing ? (
+        {message.kind === 'codefile' ? (
+          <SocialCodeCard message={message} isOwn={isOwn} />
+        ) : editing ? (
           <div className={styles.editRow}>
             <input
               className={styles.editInput}

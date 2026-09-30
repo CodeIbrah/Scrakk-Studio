@@ -18,6 +18,7 @@ import {
 import { useDndState, useDropZone } from '@features/dnd'
 import { subscribeToFileIcons } from '@services/fileIcons'
 import { showContextMenu } from '@features/editor/engines/innerta/menuHost'
+import { shareFileToSocial } from '@features/social/actions/shareFile'
 import { getFileSession, hasFileSession, isFileDirty } from '@features/editor/fileSession'
 import { tabsStore } from './store'
 import {
@@ -91,6 +92,8 @@ interface TabItemProps {
   dragging: boolean
   onSelect: () => void
   onClose: () => void
+  /** Click derecho: menú de la tab (lo arma el strip con la API global). */
+  onContextMenu?: (event: ReactMouseEvent<HTMLButtonElement>) => void
 }
 
 /**
@@ -107,7 +110,8 @@ function TabItem({
   chain,
   dragging,
   onSelect,
-  onClose
+  onClose,
+  onContextMenu
 }: TabItemProps): JSX.Element {
   const zone = useDropZone({ kind: 'tab', stripId, tabIndex: index })
   const Icon = icon
@@ -176,6 +180,7 @@ function TabItem({
           : undefined
       }
       onClick={() => onSelect()}
+      onContextMenu={onContextMenu}
       {...dragAttrs}
     >
       {Icon ? <Icon size={14} aria-hidden="true" /> : null}
@@ -370,6 +375,7 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
         dragging={draggingTabId === tab.id}
         onSelect={() => handleSelect(tab)}
         onClose={() => handleClose(tab)}
+        onContextMenu={(event) => openTabMenu(event, tab)}
       />
     )
   })
@@ -384,6 +390,24 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
     activeTab && !splitActive
       ? extractHeaderMenuItems(getTabHeader(tabHeaderKey(stripId, activeTab.id)))
       : []
+
+  /**
+   * Click derecho en una tab: menú de ESA tab. Hoy expone "Compartir en
+   * Social" para tabs de archivo (el resto de las acciones del panel siguen
+   * en el menú ⋮). Se arma con la API global de context menu.
+   */
+  const openTabMenu = (event: ReactMouseEvent<HTMLButtonElement>, tab: TabSpec): void => {
+    if (tab.kind !== 'file' || !tab.filePath) return
+    event.preventDefault()
+    event.stopPropagation()
+    const path = tab.filePath
+    showContextMenu(event.clientX, event.clientY, [
+      {
+        label: t('social.compartir.en.social'),
+        onClick: () => void shareFileToSocial(path)
+      }
+    ])
+  }
 
   const openOverflowMenu = (event: ReactMouseEvent<HTMLButtonElement>): void => {
     const entry = activeTab ? getTabHeader(tabHeaderKey(stripId, activeTab.id)) : null

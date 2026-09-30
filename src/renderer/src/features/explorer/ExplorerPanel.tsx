@@ -42,6 +42,7 @@ import styles from './Explorer.module.css'
 import { ToolDock, ToolDockHostProvider } from '@features/tooldock'
 
 import { t } from '@core/i18n'
+import { shareFileToSocial } from '@features/social/actions/shareFile'
 /** Fila fantasma mientras se crea un archivo/carpeta. */
 interface CreatingState {
   parentPath: string
@@ -523,6 +524,10 @@ export function ExplorerPanel({
       items.push({
         label: t('explorer.abrir'),
         onClick: () => openFileInEditor(node.path, node.name)
+      })
+      items.push({
+        label: t('social.compartir.en.social'),
+        onClick: () => void shareFileToSocial(node.path)
       })
     }
 

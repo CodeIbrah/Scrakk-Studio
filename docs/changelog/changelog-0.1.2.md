@@ -292,6 +292,33 @@ publicadas no se editan. El archivo va por versión:
   paquete si hay claves faltantes, desactualizadas o sin revisar; `ci.yml` avisa
   sin bloquear mientras la migración avanza.
 
+### Chat Social — archivos compartidos
+- **Compartir archivos como contenido, no como adjunto**: un archivo va como un
+  mensaje de tipo `codefile` (columna nueva `kind` en `messages`); el `body`
+  lleva un **sobre JSON de una línea** con los metadatos (`name`, `lang`,
+  `lines`, `size`, `sha`, `key`, `expiresAt`) y el contenido vive en **R2**
+  (bucket privado `scrakk-chat-files`). Los mensajes normales quedan intactos
+  (4000 chars, mismo CHECK).
+- **Gatekeeper**: las credenciales de R2 **no viajan en la app**. Todo pasa por
+  la Edge Function `social-file`, que valida JWT, amistad, **límites** (10.000
+  líneas / 512 KB), **cupo** y recién ahí sube o firma una **URL de vida corta**
+  para el receptor (con verificación `sha256` al bajar).
+- **Cupo borrable + caducidad**: 15 archivos vivos por conversación; borrar un
+  archivo libera cupo al instante y a los **60 días** el lifecycle de R2 los
+  elimina solo (la card pasa a "expirado").
+- **Card en el mensaje**: header con el **ícono del tema de fileIcons activo**
+  (nada hardcodeado), nombre, líneas, tamaño y vencimiento; el body baja el
+  contenido bajo demanda y lo pinta resaltado.
+- **Rate limit real**: se aplicó el trigger `messages_rate_limit` (7 en 5 s),
+  que hasta ahora estaba escrito pero **sin aplicar** (el `msg_ratelimited` del
+  cliente era código muerto).
+- **Compositor**: contador de caracteres estilo Discord (muestra lo que resta y
+  avisa al pasarse del tope, bloqueando el envío) y el botón de emojis ahora usa
+  un `ProductIcon` (`emoji`) en vez del glifo hardcodeado.
+- **Compartir desde el menú contextual**: opción "Compartir en Social" en el
+  **Explorer** y en el **click derecho de las tabs** de archivo, vía la API
+  global de context menu.
+
 ### Correcciones
 - **Emoji: ancho de 2 celdas y nítidos**: el layout era `x = columna × ancho`
   puro, así que un emoji avanzaba **una** celda y se pisaba con el vecino (y el

@@ -71,6 +71,26 @@ export function registerSocialIpc(): void {
       service.uploadImage(accountId, kind, image)
   )
   ipcMain.handle(
+    SOCIAL_IPC.sendCodeFile,
+    (
+      _event,
+      accountId: string,
+      toUserId: string,
+      file: { name: string; lang: string; content: string },
+      replyTo?: string | null
+    ) => service.sendCodeFile(accountId, toUserId, file, replyTo ?? null)
+  )
+  ipcMain.handle(
+    SOCIAL_IPC.codeFileContent,
+    (_event, accountId: string, messageId: string) =>
+      service.getCodeFileContent(accountId, messageId)
+  )
+  ipcMain.handle(
+    SOCIAL_IPC.deleteCodeFile,
+    (_event, accountId: string, messageId: string) =>
+      service.deleteCodeFileMessage(accountId, messageId)
+  )
+  ipcMain.handle(
     SOCIAL_IPC.editMessage,
     (_event, accountId: string, messageId: string, body: string) =>
       service.editMessage(accountId, messageId, body)

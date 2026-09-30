@@ -11,9 +11,17 @@
  */
 
 import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js'
+import { createHash } from 'node:crypto'
 import { getClientFor, dropClient } from '../supabaseClient'
 import { IMAGE_RULES } from '@shared/social'
 import { isR2Configured, sniffMime, uploadToR2 } from '../images/r2'
+import {
+  checkCodeFileContent,
+  decodeCodeFile,
+  encodeCodeFile,
+  type SocialCodeFile
+} from '@shared/socialCodeFile'
+import { codeFileSignedUrl, deleteCodeFileObject, uploadCodeFile } from './codeFiles'
 import type {
   DirectMessage,
   Friend,
@@ -22,6 +30,7 @@ import type {
   MessageAttachment,
   PresenceActivity,
   PresenceStatus,
+  SocialMessageKind,
   SocialResult,
   SocialUser,
   UploadedImage,
@@ -74,6 +83,7 @@ interface MessageRow {
   id: string
   sender_id: string
   recipient_id: string
+  kind: SocialMessageKind
   body: string
   created_at: string
   read_at: string | null
@@ -141,6 +151,7 @@ function mapMessage(row: MessageRow): DirectMessage {
     id: row.id,
     senderId: row.sender_id,
     recipientId: row.recipient_id,
+    kind: row.kind ?? 'normal',
     body: row.body,
     createdAt: row.created_at,
     readAt: row.read_at ?? null,
@@ -233,7 +244,7 @@ export async function listMessages(
   const pageSize = Math.min(Math.max(limit, 10), 100)
   let query = supabase
     .from('messages')
-    .select('id,sender_id,recipient_id,body,created_at,read_at,reply_to,edited_at')
+    .select('id,sender_id,recipient_id,kind,body,created_at,read_at,reply_to,edited_at')
     .or(
       `and(sender_id.eq.${uid},recipient_id.eq.${withUserId}),and(sender_id.eq.${withUserId},recipient_id.eq.${uid})`
     )
@@ -251,7 +262,7 @@ export async function listMessages(
   if (replyIds.length > 0) {
     const { data: replyData } = await supabase
       .from('messages')
-      .select('id,sender_id,recipient_id,body,created_at,read_at,reply_to,edited_at')
+      .select('id,sender_id,recipient_id,kind,body,created_at,read_at,reply_to,edited_at')
       .in('id', replyIds)
     for (const r of (replyData ?? []) as MessageRow[]) replyMap.set(r.id, r)
   }
@@ -375,7 +386,7 @@ export async function sendMessage(
   const { data, error } = await supabase
     .from('messages')
     .insert({ sender_id: accountId, recipient_id: toUserId, body: text, reply_to: replyTo })
-    .select('id,sender_id,recipient_id,body,created_at,read_at,reply_to,edited_at')
+    .select('id,sender_id,recipient_id,kind,body,created_at,read_at,reply_to,edited_at')
     .single()
   if (error) {
     if (error.code === '42501') return fail(t('main.solo.puedes.escribirle.a.tus'))
@@ -414,6 +425,116 @@ export async function sendMessage(
   return ok({ ...mapped, attachments: saved })
 }
 
+/**
+ * Comparte un ARCHIVO (`kind = 'codefile'`): el contenido va a R2 vía la Edge
+ * Function (gatekeeper) y el `body` guarda solo el sobre con los metadatos.
+ */
+export async function sendCodeFile(
+  accountId: string,
+  toUserId: string,
+  file: { name: string; lang: string; content: string },
+  replyTo: string | null = null
+): Promise<SocialResult<DirectMessage>> {
+  const supabase = await clientOf(accountId)
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
+
+  const name = file.name.trim().replace(/[\\/]/g, '').slice(0, 255)
+  if (!name) return fail(t('main.el.archivo.no.tiene.nombre'))
+
+  const check = checkCodeFileContent(file.content)
+  if (!check.ok) return fail(check.error)
+
+  const sha = createHash('sha256').update(file.content, 'utf8').digest('hex')
+  const uploaded = await uploadCodeFile(accountId, toUserId, {
+    name,
+    lang: file.lang,
+    lines: check.lines,
+    size: file.content.length,
+    content: file.content
+  })
+  if (!uploaded.ok || !uploaded.data) {
+    return fail(uploaded.error ?? t('main.no.se.pudo.compartir.el'))
+  }
+
+  const meta: SocialCodeFile = {
+    v: 1,
+    kind: 'codefile',
+    name,
+    lang: file.lang,
+    lines: check.lines,
+    size: file.content.length,
+    sha,
+    key: uploaded.data.key,
+    expiresAt: uploaded.data.expiresAt
+  }
+
+  const { data, error } = await supabase
+    .from('messages')
+    .insert({
+      sender_id: accountId,
+      recipient_id: toUserId,
+      kind: 'codefile',
+      body: encodeCodeFile(meta),
+      reply_to: replyTo
+    })
+    .select('id,sender_id,recipient_id,kind,body,created_at,read_at,reply_to,edited_at')
+    .single()
+  if (error) {
+    if (error.code === '42501') return fail(t('main.solo.puedes.escribirle.a.tus'))
+    if (error.message.includes('msg_ratelimited')) return fail('msg_ratelimited')
+    return fail(cleanError(error.message))
+  }
+  return ok(mapMessage(data as MessageRow))
+}
+
+/** Baja el contenido de un archivo compartido (URL firmada + verificación sha). */
+export async function getCodeFileContent(
+  accountId: string,
+  messageId: string
+): Promise<SocialResult<{ content: string; meta: SocialCodeFile }>> {
+  const supabase = await clientOf(accountId)
+  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
+
+  const { data } = await supabase
+    .from('messages')
+    .select('body,kind')
+    .eq('id', messageId)
+    .maybeSingle()
+  if (!data) return fail(t('main.mensaje.no.encontrado'))
+  const meta = decodeCodeFile((data as { body: string }).body)
+  if (!meta) return fail(t('main.el.archivo.compartido.esta.danado'))
+
+  const signed = await codeFileSignedUrl(accountId, messageId)
+  if (!signed.ok || !signed.data) return fail(signed.error ?? t('main.no.se.pudo.abrir.el'))
+
+  let res: Response
+  try {
+    res = await fetch(signed.data.url)
+  } catch (error) {
+    return fail(error instanceof Error ? error.message : t('main.no.se.pudo.descargar.el'))
+  }
+  if (!res.ok) return fail(`No se pudo descargar el archivo (${res.status}).`)
+
+  const content = await res.text()
+  if (content.length > SOCIAL_RULES.codeFileMaxChars) return fail(t('main.el.archivo.es.demasiado.grande'))
+  const sha = createHash('sha256').update(content, 'utf8').digest('hex')
+  if (sha !== meta.sha) return fail(t('main.el.archivo.no.coincide.con'))
+
+  return ok({ content, meta })
+}
+
+/** Borra el archivo (objeto en R2) y su mensaje — libera cupo. */
+export async function deleteCodeFileMessage(
+  accountId: string,
+  messageId: string
+): Promise<SocialResult<boolean>> {
+  // Si el objeto ya expiró, el DELETE falla: igual se borra el mensaje.
+  await deleteCodeFileObject(accountId, messageId)
+  const deleted = await deleteMessage(accountId, messageId)
+  if (!deleted.ok) return fail(deleted.error ?? t('main.no.se.pudo.borrar.el'))
+  return ok(true)
+}
+
 export async function editMessage(
   accountId: string,
   messageId: string,
@@ -429,7 +550,10 @@ export async function editMessage(
     .update({ body: text, edited_at: new Date().toISOString() })
     .eq('id', messageId)
     .eq('sender_id', accountId)
-    .select('id,sender_id,recipient_id,body,created_at,read_at,reply_to,edited_at')
+    // Un `codefile` no se edita: su body es el sobre (romper el JSON lo dejaría
+    // irreconocible). El filtro hace que no matchee y caiga en "no encontrado".
+    .eq('kind', 'normal')
+    .select('id,sender_id,recipient_id,kind,body,created_at,read_at,reply_to,edited_at')
     .single()
   if (error) return fail(cleanError(error.message))
   if (!data) return fail(t('main.mensaje.no.encontrado'))
@@ -696,7 +820,7 @@ export async function watchAccount(
         const att = payload.new as AttachmentRow
         const { data: parent } = await supabase
           .from('messages')
-          .select('id,sender_id,recipient_id,body,created_at,read_at,reply_to,edited_at')
+          .select('id,sender_id,recipient_id,kind,body,created_at,read_at,reply_to,edited_at')
           .eq('id', att.message_id)
           .maybeSingle()
         if (!parent) return

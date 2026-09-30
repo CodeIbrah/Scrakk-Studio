@@ -511,6 +511,16 @@ const api: WindowApi = {
       ),
     uploadImage: (accountId: string, kind: 'chat' | 'avatar', image: ImageUpload) =>
       ipcRenderer.invoke(SOCIAL_IPC.uploadImage, accountId, kind, image),
+    sendCodeFile: (
+      accountId: string,
+      toUserId: string,
+      file: { name: string; lang: string; content: string },
+      replyTo?: string | null
+    ) => ipcRenderer.invoke(SOCIAL_IPC.sendCodeFile, accountId, toUserId, file, replyTo ?? null),
+    codeFileContent: (accountId: string, messageId: string) =>
+      ipcRenderer.invoke(SOCIAL_IPC.codeFileContent, accountId, messageId),
+    deleteCodeFile: (accountId: string, messageId: string) =>
+      ipcRenderer.invoke(SOCIAL_IPC.deleteCodeFile, accountId, messageId),
     editMessage: (accountId: string, messageId: string, body: string) =>
       ipcRenderer.invoke(SOCIAL_IPC.editMessage, accountId, messageId, body),
     deleteMessage: (accountId: string, messageId: string) =>

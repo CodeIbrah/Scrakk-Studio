@@ -10,6 +10,8 @@
  * paneles del layout pueden usar cuentas distintas al mismo tiempo.
  */
 
+import type { SocialCodeFile } from './socialCodeFile'
+
 export const SOCIAL_IPC = {
   /** Abre (una vez) el canal de Realtime de una cuenta. */
   watch: 'social:watch',
@@ -26,6 +28,12 @@ export const SOCIAL_IPC = {
   markRead: 'social:mark-read',
   /** Sube una imagen al Storage (chat o avatar). */
   uploadImage: 'social:upload-image',
+  /** Comparte un archivo: el contenido va a R2 vía Edge Function. */
+  sendCodeFile: 'social:send-code-file',
+  /** Baja el contenido de un archivo compartido (URL firmada). */
+  codeFileContent: 'social:code-file-content',
+  /** Borra el archivo (R2) y su mensaje — libera cupo. */
+  deleteCodeFile: 'social:delete-code-file',
   /** Presencia: leer (yo + amigos) y publicar la mía. */
   getPresence: 'social:get-presence',
   setPresence: 'social:set-presence',
@@ -76,11 +84,16 @@ export interface FriendRequest {
   createdAt: string
 }
 
+/** Tipo de mensaje: texto normal o archivo compartido (sobre en el body). */
+export type SocialMessageKind = 'normal' | 'codefile'
+
 /** Mensaje directo 1:1. */
 export interface DirectMessage {
   id: string
   senderId: string
   recipientId: string
+  /** `normal` = texto plano; `codefile` = sobre JSON con los metadatos. */
+  kind: SocialMessageKind
   body: string
   createdAt: string
   readAt: string | null
@@ -207,6 +220,20 @@ export interface SocialApi {
     kind: 'chat' | 'avatar',
     image: ImageUpload
   ) => Promise<SocialResult<UploadedImage>>
+  /** Comparte un archivo: el contenido va a R2, el mensaje lleva el sobre. */
+  sendCodeFile: (
+    accountId: string,
+    toUserId: string,
+    file: { name: string; lang: string; content: string },
+    replyTo?: string | null
+  ) => Promise<SocialResult<DirectMessage>>
+  /** Baja el contenido de un archivo compartido (verifica integridad). */
+  codeFileContent: (
+    accountId: string,
+    messageId: string
+  ) => Promise<SocialResult<{ content: string; meta: SocialCodeFile }>>
+  /** Borra el archivo en R2 y su mensaje (libera cupo). */
+  deleteCodeFile: (accountId: string, messageId: string) => Promise<SocialResult<boolean>>
   editMessage: (
     accountId: string,
     messageId: string,
@@ -242,7 +269,17 @@ export const SOCIAL_RULES = {
   messageMax: 4000,
   /**
    * Slowmode de mensajes (como Discord): ventana deslizante. El cliente bloquea
-   * al pasarse con un mensaje simpático; la DB tiene un backstop más holgado.
+   * al pasarse con un mensaje simpático; la DB tiene un backstop más holgado
+   * (trigger `messages_rate_limit`, 7 en 5 s).
    */
-  slowmode: { windowMs: 5000, max: 5 }
+  slowmode: { windowMs: 5000, max: 5 },
+  /**
+   * Archivos compartidos (`kind = 'codefile'`). El contenido va a R2; el body
+   * solo lleva el sobre. Límites por archivo y cupo por conversación: borrar
+   * un archivo (o los 60 días de lifecycle) libera cupo.
+   */
+  codeFileMaxLines: 10_000,
+  codeFileMaxChars: 512 * 1024,
+  codeFileTtlDays: 60,
+  codeFileQuotaPerConversation: 15
 } as const

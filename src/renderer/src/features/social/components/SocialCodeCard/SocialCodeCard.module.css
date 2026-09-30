@@ -1,0 +1,142 @@
+/*
+ * Copyright 2026 Scrakk Studio
+ * SPDX-License-Identifier: Apache-2.0
+ * Licencia completa en LICENSE (Apache License 2.0).
+ */
+
+/* Card de un archivo compartido: header clickeable + vista de código. */
+
+.card {
+  margin-top: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface, var(--color-bg));
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  padding: 6px 8px;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--text-xs);
+  text-align: left;
+  cursor: pointer;
+}
+
+.header:hover {
+  background: var(--color-surface-raised, transparent);
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+}
+
+.name {
+  flex-shrink: 0;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.meta {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.spacer {
+  flex: 1;
+  min-width: 8px;
+}
+
+.expires {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  font-size: 10px;
+}
+
+.expired {
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--color-danger, #e5484d);
+}
+
+.chevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  transition: transform 120ms ease;
+}
+
+.chevron[data-open] {
+  transform: rotate(180deg);
+}
+
+.body {
+  border-top: 1px solid var(--color-border);
+  padding: 6px 8px 8px;
+}
+
+.hint {
+  padding: 4px 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.error {
+  padding: 4px 0;
+  font-size: var(--text-xs);
+  color: var(--color-danger, #e5484d);
+}
+
+/* El markdown ya trae el bloque de código; acá solo se acota la altura. */
+.code {
+  max-height: 340px;
+  overflow: auto;
+  border-radius: var(--radius-sm, 4px);
+}
+
+.code :global(pre) {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 6px;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border: none;
+  border-radius: var(--radius-sm, 4px);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.action:hover {
+  background: var(--color-surface-raised, transparent);
+  color: var(--color-danger, #e5484d);
+}

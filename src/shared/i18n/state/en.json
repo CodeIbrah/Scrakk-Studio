@@ -10639,6 +10639,206 @@
       "needsReview": false,
       "at": "2026-09-25T22:19:45.854Z",
       "approvedAt": "2026-09-25T22:19:46.075Z"
+    },
+    "main.cuenta.no.encontrada-2": {
+      "src": "d85a6beff6b51c24",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:17:07.724Z",
+      "approvedAt": "2026-09-30T05:17:08.000Z"
+    },
+    "main.el.archivo.compartido.esta.danado": {
+      "src": "aa4a7705d0ef1805",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:17:07.742Z",
+      "approvedAt": "2026-09-30T05:17:08.000Z"
+    },
+    "main.el.archivo.es.demasiado.grande": {
+      "src": "518f4e99eddc651d",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:17:07.742Z",
+      "approvedAt": "2026-09-30T05:17:08.000Z"
+    },
+    "main.el.archivo.no.coincide.con": {
+      "src": "79fd030e90d063c6",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:17:07.743Z",
+      "approvedAt": "2026-09-30T05:17:08.000Z"
+    },
+    "main.el.archivo.no.tiene.nombre": {
+      "src": "bc9d26faa51f4f20",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:17:07.743Z",
+      "approvedAt": "2026-09-30T05:17:08.000Z"
+    },
+    "main.no.se.pudo.abrir.el": {
+      "src": "b5708525c0926f63",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:17:07.743Z",
+      "approvedAt": "2026-09-30T05:17:08.000Z"
+    },
+    "main.no.se.pudo.borrar.el": {
+      "src": "447785b4527515c8",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:17:07.743Z",
+      "approvedAt": "2026-09-30T05:17:08.000Z"
+    },
+    "main.no.se.pudo.compartir.el": {
+      "src": "44e2b58003b5435f",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:17:07.743Z",
+      "approvedAt": "2026-09-30T05:17:08.000Z"
+    },
+    "main.no.se.pudo.descargar.el": {
+      "src": "ae63844593aacea5",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:17:07.743Z",
+      "approvedAt": "2026-09-30T05:17:08.000Z"
+    },
+    "social.archivo": {
+      "src": "75d6b4579e1d29eb",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:11.374Z",
+      "approvedAt": "2026-09-30T05:19:11.626Z"
+    },
+    "social.archivo.borrado": {
+      "src": "6f7c72ca6a54c533",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:11.376Z",
+      "approvedAt": "2026-09-30T05:19:11.626Z"
+    },
+    "social.archivo.compartido.danado": {
+      "src": "bf9e99f9581ebfe3",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:11.376Z",
+      "approvedAt": "2026-09-30T05:19:11.626Z"
+    },
+    "social.borrar.archivo": {
+      "src": "621bf1a598952741",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:11.376Z",
+      "approvedAt": "2026-09-30T05:19:11.626Z"
+    },
+    "social.descargando": {
+      "src": "6f5e38837d3851c4",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:11.376Z",
+      "approvedAt": "2026-09-30T05:19:11.626Z"
+    },
+    "social.expirado": {
+      "src": "5f282d5ca7a91a1b",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:11.376Z",
+      "approvedAt": "2026-09-30T05:19:11.626Z"
+    },
+    "social.lineas": {
+      "src": "6dad0dc475bc97fd",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:11.376Z",
+      "approvedAt": "2026-09-30T05:19:11.626Z"
+    },
+    "social.no.se.pudo.abrir.el.archivo": {
+      "src": "b5708525c0926f63",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:11.376Z",
+      "approvedAt": "2026-09-30T05:19:11.626Z"
+    },
+    "social.no.se.pudo.borrar.el.archivo": {
+      "src": "447785b4527515c8",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:11.376Z",
+      "approvedAt": "2026-09-30T05:19:11.626Z"
+    },
+    "social.se.borra.en.dias": {
+      "src": "f7b1b87b66e38752",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:11.376Z",
+      "approvedAt": "2026-09-30T05:19:11.626Z"
+    },
+    "social.vista.recortada.a.lineas": {
+      "src": "2048f728e49cec41",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:11.376Z",
+      "approvedAt": "2026-09-30T05:19:11.626Z"
+    },
+    "social.abri.una.conversacion": {
+      "src": "3ec91a5e8528f41d",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:47.730Z",
+      "approvedAt": "2026-09-30T05:19:47.921Z"
+    },
+    "social.archivo.compartido": {
+      "src": "109ea3ba2a6facee",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:47.731Z",
+      "approvedAt": "2026-09-30T05:19:47.921Z"
+    },
+    "social.compartir.en.social": {
+      "src": "1faaa1bd549caef1",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:47.734Z",
+      "approvedAt": "2026-09-30T05:19:47.921Z"
+    },
+    "social.compartir.va.a.la.conversacion": {
+      "src": "e5220e3daf409807",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:47.734Z",
+      "approvedAt": "2026-09-30T05:19:47.921Z"
+    },
+    "social.no.se.pudo.compartir": {
+      "src": "9011edd6ab944a41",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-09-30T05:19:47.734Z",
+      "approvedAt": "2026-09-30T05:19:47.921Z"
     }
   },
   "version": 1
