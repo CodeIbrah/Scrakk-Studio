@@ -22,6 +22,10 @@ import {
   type ImageUpload
 } from '@shared/social'
 import { EmojiPicker } from '../../emoji/EmojiPicker'
+import { useDropSink, useResourceDrop } from '@features/dnd'
+import { tabsStore } from '@features/tabs'
+import { useFileIconUrl } from '@services/fileIcons'
+import { shareFileToSocial } from '../../actions/shareFile'
 import styles from './MessageComposer.module.css'
 
 import { t } from '@core/i18n'
@@ -35,6 +39,15 @@ interface MessageComposerProps {
   onTyping?: (typing: boolean) => void
   replySenderName?: string
 }
+
+/** Archivo linkeado al composer: se comparte como mensaje `codefile`. */
+interface LinkedFile {
+  path: string
+  name: string
+}
+
+/** Tope de archivos linkeados por envío. */
+const MAX_LINKED = 5
 
 interface PendingImage {
   id: string
@@ -79,6 +92,35 @@ function dimsOf(dataUrl: string): Promise<{ width: number | null; height: number
  * Enter envía; Shift+Enter hace salto de línea. Soporta reply, typing,
  * @mentions y pegar imágenes con Ctrl+V (png/jpg/webp/gif/avif, máx 10 MB).
  */
+/** Mini-card de un archivo linkeado: ícono del pack activo + nombre + quitar. */
+function LinkedFileChip({
+  file,
+  onRemove
+}: {
+  file: LinkedFile
+  onRemove: () => void
+}): JSX.Element {
+  const iconUrl = useFileIconUrl(file.name, false, undefined, { path: file.path })
+  return (
+    <div className={styles.linkedCard} title={file.path}>
+      {iconUrl ? (
+        <img src={iconUrl} alt="" width={13} height={13} />
+      ) : (
+        <ProductIcon id="file" size={13} />
+      )}
+      <span className={styles.linkedName}>{file.name}</span>
+      <button
+        type="button"
+        className={styles.linkedRemove}
+        onClick={onRemove}
+        aria-label={t('social.borrar.archivo')}
+      >
+        <ProductIcon id="close" size={10} />
+      </button>
+    </div>
+  )
+}
+
 export function MessageComposer({
   onSend,
   placeholder = t('social.escribe.un.mensaje'),
@@ -93,6 +135,7 @@ export function MessageComposer({
   const [showMentions, setShowMentions] = useState(false)
   const [mentionQuery, setMentionQuery] = useState('')
   const [pending, setPending] = useState<PendingImage[]>([])
+  const [linked, setLinked] = useState<LinkedFile[]>([])
   const [attachError, setAttachError] = useState<string | null>(null)
   const [sending, setSending] = useState(false)
   const [showEmoji, setShowEmoji] = useState(false)
@@ -110,7 +153,7 @@ export function MessageComposer({
     !disabled &&
     !sending &&
     value.length <= maxChars &&
-    (value.trim().length > 0 || pending.length > 0)
+    (value.trim().length > 0 || pending.length > 0 || linked.length > 0)
 
   // Cerrar el selector de emojis al clickear afuera.
   useEffect(() => {
@@ -191,38 +234,79 @@ export function MessageComposer({
     if (accepted.length > 0) setPending((prev) => [...prev, ...accepted])
   }
 
+  const addLinked = (files: LinkedFile[]): void => {
+    setLinked((prev) => {
+      const seen = new Set(prev.map((f) => f.path))
+      const next = [...prev]
+      for (const file of files) {
+        if (!file.path || seen.has(file.path)) continue
+        seen.add(file.path)
+        next.push(file)
+      }
+      return next.slice(0, MAX_LINKED)
+    })
+  }
+
+  const removeLinked = (path: string): void => {
+    setLinked((prev) => prev.filter((f) => f.path !== path))
+  }
+
+  // Drop NATIVO del Explorer (archivos/carpetas) sobre el input.
+  const resourceDrop = useResourceDrop((items) => {
+    addLinked(items.filter((i) => i.kind === 'file').map((i) => ({ path: i.path, name: i.name })))
+  })
+
+  // Drop por POINTER de una tab del layout: se resuelve a su archivo.
+  const tabSink = useDropSink((payload) => {
+    if (payload.type !== 'tab') return
+    const tab = tabsStore.getTab(payload.tabId)
+    if (!tab || tab.kind !== 'file' || !tab.filePath) return
+    addLinked([{ path: tab.filePath, name: tab.label ?? tab.filePath }])
+  })
+
   const removePending = (id: string): void => {
     setPending((prev) => prev.filter((p) => p.id !== id))
   }
 
   const submit = (): void => {
     const trimmed = value.trim()
-    if ((!trimmed && pending.length === 0) || disabled || sending) return
+    if ((!trimmed && pending.length === 0 && linked.length === 0) || disabled || sending) return
     setSending(true)
     setAttachError(null)
     const current = pending
+    const files = linked
     setPending([])
+    setLinked([])
     void (async () => {
       try {
-        const images: ImageUpload[] = current.map((p) => ({
-          base64: p.base64,
-          mime: p.mime,
-          name: p.name,
-          width: p.width,
-          height: p.height
-        }))
-        const result = await onSend(trimmed, images)
-        if (!result.ok) {
-          // No se pierde nada: las miniaturas vuelven al composer con el error.
-          setPending(current)
-          setAttachError(result.error ?? t('social.no.se.pudo.enviar'))
-          return
+        // Archivos linkeados: cada uno se comparte como mensaje `codefile`
+        // (contenido a R2). Si además hay texto o imágenes, va el mensaje normal.
+        for (const file of files) {
+          await shareFileToSocial(file.path)
+        }
+        if (trimmed || current.length > 0) {
+          const images: ImageUpload[] = current.map((p) => ({
+            base64: p.base64,
+            mime: p.mime,
+            name: p.name,
+            width: p.width,
+            height: p.height
+          }))
+          const result = await onSend(trimmed, images)
+          if (!result.ok) {
+            // No se pierde nada: las miniaturas vuelven al composer con el error.
+            setPending(current)
+            setLinked(files)
+            setAttachError(result.error ?? t('social.no.se.pudo.enviar'))
+            return
+          }
         }
         setValue('')
         setShowMentions(false)
       } catch {
         setAttachError(t('social.no.se.pudo.leer.la'))
         setPending(current)
+        setLinked(files)
       } finally {
         setSending(false)
         sendTyping(false)
@@ -346,7 +430,14 @@ export function MessageComposer({
   }
 
   return (
-    <div className={styles.wrap}>
+    <div
+      className={styles.wrap}
+      data-drop-active={resourceDrop.active || tabSink.active ? '' : undefined}
+      ref={tabSink.ref}
+      onDragOver={resourceDrop.onDragOver}
+      onDragLeave={resourceDrop.onDragLeave}
+      onDrop={resourceDrop.onDrop}
+    >
       {replyTo ? (
         <div className={styles.replyPreview}>
           <span className={styles.replyLabel}>{t('social.respondiendo.a')} {replySenderName ?? 'mensaje'}</span>
@@ -370,6 +461,13 @@ export function MessageComposer({
                 <ProductIcon id="close" size={10} />
               </button>
             </div>
+          ))}
+        </div>
+      ) : null}
+      {linked.length > 0 ? (
+        <div className={styles.linkedRow}>
+          {linked.map((file) => (
+            <LinkedFileChip key={file.path} file={file} onRemove={() => removeLinked(file.path)} />
           ))}
         </div>
       ) : null}

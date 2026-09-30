@@ -157,6 +157,60 @@
   padding: 8px 10px 0;
 }
 
+/* Archivos linkeados: mini-card con ícono del pack + nombre + quitar. */
+.linkedRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 10px 0;
+}
+
+.linkedCard {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 220px;
+  padding: 3px 4px 3px 7px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md, 6px);
+  background: var(--color-surface-raised, transparent);
+  font-size: var(--text-xs);
+}
+
+.linkedName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.linkedRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.linkedRemove:hover {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+/* Zona activa durante un drag (tab o archivo del Explorer). */
+.wrap[data-drop-active] {
+  outline: 1px solid var(--color-accent, var(--color-border));
+  outline-offset: -1px;
+  border-radius: var(--radius-md, 6px);
+}
+
 .pendingThumb {
   position: relative;
   width: 56px;

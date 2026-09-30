@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Licencia completa en LICENSE (Apache License 2.0).
 
-import { useEffect, useState, type DragEvent, type PointerEvent as ReactPointerEvent } from 'react'
+import { useEffect, useRef, useState, type DragEvent, type PointerEvent as ReactPointerEvent } from 'react'
 import { dndStore } from './store'
 import type { DndState } from './store'
 import type { DragPayload, ZoneDescriptor } from './types'
@@ -51,6 +51,31 @@ export function useDropZone(desc: Omit<ZoneDescriptor, 'el'>): {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [node, desc.kind, desc.stripId, desc.tabIndex, desc.horizontal, desc.append, desc.isSplit])
   return { ref: setNode }
+}
+
+/**
+ * Registra un elemento como DROP SINK: recibe el payload de un drag por
+ * pointer (p. ej. una tab del layout) cuando el usuario suelta encima, sin
+ * pasar por el resolver de strips. Devuelve la ref y `active` para el highlight.
+ */
+export function useDropSink(onDrop: (payload: DragPayload) => void): {
+  ref: (el: HTMLElement | null) => void
+  active: boolean
+} {
+  const [node, setNode] = useState<HTMLElement | null>(null)
+  const cbRef = useRef(onDrop)
+  cbRef.current = onDrop
+
+  useEffect(() => {
+    if (!node) return undefined
+    return dndStore.registerDropSink(node, (payload) => cbRef.current(payload))
+  }, [node])
+
+  const state = useDndState()
+  const active =
+    state.phase === 'dragging' && node !== null && dndStore.isOverSink(node, state.x, state.y)
+
+  return { ref: setNode, active }
 }
 
 /**

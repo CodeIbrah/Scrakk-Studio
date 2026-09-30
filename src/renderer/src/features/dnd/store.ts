@@ -237,6 +237,39 @@ private overlayRectFor(rect: DOMRect, edge: SplitEdge): { x: number; y: number; 
     this.resolver = resolver
   }
 
+  // ── Drop sinks (drag por pointer) ──────────────────────────────────────
+  //
+  // Zonas que reciben el payload DIRECTO (sin pasar por el resolver de tabs):
+  // p. ej. el input del chat social, que acepta una tab arrastrada y la agrega
+  // como archivo linkeado. El resolver sigue siendo el de las strips: esto es
+  // un camino paralelo, no lo reemplaza.
+
+  private sinks = new Map<HTMLElement, (payload: DragPayload) => void>()
+
+  registerDropSink(el: HTMLElement, onDrop: (payload: DragPayload) => void): () => void {
+    this.sinks.set(el, onDrop)
+    return () => {
+      this.sinks.delete(el)
+    }
+  }
+
+  /** Sink bajo el punto (el primero cuyo rect contiene x,y). */
+  sinkAt(x: number, y: number): ((payload: DragPayload) => void) | null {
+    for (const [el, cb] of this.sinks) {
+      if (!el.isConnected) continue
+      const r = el.getBoundingClientRect()
+      if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return cb
+    }
+    return null
+  }
+
+  /** ¿El punto cae dentro de este sink? (para el highlight de la zona). */
+  isOverSink(el: HTMLElement, x: number, y: number): boolean {
+    if (!el.isConnected) return false
+    const r = el.getBoundingClientRect()
+    return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom
+  }
+
   // ── Detector global de headers drageables ──────────────────────────────
 
   /**
@@ -379,6 +412,20 @@ private overlayRectFor(rect: DOMRect, edge: SplitEdge): { x: number; y: number; 
     const target = this.computeTarget(event.clientX, event.clientY)
     const payload = this.state.payload
     const resolver = this.resolver
+    // Un drop sink tiene PRIORIDAD sobre el resolver de strips: el usuario
+    // apuntó a un input (p. ej. el chat social), no a una zona de tabs.
+    if (payload) {
+      const sink = this.sinkAt(event.clientX, event.clientY)
+      if (sink) {
+        try {
+          sink(payload)
+        } catch {
+          // Un sink roto no debe dejar la sesión colgada.
+        }
+        this.endSession()
+        return
+      }
+    }
     if (payload && target && resolver) {
       try {
         resolver(payload, target)

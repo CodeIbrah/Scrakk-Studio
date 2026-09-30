@@ -318,6 +318,12 @@ publicadas no se editan. El archivo va por versión:
 - **Compartir desde el menú contextual**: opción "Compartir en Social" en el
   **Explorer** y en el **click derecho de las tabs** de archivo, vía la API
   global de context menu.
+- **Drag & drop al input**: arrastrá una **tab** o un **archivo del Explorer**
+  directo al compositor del panel Social. Se agrega como **archivo linkeado**
+  con su mini-card (ícono del pack + nombre) junto al input, como los adjuntos;
+  al enviar, cada uno se comparte como mensaje `codefile`. La tab usa el drag por
+  pointer del layout (nuevo *drop sink*, sin tocar el resolver de tabs) y el
+  Explorer el drag nativo de recursos.
 
 ### Correcciones
 - **Emoji: ancho de 2 celdas y nítidos**: el layout era `x = columna × ancho`
