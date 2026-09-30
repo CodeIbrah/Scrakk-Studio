@@ -43,11 +43,25 @@ class BadRequest extends Error {
 
 const env = (name: string): string => (Deno.env.get(name) ?? '').trim()
 
-function r2Client(): { client: S3Client; bucket: string } {
-  const endpoint = env('SCRAKK_R2_ENDPOINT')
-  const accessKeyId = env('SCRAKK_R2_ACCESS_KEY')
-  const secretAccessKey = env('SCRAKK_R2_SECRET_KEY')
-  const bucket = env('SCRAKK_R2_BUCKET_FILES') || 'scrakk-chat-files'
+/**
+ * Config de R2: vive en Supabase Vault (la expone `get_r2_config()`, ejecutable
+ * SOLO por service_role) con fallback a env por si algún día se usan secrets.
+ */
+async function r2Client(
+  supabase: ReturnType<typeof createClient>
+): Promise<{ client: S3Client; bucket: string }> {
+  const { data } = await supabase.rpc('get_r2_config')
+  const cfg = (data ?? {}) as {
+    endpoint?: string
+    accessKey?: string
+    secretKey?: string
+    bucket?: string
+  }
+  const endpoint = (cfg.endpoint ?? env('SCRAKK_R2_ENDPOINT')).trim()
+  const accessKeyId = (cfg.accessKey ?? env('SCRAKK_R2_ACCESS_KEY')).trim()
+  const secretAccessKey = (cfg.secretKey ?? env('SCRAKK_R2_SECRET_KEY')).trim()
+  const bucket =
+    (cfg.bucket ?? env('SCRAKK_R2_BUCKET_FILES')).trim() || 'scrakk-chat-files'
   if (!endpoint || !accessKeyId || !secretAccessKey) {
     throw new BadRequest('R2 no configurado en el servidor.', 503)
   }
@@ -110,7 +124,7 @@ async function handleUpload(
     throw new BadRequest('Cupo de archivos lleno: borra alguno para liberar espacio.', 409)
   }
 
-  const { client, bucket } = r2Client()
+  const { client, bucket } = await r2Client(supabase)
   const key = `${KEY_PREFIX}/${crypto.randomUUID()}`
   await client.send(
     new PutObjectCommand({
@@ -155,7 +169,7 @@ async function handleUrl(
   const key = keyFromBody(body)
   if (!key) throw new BadRequest('El mensaje no tiene archivo válido.')
 
-  const { client, bucket } = r2Client()
+  const { client, bucket } = await r2Client(supabase)
   const url = await getSignedUrl(client, new GetObjectCommand({ Bucket: bucket, Key: key }), {
     expiresIn: 300
   })
@@ -172,7 +186,7 @@ async function handleDelete(
   if (senderId !== userId) throw new BadRequest('Solo el emisor puede borrar el archivo.', 403)
   const key = keyFromBody(body)
   if (key) {
-    const { client, bucket } = r2Client()
+    const { client, bucket } = await r2Client(supabase)
     await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }))
   }
   return { ok: true }
