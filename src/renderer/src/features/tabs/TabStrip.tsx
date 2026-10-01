@@ -22,9 +22,9 @@ import { fileHandlerRegistry } from '@features/fileHandlers/registry'
 import {
   canToggleMode,
   effectiveMode,
-  setPreferredMode,
-  subscribeToPreferredModes
+  setPreferredMode
 } from '@features/fileHandlers/preferences'
+import type { ContextMenuItem } from '@ui'
 import { shareFileToSocial } from '@features/social/actions/shareFile'
 import { getFileSession, hasFileSession, isFileDirty } from '@features/editor/fileSession'
 import { tabsStore } from './store'
@@ -135,24 +135,6 @@ function TabItem({
     return getFileSession(filePath).onDidChangeDirty(setDirty)
   }, [filePath])
 
-  // Ojo visor ⇄ editor: SOLO si el handler del formato admite los dos modos
-  // (markdown, svg…). No está hardcodeado por extensión: lo decide el registry.
-  const handlerPath = tab.kind === 'file' ? tab.filePath : undefined
-  const [handlerTick, setHandlerTick] = useState(0)
-  useEffect(() => {
-    if (!handlerPath) return undefined
-    const unsubHandlers = fileHandlerRegistry.subscribe(() => setHandlerTick((value) => value + 1))
-    const unsubModes = subscribeToPreferredModes(() => setHandlerTick((value) => value + 1))
-    return () => {
-      unsubHandlers()
-      unsubModes()
-    }
-  }, [handlerPath])
-  void handlerTick
-  const fileHandler = handlerPath ? fileHandlerRegistry.resolve(handlerPath) : null
-  const showViewToggle = canToggleMode(fileHandler, handlerPath ?? '')
-  const viewing = handlerPath && fileHandler ? effectiveMode(fileHandler, handlerPath) === 'view' : false
-
   // El glifo de la X (11px, trazos finos) se rasteriza asimétrico si cae en
   // una posición fraccionaria de device pixel — cada tab cae en una fracción
   // distinta, por eso la X "no siempre se ve centrada". Encajamos el svg al
@@ -221,22 +203,6 @@ function TabItem({
             </Fragment>
           ))
         : null}
-      {showViewToggle ? (
-        <span
-          role="button"
-          aria-label={viewing ? t('features.ver.como.visor') : t('features.ver.como.texto')}
-          title={viewing ? t('features.ver.como.visor') : t('features.ver.como.texto')}
-          className={styles.close}
-          data-drag-ignore=""
-          onPointerDown={(event) => event.stopPropagation()}
-          onClick={(event) => {
-            event.stopPropagation()
-            if (handlerPath) setPreferredMode(handlerPath, viewing ? 'text' : 'view')
-          }}
-        >
-          <ProductIcon id={viewing ? 'eye-off' : 'eye'} size={12} aria-hidden="true" />
-        </span>
-      ) : null}
       {tab.closable !== false && !tab.fixed ? (
         <span
           ref={closeRef}
@@ -433,21 +399,34 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
       : []
 
   /**
-   * Click derecho en una tab: menú de ESA tab. Hoy expone "Compartir en
-   * Social" para tabs de archivo (el resto de las acciones del panel siguen
-   * en el menú ⋮). Se arma con la API global de context menu.
+   * Click derecho en una tab: menú de ESA tab, armado con la API global de
+   * context menu. Para archivos: alternar visor ⇄ editor (si el formato lo
+   * permite) + compartir en Social.
    */
   const openTabMenu = (event: ReactMouseEvent<HTMLButtonElement>, tab: TabSpec): void => {
     if (tab.kind !== 'file' || !tab.filePath) return
     event.preventDefault()
     event.stopPropagation()
     const path = tab.filePath
-    showContextMenu(event.clientX, event.clientY, [
-      {
-        label: t('social.compartir.en.social'),
-        onClick: () => void shareFileToSocial(path)
-      }
-    ])
+    const handler = fileHandlerRegistry.resolve(path)
+    const items: ContextMenuItem[] = []
+
+    if (canToggleMode(handler, path)) {
+      const viewing = effectiveMode(handler, path) === 'view'
+      items.push({
+        label: viewing ? t('features.ver.como.texto') : t('features.ver.como.visor'),
+        icon: <ProductIcon id={viewing ? 'eye-off' : 'eye'} size={14} aria-hidden="true" />,
+        onClick: () => setPreferredMode(path, viewing ? 'text' : 'view')
+      })
+    }
+
+    items.push({
+      label: t('social.compartir.en.social'),
+      separatorBefore: items.length > 0,
+      onClick: () => void shareFileToSocial(path)
+    })
+
+    showContextMenu(event.clientX, event.clientY, items)
   }
 
   const openOverflowMenu = (event: ReactMouseEvent<HTMLButtonElement>): void => {

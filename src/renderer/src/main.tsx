@@ -8,6 +8,7 @@ import { App } from './app/App'
 import { AppErrorBoundary } from './components/layout/AppErrorBoundary/AppErrorBoundary'
 import { ThemeProvider } from '@core/theme/ThemeProvider'
 import { initI18n } from '@core/i18n'
+import { registerBuiltinFileHandlers } from '@features/fileHandlers'
 import { applyStartupTheme } from '@services/extensions/types/themes/bootstrap'
 import { bootExtensions } from '@services/extensions/boot'
 import { initDiagnosticsDecorations, initLspFileSync, initLspWorkspaceSync } from '@services/lsp'
@@ -23,6 +24,10 @@ applyStartupTheme()
 
 // Idioma de la interfaz (persistido o 'system') antes del primer render.
 initI18n()
+
+// Visores por formato: los handlers built-in quedan listos antes del primer
+// render, así un `.md` abre directo en modo visor.
+registerBuiltinFileHandlers()
 
 // Sistema de extensiones SEF: carga builtin + extensiones del usuario.
 void bootExtensions()
