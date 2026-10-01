@@ -120,6 +120,24 @@ export function loadAnnouncement(): WelcomeAnnouncement | null {
   }
 }
 
+/**
+ * EligE el anuncio que se muestra: el MÁS NUEVO entre el changelog empaquetado
+ * y el release remoto.
+ *
+ * Antes ganaba el remoto siempre que trajera body, así que mientras no se
+ * publicara la release, la bienvenida seguía enseñando la versión vieja
+ * (0.1.1) aunque el repo ya tuviera `changelog-0.1.2.md`. Se comparan por
+ * versión: el dev ver el 0.1.2 apenas escribe el archivo.
+ */
+export function pickAnnouncement(
+  local: WelcomeAnnouncement | null,
+  remote: WelcomeAnnouncement | null
+): WelcomeAnnouncement | null {
+  if (!local) return remote
+  if (!remote) return local
+  return isNewerVersion(local.version, remote.version) ? local : remote
+}
+
 // ── Novedades del changelog LOCAL ───────────────────────────────────────────
 // Para que el badge de Anuncios funcione sin depender del release remoto.
 

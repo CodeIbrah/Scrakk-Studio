@@ -9,7 +9,7 @@ import { FileTypeIcon } from '@features/explorer/components/FileTypeIcon'
 import { markSeen, useUpdates } from '@services/updates'
 import type { ReleaseInfo } from '@shared/updates'
 import { loadTips } from "./tips";
-import { loadAnnouncement, parseLatestEntry, changelogHasNews, markChangelogSeen, type WelcomeAnnouncement } from "./changelog";
+import { loadAnnouncement, parseLatestEntry, changelogHasNews, markChangelogSeen, pickAnnouncement, type WelcomeAnnouncement } from "./changelog";
 import { t } from '@core/i18n'
 import "./WelcomePanel.css";
 
@@ -65,13 +65,17 @@ export function WelcomePanel({
   const [infoTab, setInfoTab] = useState<'tips' | 'ads'>('tips');
   const [announcementOpen, setAnnouncementOpen] = useState(false);
   const updates = useUpdates();
-  // Release remota (más nueva) si trae notas; si no, el changelog empaquetado.
-  const announcement = updates.latest?.body ? announcementFromRelease(updates.latest) : ANNOUNCEMENT;
+  // El MÁS NUEVO entre el changelog empaquetado y el release remoto (antes
+  // ganaba el remoto siempre y la bienvenida se quedaba en la versión vieja).
+  const remoteAnnouncement = updates.latest?.body
+    ? announcementFromRelease(updates.latest)
+    : null;
+  const announcement = pickAnnouncement(ANNOUNCEMENT, remoteAnnouncement);
   // Novedad del changelog LOCAL: funciona sin release remoto.
   const [changelogSeenTick, setChangelogSeenTick] = useState(0);
   void changelogSeenTick;
-  const changelogNews = ANNOUNCEMENT
-    ? changelogHasNews(ANNOUNCEMENT.version, updates.currentVersion)
+  const changelogNews = announcement
+    ? changelogHasNews(announcement.version, updates.currentVersion)
     : false;
   const hasNews = updates.hasNews || changelogNews;
   useEffect(() => {
@@ -230,8 +234,10 @@ export function WelcomePanel({
               onClick={() => {
                 setInfoTab('ads');
                 markSeen();
-                if (ANNOUNCEMENT?.version) {
-                  markChangelogSeen(ANNOUNCEMENT.version);
+                // Se marca el anuncio que se está viendo (venga del changelog
+                // local o de la release remota), no siempre el local.
+                if (announcement?.version) {
+                  markChangelogSeen(announcement.version);
                   setChangelogSeenTick((v) => v + 1);
                 }
               }}
