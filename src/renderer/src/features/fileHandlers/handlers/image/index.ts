@@ -13,5 +13,13 @@ export const imageHandler: FileHandler = {
   match: { extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'bmp', 'ico'] },
   mode: 'view',
   priority: 30,
-  load: () => import('./ImageViewer')
+  load: () => import('./ImageViewer'),
+  actions: [
+    {
+      id: 'reveal',
+      label: 'explorer.abrir.en.explorador',
+      icon: 'folder',
+      run: (ctx) => void window.api.fs.openInFolder(ctx.path)
+    }
+  ]
 }

@@ -22,6 +22,9 @@ import {
   type FileHandlerViewProps,
   type FileViewMode
 } from '@features/fileHandlers'
+import { ProductIcon } from '@services/productIcons/components'
+import { notify } from '@services/notifications'
+import { msg } from '@core/i18n'
 import styles from './EditorPanel.module.css'
 
 /**
@@ -148,6 +151,25 @@ export function EditorPanel(): JSX.Element {
       <div ref={hostRef} className={styles.host} hidden={viewing} />
       {viewing && activePath ? (
         <div className={styles.viewer}>
+          {/* Toolbar del visor: `actions[]` que declara el handler. */}
+          {handler?.actions?.length ? (
+            <div className={styles.viewerBar} role="toolbar">
+              {handler.actions.map((action) => (
+                <button
+                  key={action.id}
+                  type="button"
+                  className={styles.viewerAction}
+                  title={msg(action.label)}
+                  onClick={() =>
+                    void action.run({ path: activePath, content: viewContent, notify })
+                  }
+                >
+                  {action.icon ? <ProductIcon id={action.icon} size={13} aria-hidden="true" /> : null}
+                  <span>{msg(action.label)}</span>
+                </button>
+              ))}
+            </div>
+          ) : null}
           <View path={activePath} content={viewContent} />
         </div>
       ) : null}

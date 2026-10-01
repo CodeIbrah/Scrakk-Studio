@@ -26,13 +26,44 @@
 }
 
 /* Visor de un fileHandler (imagen, markdown, svg…): ocupa el slot central
-   mientras el engine queda oculto detrás. */
+   mientras el engine queda oculto detrás. Columna: toolbar + contenido. */
 .viewer {
   display: flex;
+  flex-direction: column;
   flex: 1;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
+}
+
+/* Toolbar del visor: botones que declara el handler (`actions[]`). */
+.viewerBar {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 4px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface, var(--color-bg));
+}
+
+.viewerAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border: none;
+  border-radius: var(--radius-sm, 4px);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.viewerAction:hover {
+  background: var(--color-surface-raised, rgba(127, 127, 127, 0.15));
+  color: var(--color-text);
 }
 
 /* Canvas del engine Innerta (ITE): ocupa el host completo. */
