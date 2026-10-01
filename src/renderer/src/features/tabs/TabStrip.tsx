@@ -18,6 +18,13 @@ import {
 import { useDndState, useDropZone } from '@features/dnd'
 import { subscribeToFileIcons } from '@services/fileIcons'
 import { showContextMenu } from '@features/editor/engines/innerta/menuHost'
+import { fileHandlerRegistry } from '@features/fileHandlers/registry'
+import {
+  canToggleMode,
+  effectiveMode,
+  setPreferredMode,
+  subscribeToPreferredModes
+} from '@features/fileHandlers/preferences'
 import { shareFileToSocial } from '@features/social/actions/shareFile'
 import { getFileSession, hasFileSession, isFileDirty } from '@features/editor/fileSession'
 import { tabsStore } from './store'
@@ -128,6 +135,24 @@ function TabItem({
     return getFileSession(filePath).onDidChangeDirty(setDirty)
   }, [filePath])
 
+  // Ojo visor ⇄ editor: SOLO si el handler del formato admite los dos modos
+  // (markdown, svg…). No está hardcodeado por extensión: lo decide el registry.
+  const handlerPath = tab.kind === 'file' ? tab.filePath : undefined
+  const [handlerTick, setHandlerTick] = useState(0)
+  useEffect(() => {
+    if (!handlerPath) return undefined
+    const unsubHandlers = fileHandlerRegistry.subscribe(() => setHandlerTick((value) => value + 1))
+    const unsubModes = subscribeToPreferredModes(() => setHandlerTick((value) => value + 1))
+    return () => {
+      unsubHandlers()
+      unsubModes()
+    }
+  }, [handlerPath])
+  void handlerTick
+  const fileHandler = handlerPath ? fileHandlerRegistry.resolve(handlerPath) : null
+  const showViewToggle = canToggleMode(fileHandler)
+  const viewing = handlerPath && fileHandler ? effectiveMode(fileHandler, handlerPath) === 'view' : false
+
   // El glifo de la X (11px, trazos finos) se rasteriza asimétrico si cae en
   // una posición fraccionaria de device pixel — cada tab cae en una fracción
   // distinta, por eso la X "no siempre se ve centrada". Encajamos el svg al
@@ -196,6 +221,22 @@ function TabItem({
             </Fragment>
           ))
         : null}
+      {showViewToggle ? (
+        <span
+          role="button"
+          aria-label={viewing ? t('features.ver.como.visor') : t('features.ver.como.texto')}
+          title={viewing ? t('features.ver.como.visor') : t('features.ver.como.texto')}
+          className={styles.close}
+          data-drag-ignore=""
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            event.stopPropagation()
+            if (handlerPath) setPreferredMode(handlerPath, viewing ? 'text' : 'view')
+          }}
+        >
+          <ProductIcon id={viewing ? 'eye-off' : 'eye'} size={12} aria-hidden="true" />
+        </span>
+      ) : null}
       {tab.closable !== false && !tab.fixed ? (
         <span
           ref={closeRef}
@@ -386,9 +427,6 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
   // Acciones del header de la tab ACTIVA (las que se pierden sin PanelFrame):
   // se detectan solas del render de acciones publicado por el panel.
   const activeTab = strip?.activeId ? tabs.find((t) => t.id === strip.activeId) ?? null : null
-  // Acciones publicadas por la tab activa (API global de headers): las de
-  // ARCHIVO se dibujan acá, al lado del ⋮ (las de panel ya las pinta su frame).
-  const activeEntry = activeTab ? getTabHeader(tabHeaderKey(stripId, activeTab.id)) : null
   const overflowItems =
     activeTab && !splitActive
       ? extractHeaderMenuItems(getTabHeader(tabHeaderKey(stripId, activeTab.id)))
@@ -443,9 +481,6 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
           </button>
         ) : null}
       </div>
-      {activeTab?.kind === 'file' && activeEntry ? (
-        <span className={styles.tabHeaderActions}>{activeEntry.actions()}</span>
-      ) : null}
       {overflowItems.length > 0 ? (
         <button
           type="button"
