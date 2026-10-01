@@ -19,7 +19,13 @@ export default function ImageViewer({ path }: FileHandlerViewProps): JSX.Element
     setSrc(null)
     setError(null)
     void (async () => {
-      const res = await window.api.fs.readBinary(path)
+      // El puente lo agrega el PRELOAD: si la ventana es vieja, no existe.
+      const readBinary = window.api?.fs?.readBinary
+      if (typeof readBinary !== 'function') {
+        setError('Falta el puente fs.readBinary: hay que reiniciar la app (no alcanza con recargar).')
+        return
+      }
+      const res = await readBinary(path)
       if (!alive) return
       if (!res.success || !res.base64) {
         setError(res.error ?? 'No se pudo leer la imagen.')
