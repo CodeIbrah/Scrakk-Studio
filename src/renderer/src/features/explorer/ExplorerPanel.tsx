@@ -43,6 +43,12 @@ import { ToolDock, ToolDockHostProvider } from '@features/tooldock'
 
 import { t } from '@core/i18n'
 import { shareFileToSocial } from '@features/social/actions/shareFile'
+import { fileHandlerRegistry } from '@features/fileHandlers/registry'
+import {
+  canToggleMode,
+  effectiveMode,
+  setPreferredMode
+} from '@features/fileHandlers/preferences'
 /** Fila fantasma mientras se crea un archivo/carpeta. */
 interface CreatingState {
   parentPath: string
@@ -528,6 +534,22 @@ export function ExplorerPanel({
       items.push({
         label: t('social.compartir.en.social'),
         onClick: () => void shareFileToSocial(node.path)
+      })
+      // El mismo toggle visor ⇄ editor que el menú de la tab.
+      const nodeHandler = fileHandlerRegistry.resolve(node.path)
+      const nodeCanToggle = canToggleMode(nodeHandler, node.path)
+      const nodeViewing = effectiveMode(nodeHandler, node.path) === 'view'
+      items.push({
+        label: !nodeHandler?.load
+          ? t('features.sin.visor.para.este.formato')
+          : nodeViewing
+            ? t('features.ver.como.texto')
+            : t('features.ver.como.visor'),
+        icon: <ProductIcon id={nodeViewing ? 'eye-off' : 'eye'} size={14} aria-hidden="true" />,
+        disabled: !nodeCanToggle,
+        onClick: nodeCanToggle
+          ? () => setPreferredMode(node.path, nodeViewing ? 'text' : 'view')
+          : undefined
       })
     }
 

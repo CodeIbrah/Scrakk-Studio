@@ -411,18 +411,25 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
     const handler = fileHandlerRegistry.resolve(path)
     const items: ContextMenuItem[] = []
 
-    if (canToggleMode(handler, path)) {
-      const viewing = effectiveMode(handler, path) === 'view'
-      items.push({
-        label: viewing ? t('features.ver.como.texto') : t('features.ver.como.visor'),
-        icon: <ProductIcon id={viewing ? 'eye-off' : 'eye'} size={14} aria-hidden="true" />,
-        onClick: () => setPreferredMode(path, viewing ? 'text' : 'view')
-      })
-    }
+    // El visor va SIEMPRE en el menú: si el formato no tiene, queda
+    // deshabilitado con el motivo — así se ve la opción en cualquier archivo.
+    const hasViewer = Boolean(handler?.load)
+    const canToggle = canToggleMode(handler, path)
+    const viewing = effectiveMode(handler, path) === 'view'
+    items.push({
+      label: !hasViewer
+        ? t('features.sin.visor.para.este.formato')
+        : viewing
+          ? t('features.ver.como.texto')
+          : t('features.ver.como.visor'),
+      icon: <ProductIcon id={viewing ? 'eye-off' : 'eye'} size={14} aria-hidden="true" />,
+      disabled: !canToggle,
+      onClick: canToggle ? () => setPreferredMode(path, viewing ? 'text' : 'view') : undefined
+    })
 
     items.push({
       label: t('social.compartir.en.social'),
-      separatorBefore: items.length > 0,
+      separatorBefore: true,
       onClick: () => void shareFileToSocial(path)
     })
 

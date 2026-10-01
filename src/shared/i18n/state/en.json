@@ -10855,6 +10855,14 @@
       "needsReview": false,
       "at": "2026-10-01T14:10:33.561Z",
       "approvedAt": "2026-10-01T14:10:39.788Z"
+    },
+    "features.sin.visor.para.este.formato": {
+      "src": "55f7102eff63c5ff",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-01T15:15:47.635Z",
+      "approvedAt": "2026-10-01T15:15:47.820Z"
     }
   },
   "version": 1

@@ -29,6 +29,7 @@
   "features.sin.marcadores.click.derecho.sobre": "Sin marcadores. Click derecho sobre el editor → “Añadir marcador”.",
   "features.sin.notificaciones.todavia": "Sin notificaciones todavía.",
   "features.sin.opciones": "Sin opciones",
+  "features.sin.visor.para.este.formato": "Sin visor para este formato",
   "features.tabs.abiertas": "Tabs abiertas",
   "features.terminal": "Terminal",
   "features.usetooldockhost.fuera.de.tooldockhostprovider": "useToolDockHost fuera de <ToolDockHostProvider>",
