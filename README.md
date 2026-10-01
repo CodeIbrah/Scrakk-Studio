@@ -100,6 +100,9 @@ Third-party works included under their own licenses:
 
 - **Twemoji Mozilla** (emoji artwork) — CC-BY 4.0.
 - **Lilex** and **JetBrains Mono** (typefaces) — SIL Open Font License 1.1.
+- **Material Icon Theme** (file icons, converted from the VS Code extension by
+  Material Extensions) — MIT. Source:
+  <https://github.com/material-extensions/vscode-material-icon-theme>
 - **tree-sitter queries** — Apache-2.0 (nvim-treesitter) and MPL-2.0 (Helix);
   the provenance (project + commit + license) is recorded per language in
   `langs/<id>/grammar.json`.

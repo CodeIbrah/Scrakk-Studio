@@ -1,0 +1,17 @@
+{
+  "id": "material-icon-theme",
+  "name": "Material Icon Theme",
+  "version": "5.38.1",
+  "author": "Material Extensions",
+  "description": "Tema de iconos de archivos por defecto. Convertido de la extensión de VS Code Material Icon Theme (MIT).",
+  "engine": ">=0.1.0",
+  "contributes": {
+    "fileIcons": [
+      {
+        "id": "material-icon-theme",
+        "name": "Material Icon Theme",
+        "path": "./icons.json"
+      }
+    ]
+  }
+}
