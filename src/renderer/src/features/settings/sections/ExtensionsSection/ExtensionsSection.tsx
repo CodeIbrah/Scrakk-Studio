@@ -118,9 +118,10 @@ export function ExtensionsSection(): JSX.Element {
         name: meta.name,
         version: meta.version,
         author: meta.author,
-        isBuiltin: meta.isBuiltin
+        isBuiltin: meta.isBuiltin,
+        hidden: meta.hidden
       }))
-  ].filter((meta) => !meta.isBuiltin)
+  ].filter((meta) => !meta.isBuiltin && !meta.hidden)
   useEffect(
     () =>
       subscribeToFileIcons(() => {
@@ -271,7 +272,8 @@ export function ExtensionsSection(): JSX.Element {
             name: meta?.name ?? extension.name,
             version: meta?.version ?? extension.version,
             author: meta?.author ?? extension.author,
-            isBuiltin: extension.isBuiltin
+            isBuiltin: extension.isBuiltin,
+            hidden: meta?.hidden ?? extension.hidden
           })
           unregisterInstalledExtension(extension.id)
           setStatus({ kind: 'ok', text: `"${extension.name}" desactivada.` })

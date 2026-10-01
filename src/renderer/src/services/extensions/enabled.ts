@@ -20,6 +20,7 @@ export interface DisabledExtensionMeta {
   version: string
   author?: string
   isBuiltin: boolean
+  hidden?: boolean
 }
 
 const STORAGE_KEY = 'scrakk:disabled-extensions'

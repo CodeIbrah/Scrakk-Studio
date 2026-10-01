@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "author": "scrakk-grammar",
   "description": "Gramáticas tree-sitter, una por lenguaje, cargadas on-demand.",
+  "hidden": true,
   "contributes": {
     "languages": [
       {

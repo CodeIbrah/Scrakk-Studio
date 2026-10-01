@@ -41,6 +41,7 @@ Todos los campos del manifest:
 | `entry` | string | no | Punto de entrada del bundle. Default: `dist/index.js` |
 | `runtime` | objeto | no | **Extensión con código**: `{ kind: 'node', entry: 'extension.js' }`. Lo escribe el pipeline VSIX |
 | `contributes` | objeto | no | Las contribuciones (ver tabla abajo) |
+| `hidden` | boolean | no | No se lista en Ajustes → Extensiones. Sigue activa (sus contribuciones se aplican). Para packs de datos que viajan con la app |
 
 `runtime` es lo que distingue una extensión declarativa de una que ejecuta
 código: si está, el Extension Host carga ese entry y le inyecta el API. Ver

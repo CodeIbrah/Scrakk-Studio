@@ -38,7 +38,8 @@ export async function registerManifest(
     version: manifest.version,
     author: manifest.author,
     description: manifest.description,
-    isBuiltin
+    isBuiltin,
+    hidden: manifest.hidden === true
   }
   ExtensionRegistry.registerExtension(meta)
 

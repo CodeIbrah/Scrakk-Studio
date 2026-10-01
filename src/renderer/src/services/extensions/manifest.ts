@@ -55,6 +55,12 @@ export interface ExtensionManifest {
   runtime?: { kind: string; entry: string }
   /** Contribuciones que aporta la extensión. */
   contributes?: ExtensionContributions
+  /**
+   * Oculta la extensión de la lista de Ajustes → Extensiones. Sigue
+   * registrándose igual (sus contribuciones se aplican). Para packs de datos
+   * que viajan con la app, como el pack de lenguajes.
+   */
+  hidden?: boolean
 }
 
 export interface ExtensionContributions {
@@ -117,6 +123,8 @@ export interface RegisteredExtension {
   description?: string
   /** True = compilada dentro del bundle de la app. */
   isBuiltin: boolean
+  /** No se lista en Ajustes → Extensiones (packs de datos internos). */
+  hidden?: boolean
 }
 
 /** Tab del strip central de una extensión. */
