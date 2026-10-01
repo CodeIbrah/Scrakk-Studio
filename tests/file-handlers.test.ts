@@ -7,6 +7,7 @@
  * prioridad entre handlers y modo efectivo (view ⇄ text).
  */
 
+import { readFileSync } from 'node:fs'
 import { describe, it, expect } from 'vitest'
 import {
   baseNameOf,
@@ -139,5 +140,43 @@ describe('tabs virtuales (scrakk-view://)', () => {
     } finally {
       unregister()
     }
+  })
+})
+
+/**
+ * Regresión del cableado: el visor por formato tiene que estar en el punto de
+ * MONTAJE real de una tab de archivo (`FileTabView`, que es lo que renderiza
+ * `TabContentView`). Antes vivía sólo en `EditorPanel` —el panel `editor`
+ * legacy— así que un PNG siempre caía en Innerta aunque el registry, los
+ * handlers y el bundle estuvieran perfectos.
+ *
+ * Sin entorno DOM en los tests, se verifica el contrato por fuente: es
+ * exactamente lo que se rompió.
+ */
+describe('cableado del visor (regresión)', () => {
+  const read = (rel: string): string =>
+    readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8')
+
+  it('FileTabView (la tab de archivo) monta el dispatcher', () => {
+    const src = read('src/renderer/src/features/editor/FileTabView.tsx')
+    expect(src).toContain('useFileViewDispatcher')
+    // Si el formato tiene visor, NO se adjunta la sesión de Innerta.
+    expect(src).toMatch(/if \(!host \|\| viewing\) return/)
+    expect(src).toContain('node')
+  })
+
+  it('el dispatcher consulta el registry y usa import dinámico del visor', () => {
+    const src = read('src/renderer/src/features/editor/FileViewDispatcher.tsx')
+    expect(src).toContain('fileHandlerRegistry.resolve')
+    expect(src).toContain('effectiveMode')
+    expect(src).toContain('handler.load()')
+    expect(src).toContain('registerBuiltinFileHandlers')
+  })
+
+  it('ningún otro punto de montaje del editor se saltea el dispatcher', () => {
+    // El panel `editor` legacy también debe pasar por el dispatcher compartido.
+    const panel = read('src/renderer/src/features/editor/EditorPanel.tsx')
+    expect(panel).toContain('useFileViewDispatcher')
+    expect(panel).not.toContain('fileHandlerRegistry.resolve')
   })
 })
