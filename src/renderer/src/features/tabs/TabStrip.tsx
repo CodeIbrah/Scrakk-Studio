@@ -386,6 +386,9 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
   // Acciones del header de la tab ACTIVA (las que se pierden sin PanelFrame):
   // se detectan solas del render de acciones publicado por el panel.
   const activeTab = strip?.activeId ? tabs.find((t) => t.id === strip.activeId) ?? null : null
+  // Acciones publicadas por la tab activa (API global de headers): las de
+  // ARCHIVO se dibujan acá, al lado del ⋮ (las de panel ya las pinta su frame).
+  const activeEntry = activeTab ? getTabHeader(tabHeaderKey(stripId, activeTab.id)) : null
   const overflowItems =
     activeTab && !splitActive
       ? extractHeaderMenuItems(getTabHeader(tabHeaderKey(stripId, activeTab.id)))
@@ -440,6 +443,9 @@ export function TabStrip({ stripId, iconFor, onActivate, onClose, onAddTab, addT
           </button>
         ) : null}
       </div>
+      {activeTab?.kind === 'file' && activeEntry ? (
+        <span className={styles.tabHeaderActions}>{activeEntry.actions()}</span>
+      ) : null}
       {overflowItems.length > 0 ? (
         <button
           type="button"

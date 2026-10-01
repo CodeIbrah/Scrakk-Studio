@@ -31,5 +31,7 @@
   "features.sin.opciones": "No options",
   "features.tabs.abiertas": "Open tabs",
   "features.terminal": "Terminal",
-  "features.usetooldockhost.fuera.de.tooldockhostprovider": "useToolDockHost outside of <tooldockhostprovider></tooldockhostprovider>"
+  "features.usetooldockhost.fuera.de.tooldockhostprovider": "useToolDockHost outside of <tooldockhostprovider></tooldockhostprovider>",
+  "features.ver.como.texto": "View as text",
+  "features.ver.como.visor": "View as viewer"
 }

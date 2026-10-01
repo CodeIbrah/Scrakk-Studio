@@ -11,10 +11,12 @@ import { promisify } from 'util'
 import * as os from 'node:os'
 import { tryNativeSearchFiles, tryNativeGrep, ensureWatch } from '../search/nativeSearch'
 import { sidecarGrep } from '../search/kolargrepServer'
+import { sniffMime } from '../images/r2'
 import {
   FS_IPC,
   type ReadFileRequest,
   type ReadFileResponse,
+  type ReadBinaryResponse,
   type WriteFileRequest,
   type WriteFileResponse,
   type DeleteFileRequest,
@@ -79,6 +81,20 @@ function closeWatcher(key: string, entry: WatchEntry): void {
 /** Registra todos los handlers IPC del filesystem. */
 export function registerFsIpc(): void {
   // ── Read File ──────────────────────────────────────────────────────────
+  // Mime por extensión: fallback cuando los magic bytes no alcanzan (ico, bmp).
+  const MIME_BY_EXT: Record<string, string> = {
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    gif: 'image/gif',
+    webp: 'image/webp',
+    avif: 'image/avif',
+    bmp: 'image/bmp',
+    ico: 'image/x-icon'
+  }
+  const mimeFromExtension = (filePath: string): string | null =>
+    MIME_BY_EXT[filePath.split('.').pop()?.toLowerCase() ?? ''] ?? null
+
   ipcMain.handle(FS_IPC.readFile, async (_event, request: unknown): Promise<ReadFileResponse> => {
     const req = request as ReadFileRequest
     try {
@@ -89,6 +105,25 @@ export function registerFsIpc(): void {
       return { success: false, error: msg }
     }
   })
+
+  /**
+   * Lectura BINARIA (visores de imagen): base64 + mime para armar un `data:`
+   * URL en el renderer — su CSP permite `data:` pero no `file:`.
+   */
+  ipcMain.handle(
+    FS_IPC.readBinary,
+    async (_event, request: unknown): Promise<ReadBinaryResponse> => {
+      const req = request as ReadFileRequest
+      try {
+        const buf = await fs.readFile(req.path)
+        const mime = sniffMime(buf) ?? mimeFromExtension(req.path) ?? 'application/octet-stream'
+        return { success: true, base64: buf.toString('base64'), mime, size: buf.length }
+      } catch (error) {
+        const msg = error instanceof Error ? error.message : String(error)
+        return { success: false, error: msg }
+      }
+    }
+  )
 
   // ── Write File ─────────────────────────────────────────────────────────
   ipcMain.handle(FS_IPC.writeFile, async (_event, request: unknown): Promise<WriteFileResponse> => {

@@ -17,6 +17,7 @@ import {
   CenterFileTabsSync
 } from '@features/layout'
 import { DragGhost, SplitOverlay } from '@features/dnd'
+import { FileViewHeaderBridge } from '@features/fileHandlers/FileViewHeaderBridge'
 import { StatusBar } from '@features/statusbar'
 import { SettingsModal, openSettingsModal, type SettingsSectionId } from '@features/settings'
 import { ActivityBar } from '@features/activitybar'
@@ -306,6 +307,8 @@ export function App() {
               <GitDecorationsBridge />
               {/* Archivos abiertos (editorBus) ↔ tabs del centro. */}
               <CenterFileTabsSync />
+              {/* Ojo visor ⇄ editor en la tab del archivo activo. */}
+              <FileViewHeaderBridge />
               <Titlebar onOpenSettings={openSettings} />
               <div className="app-workspace">
                 <ActivityBar side="left" />

@@ -10839,6 +10839,22 @@
       "needsReview": false,
       "at": "2026-09-30T05:19:47.734Z",
       "approvedAt": "2026-09-30T05:19:47.921Z"
+    },
+    "features.ver.como.texto": {
+      "src": "5f5654b0dae75ded",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-01T14:10:33.560Z",
+      "approvedAt": "2026-10-01T14:10:39.788Z"
+    },
+    "features.ver.como.visor": {
+      "src": "4758de6c48978950",
+      "area": "features",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-01T14:10:33.561Z",
+      "approvedAt": "2026-10-01T14:10:39.788Z"
     }
   },
   "version": 1

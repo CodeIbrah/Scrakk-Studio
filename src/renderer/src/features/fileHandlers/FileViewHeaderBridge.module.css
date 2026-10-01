@@ -1,0 +1,25 @@
+/*
+ * Copyright 2026 Scrakk Studio
+ * SPDX-License-Identifier: Apache-2.0
+ * Licencia completa en LICENSE (Apache License 2.0).
+ */
+
+/* Ojo de la tab (al lado del ⋮): alterna visor ⇄ editor. */
+.eye {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm, 4px);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.eye:hover {
+  background: var(--color-surface-raised, rgba(127, 127, 127, 0.15));
+  color: var(--color-text);
+}

@@ -333,6 +333,22 @@ publicadas no se editan. El archivo va por versión:
   pointer del layout (nuevo *drop sink*, sin tocar el resolver de tabs) y el
   Explorer el drag nativo de recursos.
 
+### Editor — visores por formato (fileHandlers)
+- **Registry de excepciones por formato**: cada uno vive en **su propia carpeta**
+  (como los tools de la IA) y declara qué agarra + cómo se muestra:
+  `match` (extensión/glob/languageId/esquema) y `mode` (`view` = pieza,
+  `text` = editor, `both` = intermedio). **Nada hardcodeado en el editor**: el
+  área central consulta el registry y, si no hay match, abre con Innerta.
+- **Visores incluidos**: **imagen** (`view`), **SVG** (`both`) y **markdown**
+  (`both`). El markdown es el caso intermedio: se ve renderizado o se edita.
+- **Ojo en la tab** (al lado del ⋮) para alternar **visor ⇄ editor**, publicado
+  por la **API global de headers** (`setTabHeader`) y con preferencia por
+  archivo. Sólo aparece en los formatos que admiten los dos modos.
+- **Lectura binaria** (`fs:read-binary`): los visores de imagen reciben
+  `base64` + mime y se pintan como `data:` (la CSP del renderer no permite
+  `file:`). El motor Innerta queda montado y oculto mientras manda el visor,
+  así no se pierden undo/scroll al volver.
+
 ### Correcciones
 - **Emoji: ancho de 2 celdas y nítidos**: el layout era `x = columna × ancho`
   puro, así que un emoji avanzaba **una** celda y se pisaba con el vecino (y el

@@ -25,6 +25,16 @@
   backdrop-filter: var(--glass-blur, none);
 }
 
+/* Visor de un fileHandler (imagen, markdown, svg…): ocupa el slot central
+   mientras el engine queda oculto detrás. */
+.viewer {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
 /* Canvas del engine Innerta (ITE): ocupa el host completo. */
 .host canvas.scrakk-innerta-canvas {
   position: absolute;

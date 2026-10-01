@@ -186,6 +186,7 @@ const api: WindowApi = {
   },
   fs: {
     readFile: (path: string) => ipcRenderer.invoke(FS_IPC.readFile, { path }),
+    readBinary: (path: string) => ipcRenderer.invoke(FS_IPC.readBinary, { path }),
     writeFile: (path: string, content: string) => ipcRenderer.invoke(FS_IPC.writeFile, { path, content }),
     deleteFile: (path: string) => ipcRenderer.invoke(FS_IPC.deleteFile, { path }),
     moveFile: (source: string, destination: string) => ipcRenderer.invoke(FS_IPC.moveFile, { source, destination }),

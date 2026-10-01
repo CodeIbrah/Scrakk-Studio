@@ -239,3 +239,13 @@
   pointer-events: none;
   flex-shrink: 0;
 }
+
+/* Acciones que publica la tab activa (API global de headers): van al lado del
+   menú ⋮ — p. ej. el ojo que alterna visor ⇄ editor. */
+.tabHeaderActions {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 2px;
+  padding-left: 2px;
+}

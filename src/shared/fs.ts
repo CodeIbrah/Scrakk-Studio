@@ -11,6 +11,7 @@
 
 export const FS_IPC = {
   readFile: 'fs:read-file',
+  readBinary: 'fs:read-binary',
   writeFile: 'fs:write-file',
   deleteFile: 'fs:delete-file',
   moveFile: 'fs:move-file',
@@ -41,6 +42,18 @@ export interface ReadFileRequest {
 export interface ReadFileResponse {
   success: boolean
   content?: string
+  error?: string
+}
+
+/**
+ * Lectura BINARIA (visores de imagen): el contenido viaja en base64 para poder
+ * usarse como `data:` URL — la CSP del renderer no permite `file:`.
+ */
+export interface ReadBinaryResponse {
+  success: boolean
+  base64?: string
+  mime?: string
+  size?: number
   error?: string
 }
 
@@ -260,6 +273,7 @@ export interface StatResponse {
 
 export interface FsApi {
   readFile: (path: string) => Promise<ReadFileResponse>
+  readBinary: (path: string) => Promise<ReadBinaryResponse>
   writeFile: (path: string, content: string) => Promise<WriteFileResponse>
   deleteFile: (path: string) => Promise<DeleteFileResponse>
   moveFile: (source: string, destination: string) => Promise<MoveFileResponse>
