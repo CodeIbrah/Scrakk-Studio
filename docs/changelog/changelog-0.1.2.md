@@ -341,9 +341,16 @@ publicadas no se editan. El archivo va por versión:
   área central consulta el registry y, si no hay match, abre con Innerta.
 - **Visores incluidos**: **imagen** (`view`), **SVG** (`both`) y **markdown**
   (`both`). El markdown es el caso intermedio: se ve renderizado o se edita.
-- **Ojo en la tab** (al lado del ⋮) para alternar **visor ⇄ editor**, publicado
-  por la **API global de headers** (`setTabHeader`) y con preferencia por
-  archivo. Sólo aparece en los formatos que admiten los dos modos.
+  Los formatos `both` abren **directo en modo visor**.
+- **Alternar visor ⇄ editor**: en el **menú de click derecho de la pestaña**
+  ("Ver como texto" / "Ver como visor", con el icono del ojo), junto a
+  "Compartir en Social". Solo aparece en los formatos que admiten los dos modos;
+  la preferencia se guarda **por archivo**.
+- **Toolbar del visor**: cada handler declara sus **acciones** (`actions[]`) y se
+  dibujan arriba del contenido — markdown: Copiar; imagen: Abrir en el
+  explorador. Las mismas acciones entran al menú ⋮ de la pestaña.
+- **Registro en el arranque**: los handlers built-in quedan listos antes del
+  primer render (`main.tsx`), así no dependen del orden de montaje de paneles.
 - **Lectura binaria** (`fs:read-binary`): los visores de imagen reciben
   `base64` + mime y se pintan como `data:` (la CSP del renderer no permite
   `file:`). El motor Innerta queda montado y oculto mientras manda el visor,
