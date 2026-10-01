@@ -5,21 +5,22 @@
 /**
  * social-file — gatekeeper de los archivos del chat social.
  *
- * Es la ÚNICA puerta a R2: las credenciales viven acá (secrets de la función),
- * nunca en la app. Valida JWT, autoría, límites (líneas/caracteres) y cupo, y
- * solo entonces sube, firma o borra.
+ * Es la ÚNICA puerta a R2: las credenciales viven en Supabase Vault y solo las
+ * lee esta función (service_role), nunca la app. Valida JWT, autoría, límites
+ * (líneas/caracteres) y cupo, y solo entonces sube, firma o borra.
+ *
+ * El INSERT del mensaje lo hace ESTA función (no el cliente): así la cuota
+ * cuenta mensajes reales y el trigger `messages_rate_limit` de la DB aplica.
+ * Si el cliente insertara, se podría subir a R2 sin mensaje (huérfanos) y sin
+ * tope de tasa.
  *
  * Acciones (POST JSON):
- *   { action: 'upload', peerId, name, lang, lines, size, sha, content }
- *     → sube a R2 y devuelve { key, expiresAt }
+ *   { action: 'upload', peerId, name, lang, content, replyTo? }
+ *     → valida + sube a R2 + inserta el mensaje → { message }
  *   { action: 'url', messageId }
  *     → si sos participante, devuelve { url, expiresIn } (presigned GET)
  *   { action: 'delete', messageId }
  *     → si sos el emisor, borra el objeto (libera cupo)
- *
- * Secrets requeridos:
- *   SCRAKK_R2_ENDPOINT, SCRAKK_R2_ACCESS_KEY, SCRAKK_R2_SECRET_KEY
- *   SCRAKK_R2_BUCKET_FILES (default: scrakk-chat-files)
  */
 
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from 'npm:@aws-sdk/client-s3@3'
@@ -31,6 +32,8 @@ const MAX_CHARS = 512 * 1024
 const QUOTA_PER_CONVERSATION = 15
 const TTL_DAYS = 60
 const KEY_PREFIX = 'code'
+const MESSAGE_SELECT =
+  'id,sender_id,recipient_id,kind,body,created_at,read_at,reply_to,edited_at'
 
 /** Errores de negocio: se devuelven con el código para que la app los muestre. */
 class BadRequest extends Error {
@@ -73,6 +76,22 @@ async function r2Client(
   return { client, bucket }
 }
 
+/** sha256 hex del contenido — lo calcula el SERVIDOR (no se confía en el cliente). */
+async function sha256Hex(text: string): Promise<string> {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('')
+}
+
+/** Cuenta líneas igual que el codec del cliente (una cadena vacía tiene 0). */
+function countLines(text: string): number {
+  if (text.length === 0) return 0
+  let lines = 1
+  for (let i = 0; i < text.length; i += 1) {
+    if (text.charCodeAt(i) === 10) lines += 1
+  }
+  return lines
+}
+
 /** Extrae la key del sobre JSON que guarda el mensaje `codefile`. */
 function keyFromBody(body: string): string | null {
   try {
@@ -95,11 +114,13 @@ async function handleUpload(
   const name = typeof payload.name === 'string' ? payload.name.slice(0, 255) : ''
   const lang = typeof payload.lang === 'string' ? payload.lang.slice(0, 64) : ''
   const content = typeof payload.content === 'string' ? payload.content : ''
-  const lines = typeof payload.lines === 'number' ? payload.lines : -1
+  const replyTo =
+    typeof payload.replyTo === 'string' && payload.replyTo.length > 0 ? payload.replyTo : null
   if (!peerId || !name) throw new BadRequest('Faltan datos del archivo.')
   if (content.length === 0) throw new BadRequest('El archivo está vacío.')
   if (content.length > MAX_CHARS) throw new BadRequest('El archivo supera el tamaño máximo.')
-  if (lines < 0 || lines > MAX_LINES) throw new BadRequest('El archivo supera el máximo de líneas.')
+  const lines = countLines(content)
+  if (lines > MAX_LINES) throw new BadRequest('El archivo supera el máximo de líneas.')
 
   // Debe ser un amigo (misma regla que el INSERT de messages).
   const { data: friendship } = await supabase
@@ -135,7 +156,48 @@ async function handleUpload(
     })
   )
   const expiresAt = new Date(Date.now() + TTL_DAYS * 86_400_000).toISOString()
-  return { key, expiresAt }
+  const meta = {
+    v: 1,
+    kind: 'codefile',
+    name,
+    lang,
+    lines,
+    size: content.length,
+    sha: await sha256Hex(content),
+    key,
+    expiresAt
+  }
+
+  // El mensaje lo inserta el SERVIDOR: acá sí corre el trigger de rate limit y
+  // la cuota de arriba cuenta filas reales.
+  const { data: row, error } = await supabase
+    .from('messages')
+    .insert({
+      sender_id: userId,
+      recipient_id: peerId,
+      kind: 'codefile',
+      body: JSON.stringify(meta),
+      reply_to: replyTo
+    })
+    .select(MESSAGE_SELECT)
+    .single()
+  if (error) {
+    // Sin mensaje no hay archivo: se borra el objeto para no dejar huérfanos.
+    try {
+      await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }))
+    } catch {
+      // El lifecycle de 60 días lo limpia igual.
+    }
+    if (error.message.includes('msg_ratelimited')) {
+      throw new BadRequest('msg_ratelimited', 429)
+    }
+    if (error.code === '23514') throw new BadRequest('El sobre del archivo es inválido.')
+    if (error.message.includes('reply_not_in_dm')) {
+      throw new BadRequest('El mensaje citado no es de esta conversación.')
+    }
+    throw new BadRequest(`No se pudo guardar el archivo: ${error.message}`)
+  }
+  return { message: row }
 }
 
 /** Devuelve el mensaje si el usuario es participante (si no, lanza). */

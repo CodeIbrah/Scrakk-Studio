@@ -306,6 +306,14 @@ publicadas no se editan. El archivo va por versión:
 - **Cupo borrable + caducidad**: 15 archivos vivos por conversación; borrar un
   archivo libera cupo al instante y a los **60 días** el lifecycle de R2 los
   elimina solo (la card pasa a "expirado").
+- **El INSERT lo hace el gatekeeper**: la Edge Function valida, sube a R2 **y
+  crea el mensaje**, así la cuota cuenta archivos reales y el **rate limit de la
+  DB** aplica aunque el cliente esté modificado (antes se podía subir sin
+  mensaje → objetos huérfanos sin tope de tasa). Si el INSERT falla, borra el
+  objeto. El `sha256` y las líneas los calcula el **servidor**, no el cliente.
+- **Sobre validado en la DB**: un CHECK exige que un mensaje `codefile` traiga un
+  sobre JSON válido (`v`, `kind`, `name`, `key`) — ni con SQL directo se cuela
+  un archivo basura. El `body` de los mensajes normales sigue capado en 4000.
 - **Card en el mensaje**: header con el **ícono del tema de fileIcons activo**
   (nada hardcodeado), nombre, líneas, tamaño y vencimiento; el body baja el
   contenido bajo demanda y lo pinta resaltado.

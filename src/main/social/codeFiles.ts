@@ -12,6 +12,7 @@
 
 import { getClientFor } from '../supabaseClient'
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from '../account/config'
+import type { DirectMessage } from '@shared/social'
 
 import { t } from '@shared/i18n'
 
@@ -20,14 +21,16 @@ const FUNCTION_URL = `${SUPABASE_URL}/functions/v1/social-file`
 export interface CodeFileUpload {
   name: string
   lang: string
-  lines: number
-  size: number
   content: string
+  replyTo?: string | null
 }
 
+/**
+ * El INSERT del mensaje lo hace la Edge Function (así la cuota y el rate limit
+ * de la DB aplican): acá solo llega el mensaje ya creado.
+ */
 export interface CodeFileUploadResult {
-  key: string
-  expiresAt: string
+  message: DirectMessage
 }
 
 interface CallResult<T> {
@@ -77,7 +80,7 @@ async function call<T>(accountId: string, body: Record<string, unknown>): Promis
   return { ok: true, data: parsed as T }
 }
 
-/** Sube el contenido (la función valida líneas/caracteres/cupo y va a R2). */
+/** Sube el contenido: la función valida, sube a R2 e inserta el mensaje. */
 export function uploadCodeFile(
   accountId: string,
   peerId: string,

@@ -18,7 +18,6 @@ import { isR2Configured, sniffMime, uploadToR2 } from '../images/r2'
 import {
   checkCodeFileContent,
   decodeCodeFile,
-  encodeCodeFile,
   type SocialCodeFile
 } from '@shared/socialCodeFile'
 import { codeFileSignedUrl, deleteCodeFileObject, uploadCodeFile } from './codeFiles'
@@ -427,7 +426,9 @@ export async function sendMessage(
 
 /**
  * Comparte un ARCHIVO (`kind = 'codefile'`): el contenido va a R2 vía la Edge
- * Function (gatekeeper) y el `body` guarda solo el sobre con los metadatos.
+ * Function (gatekeeper), que además INSERTA el mensaje — así la cuota y el rate
+ * limit de la DB aplican aunque el cliente esté modificado. Acá se revalida
+ * rápido para dar feedback inmediato y se devuelve el mensaje ya creado.
  */
 export async function sendCodeFile(
   accountId: string,
@@ -435,56 +436,22 @@ export async function sendCodeFile(
   file: { name: string; lang: string; content: string },
   replyTo: string | null = null
 ): Promise<SocialResult<DirectMessage>> {
-  const supabase = await clientOf(accountId)
-  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
-
   const name = file.name.trim().replace(/[\\/]/g, '').slice(0, 255)
   if (!name) return fail(t('main.el.archivo.no.tiene.nombre'))
 
   const check = checkCodeFileContent(file.content)
   if (!check.ok) return fail(check.error)
 
-  const sha = createHash('sha256').update(file.content, 'utf8').digest('hex')
   const uploaded = await uploadCodeFile(accountId, toUserId, {
     name,
     lang: file.lang,
-    lines: check.lines,
-    size: file.content.length,
-    content: file.content
+    content: file.content,
+    replyTo
   })
-  if (!uploaded.ok || !uploaded.data) {
+  if (!uploaded.ok || !uploaded.data?.message) {
     return fail(uploaded.error ?? t('main.no.se.pudo.compartir.el'))
   }
-
-  const meta: SocialCodeFile = {
-    v: 1,
-    kind: 'codefile',
-    name,
-    lang: file.lang,
-    lines: check.lines,
-    size: file.content.length,
-    sha,
-    key: uploaded.data.key,
-    expiresAt: uploaded.data.expiresAt
-  }
-
-  const { data, error } = await supabase
-    .from('messages')
-    .insert({
-      sender_id: accountId,
-      recipient_id: toUserId,
-      kind: 'codefile',
-      body: encodeCodeFile(meta),
-      reply_to: replyTo
-    })
-    .select('id,sender_id,recipient_id,kind,body,created_at,read_at,reply_to,edited_at')
-    .single()
-  if (error) {
-    if (error.code === '42501') return fail(t('main.solo.puedes.escribirle.a.tus'))
-    if (error.message.includes('msg_ratelimited')) return fail('msg_ratelimited')
-    return fail(cleanError(error.message))
-  }
-  return ok(mapMessage(data as MessageRow))
+  return ok(uploaded.data.message)
 }
 
 /** Baja el contenido de un archivo compartido (URL firmada + verificación sha). */
