@@ -34,5 +34,8 @@ build-resources/
 # Secretos locales (R2, keys de dev) — NUNCA commitear
 .env
 
+# Estado local del IDE por proyecto (agentes/runtime). No versionar.
+.scrakk/
+
 # Bundle de docs generado (lo publica el workflow a R2)
 docs/.generated/
