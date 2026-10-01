@@ -21,6 +21,7 @@ import type { ThemeContribution } from './types/themes/schema'
 import type { LspContribution } from './types/lsp/schema'
 import type { FileIconContribution } from './types/fileIcons/schema'
 import type { ProductIconContribution } from './types/productIcons/schema'
+import type { FileHandlerContribution } from './types/fileHandlers/schema'
 import type { ToolContribution } from './types/tools/schema'
 import type { SkillContribution } from './types/skills/schema'
 import type {
@@ -75,6 +76,12 @@ export interface ExtensionContributions {
   activityBar?: ActivityBarContribution[]
   /** Tabs del strip central. */
   centerTabs?: CenterTabContribution[]
+  /**
+   * Formatos de archivo propios (SEF `fileHandlers`): cada uno declara qué
+   * agarra y cómo se muestra (`view`/`text`/`both`), y entra al MISMO registry
+   * que los built-in.
+   */
+  fileHandlers?: FileHandlerContribution[]
   /** Temas de color (SEF themes). */
   themes?: ThemeContribution[]
   /** Language servers (SEF lspServers): se registran en el runtime main. */
@@ -111,6 +118,7 @@ export type { PanelContribution } from './types/panels/schema'
 export type { ViewContribution } from './types/views/schema'
 export type { ActivityBarContribution } from './types/activitybar/schema'
 export type { CenterTabContribution } from './types/centertabs/schema'
+export type { FileHandlerContribution } from './types/fileHandlers/schema'
 export type { LanguageContribution } from './types/languages/schema'
 
 // ── Registrados (lo que el registry conoce) ───────────────────────────────

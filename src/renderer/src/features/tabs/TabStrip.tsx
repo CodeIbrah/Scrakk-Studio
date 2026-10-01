@@ -150,7 +150,7 @@ function TabItem({
   }, [handlerPath])
   void handlerTick
   const fileHandler = handlerPath ? fileHandlerRegistry.resolve(handlerPath) : null
-  const showViewToggle = canToggleMode(fileHandler)
+  const showViewToggle = canToggleMode(fileHandler, handlerPath ?? '')
   const viewing = handlerPath && fileHandler ? effectiveMode(fileHandler, handlerPath) === 'view' : false
 
   // El glifo de la X (11px, trazos finos) se rasteriza asimétrico si cae en

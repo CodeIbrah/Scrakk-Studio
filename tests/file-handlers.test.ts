@@ -20,6 +20,12 @@ import {
   canToggleMode,
   effectiveMode
 } from '../src/renderer/src/features/fileHandlers/preferences'
+import {
+  VIRTUAL_SCHEME,
+  virtualIdOf,
+  virtualPathOf
+} from '../src/renderer/src/features/fileHandlers/detect'
+import { fileHandlerRegistry } from '../src/renderer/src/features/fileHandlers/registry'
 import type { FileHandler } from '../src/renderer/src/features/fileHandlers/types'
 
 const image: FileHandler = {
@@ -110,5 +116,28 @@ describe('modo efectivo', () => {
     expect(effectiveMode(markdown, '/x/a.md')).toBe('view')
     expect(canToggleMode(markdown)).toBe(true)
     expect(canToggleMode(image)).toBe(false)
+  })
+})
+
+describe('tabs virtuales (scrakk-view://)', () => {
+  it('arma y parsea el path', () => {
+    expect(virtualPathOf('markdown')).toBe('scrakk-view://markdown')
+    expect(virtualPathOf('markdown', 'a/b')).toBe('scrakk-view://markdown/a/b')
+    expect(schemeOf(virtualPathOf('image', 'x'))).toBe(VIRTUAL_SCHEME)
+    expect(virtualIdOf('scrakk-view://image/payload')).toBe('image')
+    expect(virtualIdOf('/tmp/a.md')).toBe('')
+  })
+
+  it('el registry resuelve POR ID y siempre en modo visor', () => {
+    const unregister = fileHandlerRegistry.register(markdown)
+    try {
+      expect(fileHandlerRegistry.resolve('scrakk-view://markdown/x')?.id).toBe('markdown')
+      expect(fileHandlerRegistry.resolve('scrakk-view://nope/x')).toBeNull()
+      // Un virtual no puede caer al editor: no hay archivo en disco.
+      expect(effectiveMode(markdown, 'scrakk-view://markdown/x')).toBe('view')
+      expect(canToggleMode(markdown, 'scrakk-view://markdown/x')).toBe(false)
+    } finally {
+      unregister()
+    }
   })
 })

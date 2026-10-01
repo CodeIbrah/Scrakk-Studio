@@ -348,6 +348,14 @@ publicadas no se editan. El archivo va por versión:
   `base64` + mime y se pintan como `data:` (la CSP del renderer no permite
   `file:`). El motor Innerta queda montado y oculto mientras manda el visor,
   así no se pierden undo/scroll al volver.
+- **Tabs virtuales** (`scrakk-view://<handlerId>/<payload>`): el mismo visor
+  sirve como tab sobre contenido que no es un archivo (por ejemplo la card de
+  un `codefile` del chat). Se resuelve **por id**, viaja por el mismo bus de
+  archivos y no toca el disco.
+- **`contributes.fileHandlers`**: una extensión aporta sus propios formatos al
+  **mismo registry** que los built-in (segunda puerta al mismo store), con
+  ownership para desinstalar limpio. El visor se resuelve por import dinámico
+  del paquete, nunca con un `ComponentType` directo.
 
 ### Correcciones
 - **Emoji: ancho de 2 celdas y nítidos**: el layout era `x = columna × ancho`

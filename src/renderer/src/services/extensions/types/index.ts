@@ -24,6 +24,7 @@ import { fileIconsHandler } from './fileIcons/api'
 import { productIconsHandler } from './productIcons/api'
 import { toolsHandler } from './tools'
 import { skillsHandler } from './skills'
+import { fileHandlersHandler } from './fileHandlers/api'
 
 let registered = false
 
@@ -44,6 +45,7 @@ export function ensureTypesRegistered(): void {
   ExtensionTypeRegistry.registerType(productIconsHandler)
   ExtensionTypeRegistry.registerType(toolsHandler)
   ExtensionTypeRegistry.registerType(skillsHandler)
+  ExtensionTypeRegistry.registerType(fileHandlersHandler)
 }
 
 export { ExtensionTypeRegistry } from './registry'
@@ -102,3 +104,4 @@ export type { FileIconContribution } from './fileIcons/schema'
 export type { ProductIconContribution } from './productIcons/schema'
 export type { ToolContribution, ToolDangerLevel } from './tools/schema'
 export type { SkillContribution } from './skills/schema'
+export type { FileHandlerContribution } from './fileHandlers/schema'

@@ -14,7 +14,7 @@
  * después por el mismo camino.
  */
 
-import { pickHandler } from './detect'
+import { pickHandler, virtualIdOf } from './detect'
 import type { FileHandler } from './types'
 
 type Listener = () => void
@@ -61,6 +61,10 @@ class FileHandlerRegistry {
 
   /** El handler que corresponde a este archivo (o null → editor). */
   resolve(path: string): FileHandler | null {
+    // Los paths virtuales (`scrakk-view://<id>/…`) se resuelven POR ID: ahí el
+    // "match" no aplica porque no hay extensión ni archivo real.
+    const virtualId = virtualIdOf(path)
+    if (virtualId) return this.handlers.get(virtualId) ?? null
     return pickHandler(this.list(), path)
   }
 }

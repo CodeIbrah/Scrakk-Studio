@@ -17,6 +17,7 @@ export {
 } from './editorBus'
 export type { EditorFileTab, EditorFilesState } from './editorBus'
 export { FileTabView } from './FileTabView'
+export { openVirtualTab } from './virtualTabs'
 export {
   getFileSession,
   destroyFileSession,

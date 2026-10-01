@@ -13,6 +13,22 @@
 import { detectLanguageFromPath } from '@features/editor/languages'
 import type { FileHandler, FileHandlerMatch } from './types'
 
+/** Esquema de las tabs VIRTUALES: `scrakk-view://<handlerId>/<payload>`. */
+export const VIRTUAL_SCHEME = 'scrakk-view'
+
+/** Arma el path virtual de un handler (`scrakk-view://image/…`). */
+export function virtualPathOf(handlerId: string, payload = ''): string {
+  const clean = payload.replace(/^\/+/, '')
+  return `${VIRTUAL_SCHEME}://${handlerId}${clean ? `/${clean}` : ''}`
+}
+
+/** Id del handler de un path virtual ('' si no lo es). */
+export function virtualIdOf(path: string): string {
+  if (schemeOf(path) !== VIRTUAL_SCHEME) return ''
+  const rest = path.slice(`${VIRTUAL_SCHEME}://`.length)
+  return rest.split('/')[0] ?? ''
+}
+
 /** `foo/Bar.TS` → `ts` ('' si no tiene extensión). */
 export function extensionOf(path: string): string {
   const base = path.split(/[/\\]/).pop() ?? ''

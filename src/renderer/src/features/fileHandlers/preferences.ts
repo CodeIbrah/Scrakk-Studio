@@ -11,6 +11,7 @@
  */
 
 import type { FileHandler } from './types'
+import { virtualIdOf } from './detect'
 
 const STORAGE_KEY = 'fileHandlers.mode'
 
@@ -77,12 +78,16 @@ export function setPreferredMode(path: string, mode: FileViewMode): void {
  */
 export function effectiveMode(handler: FileHandler | null, path: string): FileViewMode {
   if (!handler) return 'text'
+  // Un path virtual no tiene archivo en disco: el editor no puede leerlo, así
+  // que siempre se muestra con el visor.
+  if (virtualIdOf(path)) return 'view'
   if (handler.mode === 'view') return 'view'
   if (handler.mode === 'text') return 'text'
   return getPreferredMode(path) ?? 'view'
 }
 
 /** ¿Tiene sentido ofrecer el ojo? (el formato admite los dos modos). */
-export function canToggleMode(handler: FileHandler | null): boolean {
+export function canToggleMode(handler: FileHandler | null, path = ''): boolean {
+  if (virtualIdOf(path)) return false
   return handler?.mode === 'both'
 }

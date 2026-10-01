@@ -18,7 +18,10 @@ export {
   matches,
   matchesGlob,
   pickHandler,
-  schemeOf
+  schemeOf,
+  VIRTUAL_SCHEME,
+  virtualIdOf,
+  virtualPathOf
 } from './detect'
 export {
   canToggleMode,
