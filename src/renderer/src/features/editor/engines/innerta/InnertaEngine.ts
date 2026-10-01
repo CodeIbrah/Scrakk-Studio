@@ -347,9 +347,15 @@ export class InnertaEngine implements EditorEngine {
     }
 
     const applyBounds = (): void => {
-      if (this.module && this.host) {
-        this.module.setBounds(0, 0, this.host.clientWidth, this.host.clientHeight)
-      }
+      if (!this.module || !this.host) return
+      const w = this.host.clientWidth
+      const h = this.host.clientHeight
+      // Un host oculto (`display:none`, mientras manda un visor de formato)
+      // mide 0×0 y el módulo aborta: NO se le pasan dimensiones cero. El
+      // rAF sigue vivo; cuando el host vuelve a tener área, el ResizeObserver
+      // reaplica los bounds reales.
+      if (w <= 0 || h <= 0) return
+      this.module.setBounds(0, 0, w, h)
     }
 
     // RE-ATTACH rápido: módulo vivo de un montaje previo → re-parent hecho,
@@ -421,7 +427,12 @@ export class InnertaEngine implements EditorEngine {
           this.module = module
           this.ready = true
 
-          module.init(0, 0, this.host.clientWidth, this.host.clientHeight)
+          module.init(
+            0,
+            0,
+            Math.max(this.host.clientWidth, 1),
+            Math.max(this.host.clientHeight, 1)
+          )
           module.setFocus(true)
           module.setTheme(document.documentElement.dataset.theme ?? 'dark')
           applyBounds()

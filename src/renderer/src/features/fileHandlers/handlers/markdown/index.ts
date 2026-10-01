@@ -3,7 +3,6 @@
 // Licencia completa en LICENSE (Apache License 2.0).
 
 import type { FileHandler } from '../../types'
-import { msg } from '@core/i18n'
 
 /**
  * Markdown: el caso INTERMEDIO por excelencia — se ve renderizado (`view`) o
@@ -14,16 +13,5 @@ export const markdownHandler: FileHandler = {
   match: { extensions: ['md', 'markdown', 'mdown', 'mkd'] },
   mode: 'both',
   priority: 10,
-  load: () => import('./MarkdownViewer'),
-  actions: [
-    {
-      id: 'copy',
-      label: 'common.copiar',
-      icon: 'copy',
-      run: (ctx) => {
-        void navigator.clipboard.writeText(ctx.content ?? '')
-        ctx.notify({ title: msg('common.copiar') })
-      }
-    }
-  ]
+  load: () => import('./MarkdownViewer')
 }

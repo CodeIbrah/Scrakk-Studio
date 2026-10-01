@@ -153,10 +153,10 @@ describe('tabs virtuales (scrakk-view://)', () => {
  * Sin entorno DOM en los tests, se verifica el contrato por fuente: es
  * exactamente lo que se rompió.
  */
-describe('cableado del visor (regresión)', () => {
-  const read = (rel: string): string =>
-    readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8')
+/** Lee un archivo del repo desde el test (no hay entorno DOM para renderizar). */
+const read = (rel: string): string => readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8')
 
+describe('cableado del visor (regresión)', () => {
   it('FileTabView (la tab de archivo) monta el dispatcher', () => {
     const src = read('src/renderer/src/features/editor/FileTabView.tsx')
     expect(src).toContain('useFileViewDispatcher')
@@ -178,5 +178,30 @@ describe('cableado del visor (regresión)', () => {
     const panel = read('src/renderer/src/features/editor/EditorPanel.tsx')
     expect(panel).toContain('useFileViewDispatcher')
     expect(panel).not.toContain('fileHandlerRegistry.resolve')
+  })
+})
+
+/**
+ * El visor oculta el host del engine con `display:none`, y un host oculto
+ * mide 0×0. El módulo WASM ABORTA si se le pasan dimensiones cero
+ * ("Exception thrown, but exception catching is not enabled"), lo que tumbaba
+ * la tab entera. El engine tiene que saltear el setBounds y dejar que el
+ * ResizeObserver lo reaplique cuando el host vuelve a tener área.
+ */
+describe('bounds del engine con el host oculto (regresión)', () => {
+  it('applyBounds nunca manda 0×0 al módulo', () => {
+    const src = read('src/renderer/src/features/editor/engines/innerta/InnertaEngine.ts')
+    const fn = src.slice(src.indexOf('const applyBounds'))
+    expect(fn).toMatch(/if \(w <= 0 \|\| h <= 0\) return/)
+    expect(fn).toMatch(/Math\.max\(this\.host\.clientWidth, 1\)|this\.module\.setBounds\(0, 0, w, h\)/)
+  })
+
+  it('el host del engine se oculta en vez de desmontarse (display, no hidden)', () => {
+    const src = read('src/renderer/src/features/editor/FileTabView.tsx')
+    // `hidden` como atributo no sirve: el `display:flex` inline lo pisa y el
+    // host queda midiendo 0×0. Tiene que ser el `display` explícito.
+    const jsx = src.slice(src.indexOf('return ('))
+    expect(jsx).not.toMatch(/hidden=\{viewing\}/)
+    expect(jsx).toMatch(/display: viewing \? 'none' : 'flex'/)
   })
 })
