@@ -17,8 +17,28 @@
 import { describe, it, expect } from 'vitest'
 import {
   describeSendError,
+  effectiveMessageBody,
   looksLikeMissingSession
 } from '../src/main/social/service'
+
+describe('effectiveMessageBody', () => {
+  it('sólo adjuntos → body VACÍO (nada de emoji 📷)', () => {
+    // Regresión: se rellenaba con '📷' para pasar el CHECK del body, y el emoji
+    // viajaba como data y se pintaba arriba de la foto.
+    expect(effectiveMessageBody('', 1)).toBe('')
+    expect(effectiveMessageBody('   ', 3)).toBe('')
+  })
+
+  it('sin texto y sin adjuntos → null (mensaje vacío)', () => {
+    expect(effectiveMessageBody('', 0)).toBeNull()
+    expect(effectiveMessageBody('  \n ', 0)).toBeNull()
+  })
+
+  it('con texto, lo devuelve sin espacios sobrantes', () => {
+    expect(effectiveMessageBody('  hola  ', 0)).toBe('hola')
+    expect(effectiveMessageBody('hola', 2)).toBe('hola')
+  })
+})
 
 describe('looksLikeMissingSession', () => {
   it('detecta los textos de sesión ausente/vencida', () => {

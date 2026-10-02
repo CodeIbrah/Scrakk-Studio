@@ -464,7 +464,10 @@ export function SocialProvider({
         const senderName = sender?.displayName ?? sender?.handle ?? t('social.alguien')
         notify({
           title: isMention ? `${senderName} te mencionó` : `Mensaje de ${senderName}`,
-          message: message.body.slice(0, 120),
+          // Un mensaje que sólo lleva adjuntos no tiene texto: el aviso salía vacío.
+          message:
+            message.body.trim().slice(0, 120) ||
+            (message.attachments?.length ? t('social.imagen.adjunta') : ''),
           severity: isMention ? 'info' : 'info',
           timeoutMs: 4000
         })

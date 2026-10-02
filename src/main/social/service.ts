@@ -400,6 +400,21 @@ export function describeSendError(
   return cleanError(raw)
 }
 
+/**
+ * Texto efectivo del mensaje.
+ *
+ * Si mandás SÓLO adjuntos, el body va **vacío**: antes se rellenaba con `'📷'`
+ * para pasar el CHECK `char_length(body) >= 1`, y ese emoji viajaba como data y
+ * se pintaba arriba de la imagen (el usuario veía "foto + 📷").
+ *
+ * Devuelve `null` cuando no hay ni texto ni adjuntos: mensaje vacío, se rechaza.
+ */
+export function effectiveMessageBody(body: string, attachmentCount: number): string | null {
+  const text = body.trim()
+  if (!text && attachmentCount === 0) return null
+  return text
+}
+
 export async function sendMessage(
   accountId: string,
   toUserId: string,
@@ -407,8 +422,9 @@ export async function sendMessage(
   replyTo: string | null = null,
   attachments: ImageUpload[] = []
 ): Promise<SocialResult<DirectMessage>> {
-  const text = body.trim() || (attachments.length > 0 ? '📷' : '')
-  if (!text) return fail(t('main.el.mensaje.esta.vacio'))
+  // Si mandás una foto sin escribir nada, el body va VACÍO (ver `effectiveMessageBody`).
+  const text = effectiveMessageBody(body, attachments.length)
+  if (text === null) return fail(t('main.el.mensaje.esta.vacio'))
   if (text.length > SOCIAL_RULES.messageMax) return fail(t('main.mensaje.demasiado.largo'))
   if (attachments.length > 8) return fail(t('main.maximo.8.imagenes.por.mensaje'))
   const supabase = await clientOf(accountId)

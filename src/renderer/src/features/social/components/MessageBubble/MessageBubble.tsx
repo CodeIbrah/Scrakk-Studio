@@ -110,6 +110,8 @@ function emojiOnlyCount(body: string): number {
 function replyPreviewLabel(body: string): string {
   const meta = decodeCodeFile(body)
   if (meta) return `${meta.name} · ${t('social.archivo')}`
+  // Un mensaje que sólo lleva adjuntos (body vacío): sin esto la cita salía en blanco.
+  if (!body.trim()) return t('social.imagen.adjunta')
   return body.slice(0, 80)
 }
 
@@ -228,7 +230,7 @@ export const MessageBubble = memo(function MessageBubble({
               cancelar
             </button>
           </div>
-        ) : (
+        ) : message.body.trim() ? (
           <div
             className={[
               styles.body,
@@ -241,7 +243,7 @@ export const MessageBubble = memo(function MessageBubble({
           >
             {renderWithMentions(message.body)}
           </div>
-        )}
+        ) : null}
         {message.attachments && message.attachments.length > 0 ? (
           <div className={styles.attachGrid}>
             {message.attachments.map((a) => (

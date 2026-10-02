@@ -441,7 +441,10 @@ export function MessageComposer({
       {replyTo ? (
         <div className={styles.replyPreview}>
           <span className={styles.replyLabel}>{t('social.respondiendo.a')} {replySenderName ?? 'mensaje'}</span>
-          <span className={styles.replyText}>{replyTo.body.slice(0, 80)}</span>
+          <span className={styles.replyText}>
+            {replyTo.body.trim().slice(0, 80) ||
+              (replyTo.attachments?.length ? t('social.imagen.adjunta') : '')}
+          </span>
           <button className={styles.replyClose} onClick={onCancelReply} aria-label={t('social.cancelar.respuesta')}>
             <ProductIcon id="close" size={12} />
           </button>
