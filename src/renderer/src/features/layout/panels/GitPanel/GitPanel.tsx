@@ -1240,6 +1240,29 @@ function ChangedTree({
           interactive={false}
           visiblePaths={visiblePaths}
           onSelectionChange={setSelected}
+          rowActions={(node) =>
+            // Acción de staging por archivo, al hover (como el `+` de VS Code).
+            // Sin esto, el único camino para preparar un archivo era
+            // seleccionarlo primero para que apareciera la barra bulk, y el
+            // botón Commit quedaba muerto sin explicar por qué.
+            node.isDirectory
+              ? []
+              : [
+                  stagedSet.has(node.path)
+                    ? {
+                        id: 'unstage',
+                        icon: 'x',
+                        title: t('git.quitar.de.la.preparacion'),
+                        onClick: () => onUnstage([toRel(node.path)])
+                      }
+                    : {
+                        id: 'stage',
+                        icon: 'plus',
+                        title: t('git.preparar.archivo'),
+                        onClick: () => onStage([toRel(node.path)])
+                      }
+                ]
+          }
         />
       </div>
       {!badgesOn ? (

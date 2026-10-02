@@ -21,6 +21,8 @@
 import type { JSX } from 'react'
 import { PanelTitleProvider } from '@features/layout'
 import { ExplorerPanel } from './ExplorerPanel'
+import type { RowAction } from './components/ExplorerRow'
+import type { FileNode } from './hooks/useWorkspaceState'
 import { baseNameOf } from './utils/fileUtils'
 
 import { t } from '@core/i18n'
@@ -30,7 +32,8 @@ export function ExplorerView({
   title,
   visiblePaths = null,
   onSelectionChange,
-  onOpenFile
+  onOpenFile,
+  rowActions
 }: {
   /** Raíz absoluta a mostrar. */
   root: string | null
@@ -44,6 +47,8 @@ export function ExplorerView({
   onSelectionChange?: (paths: string[]) => void
   /** Hook extra al abrir un archivo (default: nada). */
   onOpenFile?: (path: string, name: string) => void
+  /** Acciones por fila (hover): el árbol las dibuja con su propio estilo. */
+  rowActions?: (node: FileNode) => RowAction[]
 }): JSX.Element {
   return (
     <PanelTitleProvider initialTitle={title ?? (root ? baseNameOf(root) : t('explorer.explorador'))}>
@@ -53,6 +58,7 @@ export function ExplorerView({
         visiblePaths={visiblePaths}
         onSelectionChange={onSelectionChange}
         onOpenFile={onOpenFile}
+        rowActions={rowActions}
       />
     </PanelTitleProvider>
   )

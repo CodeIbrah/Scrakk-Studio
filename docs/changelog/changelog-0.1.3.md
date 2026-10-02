@@ -28,6 +28,19 @@ published are not edited. The file goes per version:
   — which opens in the editor. The three live in `@features/explorer` and the
   **File menu reuses them** instead of keeping its own copy.
 
+### Git panel (UI)
+- **Per-file staging, like VS Code**: the only way to prepare a file was to
+  **select it first** in the tree so that the bulk bar (`Stage (N)`) appeared.
+  Without that, the **Commit** button stayed disabled no matter what you typed
+  in the message box — it only commits what is in the index. It did not explain
+  why either. Now each row shows **stage / unstage** on hover (the `+` / `×`
+  that VS Code shows), on top of the existing bulk bar. The two buttons keep
+  their meaning: **Commit** = what is staged, **Todo** = `git add -A` + commit.
+- The tree now accepts **declarative per-row actions**
+  (`rowActions?: (node) => RowAction[]`): the explorer draws them with its own
+  style (size, color, and the same hover reveal as the `…` button), so a
+  consumer does not have to replicate CSS or reach into the row layout.
+
 ### Fixes
 - **The Social panel showed the login for a few seconds when opening it**: `me`
   is `null` both when there is **no session** and while the account is **still

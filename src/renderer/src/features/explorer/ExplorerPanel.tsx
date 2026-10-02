@@ -28,6 +28,7 @@ import {
 import { openFileInEditor } from '@features/editor'
 import { setResourceDragData } from '@features/dnd'
 import { useWorkspaceState, type FileNode } from './hooks/useWorkspaceState'
+import type { RowAction } from './components/ExplorerRow'
 import { useFileSelection } from './hooks/useFileSelection'
 import { useWindowedRows } from './hooks/useWindowedRows'
 import { useSelectionBox } from './hooks/useSelectionBox'
@@ -94,7 +95,8 @@ export function ExplorerPanel({
   interactive = true,
   visiblePaths = null,
   onSelectionChange,
-  onOpenFile
+  onOpenFile,
+  rowActions
 }: {
   /** Raíz arbitraria a mostrar (default: workspace global). */
   rootOverride?: string
@@ -106,6 +108,8 @@ export function ExplorerPanel({
   onSelectionChange?: (paths: string[]) => void
   /** Hook extra al abrir un archivo (default: nada). */
   onOpenFile?: (path: string, name: string) => void
+  /** Acciones por fila (hover), dibujadas por el propio árbol. Ver `RowAction`. */
+  rowActions?: (node: FileNode) => RowAction[]
 }): JSX.Element {
   const workspace = useWorkspaceState(rootOverride)
   const selection = useFileSelection()
@@ -671,6 +675,7 @@ export function ExplorerPanel({
         editValue={editValue}
         interactive={interactive}
         hideDots={!interactive}
+        rowActions={rowActions}
         onEditValueChange={(value) => {
           setEditValue(value)
           setEditError(null)

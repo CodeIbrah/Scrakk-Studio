@@ -56,6 +56,25 @@ interface ExplorerRowProps {
   onHover?: (path: string | null) => void
   /** false = sin drag nativo (árboles de solo lectura). Default true. */
   interactive?: boolean
+  /**
+   * Acciones por fila que aparecen al hacer hover (como el `+` de VS Code).
+   *
+   * Declarativas a propósito: el árbol las dibuja con SU estilo (tamaño,
+   * color y la misma aparición en hover que el botón "…"), así un consumidor
+   * externo —el panel de Git, por ejemplo— no tiene que replicar CSS ni
+   * meterse en el layout de la fila.
+   */
+  rowActions?: (node: FileNode) => RowAction[]
+}
+
+/** Acción de fila declarativa (ícono del pack + handler). */
+export interface RowAction {
+  id: string
+  /** Nombre del ícono en el pack de `productIcons` (nunca un glifo). */
+  icon: string
+  /** Tooltip y etiqueta accesible, ya traducidos. */
+  title: string
+  onClick: (node: FileNode) => void
 }
 
 export const ExplorerRow = memo(function ExplorerRow({
@@ -82,7 +101,8 @@ export const ExplorerRow = memo(function ExplorerRow({
   activeGuideLevel,
   hideDots = false,
   onHover,
-  interactive = true
+  interactive = true,
+  rowActions
 }: ExplorerRowProps): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null)
   const submittedRef = useRef(false)
@@ -221,6 +241,25 @@ export const ExplorerRow = memo(function ExplorerRow({
           {resolvedDecoration.badge}
         </span>
       ) : null}
+
+      {/* Acciones por fila (hover): mismo estilo y misma aparición que el "…". */}
+      {!isEditing && rowActions
+        ? rowActions(node).map((action) => (
+            <button
+              key={action.id}
+              type="button"
+              className={styles.dots}
+              title={action.title}
+              aria-label={action.title}
+              onClick={(event) => {
+                event.stopPropagation()
+                action.onClick(node)
+              }}
+            >
+              <ProductIcon id={action.icon} size={14} />
+            </button>
+          ))
+        : null}
 
       {!isEditing && !hideDots ? (
         <button
