@@ -59,6 +59,18 @@ published are not edited. The file goes per version:
   style (size, color, and the same hover reveal as the `…` button), so a
   consumer does not have to replicate CSS or reach into the row layout.
 
+### AI chat (UI)
+- **Tool rows have hover and open their result**: the rows of a tool call are now
+  a button that **highlights on hover** and, on click, opens the tool's **result
+  in a modal** (the same `plain` pattern the subagent chat uses: mounted inside
+  the chat panel, no overlay, so you can keep interacting). The modal shows the
+  **arguments** the model sent and the **raw output** (monospaced and scrollable,
+  since it is a dump, not prose), with a proper state for "still running" and
+  "no output".
+- The click is **only added to tools that do not bring their own visual**
+  (`renderBody`): the subagent card and the diffs already do something on click,
+  and wrapping them would have stolen that interaction and opened two modals.
+
 ### Explorer (UI)
 - **The filtered tree (Git → Changes) no longer costs a render per folder**: the
   view auto-expands the ancestors of the files it shows, and it did it with

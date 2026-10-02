@@ -26,6 +26,24 @@
   padding-top: 1px;
 }
 
+/* Fila clickeable (tools sin visual propio): abre su resultado en un modal.
+   Reset de botón + hover, sin mover nada del layout. */
+.clickable {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-sm, 4px);
+  padding: 2px 6px;
+  margin: -2px -6px;
+}
+
+.clickable:hover {
+  background: var(--color-hover);
+}
+
 .toolVisual {
   flex: 1;
   min-width: 0;
