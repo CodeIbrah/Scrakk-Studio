@@ -54,8 +54,9 @@ describe('acciones por fila en el árbol', () => {
 
   it('el panel de Git ofrece stage/unstage por archivo', () => {
     const git = src(GIT)
-    // La acción depende de si ESE path ya está en el índice.
-    expect(git).toMatch(/stagedSet\.has\(node\.path\)/)
+    // La acción depende de si ESE path ya está en el índice (leído por ref para
+    // que el callback sea ESTABLE y no rompa el `memo` de cada fila).
+    expect(git).toMatch(/stagedSetRef\.current\.has\(node\.path\)/)
     expect(git).toContain('onStage([toRel(node.path)])')
     expect(git).toContain('onUnstage([toRel(node.path)])')
     // No se ofrece en carpetas.
@@ -96,7 +97,9 @@ describe('acciones por fila en el árbol', () => {
   it('Git usa el recuadro para preparar en lote (selecciona + stagea)', () => {
     const git = src(GIT)
     expect(git).toContain('onLasso={')
-    // Compone: primero selecciona, después stagea lo que no estaba.
+    // Compone: primero selecciona (con refs, para no cambiar de identidad),
+    // después stagea lo que no estaba.
+    expect(git).toMatch(/selectedRef\.current/)
     expect(git).toMatch(/select\(additive \?/)
     expect(git).toMatch(/filter\(\(p\) => !stagedSet\.has\(p\)\)/)
     expect(git).toMatch(/onStage\(pending\)/)
@@ -104,9 +107,13 @@ describe('acciones por fila en el árbol', () => {
 
   it('Commit sigue exigiendo índice y Todo sigue siendo stage-all', () => {
     const git = src(GIT)
+    const box = src('src/renderer/src/features/layout/panels/GitPanel/CommitBox.tsx')
     // Si alguien "arregla" Commit relajando esto, se pierde la semántica de git.
-    expect(git).toMatch(/state\.staged\.length === 0/)
-    expect(git).toMatch(/doCommit\(false\)/)
-    expect(git).toMatch(/doCommit\(true\)/)
+    expect(git).toMatch(/hasStaged=\{state\.staged\.length > 0\}/)
+    expect(box).toMatch(/disabled=\{committing \|\| !hasText \|\| !hasStaged\}/)
+    expect(box).toMatch(/disabled=\{committing \|\| !hasText \|\| !hasChanges\}/)
+    // Y el panel ya NO se re-renderiza por tecla: el mensaje vive en CommitBox.
+    expect(git).not.toContain('const [commitMessage')
+    expect(box).toContain('useRef<HTMLTextAreaElement>')
   })
 })

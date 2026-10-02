@@ -29,6 +29,24 @@ published are not edited. The file goes per version:
   **File menu reuses them** instead of keeping its own copy.
 
 ### Git panel (UI)
+- **The panel no longer re-renders on every keystroke**: the commit message
+  lived in the panel component (1500+ lines with branches, history, diffs and
+  the file tree), so **every letter re-rendered the whole panel — and the tree**.
+  It now lives in its own `memo` component (`CommitBox`), and its `<textarea>` is
+  **uncontrolled**: it only re-renders when it crosses the "has text / no text"
+  boundary, which is the only thing that toggles the buttons. Typing 40
+  characters is now a couple of renders instead of 40.
+- **The tree's `memo` works again**: the staging callbacks were inline arrows,
+  so they changed identity on every render of the panel and the shallow compare
+  of **every row** failed (the whole tree repainted). `stage`/`unstage`/`discard`
+  are now stable (`useCallback`) and the per-row actions read the mutable data
+  (selection, index) through refs, so they never change. The changes tree is
+  also `memo`'d, so panel-only re-renders (opening the branch form, toggling a
+  section, logging in) no longer touch it.
+- **The commit history is not painted off-screen**: each entry uses
+  `content-visibility: auto` with `contain-intrinsic-size` (same treatment as
+  the chat's message list), which matters because the log loads up to 200
+  commits.
 - **Per-file staging, like VS Code**: the only way to prepare a file was to
   **select it first** in the tree so that the bulk bar (`Stage (N)`) appeared.
   Without that, the **Commit** button stayed disabled no matter what you typed

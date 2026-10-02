@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Licencia completa en LICENSE (Apache License 2.0).
 
-import { useCallback, useEffect, useMemo, useState, type JSX, type ReactNode } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type JSX, type ReactNode } from 'react'
 import { ProductIcon } from '@services/productIcons/components'
 import { HeaderActionButton, usePanelTitle } from '@features/layout'
 import { showContextMenu } from '@features/editor/engines/innerta/menuHost'
@@ -10,7 +10,10 @@ import {
   ExplorerView,
   refreshFileDecorations,
   isGitDecorationsVisible,
-  setGitDecorationsVisible
+  setGitDecorationsVisible,
+  type FileNode,
+  type LassoContext,
+  type RowAction
 } from '@features/explorer'
 import { pickOption } from '@services/modals'
 import { notify } from '@services/notifications'
@@ -57,6 +60,8 @@ import type { GitBranch, GitFileChange } from '@shared/git'
 import type { ShownCommit } from '@shared/git-parse'
 import type { PullRequest } from '@shared/git'
 import styles from './GitPanel.module.css'
+
+import { CommitBox } from './CommitBox'
 
 import { t } from '@core/i18n'
 const ROOT_KEY = 'scrakk-studio:root-path'
@@ -148,7 +153,6 @@ export function GitPanel(): JSX.Element {
     account: false,
     prs: false
   })
-  const [commitMessage, setCommitMessage] = useState('')
   const [committing, setCommitting] = useState(false)
   const [syncing, setSyncing] = useState<string | null>(null)
   const [showNewBranch, setShowNewBranch] = useState(false)
@@ -220,6 +224,28 @@ export function GitPanel(): JSX.Element {
       await fn(activeRoot)
     },
     [activeRoot]
+  )
+
+  // Acciones de staging ESTABLES: se pasan al árbol, que memoiza cada fila. Con
+  // flechas inline cambiaban de identidad en cada render del panel y anulaban el
+  // `memo` de todas las filas (el árbol entero se repintaba al tipear el commit).
+  const handleStage = useCallback(
+    (paths: string[]): void => {
+      void withRoot((root) => stagePaths(root, paths))
+    },
+    [withRoot]
+  )
+  const handleUnstage = useCallback(
+    (paths: string[]): void => {
+      void withRoot((root) => unstagePaths(root, paths))
+    },
+    [withRoot]
+  )
+  const handleDiscard = useCallback(
+    (paths: string[]): void => {
+      void withRoot((root) => discardPaths(root, paths))
+    },
+    [withRoot]
   )
 
   // Header: refresh + nueva rama (como el + del chat). Arrastrables: el
@@ -354,18 +380,16 @@ export function GitPanel(): JSX.Element {
   )
 
   const doCommit = useCallback(
-    async (stageAll: boolean): Promise<void> => {
-      if (!activeRoot || !commitMessage.trim()) return
+    async (message: string, stageAll: boolean): Promise<boolean> => {
+      if (!activeRoot) return false
       setCommitting(true)
       try {
-        if (await commitChanges(activeRoot, commitMessage.trim(), { stageAll })) {
-          setCommitMessage('')
-        }
+        return await commitChanges(activeRoot, message, { stageAll })
       } finally {
         setCommitting(false)
       }
     },
-    [activeRoot, commitMessage]
+    [activeRoot]
   )
 
   const doLogin = useCallback(async (): Promise<void> => {
@@ -529,46 +553,21 @@ export function GitPanel(): JSX.Element {
         open={sections.changes}
         onToggle={() => toggleSection('changes')}
       >
-        <div className={styles.commitBox}>
-          <textarea
-            className={styles.commitInput}
-            value={commitMessage}
-            onChange={(event) => setCommitMessage(event.target.value)}
-            placeholder={t('git.mensaje.de.commit')}
-            aria-label={t('git.mensaje.de.commit-2')}
-            rows={2}
-            spellCheck={false}
-          />
-          <div className={styles.commitActions}>
-            <button
-              type="button"
-              className={styles.primary}
-              disabled={committing || !commitMessage.trim() || state.staged.length === 0}
-              onClick={() => void doCommit(false)}
-            >
-              <ProductIcon id="check" size={14} />
-              {t('git.commit')}
-            </button>
-            <button
-              type="button"
-              className={styles.ghost}
-              disabled={committing || !commitMessage.trim() || !hasChanges}
-              title={t('git.stage.todo.commit')}
-              onClick={() => void doCommit(true)}
-            >
-              {t('git.todo')}
-            </button>
-          </div>
-        </div>
+        <CommitBox
+          hasStaged={state.staged.length > 0}
+          hasChanges={hasChanges}
+          committing={committing}
+          onCommit={doCommit}
+        />
         {activeRoot ? (
           <ChangedTree
             root={activeRoot}
             staged={state.staged}
             unstaged={state.unstaged}
             untracked={state.untracked}
-            onStage={(paths) => withRoot((root) => stagePaths(root, paths))}
-            onUnstage={(paths) => withRoot((root) => unstagePaths(root, paths))}
-            onDiscard={(paths) => withRoot((root) => discardPaths(root, paths))}
+            onStage={handleStage}
+            onUnstage={handleUnstage}
+            onDiscard={handleDiscard}
           />
         ) : null}
       </Section>
@@ -1148,7 +1147,13 @@ function Section({
  * (staged/unstaged/untracked + ancestros), con badges de git y acciones
  * bulk sobre la selección (lasso incluido).
  */
-function ChangedTree({
+/**
+ * El árbol de cambios va en `memo`: el panel se re-renderiza por cosas que no
+ * lo tocan (abrir el form de rama, togglear una sección, el login…) y sin esto
+ * el árbol entero se repintaba igual. Sus props relevantes (`staged`/`unstaged`/
+ * `untracked`) son las del store, y las acciones ya son estables.
+ */
+const ChangedTree = memo(function ChangedTree({
   root,
   staged,
   unstaged,
@@ -1196,6 +1201,54 @@ function ChangedTree({
   const toUnstage = selected.filter((p) => stagedSet.has(p))
   const total = staged.length + unstaged.length + untracked.length
 
+  // ── Callbacks ESTABLES para el árbol ──────────────────────────────────
+  // El árbol memoiza cada fila. Si `rowActions`/`onLasso` cambian de identidad
+  // en cada render, la comparación de `memo` falla para TODAS las filas y el
+  // árbol entero se vuelve a renderizar (era el caso: se rehacían al seleccionar
+  // y al tipear en el commit). Los datos mutables se leen por ref, así los
+  // callbacks no dependen de ellos y no cambian nunca.
+  const selectedRef = useRef(selected)
+  selectedRef.current = selected
+  const stagedSetRef = useRef(stagedSet)
+  stagedSetRef.current = stagedSet
+
+  const rowActions = useCallback(
+    (node: FileNode): RowAction[] =>
+      node.isDirectory
+        ? []
+        : stagedSetRef.current.has(node.path)
+          ? [
+              {
+                id: 'unstage',
+                icon: 'x',
+                title: t('git.quitar.de.la.preparacion'),
+                onClick: () => onUnstage([toRel(node.path)])
+              }
+            ]
+          : [
+              {
+                id: 'stage',
+                icon: 'plus',
+                title: t('git.preparar.archivo'),
+                onClick: () => onStage([toRel(node.path)])
+              }
+            ],
+    [onStage, onUnstage, toRel]
+  )
+
+  const handleLasso = useCallback(
+    (paths: string[], { select, additive }: LassoContext): void => {
+      // Recuadro = "barrer y preparar": selecciona (para que aparezca la barra
+      // bulk y se vea qué agarró) y stagea lo que no esté ya en el índice. Con
+      // Ctrl/Cmd la selección se SUMA en vez de reemplazarse.
+      const current = selectedRef.current
+      select(additive ? [...new Set([...current, ...paths])] : paths)
+      const pending = paths.filter((p) => !stagedSetRef.current.has(p)).map(toRel)
+      if (pending.length > 0) onStage(pending)
+    },
+    [onStage, toRel]
+  )
+
   if (total === 0) {
     return <p className={styles.empty}>{t('git.arbol.limpio')}</p>
   }
@@ -1240,37 +1293,8 @@ function ChangedTree({
           interactive={false}
           visiblePaths={visiblePaths}
           onSelectionChange={setSelected}
-          onLasso={(paths, { select, additive }) => {
-            // Recuadro = "barrer y preparar": selecciona (para que aparezca la
-            // barra bulk y se vea qué agarró) y stagea lo que no esté ya en el
-            // índice. Con Ctrl/Cmd la selección se SUMA en vez de reemplazarse.
-            select(additive ? [...new Set([...selected, ...paths])] : paths)
-            const pending = paths.filter((p) => !stagedSet.has(p)).map(toRel)
-            if (pending.length > 0) onStage(pending)
-          }}
-          rowActions={(node) =>
-            // Acción de staging por archivo, al hover (como el `+` de VS Code).
-            // Sin esto, el único camino para preparar un archivo era
-            // seleccionarlo primero para que apareciera la barra bulk, y el
-            // botón Commit quedaba muerto sin explicar por qué.
-            node.isDirectory
-              ? []
-              : [
-                  stagedSet.has(node.path)
-                    ? {
-                        id: 'unstage',
-                        icon: 'x',
-                        title: t('git.quitar.de.la.preparacion'),
-                        onClick: () => onUnstage([toRel(node.path)])
-                      }
-                    : {
-                        id: 'stage',
-                        icon: 'plus',
-                        title: t('git.preparar.archivo'),
-                        onClick: () => onStage([toRel(node.path)])
-                      }
-                ]
-          }
+          onLasso={handleLasso}
+          rowActions={rowActions}
         />
       </div>
       {!badgesOn ? (
@@ -1287,7 +1311,7 @@ function ChangedTree({
       ) : null}
     </>
   )
-}
+})
 
 function AuthSection(): JSX.Element {
   const auth = getAuthState()

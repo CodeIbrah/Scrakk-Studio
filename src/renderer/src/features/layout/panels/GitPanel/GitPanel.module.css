@@ -486,6 +486,11 @@ button.row:hover {
 
 .commitItem {
   position: relative;
+  /* Igual que la lista de mensajes del chat: fuera de pantalla no se pinta.
+     El historial trae hasta 200 commits y el `contain-intrinsic-size` evita
+     los saltos de scroll al estimar la altura. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 34px;
 }
 
 /* Raíl continuo detrás de los puntos (centro del punto: 11.5px). */
