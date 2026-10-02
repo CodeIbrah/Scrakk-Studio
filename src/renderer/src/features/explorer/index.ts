@@ -24,3 +24,4 @@ export {
   type FileDecorationProvider
 } from './decorations'
 export { ancestorDirs, filterRowsByPaths } from './filter'
+export type { LassoContext } from './hooks/useSelectionBox'

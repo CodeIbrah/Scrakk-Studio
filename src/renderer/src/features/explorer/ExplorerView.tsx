@@ -24,6 +24,7 @@ import { PanelTitleProvider } from '@features/layout'
 import { ExplorerPanel } from './ExplorerPanel'
 import type { RowAction } from './components/ExplorerRow'
 import type { FileNode } from './hooks/useWorkspaceState'
+import type { LassoContext } from './hooks/useSelectionBox'
 import { baseNameOf } from './utils/fileUtils'
 
 import { t } from '@core/i18n'
@@ -63,7 +64,7 @@ export interface ExplorerViewProps {
    * Acción del recuadro de selección al soltar. Recibe los paths barridos y
    * `select` para componer con la selección normal. Ver `ExplorerPanel`.
    */
-  onLasso?: (paths: string[], select: (paths: string[]) => void) => void
+  onLasso?: (paths: string[], ctx: LassoContext) => void
 }
 
 export function ExplorerView({

@@ -31,7 +31,7 @@ import { useWorkspaceState, type FileNode } from './hooks/useWorkspaceState'
 import type { RowAction } from './components/ExplorerRow'
 import { useFileSelection } from './hooks/useFileSelection'
 import { useWindowedRows } from './hooks/useWindowedRows'
-import { useSelectionBox } from './hooks/useSelectionBox'
+import { useSelectionBox, type LassoContext } from './hooks/useSelectionBox'
 import { ExplorerRow } from './components/ExplorerRow'
 import { focusGuideLevel, rowActiveGuideLevel } from './utils/indentGuides'
 import { SelectionBox } from './components/SelectionBox/SelectionBox'
@@ -114,15 +114,22 @@ export function ExplorerPanel({
   /**
    * Acción del RECUADRO de selección (lasso) al soltar.
    *
-   * Si no se pasa, el recuadro deja los paths como selección (lo de siempre).
-   * Si se pasa, el consumidor decide qué hacer con esos paths — y recibe
-   * `select` para poder COMPONER en vez de reemplazar:
+   * Si no se pasa, el recuadro deja los paths como selección (lo de siempre),
+   * y con **Ctrl/Cmd** los SUMA a la selección existente.
    *
-   *   onLasso: (paths, select) => { select(paths); stage(paths) }
+   * Si se pasa, el consumidor decide qué hacer: recibe los paths barridos y un
+   * `ctx` con `select` (la acción por defecto, para COMPONER en vez de
+   * reemplazar) y `additive` (el usuario mantuvo Ctrl/Cmd), así puede respetar
+   * la suma o ignorarla:
    *
-   * El panel de Git lo usa así para preparar en lote arrastrando el recuadro.
+   *   onLasso: (paths, { select, additive }) => {
+   *     select(additive ? [...yaSeleccionados, ...paths] : paths)
+   *     stage(paths)
+   *   }
+   *
+   * El panel de Git lo usa para preparar en lote arrastrando el recuadro.
    */
-  onLasso?: (paths: string[], select: (paths: string[]) => void) => void
+  onLasso?: (paths: string[], ctx: LassoContext) => void
 }): JSX.Element {
   const workspace = useWorkspaceState(rootOverride)
   const selection = useFileSelection()
@@ -221,12 +228,17 @@ export function ExplorerPanel({
     boxRef: selectionBoxRef,
     rowCount: flatPaths.length,
     flatPaths,
-    onCommit: (paths) => {
+    onCommit: (paths, additive) => {
       // La acción del recuadro es **del consumidor**: por defecto deja los
       // paths seleccionados, pero `onLasso` puede reemplazarla o componerla
       // (el panel de Git la usa para stagear en lote al arrastrar).
       const select = (next: string[]): void => selection.setSelection(next)
-      if (onLasso) onLasso(paths, select)
+      if (onLasso) {
+        onLasso(paths, { select, additive })
+        return
+      }
+      // Ctrl/Cmd: se SUMA a lo que ya estaba seleccionado en vez de pisarlo.
+      if (additive) select([...new Set([...selection.selected, ...paths])])
       else select(paths)
     },
     onClear: () => {

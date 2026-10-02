@@ -49,9 +49,16 @@ published are not edited. The file goes per version:
   The Git panel uses exactly that: sweeping the box selects and **stages**
   whatever was not staged yet. The default (no `onLasso`) is unchanged: the
   rectangle just selects.
-- **Explorer API published and typed**: `ExplorerViewProps`, `RowAction` and
-  `FileNode` are exported from `@features/explorer`, so a host can type its own
-  props without importing internals.
+- **Ctrl/Cmd + rubber-band adds to the selection**: the rectangle always
+  cleared the selection before starting, so there was no way to sweep several
+  areas and keep them. Now `Ctrl`/`Cmd` held at the start makes it **additive**:
+  the previous selection is kept, the swept paths are **unioned** with it, and
+  the visual joins account for the rows that were already selected (no border
+  in the middle of a contiguous block). The consumer receives `additive` in the
+  `onLasso` context, so Git can honor it too.
+- **Explorer API published and typed**: `ExplorerViewProps`, `RowAction`,
+  `FileNode`, and `LassoContext` are exported from `@features/explorer`, so a
+  host can type its own props without importing internals.
 
 ### Fixes
 - **The Social panel showed the login for a few seconds when opening it**: `me`

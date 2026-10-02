@@ -74,21 +74,30 @@ describe('acciones por fila en el árbol', () => {
 
   it('el recuadro de selección ejecuta la acción del consumidor', () => {
     const panel = src(PANEL)
-    // Default: seleccionar. Con `onLasso`, decide el consumidor.
-    expect(panel).toMatch(/if \(onLasso\) onLasso\(paths, select\)/)
-    expect(panel).toMatch(/else select\(paths\)/)
-    // Y el contrato expone `select` para poder COMPONER.
-    expect(panel).toMatch(
-      /onLasso\?:\s*\(paths: string\[\], select: \(paths: string\[\]\) => void\) => void/
-    )
-    expect(src(VIEW)).toMatch(/onLasso\?:\s*\(paths: string\[\], select/)
+    // Default: seleccionar (y con Ctrl/Cmd, SUMAR). Con `onLasso`, decide el consumidor.
+    expect(panel).toMatch(/if \(onLasso\) \{/)
+    expect(panel).toMatch(/onLasso\(paths, \{ select, additive \}\)/)
+    expect(panel).toMatch(/if \(additive\) select\(\[\.\.\.new Set\(\[\.\.\.selection\.selected, \.\.\.paths\]\)\]\)/)
+    // El contrato expone `select` + `additive` para poder COMPONER.
+    expect(panel).toMatch(/onLasso\?:\s*\(paths: string\[\], ctx: LassoContext\) => void/)
+    expect(src(VIEW)).toMatch(/onLasso\?:\s*\(paths: string\[\], ctx: LassoContext\)/)
+  })
+
+  it('Ctrl/Cmd vuelve aditivo el recuadro (no limpia y suma)', () => {
+    const box = src('src/renderer/src/features/explorer/hooks/useSelectionBox.ts')
+    expect(box).toContain('export interface LassoContext')
+    // Se lee el modificador al empezar y NO se limpia la selección previa.
+    expect(box).toMatch(/const additive = event\.ctrlKey \|\| event\.metaKey/)
+    expect(box).toMatch(/if \(!additive\) onClearRef\.current\(\)/)
+    // Y se propaga al commit para que el consumidor una.
+    expect(box).toMatch(/onCommitRef\.current\(pendingPaths\.current, additiveRef\.current\)/)
   })
 
   it('Git usa el recuadro para preparar en lote (selecciona + stagea)', () => {
     const git = src(GIT)
     expect(git).toContain('onLasso={')
     // Compone: primero selecciona, después stagea lo que no estaba.
-    expect(git).toMatch(/select\(paths\)/)
+    expect(git).toMatch(/select\(additive \?/)
     expect(git).toMatch(/filter\(\(p\) => !stagedSet\.has\(p\)\)/)
     expect(git).toMatch(/onStage\(pending\)/)
   })

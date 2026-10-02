@@ -1240,12 +1240,11 @@ function ChangedTree({
           interactive={false}
           visiblePaths={visiblePaths}
           onSelectionChange={setSelected}
-          onLasso={(paths, select) => {
+          onLasso={(paths, { select, additive }) => {
             // Recuadro = "barrer y preparar": selecciona (para que aparezca la
             // barra bulk y se vea qué agarró) y stagea lo que no esté ya en el
-            // índice. Antes el recuadro sólo seleccionaba y había que apretar
-            // Stage aparte.
-            select(paths)
+            // índice. Con Ctrl/Cmd la selección se SUMA en vez de reemplazarse.
+            select(additive ? [...new Set([...selected, ...paths])] : paths)
             const pending = paths.filter((p) => !stagedSet.has(p)).map(toRel)
             if (pending.length > 0) onStage(pending)
           }}

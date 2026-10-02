@@ -52,6 +52,20 @@ export function lassoPaths(flatPaths: string[], rowCount: number, y: number, h: 
   return sel
 }
 
+/**
+ * Contexto que recibe la acción del recuadro de selección (`onLasso`).
+ *
+ * Existe para que el consumidor pueda **componer** en vez de reemplazar: `select`
+ * es la acción por defecto (dejar esos paths como selección) y `additive` dice
+ * si el usuario mantuvo Ctrl/Cmd.
+ */
+export interface LassoContext {
+  /** Deja estos paths como selección (el comportamiento por defecto). */
+  select: (paths: string[]) => void
+  /** El usuario mantuvo Ctrl/Cmd: la selección se SUMA en vez de reemplazar. */
+  additive: boolean
+}
+
 interface UseSelectionBoxOptions {
   /** Ref del contenedor scrolleable del árbol. */
   containerRef: RefObject<HTMLDivElement | null>
@@ -61,9 +75,15 @@ interface UseSelectionBoxOptions {
   rowCount: number
   /** Paths de las filas en orden. */
   flatPaths: string[]
-  /** Callback al finalizar la selección (mouseUp). */
-  onCommit: (paths: string[]) => void
-  /** Callback al iniciar (para limpiar selección previa). */
+  /**
+   * Callback al finalizar la selección (mouseUp).
+   *
+   * `additive` es `true` cuando el usuario mantuvo Ctrl/Cmd: en ese caso la
+   * selección se **suma** a la que ya había, y `onClear` NO se llamó al empezar
+   * (el consumidor decide cómo unirla).
+   */
+  onCommit: (paths: string[], additive: boolean) => void
+  /** Callback al iniciar (para limpiar selección previa). Se omite en aditivo. */
   onClear: () => void
 }
 
@@ -80,6 +100,8 @@ export function useSelectionBox({
   const rafRef = useRef<number | null>(null)
   const lastMousePos = useRef<{ x: number; y: number } | null>(null)
   const pendingPaths = useRef<string[]>([])
+  /** Ctrl/Cmd al empezar: la selección se SUMA a la existente. */
+  const additiveRef = useRef(false)
 
   // Refs "latest": los listeners de window se enganchan UNA vez (estables),
   // pero siempre leen los datos frescos del render actual. Sin esto, el
@@ -126,6 +148,19 @@ export function useSelectionBox({
         if (!order.has(path)) order.set(path, index)
       })
 
+      // Con Ctrl/Cmd la barrida se SUMA a lo que ya estaba seleccionado, así
+      // que las filas previas también cuentan para las uniones: si la barrida
+      // queda pegada a la selección anterior, no debe aparecer un borde en el
+      // medio. Se lee del DOM por `aria-selected` (la clase del CSS module está
+      // hasheada y no se puede consultar).
+      const merge = new Set(sel)
+      if (additiveRef.current) {
+        for (const row of el.querySelectorAll('[aria-selected="true"]')) {
+          const path = (row as HTMLElement).dataset.rowPath
+          if (path) merge.add(path)
+        }
+      }
+
       // Actualizar clases directamente en el DOM (sin React state).
       const visibleRows = el.querySelectorAll('[data-row-path]')
       for (const row of visibleRows) {
@@ -136,11 +171,11 @@ export function useSelectionBox({
           row.classList.add('row-selected-lasso')
           row.classList.toggle(
             'row-lasso-merge-top',
-            index > 0 && sel.has(list[index - 1])
+            index > 0 && merge.has(list[index - 1])
           )
           row.classList.toggle(
             'row-lasso-merge-bottom',
-            index >= 0 && sel.has(list[index + 1])
+            index >= 0 && merge.has(list[index + 1])
           )
         } else {
           row.classList.remove('row-selected-lasso')
@@ -171,8 +206,13 @@ export function useSelectionBox({
       dragStart.current = pos
       isDragging.current = true
 
-      // Limpiar selección previa.
-      onClearRef.current()
+      // Ctrl/Cmd = aditivo: NO se limpia lo seleccionado, así el recuadro sirve
+      // para seguir sumando en vez de empezar de cero.
+      const additive = event.ctrlKey || event.metaKey
+      additiveRef.current = additive
+
+      // Limpiar selección previa (solo si no es aditivo).
+      if (!additive) onClearRef.current()
 
       // Mostrar y resetear el box via DOM directo.
       const box = boxRef.current
@@ -257,9 +297,10 @@ export function useSelectionBox({
 
     // Commitear selección final al state de React.
     if (pendingPaths.current.length > 0) {
-      onCommitRef.current(pendingPaths.current)
+      onCommitRef.current(pendingPaths.current, additiveRef.current)
       pendingPaths.current = []
     }
+    additiveRef.current = false
 
     if (rafRef.current !== null) {
       cancelAnimationFrame(rafRef.current)
