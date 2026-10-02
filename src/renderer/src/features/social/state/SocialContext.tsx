@@ -514,6 +514,10 @@ export function SocialProvider({
     })
     const unsubPresence = social.onPresenceChanged(({ accountId: acc, presence }) => {
       if (acc !== accountIdRef.current) return
+      // Mi propio latido vuelve por el mismo canal (yo también cumplo la
+      // política de "amigos"). Mi estado local ya es la fuente de verdad, así
+      // que ignorarlo evita un re-render del panel cada 45s.
+      if (presence.userId === accountIdRef.current) return
       // Quirúrgico: la fila viene en el evento, así que NO se refetchea nada.
       // Antes llamaba a `reloadRef.current()` → 3 queries (amigos + solicitudes +
       // presencia) y un re-render del panel entero por CADA latido de CADA
