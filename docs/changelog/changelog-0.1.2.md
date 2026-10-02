@@ -408,6 +408,13 @@ publicadas no se editan. El archivo va por versión:
   del paquete, nunca con un `ComponentType` directo.
 
 ### Correcciones
+- **La bienvenida mostraba una versión vieja en Anuncios**: el release remoto
+  ganaba **siempre** que trajera notas, sin comparar versiones, así que mientras
+  la release publicada seguía siendo la anterior, el panel mostraba esa aunque
+  el repo ya tuviera el changelog nuevo. Ahora se elige **el más nuevo** de los
+  dos (comparando por segmentos: `0.1.10` > `0.1.9`), y el "visto" se marca
+  sobre el anuncio que realmente se mostró. Efecto secundario útil: ya no hace
+  falta publicar la release para ver los anuncios de una versión nueva.
 - **No se podía enviar mensajes de texto en el chat Social**: la migración
   `0022` agregó el CHECK `messages_codefile_body_check`, que llama a
   `is_codefile_body(body)`, y acto seguido le **revocó EXECUTE** a
