@@ -23,7 +23,7 @@ import {
 } from '@shared/account'
 import { API_TIMEOUT_MS, CLI_API_BASE } from './config'
 import { BUILD_ID } from '../build'
-import { getClientFor } from '../supabaseClient'
+import { getClientFor, forgetClient } from '../supabaseClient'
 import {
   getAccount,
   getActiveId,
@@ -134,6 +134,11 @@ export async function verifyCode(req: VerifyCodeRequest): Promise<AccountResult<
     accessToken: login.access_token!,
     refreshToken: login.refresh_token!
   })
+  // Clave: el cliente de esta cuenta se cachea por id, así que hay que sacar el
+  // viejo (o inyectarle los tokens nuevos) ANTES de usarlo. Sin esto, el login
+  // guardaba tokens nuevos pero se seguía usando el cliente anónimo previo, y
+  // cada envío fallaba con 42501 "permission denied" — logueado y todo.
+  forgetClient(userId)
   const client = await getClientFor(userId)
   if (!client) return fail('unknown', t('main.no.se.pudo.abrir.la'))
 

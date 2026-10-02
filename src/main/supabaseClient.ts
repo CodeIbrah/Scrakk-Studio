@@ -85,7 +85,42 @@ export function getClientFor(accountId: string): Promise<SupabaseClient | null> 
     clients.set(accountId, pending)
     pending.catch(() => clients.delete(accountId))
   }
-  return pending.catch(() => null)
+  return pending.then((client) => ensureSession(client, accountId)).catch(() => null)
+}
+
+/**
+ * Garantiza que el cliente tenga la sesión GUARDADA.
+ *
+ * `getClientFor` cachea el cliente por cuenta, y el LOGIN (`verifyCode`) guarda
+ * tokens NUEVOS sin tocar ese cache. Consecuencia: después de iniciar sesión
+ * seguías usando el cliente de antes (sin sesión → rol `anon`), y cada INSERT
+ * moría con 42501 `permission denied for table messages` **justo después de un
+ * login exitoso** (se veía como "sin permiso", y antes como "solo puedes
+ * escribirle a tus amigos"). En los logs: sesión creada 01:26:42, INSERT
+ * rechazado 01:26:47.
+ *
+ * Se reusa el MISMO cliente inyectándole los tokens nuevos, en vez de
+ * reconstruirlo, para no perder los canales de Realtime ya suscritos.
+ */
+async function ensureSession(
+  client: SupabaseClient,
+  accountId: string
+): Promise<SupabaseClient | null> {
+  const { data } = await client.auth.getSession()
+  if (data.session) return client
+  const account = getAccount(accountId)
+  if (!account) return null
+  const { error } = await client.auth.setSession({
+    access_token: account.accessToken,
+    refresh_token: account.refreshToken
+  })
+  if (!error) return client
+  const { error: refreshError } = await client.auth.refreshSession()
+  if (refreshError && isCredentialError(refreshError.message)) {
+    clients.delete(accountId)
+    return null
+  }
+  return client
 }
 
 /** Descarta el cliente de una cuenta (al quitarla). */
