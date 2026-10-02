@@ -141,6 +141,9 @@ interface SocialContextValue {
   hasMore: boolean
   loadingMore: boolean
 
+  /** false mientras se resuelve la cuenta: el panel muestra un placeholder. */
+  ready: boolean
+
   view: SocialView
 
   requestCode: (email: string) => Promise<AccountActionResult>
@@ -224,6 +227,14 @@ export function SocialProvider({
   const [typingByPeer, setTypingByPeer] = useState<Record<string, boolean>>({})
   const [hasMore, setHasMore] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
+  /**
+   * ¿Ya sabemos si hay sesión o no?
+   *
+   * Sin esto el panel pintaba el LOGIN mientras resolvía la cuenta (el `me` es
+   * `null` tanto en "no hay sesión" como en "todavía no cargó"), así que al
+   * abrir el panel se veía el login por unos segundos y después los amigos.
+   */
+  const [ready, setReady] = useState(false)
 
   const [activityOverride, setActivityOverride] = useState<PresenceActivity | null>(null)
   const [presenceOverride, setPresenceOverride] = useState<PresenceStatus | null>(null)
@@ -403,8 +414,16 @@ export function SocialProvider({
     let alive = true
     void (async () => {
       const list = await loadAccounts()
-      if (!alive || !list) return
-      setAccountId((current) => current ?? list.activeId ?? list.accounts[0]?.id ?? null)
+      if (!alive) return
+      const next = list?.activeId ?? list?.accounts[0]?.id ?? null
+      if (!next) {
+        // No hay cuentas guardadas: el login es el estado CORRECTO, no una
+        // espera. Se marca listo para que el panel no muestre un placeholder.
+        setAccountId(null)
+        setReady(true)
+        return
+      }
+      setAccountId((current) => current ?? next)
     })()
     return () => {
       alive = false
@@ -434,6 +453,9 @@ export function SocialProvider({
       } catch (error) {
         if (import.meta.env.DEV) console.log('[social] cuenta', accountId, '→ throw', error)
         if (alive) setAccount(null)
+      } finally {
+        // Pase lo que pase, ya sabemos si hay sesión: se sale del placeholder.
+        if (alive) setReady(true)
       }
     })()
     void social.watch(accountId).then((result) => {
@@ -892,6 +914,7 @@ export function SocialProvider({
       typingByPeer,
       hasMore,
       loadingMore,
+      ready,
       view,
       requestCode,
       verifyCode,
@@ -934,6 +957,7 @@ export function SocialProvider({
       typingByPeer,
       hasMore,
       loadingMore,
+      ready,
       view,
       requestCode,
       verifyCode,

@@ -29,6 +29,13 @@ published are not edited. The file goes per version:
   **File menu reuses them** instead of keeping its own copy.
 
 ### Fixes
+- **The Social panel showed the login for a few seconds when opening it**: `me`
+  is `null` both when there is **no session** and while the account is **still
+  being resolved**, so the panel painted the login screen and then switched to
+  the friends list. Now the provider exposes a `ready` flag that only turns true
+  once it actually knows whether there is a session (and the "no accounts
+  saved" case counts as ready, not as a wait), and the panel shows a loading
+  placeholder until then instead of guessing.
 - **Sending a photo no longer adds a 📷 next to it**: the `body` of a message
   could not be empty (`messages_body_check` required
   `char_length(body) >= 1`), so an image-only message was filled with the `'📷'`

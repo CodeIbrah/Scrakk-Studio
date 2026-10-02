@@ -48,6 +48,7 @@ function SocialPanelInner(): JSX.Element {
     typingByPeer,
     hasMore,
     loadingMore,
+    ready,
     view,
     requestCode,
     verifyCode,
@@ -126,6 +127,16 @@ function SocialPanelInner(): JSX.Element {
     })
     return () => setHeaderActions(null)
   }, [setHeaderActions, view, me, setView])
+
+  // Todavía no sabemos si hay sesión: NO se muestra el login (antes aparecía
+  // por unos segundos al abrir el panel y después daba paso a los amigos).
+  if (!ready) {
+    return (
+      <main className={styles.screen}>
+        <p className={styles.booting}>{t('social.cargando')}</p>
+      </main>
+    )
+  }
 
   // Sin sesión (o cuenta vencida) → email + código (mismo login que el CLI).
   if (!me) {

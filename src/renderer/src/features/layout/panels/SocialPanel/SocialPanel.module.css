@@ -14,6 +14,14 @@
   overflow: hidden;
 }
 
+/* Placeholder mientras se resuelve la cuenta: sin él, el panel pintaba el
+   login por unos segundos al abrirse y después daba paso a los amigos. */
+.booting {
+  margin: auto;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
 /* Home / perfil / servidor: columna scrolleable con secciones.
    FULL-BLEED: el scroller llega al borde del panel (ahí vive el scrollbar) y
    el aire del contenido va adentro con padding. Así la barra no queda pegada

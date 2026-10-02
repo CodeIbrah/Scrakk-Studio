@@ -10915,6 +10915,14 @@
       "machine": false,
       "needsReview": false,
       "at": "2026-10-04T00:11:10.514Z"
+    },
+    "social.cargando": {
+      "src": "205443ee88568e8c",
+      "area": "social",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-02T19:34:16.343Z",
+      "approvedAt": "2026-10-02T19:34:16.739Z"
     }
   },
   "version": 1
