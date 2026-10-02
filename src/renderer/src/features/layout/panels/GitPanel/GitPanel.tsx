@@ -1240,6 +1240,15 @@ function ChangedTree({
           interactive={false}
           visiblePaths={visiblePaths}
           onSelectionChange={setSelected}
+          onLasso={(paths, select) => {
+            // Recuadro = "barrer y preparar": selecciona (para que aparezca la
+            // barra bulk y se vea qué agarró) y stagea lo que no esté ya en el
+            // índice. Antes el recuadro sólo seleccionaba y había que apretar
+            // Stage aparte.
+            select(paths)
+            const pending = paths.filter((p) => !stagedSet.has(p)).map(toRel)
+            if (pending.length > 0) onStage(pending)
+          }}
           rowActions={(node) =>
             // Acción de staging por archivo, al hover (como el `+` de VS Code).
             // Sin esto, el único camino para preparar un archivo era

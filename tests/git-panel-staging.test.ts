@@ -62,6 +62,37 @@ describe('acciones por fila en el árbol', () => {
     expect(git).toMatch(/node\.isDirectory/)
   })
 
+  it('la API es pública y tipada', () => {
+    // El consumidor puede tipar sus props sin reimportar internals.
+    const view = src(VIEW)
+    expect(view).toContain('export interface ExplorerViewProps')
+    const barrel = src('src/renderer/src/features/explorer/index.ts')
+    expect(barrel).toMatch(/type ExplorerViewProps/)
+    expect(barrel).toMatch(/type RowAction/)
+    expect(barrel).toMatch(/export type \{ FileNode \}/)
+  })
+
+  it('el recuadro de selección ejecuta la acción del consumidor', () => {
+    const panel = src(PANEL)
+    // Default: seleccionar. Con `onLasso`, decide el consumidor.
+    expect(panel).toMatch(/if \(onLasso\) onLasso\(paths, select\)/)
+    expect(panel).toMatch(/else select\(paths\)/)
+    // Y el contrato expone `select` para poder COMPONER.
+    expect(panel).toMatch(
+      /onLasso\?:\s*\(paths: string\[\], select: \(paths: string\[\]\) => void\) => void/
+    )
+    expect(src(VIEW)).toMatch(/onLasso\?:\s*\(paths: string\[\], select/)
+  })
+
+  it('Git usa el recuadro para preparar en lote (selecciona + stagea)', () => {
+    const git = src(GIT)
+    expect(git).toContain('onLasso={')
+    // Compone: primero selecciona, después stagea lo que no estaba.
+    expect(git).toMatch(/select\(paths\)/)
+    expect(git).toMatch(/filter\(\(p\) => !stagedSet\.has\(p\)\)/)
+    expect(git).toMatch(/onStage\(pending\)/)
+  })
+
   it('Commit sigue exigiendo índice y Todo sigue siendo stage-all', () => {
     const git = src(GIT)
     // Si alguien "arregla" Commit relajando esto, se pierde la semántica de git.

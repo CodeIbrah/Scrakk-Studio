@@ -11,7 +11,8 @@ export { ExplorerPanel } from './ExplorerPanel'
 export { ExplorerRow, type RowAction } from './components/ExplorerRow'
 export { setWorkspaceRoot, getWorkspaceRoot } from './hooks/useWorkspaceState'
 export { createNewFile, openFilesViaDialog, openFolderViaDialog } from './fileActions'
-export { ExplorerView } from './ExplorerView'
+export { ExplorerView, type ExplorerViewProps } from './ExplorerView'
+export type { FileNode } from './hooks/useWorkspaceState'
 export {
   registerFileDecorationProvider,
   getFileDecoration,

@@ -10,12 +10,13 @@
  * (virtualización, lasso, iconos por tema, decoraciones) sobre una raíz
  * arbitraria, con contexto de título aislado (no toca el header ajeno).
  *
- * Toggles (misma idea que los paneles: nada hardcodeado):
- * - `interactive` (default false): menús, dnd, crear/renombrar/eliminar,
- *   botones de header y atajos de mutación. La selección, el lasso y abrir
- *   archivos siguen funcionando.
- * - `decorations` (default true): badges del registry global
- *   (registerFileDecorationProvider).
+ * El árbol no sabe de ningún dominio: lo que puede hacer de más lo declara el
+ * consumidor —
+ *   - `visiblePaths`: mostrar solo estos archivos (+ sus ancestros).
+ *   - `rowActions`: botones por fila al hover (el `+`/`×` de Git, por ejemplo).
+ *   - `onLasso`: qué hace el recuadro de selección al soltar.
+ *
+ * Ver `ExplorerViewProps` para el detalle de cada una.
  */
 
 import type { JSX } from 'react'
@@ -26,6 +27,45 @@ import type { FileNode } from './hooks/useWorkspaceState'
 import { baseNameOf } from './utils/fileUtils'
 
 import { t } from '@core/i18n'
+
+/**
+ * API pública del árbol del explorer.
+ *
+ * El MISMO árbol que usa el panel (virtualización, lasso, iconos del tema
+ * activo, decoraciones) sobre una raíz arbitraria. Todo lo que el árbol puede
+ * hacer de más lo declara el consumidor: acciones por fila y acción del
+ * recuadro de selección. Nada de Git acá adentro.
+ */
+export interface ExplorerViewProps {
+  /** Raíz absoluta a mostrar (o `null` para el estado vacío). */
+  root: string | null
+  /**
+   * `true` = explorer completo: menús, drag & drop, crear/renombrar/eliminar,
+   * botones de header y atajos de mutación. Con `false` (default) queda de
+   * solo lectura: la selección, el lasso y abrir archivos siguen funcionando.
+   */
+  interactive?: boolean
+  /** Título del contexto aislado (default: el nombre de la carpeta). */
+  title?: string
+  /**
+   * Subset de paths a mostrar (default: todo el árbol). Los ancestros de los
+   * paths indicados se auto-expanden, así que sirve para pintar "solo estos
+   * archivos" sin construir una lista plana.
+   */
+  visiblePaths?: Set<string> | null
+  /** Selección actual, para que el consumidor ofrezca acciones bulk. */
+  onSelectionChange?: (paths: string[]) => void
+  /** Hook extra al abrir un archivo (después del open normal). */
+  onOpenFile?: (path: string, name: string) => void
+  /** Acciones por fila que aparecen al hacer hover (ver `RowAction`). */
+  rowActions?: (node: FileNode) => RowAction[]
+  /**
+   * Acción del recuadro de selección al soltar. Recibe los paths barridos y
+   * `select` para componer con la selección normal. Ver `ExplorerPanel`.
+   */
+  onLasso?: (paths: string[], select: (paths: string[]) => void) => void
+}
+
 export function ExplorerView({
   root,
   interactive = false,
@@ -33,23 +73,9 @@ export function ExplorerView({
   visiblePaths = null,
   onSelectionChange,
   onOpenFile,
-  rowActions
-}: {
-  /** Raíz absoluta a mostrar. */
-  root: string | null
-  /** true = explorer completo (igual que el panel). */
-  interactive?: boolean
-  /** Título del contexto aislado (default: nombre de la carpeta). */
-  title?: string
-  /** Subset a mostrar + ancestros auto-expandidos (default: todo). */
-  visiblePaths?: Set<string> | null
-  /** Selección actual (para acciones bulk externas). */
-  onSelectionChange?: (paths: string[]) => void
-  /** Hook extra al abrir un archivo (default: nada). */
-  onOpenFile?: (path: string, name: string) => void
-  /** Acciones por fila (hover): el árbol las dibuja con su propio estilo. */
-  rowActions?: (node: FileNode) => RowAction[]
-}): JSX.Element {
+  rowActions,
+  onLasso
+}: ExplorerViewProps): JSX.Element {
   return (
     <PanelTitleProvider initialTitle={title ?? (root ? baseNameOf(root) : t('explorer.explorador'))}>
       <ExplorerPanel
@@ -59,6 +85,7 @@ export function ExplorerView({
         onSelectionChange={onSelectionChange}
         onOpenFile={onOpenFile}
         rowActions={rowActions}
+        onLasso={onLasso}
       />
     </PanelTitleProvider>
   )

@@ -96,7 +96,8 @@ export function ExplorerPanel({
   visiblePaths = null,
   onSelectionChange,
   onOpenFile,
-  rowActions
+  rowActions,
+  onLasso
 }: {
   /** Raíz arbitraria a mostrar (default: workspace global). */
   rootOverride?: string
@@ -110,6 +111,18 @@ export function ExplorerPanel({
   onOpenFile?: (path: string, name: string) => void
   /** Acciones por fila (hover), dibujadas por el propio árbol. Ver `RowAction`. */
   rowActions?: (node: FileNode) => RowAction[]
+  /**
+   * Acción del RECUADRO de selección (lasso) al soltar.
+   *
+   * Si no se pasa, el recuadro deja los paths como selección (lo de siempre).
+   * Si se pasa, el consumidor decide qué hacer con esos paths — y recibe
+   * `select` para poder COMPONER en vez de reemplazar:
+   *
+   *   onLasso: (paths, select) => { select(paths); stage(paths) }
+   *
+   * El panel de Git lo usa así para preparar en lote arrastrando el recuadro.
+   */
+  onLasso?: (paths: string[], select: (paths: string[]) => void) => void
 }): JSX.Element {
   const workspace = useWorkspaceState(rootOverride)
   const selection = useFileSelection()
@@ -209,7 +222,12 @@ export function ExplorerPanel({
     rowCount: flatPaths.length,
     flatPaths,
     onCommit: (paths) => {
-      selection.setSelection(paths)
+      // La acción del recuadro es **del consumidor**: por defecto deja los
+      // paths seleccionados, pero `onLasso` puede reemplazarla o componerla
+      // (el panel de Git la usa para stagear en lote al arrastrar).
+      const select = (next: string[]): void => selection.setSelection(next)
+      if (onLasso) onLasso(paths, select)
+      else select(paths)
     },
     onClear: () => {
       selection.clear()

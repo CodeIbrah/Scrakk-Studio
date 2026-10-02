@@ -40,6 +40,18 @@ published are not edited. The file goes per version:
   (`rowActions?: (node) => RowAction[]`): the explorer draws them with its own
   style (size, color, and the same hover reveal as the `…` button), so a
   consumer does not have to replicate CSS or reach into the row layout.
+- **Rubber-band to stage**: the selection rectangle's action is now the
+  consumer's (`onLasso`), and it receives the swept paths **plus the default
+  `select`** so it can compose instead of replacing:
+  ```ts
+  onLasso: (paths, select) => { select(paths); stage(paths) }
+  ```
+  The Git panel uses exactly that: sweeping the box selects and **stages**
+  whatever was not staged yet. The default (no `onLasso`) is unchanged: the
+  rectangle just selects.
+- **Explorer API published and typed**: `ExplorerViewProps`, `RowAction` and
+  `FileNode` are exported from `@features/explorer`, so a host can type its own
+  props without importing internals.
 
 ### Fixes
 - **The Social panel showed the login for a few seconds when opening it**: `me`
