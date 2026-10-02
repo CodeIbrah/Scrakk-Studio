@@ -54,19 +54,21 @@ export const MessageList = memo(function MessageList({
     const handle = requestAnimationFrame(() => {
       const wraps = el.querySelectorAll<HTMLElement>(':scope > div')
       let prevBottom = Number.NaN
+      const report: string[] = []
       wraps.forEach((wrap, index) => {
         const rect = wrap.getBoundingClientRect()
         const gap = rect.top - prevBottom
-        if (Number.isFinite(gap) && gap > 16) {
+        if (Number.isFinite(gap) && gap > 4) {
           const hasThought = Boolean(wrap.querySelector('[aria-expanded]'))
-          console.warn(
-            `[chat] hueco de ${Math.round(gap)}px antes del mensaje #${index}` +
-              `${hasThought ? ' (Thought)' : ''} — alto del anterior: ` +
-              `${Math.round(wraps[index - 1]?.getBoundingClientRect().height ?? 0)}px`
+          const prev = wraps[index - 1]
+          report.push(
+            `#${index}${hasThought ? '(Thought)' : ''} +${Math.round(gap)}px ` +
+              `[prev alto ${Math.round(prev?.getBoundingClientRect().height ?? 0)}px]`
           )
         }
         prevBottom = rect.bottom
       })
+      if (report.length > 0) console.warn(`[chat] huecos: ${report.join(' | ')}`)
     })
     return () => cancelAnimationFrame(handle)
   }, [messages])
