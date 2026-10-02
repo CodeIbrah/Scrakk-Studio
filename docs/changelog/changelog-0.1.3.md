@@ -60,16 +60,22 @@ published are not edited. The file goes per version:
   consumer does not have to replicate CSS or reach into the row layout.
 
 ### AI chat (UI)
-- **Tool rows have hover and open their result**: the rows of a tool call are now
-  a button that **highlights on hover** and, on click, opens the tool's **result
-  in a modal** (the same `plain` pattern the subagent chat uses: mounted inside
-  the chat panel, no overlay, so you can keep interacting). The modal shows the
-  **arguments** the model sent and the **raw output** (monospaced and scrollable,
-  since it is a dump, not prose), with a proper state for "still running" and
-  "no output".
-- The click is **only added to tools that do not bring their own visual**
-  (`renderBody`): the subagent card and the diffs already do something on click,
-  and wrapping them would have stolen that interaction and opened two modals.
+- **Tool rows highlight on hover and open their result on click**, with the
+  decision living in **each tool's folder**, not in the chat block:
+  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
+    button with hover and, on click, opens the tool's **result in a modal** (the
+    same `plain` pattern as the subagent chat: mounted inside the chat panel, no
+    overlay, so you can keep interacting). The modal shows the **arguments** the
+    model sent and the **raw output** (monospaced and scrollable, since it is a
+    dump, not prose), with proper states for "still running" and "no output".
+  - Each tool opts out from **its own manifest** with `onOpen`: unset means the
+    generic result modal, `'self'` means the tool already handles the click, and
+    a function means a custom handler. The subagent (`task`) declares
+    `onOpen: 'self'` because its card opens the subagent's chat.
+- The first attempt decided this in the chat block by looking at `renderBody` —
+  and since **27 tools ship their own visual**, the `!renderBody` condition left
+  every one of them out and nothing was clickable. That coupling is what the
+  declarative `onOpen` removes.
 
 ### Explorer (UI)
 - **The filtered tree (Git → Changes) no longer costs a render per folder**: the

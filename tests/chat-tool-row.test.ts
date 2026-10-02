@@ -3,14 +3,14 @@
 // Licencia completa en LICENSE (Apache License 2.0).
 
 /**
- * Fila de tool en el chat: hover siempre, click sólo cuando la tool no trae su
- * propio visual.
+ * Interacción de la fila de una tool: hover siempre, click → resultado en modal.
  *
- * El criterio importa: las tools con `renderBody` (el subagente, los diffs…)
- * ya saben qué hacer al click —el subagente abre su chat en un modal—, así que
- * envolverlas en un botón les pisaría la interacción y abriría DOS modales.
- *
- * Sin entorno DOM, se verifica sobre el código: es lo que se rompe.
+ * ARQUITECTURA (esto es lo que se rompió la primera vez): el **shell** provee el
+ * comportamiento y **cada tool declara** el suyo desde su propia carpeta. La
+ * primera versión decidía en el bloque del chat mirando `renderBody` — y como
+ * casi todas las tools (27) traen visual propio, la condición `!renderBody`
+ * dejaba a todas afuera y ninguna era clickeable. Nada de eso puede volver a
+ * decidirse en el centro.
  */
 
 import { readFileSync } from 'node:fs'
@@ -19,37 +19,59 @@ import { describe, it, expect } from 'vitest'
 const src = (rel: string): string =>
   readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8')
 
+const SHELL = 'src/renderer/src/services/ai/tool-shell/ToolCallShell.tsx'
+const SHELL_CSS = 'src/renderer/src/services/ai/tool-shell/ToolCallShell.module.css'
+const MODAL = 'src/renderer/src/services/ai/tool-shell/ToolResultModal.tsx'
+const TYPES = 'src/renderer/src/services/ai/tools/types.ts'
+const TASK = 'src/renderer/src/services/ai/tools/task/index.tsx'
 const BLOCK = 'src/renderer/src/features/chat/components/ToolCallsBlock/ToolCallsBlock.tsx'
-const MODAL = 'src/renderer/src/features/chat/components/ToolCallsBlock/ToolResultModal.tsx'
-const CSS = 'src/renderer/src/features/chat/components/ToolCallsBlock/ToolCallsBlock.module.css'
 
-describe('fila de tool: hover y click', () => {
-  it('sólo es clickeable si la tool NO trae visual propio', () => {
-    const block = src(BLOCK)
-    expect(block).toMatch(/const openable = !meta\?\.renderBody/)
-    // Y cuando lo es, se renderiza como botón con su clase de hover.
-    expect(block).toMatch(/styles\.clickable/)
-    expect(block).toMatch(/onClick=\{openResult\}/)
+describe('fila de tool: el shell provee, la tool declara', () => {
+  it('el contrato existe y es declarativo', () => {
+    const types = src(TYPES)
+    expect(types).toContain('export interface ToolOpenContext')
+    // Sin declarar = resultado genérico; 'self' = la tool maneja su click.
+    expect(types).toMatch(/onOpen\?:\s*'self' \| \(\(ctx: ToolOpenContext\) => void\)/)
   })
 
-  it('el click abre el resultado en el modal del chat', () => {
+  it('el shell es quien pone el hover y el click (no el bloque del chat)', () => {
+    const shell = src(SHELL)
+    expect(shell).toMatch(/const openSelf = onOpen === 'self'/)
+    expect(shell).toMatch(/const clickable = !openSelf/)
+    expect(shell).toMatch(/<button type="button" className=\{styles\.row\}/)
+    // Con handler propio se respeta; si no, va el modal de resultado.
+    expect(shell).toContain('openCustom({')
+    expect(shell).toContain('openToolResultModal({')
+
+    const css = src(SHELL_CSS)
+    expect(css).toMatch(/\.row:hover/)
+    expect(css).toMatch(/cursor: pointer/)
+  })
+
+  it('el bloque del chat NO decide la interacción (nada hardcodeado)', () => {
+    const block = src(BLOCK)
+    // La condición que dejó a las 27 tools sin click, y su botón, ya no están.
+    expect(block).not.toContain('!meta?.renderBody')
+    expect(block).not.toContain('openToolResultModal')
+    expect(block).not.toMatch(/styles\.clickable/)
+    // Solo delega en el shell.
+    expect(block).toContain('<ToolCallShell')
+  })
+
+  it('la tool que ya es clickeable lo declara en SU carpeta', () => {
+    const task = src(TASK)
+    // El subagente abre su propio chat: lo dice su manifest, no el chat.
+    expect(task).toMatch(/onOpen: 'self'/)
+  })
+
+  it('el modal del resultado sale de la infraestructura de tools', () => {
     const modal = src(MODAL)
-    // Mismo patrón que el chat del subagente: plain dentro del panel de chat.
+    expect(modal).toContain('export function openToolResultModal')
     expect(modal).toContain("variant: 'plain'")
     expect(modal).toContain("portalSelector: '[data-modal-portal=\"chat\"]'")
-    expect(modal).toContain('export function openToolResultModal')
-    // Muestra args + salida (y qué hacer si aún corre o no hay salida).
-    expect(modal).toContain('chat.tool.argumentos')
-    expect(modal).toContain('chat.tool.salida')
-  })
-
-  it('la fila clickeable tiene hover real (y no mueve el layout)', () => {
-    const css = src(CSS)
-    expect(css).toMatch(/\.clickable:hover/)
-    expect(css).toMatch(/\.clickable \{/)
-    // Reset de botón: si falta, la fila se ve como un botón nativo.
-    expect(css).toMatch(/border: none/)
-    expect(css).toMatch(/background: transparent/)
-    expect(css).toMatch(/cursor: pointer/)
+    // Exportado por el barrel para que cualquier consumidor lo use.
+    expect(src('src/renderer/src/services/ai/tool-shell/index.ts')).toContain(
+      'openToolResultModal'
+    )
   })
 })

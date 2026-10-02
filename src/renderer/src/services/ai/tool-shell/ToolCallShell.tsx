@@ -15,7 +15,10 @@
 import type { JSX, ReactNode } from 'react'
 import type { ToolMeta } from '../tools/types'
 import type { ToolCall } from '../tools/types'
+import { openToolResultModal } from './ToolResultModal'
 import styles from './ToolCallShell.module.css'
+
+import { t } from '@core/i18n'
 
 export type ToolCallStatusType = 'pending' | 'streaming' | 'running' | 'success' | 'error' | 'blocked'
 
@@ -92,6 +95,50 @@ export function ToolCallShell({ execution, meta, children }: ToolCallShellProps)
   // Si la tool tiene visual propio → se usa tal cual (detectar visual y delegar).
   const visual = children ?? meta?.renderBody?.(args, result, status, execution)
 
+  // ── Click de la fila ────────────────────────────────────────────────────
+  // El shell PROVEE el comportamiento (hover + abrir el resultado en un modal) y
+  // cada tool lo ajusta desde SU carpeta: `onOpen` sin declarar = resultado
+  // genérico, `'self'` = la tool ya es clickeable por su cuenta (el subagente),
+  // o una función = handler propio. Antes esto se decidía en el bloque del chat
+  // mirando `renderBody`, y como casi todas las tools lo tienen, ninguna era
+  // clickeable.
+  const onOpen = meta?.onOpen
+  const openSelf = onOpen === 'self'
+  const openCustom = typeof onOpen === 'function' ? onOpen : null
+  const clickable = !openSelf
+
+  const handleOpen = (): void => {
+    if (openCustom) {
+      openCustom({
+        args,
+        result,
+        status,
+        runId: execution.runId,
+        toolCallId: execution.toolCallId
+      })
+      return
+    }
+    openToolResultModal({
+      label,
+      args,
+      result,
+      status
+    })
+  }
+
+  // CSS propio de la tool (vive en su carpeta visual/).
+  const body = (
+    <>
+      {meta?.displayCss ? <style>{meta.displayCss}</style> : null}
+      {visual ?? (
+        <span>
+          {label}
+          {displayArg ? ` · ${displayArg}` : ''}
+        </span>
+      )}
+    </>
+  )
+
   // Fallback de error (sin visual): ⚠ {label} · {arg}.
   if (status === 'error' && !visual) {
     return (
@@ -102,16 +149,11 @@ export function ToolCallShell({ execution, meta, children }: ToolCallShellProps)
     )
   }
 
-  // CSS propio de la tool (vive en su carpeta visual/) + su contenido directo.
+  if (!clickable) return body
+
   return (
-    <>
-      {meta?.displayCss ? <style>{meta.displayCss}</style> : null}
-      {visual ?? (
-        <span>
-          {label}
-          {displayArg ? ` · ${displayArg}` : ''}
-        </span>
-      )}
-    </>
+    <button type="button" className={styles.row} onClick={handleOpen} title={t('chat.tool.ver.resultado')}>
+      {body}
+    </button>
   )
 }

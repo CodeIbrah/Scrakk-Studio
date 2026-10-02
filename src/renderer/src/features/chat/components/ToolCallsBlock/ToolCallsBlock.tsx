@@ -16,20 +16,7 @@ import { ToolCallShell, ToolCallIcon, type ToolCallExecution } from '@services/a
 import type { ToolCallInfo, ToolResultInfo, ToolCallStatusType } from '@services/chat/types'
 import { registry } from '@services/ai/tools'
 import { sessionIdForToolCall } from '@services/ai/agents'
-import { openToolResultModal } from './ToolResultModal'
 import styles from './ToolCallsBlock.module.css'
-
-import { t } from '@core/i18n'
-
-/** Argumentos del tool call (JSON de la IA; `{}` si viene a medias). */
-function parseToolArgs(tc: ToolCallInfo): Record<string, unknown> {
-  try {
-    const parsed: unknown = JSON.parse(tc.function.arguments || '{}')
-    return parsed && typeof parsed === 'object' ? (parsed as Record<string, unknown>) : {}
-  } catch {
-    return {}
-  }
-}
 
 interface ToolCallsBlockProps {
   toolCalls: ToolCallInfo[]
@@ -52,21 +39,9 @@ export const ToolCallsBlock = memo(function ToolCallsBlock({
           : status
 
         // Config real de la tool: label, expandible, renderBody, plain…
+        // La INTERACCIÓN (hover + click) la resuelve `ToolCallShell` con el
+        // `onOpen` que declara cada tool en su propia carpeta: acá no se decide.
         const meta = registry.get(tc.function.name)?.meta
-
-        // Las tools SIN visual propio son clickeables: abren su resultado en un
-        // modal (mismo patrón que el subagente). Las que traen `renderBody`
-        // (subagente, diffs…) ya tienen su propia interacción y no se tocan.
-        const openable = !meta?.renderBody
-        const openResult = openable
-          ? () =>
-              openToolResultModal({
-                label: meta?.label ?? tc.function.name,
-                args: parseToolArgs(tc),
-                result: resultInfo?.content,
-                status: callStatus
-              })
-          : undefined
 
         const execution: ToolCallExecution = {
           toolCall: tc,
@@ -79,28 +54,20 @@ export const ToolCallsBlock = memo(function ToolCallsBlock({
           toolCallId: tc.id,
         }
 
-        return openResult ? (
-          <button
-            key={tc.id}
-            type="button"
-            className={[styles.toolRow, styles.clickable].join(' ')}
-            onClick={openResult}
-            title={t('chat.tool.ver.resultado')}
-          >
-            <span className={styles.toolIconBox}>
-              <ToolCallIcon toolName={tc.function.name} icon={meta?.icon} size={13} />
-            </span>
-            <div className={styles.toolVisual}>
-              <ToolCallShell execution={execution} meta={meta} />
-            </div>
-          </button>
-        ) : (
+        return (
           <div key={tc.id} className={styles.toolRow}>
             <span className={styles.toolIconBox}>
-              <ToolCallIcon toolName={tc.function.name} icon={meta?.icon} size={13} />
+              <ToolCallIcon
+                toolName={tc.function.name}
+                icon={meta?.icon}
+                size={13}
+              />
             </span>
             <div className={styles.toolVisual}>
-              <ToolCallShell execution={execution} meta={meta} />
+              <ToolCallShell
+                execution={execution}
+                meta={meta}
+              />
             </div>
           </div>
         )

@@ -15,3 +15,24 @@
   font-size: 12px;
   line-height: 1.5;
 }
+
+/* Fila clickeable: hover + reset de botón. La usa el shell para TODAS las
+   tools; el contenido lo sigue pintando la carpeta visual/ de cada una. El
+   padding/margin ±6px mantiene el layout idéntico al de antes del hover. */
+.row {
+  display: inline-block;
+  width: 100%;
+  margin: -3px -6px;
+  padding: 3px 6px;
+  border: none;
+  border-radius: var(--radius-sm, 4px);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.row:hover {
+  background: var(--color-hover);
+}

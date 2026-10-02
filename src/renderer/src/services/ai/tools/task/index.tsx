@@ -26,6 +26,9 @@ export const taskTool: Tool = {
     headerArgKey: 'subagent_type',
     expandable: true,
     displayCss,
+    // El subagente ya es clickeable por su cuenta: abre su chat en un modal.
+    // Se declara ACÁ, en la carpeta de la tool, no en el bloque del chat.
+    onOpen: 'self',
     renderBody: (args, result, status, execution) => (
       <TaskCard args={args} result={result} status={status} execution={execution} />
     )

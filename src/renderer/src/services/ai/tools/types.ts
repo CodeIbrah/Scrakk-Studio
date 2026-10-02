@@ -123,6 +123,28 @@ export interface ToolMeta {
     status?: string,
     execution?: { runId?: string; toolCallId?: string }
   ) => React.ReactNode
+
+  /**
+   * ¿Qué hace el click en la fila de esta tool?
+   *
+   * - **sin declarar** (default): el shell abre el **resultado** de la tool en un
+   *   modal (args + salida). Vale para todas.
+   * - `'self'`: la tool maneja su propio click. Lo declara la tool que ya es
+   *   clickeable por su cuenta — el subagente (`task`), que abre su chat.
+   *
+   * La decisión vive acá, en la carpeta de cada tool, no en el bloque central
+   * del chat: así el shell provee el comportamiento y cada tool lo ajusta.
+   */
+  onOpen?: 'self' | ((ctx: ToolOpenContext) => void)
+}
+
+/** Lo que recibe el `onOpen` propio de una tool. */
+export interface ToolOpenContext {
+  args: Record<string, unknown>
+  result?: string
+  status?: string
+  runId?: string
+  toolCallId?: string
 }
 
 export type ToolMutationBehavior = 'always' | 'never' | 'shell'
