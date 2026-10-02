@@ -2,525 +2,525 @@
 title: "Changelog 0.1.2"
 group: changelog
 order: 20
-summary: "Cambios relevantes de Scrakk Studio. La bienvenida muestra la primera entrada (la más nueva) en el apartado Anuncios, así que lo nuevo va arriba."
+summary: "Relevant changes in Scrakk Studio. The welcome screen shows the first entry (the newest) in the Announcements section, so the newest goes on top."
 ---
 # Changelog
 
-Cambios relevantes de Scrakk Studio. La **bienvenida** muestra la primera
-entrada (la más nueva) en el apartado **Anuncios**, así que lo nuevo va arriba.
+Relevant changes in Scrakk Studio. The **welcome screen** shows the first
+entry (the newest) in the **Announcements** section, so the newest goes on top.
 
-Formato: `## <versión> — <título>` y bullets por área. Las entradas ya
-publicadas no se editan. El archivo va por versión:
+Format: `## <version> — <title>` and bullets per area. Entries already
+published are not edited. The file goes per version:
 `docs/changelog/changelog-<x.y.z>.md`.
 
 ---
 
-## 0.1.2 — Memoria, terminal y chat
+## 0.1.2 — Memory, terminal, and chat
 
-### Rendimiento (memoria del editor)
-- El editor pasó de **un módulo WASM por archivo** a **uno por panel**: cada
-  archivo abierto es una **sesión** dentro del mismo motor, con su estado
-  completo (texto, **undo**, cursor, scroll y plegado). Cambiar de pestaña es
-  instantáneo y **ya no se pierde el undo** (antes, al superar el tope de
-  módulos en segundo plano, se descartaban). El motor ahora guarda ese estado
-  por sesión.
-- El renderer estaba **capeado a 256 MB** (`--js-flags` del perfil de
-  producción, que se propaga a **todos** los procesos). Al abrir varios archivos
-  V8 moría con *"Ineffective mark-compacts near heap limit"*. El tope queda
-  **opt-in** y apagado por defecto (`SCRAKK_PERF_CAP_MAIN_HEAP=1` lo activa).
-- Los cachés por archivo (símbolos del LSP, resaltado, encoding) ahora tienen
-  **tope y descarte del más viejo**: antes crecían con cada archivo abierto
-  hasta cerrar la tab.
-- Cada panel tiene su **propio módulo** (aislado): se pueden tener **varios
-  editores a la vez** (splits) sin que compartan canvas.
+### Performance (editor memory)
+- The editor went from **one WASM module per file** to **one per panel**: each
+  open file is a **session** inside the same engine, with its full state
+  (text, **undo**, cursor, scroll, and folding). Switching tabs is
+  instant and **the undo is no longer lost** (before, when the cap of
+  background modules was exceeded, they were discarded). The engine now keeps that state
+  per session.
+- The renderer was **capped at 256 MB** (`--js-flags` of the
+  production profile, which propagates to **all** processes). When opening several files
+  V8 died with *"Ineffective mark-compacts near heap limit"*. The cap is now
+  **opt-in** and off by default (`SCRAKK_PERF_CAP_MAIN_HEAP=1` enables it).
+- Per-file caches (LSP symbols, highlighting, encoding) now have
+  **a cap and oldest-first eviction**: before they grew with every open file
+  until the tab was closed.
+- Each panel has its **own module** (isolated): you can have **several
+  editors at once** (splits) without them sharing a canvas.
 
-### Lenguajes (un solo camino)
-- El **motor ya no trae gramáticas embebidas**: su wasm pasó de **~50 MB a ~3 MB**
-  y queda como renderer (recibe tokens, plegado y selección del host).
-- Cada lenguaje vive en **`langs/<id>/`** (su propio `.wasm` + queries + manifest)
-  y el IDE los carga **on-demand**. Agregar o actualizar un lenguaje es regenerar
-  su carpeta (`node tools/build-langs.mjs`), **sin recompilar el motor**.
-- El pack `langs/` se registra como **una extensión** más, así que los lenguajes
-  siguen funcionando sin instalar nada.
-- **Queries por el sistema híbrido**: cada categoría se completa desde el catálogo
-  que la publica mejor, no desde uno solo — **nvim-treesitter** (Apache-2.0) para
-  `highlights`, `injections`, `locals`, `folds` e `indents`; **Helix** (MPL-2.0)
-  para `tags` y `rainbows` (los únicos que los traen), y
-  **nvim-treesitter-textobjects** (Apache-2.0) para `textobjects`. Cuando el repo
-  del parser ya publica una categoría, esa manda. Cada catálogo va **fijado por
-  commit** y su licencia queda grabada en el `grammar.json` del paquete.
+### Languages (a single path)
+- The **engine no longer ships embedded grammars**: its wasm went from **~50 MB to ~3 MB**
+  and remains a renderer (it receives tokens, folding, and selection from the host).
+- Each language lives in **`langs/<id>/`** (its own `.wasm` + queries + manifest)
+  and the IDE loads them **on-demand**. Adding or updating a language means regenerating
+  its folder (`node tools/build-langs.mjs`), **without recompiling the engine**.
+- The `langs/` pack is registered as **one more extension**, so languages
+  keep working without installing anything.
+- **Queries via the hybrid system**: each category is completed from the catalog
+  that publishes it best, not from just one — **nvim-treesitter** (Apache-2.0) for
+  `highlights`, `injections`, `locals`, `folds`, and `indents`; **Helix** (MPL-2.0)
+  for `tags` and `rainbows` (the only ones that ship them), and
+  **nvim-treesitter-textobjects** (Apache-2.0) for `textobjects`. When the parser
+  repo already publishes a category, that one wins. Each catalog is **pinned by
+  commit** and its license is recorded in the package's `grammar.json`.
 
-### Editor — edición
-- **Auto-pairing por lenguaje**: los pares de cierre los declara el lenguaje (su
-  `language-configuration` o su tabla real); el motor ya no tiene una tabla fija
-  ni heurísticas (se fue el caso especial del apóstrofe). Sin pares declarados no
-  hay auto-cierre.
-- **Auto-indent real**: la sangría de la línea nueva sale del `indents.scm` del
-  lenguaje (`@indent.begin/@indent.end/@indent.dedent`) más la unidad del
-  lenguaje. Se fue la heurística (sangría previa + `{`); sin dato del lenguaje se
-  conserva la sangría actual.
-- **Multi-cursor**: carets extra con `Ctrl+Alt+↑/↓`, `Alt+Click` (caret donde
-  clickeás) y `Ctrl+D` (agrega la siguiente ocurrencia de la palabra, con
-  envolvimiento); tipear, borrar y Enter se aplican en **todos**, las flechas los
-  mueven juntos y `Esc` (o un click simple) vuelve a uno solo.
+### Editor — editing
+- **Per-language auto-pairing**: closing pairs are declared by the language (its
+  `language-configuration` or its real table); the engine no longer has a fixed table
+  or heuristics (the apostrophe special case is gone). Without declared pairs there is
+  no auto-close.
+- **Real auto-indent**: the new line's indent comes from the language's `indents.scm`
+  (`@indent.begin/@indent.end/@indent.dedent`) plus the language's
+  unit. The heuristic is gone (previous indent + `{`); without data from the language
+  the current indent is kept.
+- **Multi-cursor**: extra carets with `Ctrl+Alt+↑/↓`, `Alt+Click` (caret where
+  you click), and `Ctrl+D` (adds the next occurrence of the word, with
+  wrapping); typing, deleting, and Enter apply to **all**, the arrows
+  move them together, and `Esc` (or a simple click) goes back to just one.
 
-### Búsqueda (KolarGrep)
-- La búsqueda en archivos ahora puede usar el **servidor de KolarGrep**
-  (`kolargrep serve`) como **sidecar**: índice de trigramas **vivo** (watcher +
-  overlay incremental), caché y resultados con **`spans`/`columns`** — que es lo
-  que el editor necesita para resaltar el match exacto. El binario se lanza una
-  vez por workspace, con el índice **fuera del proyecto**
-  (`~/.cache/scrakk-search-serve`), y se apaga al cerrar la app.
-- Se mantiene el **fallback** al addon nativo y, si no está, al scan en TS: sin
-  sidecar la búsqueda sigue funcionando (solo pierde los detalles finos).
+### Search (KolarGrep)
+- File search can now use the **KolarGrep server**
+  (`kolargrep serve`) as a **sidecar**: a **live** trigram index (watcher +
+  incremental overlay), cache, and results with **`spans`/`columns`** — which is what
+  the editor needs to highlight the exact match. The binary is launched once
+  per workspace, with the index **outside the project**
+  (`~/.cache/scrakk-search-serve`), and it shuts down when the app closes.
+- The **fallback** to the native addon and, if it is not available, to the TS scan is kept:
+  without a sidecar, search keeps working (it only loses the fine details).
 
-### Editor — sugerencias (LSP)
-- **Lista de sugerencias en tiempo real** anclada al caret, como VS Code: al
-  tipear se pide `textDocument/completion` al server del archivo y aparece el
-  menú (DOM puro, igual que el tooltip del hover y el menú contextual). `↑`/`↓`
-  eligen, `Enter`/`Tab` aceptan, `Esc` cierra, `Ctrl+Space` la abre a mano y el
-  click también acepta.
-- Filtra por el **prefijo tipeado**, ordena por `sortText` y **deduplica** el
-  mismo símbolo cuando lo proponen dos servers. Cada ítem lleva **badge por
-  tipo**, `detail` y panel de **documentación**.
-- El commit **conserva el undo**: en vez de reescribir el buffer, manda los
-  Backspace del prefijo y los caracteres por el camino de teclado del motor (así
-  además respetan los auto-pairs del lenguaje).
-- El **ancla del caret** se calcula del lado del host (hit-test inverso sobre el
-  motor), así que no hizo falta ningún canal nuevo en Innerta.
-- Límites de esta primera versión: sin **snippets** ni **auto-import**
-  (`additionalTextEdits`), filtro por prefijo (no fuzzy) y el commit con
-  **multi-cursor** activo todavía toca todos los carets.
+### Editor — suggestions (LSP)
+- **Real-time suggestion list** anchored to the caret, like VS Code: as you
+  type, `textDocument/completion` is requested from the file's server and the
+  menu appears (pure DOM, just like the hover tooltip and the context menu). `↑`/`↓`
+  select, `Enter`/`Tab` accept, `Esc` closes, `Ctrl+Space` opens it manually, and
+  a click also accepts.
+- It filters by the **typed prefix**, sorts by `sortText`, and **deduplicates** the
+  same symbol when two servers propose it. Each item carries a **per-type badge**,
+  `detail`, and a **documentation** panel.
+- The commit **preserves undo**: instead of rewriting the buffer, it sends the
+  prefix's Backspaces and the characters through the engine's keyboard path (so
+  they also respect the language's auto-pairs).
+- The **caret anchor** is computed on the host side (reverse hit-test on the
+  engine), so no new channel was needed in Innerta.
+- Limitations of this first version: no **snippets** or **auto-import**
+  (`additionalTextEdits`), prefix filtering (not fuzzy), and the commit with
+  **multi-cursor** active still touches all carets.
 
 ### Terminal
-- Al **cambiar de workspace**, las terminales abiertas se reubican en el
-  proyecto nuevo (`cd`) y las nuevas nacen en la carpeta correcta. Antes
-  quedaban en la carpeta del proyecto anterior.
+- When **switching workspace**, open terminals are relocated to the
+  new project (`cd`) and new ones are born in the correct folder. Before
+  they stayed in the previous project's folder.
 
-### Chat de IA
-- Se quitó el **tope de rondas de tools** por turno (era 12): el ciclo se cortaba
-  en silencio después de varias herramientas. Ahora solo lo corta el usuario con
-  **Detener**.
-- **Subagentes (`task`) ya no quedan "clavados en Thinking"**: mientras la tool
-  corre, la card del subagente ahora se dibuja (antes el bubble se ocultaba hasta
-  que hubiera texto, así que no se veía ni la card ni el progreso hasta terminar
-  la ronda o apretar **Detener**).
-- **Se acabaron las cards duplicadas**: un proveedor que repite el `id` del tool
-  call con el `index` incrementado en cada chunk generaba **varias cards
-  idénticas** para un solo spawn. Ahora la acumulación del stream identifica por
-  `id`, deduplica al emitir y descarta los chunks que llegan con un `id` nuevo
-  pero **sin nombre** (cards fantasma, no ejecutables ni clickeables).
-- **Progreso en vivo en el chat**: la card del subagente muestra la última línea
-  con contenido mientras corre, sin abrir el modal.
-- **Sin burbujas vacías por ronda** en el transcript del subagente y **sin tool
-  result vacío** que hiciera al modelo padre volver a llamar `task`.
+### AI chat
+- The **per-turn tool round cap** was removed (it was 12): the loop was cut off
+  silently after several tools. Now only the user stops it with
+  **Stop**.
+- **Subagents (`task`) no longer get "stuck on Thinking"**: while the tool
+  runs, the subagent card is now drawn (before the bubble was hidden until
+  there was text, so neither the card nor the progress was visible until the round
+  finished or **Stop** was pressed).
+- **Duplicate cards are gone**: a provider that repeats the tool call's `id`
+  with the `index` incremented on each chunk generated **several identical
+  cards** for a single spawn. Now stream accumulation identifies by
+  `id`, deduplicates on emit, and discards chunks that arrive with a new `id`
+  but **no name** (ghost cards, not executable or clickable).
+- **Live progress in the chat**: the subagent card shows the last line
+  with content while it runs, without opening the modal.
+- **No empty bubbles per round** in the subagent transcript and **no empty tool
+  result** that would make the parent model call `task` again.
 
-### Panel de Git (UI)
-- **Rediseño del panel**: la rama y los botones **Fetch / Pull / Push** ahora
-  viven en un **solo bloque sin bordes**, solo con fondo; antes eran dos filas
-  con caja. Si hay varios repos, el activo aparece como etiqueta.
-- **Jerarquía reordenada**: el **mensaje de commit sube arriba de los cambios**
-  (antes quedaba escondido al final) y las secciones se agrupan por zonas:
-  **Repositorio** (ramas, historial, stash, tags, remotos), **Integración**
-  (cuenta, pull requests) y **Workspace** (árbol de solo lectura, que pasa al
-  final por no ser git).
-- **Historial con línea de tiempo**: un raíl continuo conecta los puntos de cada
+### Git panel (UI)
+- **Panel redesign**: the branch and the **Fetch / Pull / Push** buttons now
+  live in a **single borderless block**, with just a background; before they were two rows
+  with a box. If there are several repos, the active one appears as a label.
+- **Reordered hierarchy**: the **commit message moves above the changes**
+  (before it was hidden at the end) and the sections are grouped by zones:
+  **Repository** (branches, history, stash, tags, remotes), **Integration**
+  (account, pull requests), and **Workspace** (read-only tree, which moves to
+  the end for not being git).
+- **History with a timeline**: a continuous rail connects the dots of each
   commit.
-- **Tipografía más calmada**: fuera las MAYÚSCULAS de los títulos y pesos
-  bajados a 400/500, con números tabulares.
-- **Botones cuadrados** con esquinas redondeadas (ya no cápsula), también en el
+- **Calmer typography**: no more UPPERCASE titles and weights
+  lowered to 400/500, with tabular numbers.
+- **Square buttons** with rounded corners (no more pill), also in the
   commit.
-- El **input de commit** queda idéntico al del chat de IA: sin resize, con el
-  borde que aparece al enfocar y los botones alineados a la derecha.
-- **Hover directo**, sin transiciones, para que el cursor responda al instante.
+- The **commit input** is identical to the AI chat's: no resize, with the
+  border that appears on focus and the buttons aligned to the right.
+- **Direct hover**, no transitions, so the cursor responds instantly.
 
 ### Layout (splits)
-- Los paneles ahora se **parten de verdad**: al soltar una tab en un borde
-  (arriba / abajo / izquierda / derecha) se crea un **grupo nuevo** con su
-  propia barra de tabs, como en VS Code. Se pueden **anidar** sin límite.
-- El separador entre grupos muestra **dos bordes** (uno por hoja, mismo estilo
-  que el resto de paneles) con el handle de resize en el medio, igual que la
-  separación entre slots.
-- Cada split guarda su **ratio**: el tamaño se conserva al recargar la app.
-- Los splits viejos de **contenido dividido** (`splitDir`) se migran solos a
-  grupos reales al abrir la app.
-- Un grupo **vacío** muestra un botón **Cerrar slot** que lo cierra (colapsa
-  el split al grupo hermano o cierra el slot entero).
+- Panels now **truly split**: when you drop a tab on an edge
+  (top / bottom / left / right) a **new group** is created with its
+  own tab bar, like in VS Code. They can be **nested** without limit.
+- The separator between groups shows **two borders** (one per leaf, same style
+  as the rest of the panels) with the resize handle in the middle, just like the
+  separation between slots.
+- Each split saves its **ratio**: the size is preserved when reloading the app.
+- Old **split-content** splits (`splitDir`) migrate on their own to
+  real groups when the app opens.
+- An **empty** group shows a **Close slot** button that closes it (collapses
+  the split into the sibling group or closes the whole slot).
 
-### Barra de estado (UI)
-- Se **unificó el hover** de todos los botones/chips: cuadrado con esquinas
-  redondeadas (radio chico, no cápsula), mismo alto y color `--color-hover`,
-  tanto en los de la izquierda (LSP, problemas, git, encoding, extensiones)
-  como en los de la derecha (toggles de paneles, notificaciones y ajustes).
+### Status bar (UI)
+- The **hover** of all buttons/chips was **unified**: square with rounded
+  corners (small radius, not a pill), same height, and `--color-hover` color,
+  both for the left ones (LSP, problems, git, encoding, extensions)
+  and the right ones (panel toggles, notifications, and settings).
 
-### Cuenta (UI)
-- El **código de verificación por email** ahora se escribe en un input con
-  **slots animados** (`CodeSlots`, de React Bits): los dígitos aterrizan uno a
-  uno, el error **drena y limpia** los slots y el acierto los funde con un
-  check. Verifica solo al completar los 6 dígitos.
+### Account (UI)
+- The **email verification code** is now entered in an input with
+  **animated slots** (`CodeSlots`, from React Bits): the digits land one by
+  one, an error **drains and clears** the slots, and success merges them with a
+  check. It verifies only when the 6 digits are complete.
 
-### Chat de IA (UI)
-- El selector de **esfuerzo de pensamiento** abre una **barra slideable**
-  (extraída del componente PromptBar) en un menú custom, en vez del menú
-  contextual de opciones. Al llegar al **paso máximo**, el input se enciende con
-  un wash de acento y **chispas** que suben (más intensas al tipear).
+### AI chat (UI)
+- The **thinking effort** selector opens a **slideable bar**
+  (extracted from the PromptBar component) in a custom menu, instead of the
+  contextual options menu. On reaching the **maximum step**, the input lights up with
+  an accent wash and **sparks** that rise (more intense while typing).
 
-### Chat de IA — Skills (UI)
-- Las **vistas de skills e historial** dejaron de ser un toggle: son vistas
-  propias dentro del panel de chat, cada una con su **botón de volver** (animado)
-  en el header y su título propio (**Skills** / **Historial**). Abrir una cierra
-  la otra desde cualquier vía (header, comando o menú).
-- **La pestaña sigue el título del panel**: al mover el chat a otra zona, la tab
-  toma el título dinámico que el panel publica (p. ej. **Skills**) en vez de un
-  label fijo.
-- **Rediseño del panel de Skills**: barra de acciones arriba (**Nueva** con
-  icono y **Recargar**, que pasa a **Cerrar** al abrir el formulario); el
-  formulario aparece debajo al pulsar **Nueva** y la lista queda abajo. El
-  formulario y el log se **colapsan/expanden animando la altura**, así el
-  contenido se mueve suave y sin saltos; la entrada de los campos es
-  **escalonada (350ms)** y la salida inversa de **150ms**.
-- **Filas estilo explorador**: píldora de origen más grande (envuelve si el
-  texto es largo) y hover de fila que contiene los botones de acción. Los inputs
-  viven sobre un container con la **superficie del tema** y usan el **bg del
-  tema** (nada hardcodeado), sin bordes y sin resize en las instrucciones.
-- **Contador** en lenguaje natural ("Tienes N skills") y **confirmación al
-  borrar** mediante el **sistema global de modales**.
+### AI chat — Skills (UI)
+- The **skills and history views** are no longer a toggle: they are their
+  own views inside the chat panel, each with its **back button** (animated)
+  in the header and its own title (**Skills** / **History**). Opening one closes
+  the other from any path (header, command, or menu).
+- **The tab follows the panel title**: when moving the chat to another zone, the tab
+  takes the dynamic title that the panel publishes (e.g. **Skills**) instead of a
+  fixed label.
+- **Skills panel redesign**: action bar on top (**New** with
+  icon and **Reload**, which becomes **Close** when the form opens); the
+  form appears below when pressing **New** and the list stays at the bottom. The
+  form and the log **collapse/expand by animating the height**, so the
+  content moves smoothly and without jumps; the fields' entry is
+  **staggered (350ms)** and the reverse exit is **150ms**.
+- **Explorer-style rows**: a larger origin pill (it wraps if the
+  text is long) and row hover that contains the action buttons. The inputs
+  live on a container with the **theme surface** and use the **theme
+  bg** (nothing hardcoded), with no borders and no resize on the instructions.
+- **Counter** in natural language ("You have N skills") and **confirmation
+  when deleting** through the **global modal system**.
 
-### Herramientas (tipos)
-- Las tools se agrupan por **Familias → Tipos** en Ajustes → Chat →
-  Herramientas: **Entorno** (Archivos, Código, Sistema, Navegador, Skills,
-  Utilidades) y **Agénticos** (Subagentes).
-- Cada tool declara su `type`; ya **no hay un union hardcodeado**. El catálogo
-  es **extensible**: una extensión `.sef` puede aportar su propio
-  **pack/familia** y sus tipos (`family`/`type` en el manifest).
-- Toggle por **grupo** (encender/apagar todo un tipo) además del toggle por tool.
-- La **guía propia de cada tool** (`prompt.ts`) ahora se inyecta al system prompt
-  (`Guidance:` por tool). Antes estaba muerta: solo se usaba la `description`.
+### Tools (types)
+- Tools are grouped by **Families → Types** in Settings → Chat →
+  Tools: **Environment** (Files, Code, System, Browser, Skills,
+  Utilities) and **Agentic** (Subagents).
+- Each tool declares its `type`; there is **no hardcoded union** anymore. The catalog
+  is **extensible**: a `.sef` extension can contribute its own
+  **pack/family** and its types (`family`/`type` in the manifest).
+- Toggle per **group** (turn a whole type on/off) in addition to the per-tool toggle.
+- Each tool's **own guidance** (`prompt.ts`) is now injected into the system prompt
+  (`Guidance:` per tool). Before it was dead: only the `description` was used.
 
-### Agentes (UI)
-- Se **unificaron modos y subagentes** en un solo concepto: **Agentes**, con
-  dos tabs en Ajustes → Chat → **Agentes**: **Primarios** (los que antes eran
-  "modos", el agente activo del chat) y **Subagentes** (reusables).
-- Cada agente tiene **prompt, permisos, herramientas y modelo** propios; el
-  modelo **hereda el del chat** por defecto (`inherit`, como el CLI).
-- Los subagentes se invocan con la tool **`task`** o escribiendo
-  **`@nombre <tarea>`** en el input del chat. Los primarios declaran qué
-  subagentes pueden usar (los modos integrados ven todos).
-- Se guardan en `.scrakk/agents/primary.json` y `.scrakk/agents/subagents.json`
-  (usuario y proyecto). Al primer arranque se crea un primario **Asistente** y
-  un subagente **Explorador** (read-only) usando el propio sistema, no builtins.
-- `modes.json` se migra solo a `primary.json`.
-- **El subagente se ve en un modal**: `@nombre <tarea>` (y el click en la card
-  de `task`) abre un **modal sin overlay** (variante `plain` del sistema global
-  de modales) montado **dentro del panel de chat**, con el **transcript en vivo**
-  del subagente (contenido, razonamiento y tool calls) reusando los componentes
-  de chat, **sin input** (un subagente no recibe mensajes). Mientras está
-  abierto, el input del chat principal queda **bloqueado** (estado `locked`).
-- Las **tool calls** llegan **en vivo**: el proceso main las emite mientras el
-  modelo las escribe (antes solo al terminar el stream), así la card aparece en
-  tiempo real y no recién al cortar la respuesta.
-- La tool `task` tiene **card custom** (shimmer mientras corre): al terminar,
-  **click en la card** abre ese modal; solo hay uno a la vez.
+### Agents (UI)
+- **Modes and subagents were unified** into a single concept: **Agents**, with
+  two tabs in Settings → Chat → **Agents**: **Primary** (what used to be
+  "modes", the chat's active agent) and **Subagents** (reusable).
+- Each agent has its own **prompt, permissions, tools, and model**; the
+  model **inherits the chat's** by default (`inherit`, like the CLI).
+- Subagents are invoked with the **`task`** tool or by typing
+  **`@name <task>`** in the chat input. Primary agents declare which
+  subagents they can use (the built-in modes see all).
+- They are stored in `.scrakk/agents/primary.json` and `.scrakk/agents/subagents.json`
+  (user and project). On first launch a primary **Wizard** and
+  an **Explorer** subagent (read-only) are created using the system itself, not builtins.
+- `modes.json` migrates on its own to `primary.json`.
+- **The subagent is seen in a modal**: `@name <task>` (and clicking the `task`
+  card) opens an **overlay-less modal** (`plain` variant of the global
+  modal system) mounted **inside the chat panel**, with the subagent's **live
+  transcript** (content, reasoning, and tool calls) reusing the chat
+  components, **with no input** (a subagent receives no messages). While it is
+  open, the main chat input is **locked** (state `locked`).
+- **Tool calls** arrive **live**: the main process emits them while the
+  model is writing them (before, only when the stream ended), so the card appears in
+  real time and not only when the response is cut off.
+- The `task` tool has a **custom card** (shimmer while it runs): when it finishes,
+  **clicking the card** opens that modal; there is only one at a time.
 
-### Servidores (LSP)
-- **Progreso de instalación en vivo**: al instalar un language server desde
-  Ajustes, el botón que dispara la acción se envuelve con un **borde animado**
-  que recorre sus cuatro lados mientras corre, y el **tooltip** muestra la fase
-  (preparando, descargando, instalando, extrayendo). Cuando el release publica
-  `content-length`, además se ve el **porcentaje real** (`Descargando… 42%`).
-- La descarga de releases de GitHub se **transmite por chunks** y reporta
-  bytes/porcentaje desde el proceso main; antes se bajaba el buffer completo en
-  memoria y sin aviso. Los instaladores por **npm/go/gem/dotnet** muestran su
-  última línea de salida, sin inventar un porcentaje que no conocen.
-- **Feedback unificado en la zona**: reiniciar, encender/apagar e instalar usan
-  el mismo botón de carga; la carga inicial de la lista usa la barra de la zona.
-  Cada operación permanece visible **al menos 250 ms** aunque responda al
-  instante (evita el parpadeo) y el aviso del resultado sale después de ese
-  mínimo.
-- El botón de carga queda como **pieza reutilizable del UI kit**
-  (`LoadingButton`, con variantes y tamaños como `IconButton`), disponible para
-  cualquier botón de la app y con el color del tema.
+### Servers (LSP)
+- **Live installation progress**: when installing a language server from
+  Settings, the button that triggers the action is wrapped with an **animated border**
+  that travels along its four sides while it runs, and the **tooltip** shows the phase
+  (preparing, downloading, installing, extracting). When the release publishes
+  `content-length`, the **real percentage** is also shown (`Downloading… 42%`).
+- GitHub release downloads are **streamed in chunks** and report
+  bytes/percentage from the main process; before the whole buffer was downloaded into
+  memory and with no notice. Installs via **npm/go/gem/dotnet** show their
+  last output line, without inventing a percentage they do not know.
+- **Unified feedback in the zone**: restarting, toggling, and installing use
+  the same loading button; the list's initial load uses the zone's bar.
+  Each operation stays visible for **at least 250 ms** even if it responds
+  instantly (avoids flicker) and the result notice appears after that
+  minimum.
+- The loading button becomes a **reusable UI kit piece**
+  (`LoadingButton`, with variants and sizes like `IconButton`), available for
+  any button in the app and with the theme color.
 
-### Ajustes (UI)
-- **Ajustes → Servidores (LSP)**: las filas de cada server dejaron la forma de
-  *card con cápsulas* (estado, origen y extensiones iban en píldoras) por una
-  **superficie única con filas planas**, al estilo de Apariencia y Skills: el
-  **estado es un punto de color + texto**, el origen y las extensiones van en
-  **texto tenue** (sin fondo) y las filas tienen **hover** en vez de borde por
-  card. Los botones pasan de cápsula a **radio de input** y **conservan el
-  loader animado** (`LoadingButton`), ahora con radio configurable por contexto
+### Settings (UI)
+- **Settings → Servers (LSP)**: each server's rows dropped the
+  *card with pills* shape (status, origin, and extensions were in pills) for a
+  **single surface with flat rows**, in the style of Appearance and Skills: the
+  **status is a colored dot + text**, the origin and extensions are in
+  **muted text** (no background), and the rows have **hover** instead of a per-card
+  border. The buttons go from pill to **input radius** and **keep the
+  animated loader** (`LoadingButton`), now with a radius configurable per context
   (`--loading-border-radius`).
-- **Nav de Ajustes**: **Servidores** y **Resaltado** pasan a ser **hijos de
-  Editor** (antes Servidores era de primer nivel y Resaltado colgaba de
-  Servidores), para que la jerarquía refleje que son ajustes del editor.
-- **Editor → Resaltado (Fuente)**: el cambio ahora **aplica al instante** sobre
-  el archivo abierto. El ajuste existía y se guardaba, pero el motor Innerta
-  **no escuchaba** su evento (`highlight-source-changed`): recién se notaba al
-  reabrir el archivo. Además la sección muestra un **estado en vivo** (modo
-  efectivo + tokens de LSP / tree-sitter / TextMate) para poder **verificar**
-  quién está pintando, junto al inspector de tokens.
-- **Botón "volver arriba"** en el contenido de Ajustes: aparece al bajar con una
-  animación de **150ms** (fade + deslizamiento) y sube el contenido de forma
-  **suave**; respeta `prefers-reduced-motion` (salto directo) y al cambiar de
-  sección el contenido vuelve arriba.
+- **Settings nav**: **Servers** and **Highlighting** become **children of
+  Editor** (before, Servers was top-level and Highlighting hung from
+  Servers), so the hierarchy reflects that they are editor settings.
+- **Editor → Highlighting (Source)**: the change now **applies instantly** to
+  the open file. The setting existed and was saved, but the Innerta engine
+  **did not listen** to its event (`highlight-source-changed`): it was only noticed
+  when the file was reopened. The section also shows a **live state** (effective
+  mode + LSP / tree-sitter / TextMate tokens) to be able to **verify**
+  who is painting, next to the token inspector.
+- **"Back to top" button** in the Settings content: it appears when scrolling down with a
+  **150ms** animation (fade + slide) and scrolls the content **smoothly**;
+  it respects `prefers-reduced-motion` (direct jump) and when changing
+  section the content returns to the top.
 
-### i18n — Internacionalización (UI)
-- **Motor propio y tipado**: `t()` con interpolación (`{nombre}`), plurales
-  (`count` → `.one`/`.other`) y caída al idioma base. Sin traducción en runtime:
-  las claves se resuelven contra catálogos estáticos y un typo en `t('...')` no
-  compila (la unión `MessageKey` se deriva del catálogo base).
-- **El español es la base** (`es`) y el **inglés** se traduce una sola vez y se
-  guarda. Cada clave recuerda el **hash del texto base**: si el `es` no cambió
-  nunca se re-traduce; si cambió, queda `stale`.
-- **Selector de idioma** en Ajustes → Apariencia (`Sistema` / `Español` /
-  `English`), persistido y aplicado al instante (incluido el `<html lang>`).
-  Al cambiarlo, el **IDE entero** se vuelve a renderizar con el idioma nuevo
-  (sin remontar paneles: no se pierde estado).
-- **Interfaz migrada al catálogo**: menú superior, barra de estado, activity
-  bar, títulos de paneles y pestañas, Ajustes (nav + secciones), paneles
-  (Explorador, Git, Problemas, Notas, Social, Chat…), onboarding y diálogos.
-  Los títulos de panel y los labels de los registries se resuelven con
-  *getters* (`get title() { return t(...) }`), así siguen al idioma sin tocar
-  a los consumidores.
+### i18n — Internationalization (UI)
+- **Own typed engine**: `t()` with interpolation (`{name}`), plurals
+  (`count` → `.one`/`.other`), and fallback to the base language. No runtime
+  translation: keys are resolved against static catalogs and a typo in `t('...')` does not
+  compile (the `MessageKey` union is derived from the base catalog).
+- **Spanish is the base** (`es`) and **English** is translated once and
+  stored. Each key remembers the **hash of the base text**: if the `es` did not
+  change it is never re-translated; if it changed, it becomes `stale`.
+- **Language selector** in Settings → Appearance (`System` / `Spanish` /
+  `English`), persisted and applied instantly (including `<html lang>`).
+  When changed, the **entire IDE** re-renders with the new language
+  (without remounting panels: no state is lost).
+- **Interface migrated to the catalog**: top menu, status bar, activity
+  bar, panel and tab titles, Settings (nav + sections), panels
+  (Explorer, Git, Problems, Notes, Social, Chat…), onboarding, and dialogs.
+  Panel titles and registry labels are resolved with
+  *getters* (`get title() { return t(...) }`), so they follow the language without touching
+  the consumers.
 - **`tools/i18n.mjs`** (`npm run i18n`): `--status`, `--extract`, `--sync`,
-  `--translate <lang>` (motor **DeepL** por defecto; `argos` local como
-  alternativa), `--review`, `--approve`, `--check [--strict]` y `--doctor`.
-  Incluye **glosario curado** (coincidencia exacta) para las strings cortas que
-  el motor no desambigua sin contexto, y **protección de `{placeholders}`** con
-  verificación posterior.
-- **Flujo de release**: `release.yml` corre `--check --strict` y **bloquea** el
-  paquete si hay claves faltantes, desactualizadas o sin revisar; `ci.yml` avisa
-  sin bloquear mientras la migración avanza.
+  `--translate <lang>` (**DeepL** engine by default; local `argos` as an
+  alternative), `--review`, `--approve`, `--check [--strict]`, and `--doctor`.
+  It includes a **curated glossary** (exact match) for short strings that
+  the engine cannot disambiguate without context, and **`{placeholders}` protection** with
+  a later check.
+- **Release flow**: `release.yml` runs `--check --strict` and **blocks** the
+  package if there are missing, outdated, or unreviewed keys; `ci.yml` warns
+  without blocking while the migration progresses.
 
-### Chat Social — archivos compartidos
-- **Compartir archivos como contenido, no como adjunto**: un archivo va como un
-  mensaje de tipo `codefile` (columna nueva `kind` en `messages`); el `body`
-  lleva un **sobre JSON de una línea** con los metadatos (`name`, `lang`,
-  `lines`, `size`, `sha`, `key`, `expiresAt`) y el contenido vive en **R2**
-  (bucket privado `scrakk-chat-files`). Los mensajes normales quedan intactos
-  (4000 chars, mismo CHECK).
-- **Gatekeeper**: las credenciales de R2 **no viajan en la app**. Todo pasa por
-  la Edge Function `social-file`, que valida JWT, amistad, **límites** (10.000
-  líneas / 512 KB), **cupo** y recién ahí sube o firma una **URL de vida corta**
-  para el receptor (con verificación `sha256` al bajar).
-- **Cupo borrable + caducidad**: 15 archivos vivos por conversación; borrar un
-  archivo libera cupo al instante y a los **60 días** el lifecycle de R2 los
-  elimina solo (la card pasa a "expirado").
-- **El INSERT lo hace el gatekeeper**: la Edge Function valida, sube a R2 **y
-  crea el mensaje**, así la cuota cuenta archivos reales y el **rate limit de la
-  DB** aplica aunque el cliente esté modificado (antes se podía subir sin
-  mensaje → objetos huérfanos sin tope de tasa). Si el INSERT falla, borra el
-  objeto. El `sha256` y las líneas los calcula el **servidor**, no el cliente.
-- **Sobre validado en la DB**: un CHECK exige que un mensaje `codefile` traiga un
-  sobre JSON válido (`v`, `kind`, `name`, `key`) — ni con SQL directo se cuela
-  un archivo basura. El `body` de los mensajes normales sigue capado en 4000.
-- **Card en el mensaje**: header con el **ícono del tema de fileIcons activo**
-  (nada hardcodeado), nombre, líneas, tamaño y vencimiento; el body baja el
-  contenido bajo demanda y lo pinta resaltado.
-- **Rate limit real**: se aplicó el trigger `messages_rate_limit` (7 en 5 s),
-  que hasta ahora estaba escrito pero **sin aplicar** (el `msg_ratelimited` del
-  cliente era código muerto).
-- **Compositor**: contador de caracteres estilo Discord (muestra lo que resta y
-  avisa al pasarse del tope, bloqueando el envío) y el botón de emojis ahora usa
-  un `ProductIcon` (`emoji`) en vez del glifo hardcodeado.
-- **Compartir desde el menú contextual**: opción "Compartir en Social" en el
-  **Explorer** y en el **click derecho de las tabs** de archivo, vía la API
-  global de context menu.
-- **Drag & drop al input**: arrastrá una **tab** o un **archivo del Explorer**
-  directo al compositor del panel Social. Se agrega como **archivo linkeado**
-  con su mini-card (ícono del pack + nombre) junto al input, como los adjuntos;
-  al enviar, cada uno se comparte como mensaje `codefile`. La tab usa el drag por
-  pointer del layout (nuevo *drop sink*, sin tocar el resolver de tabs) y el
-  Explorer el drag nativo de recursos.
+### Social Chat — shared files
+- **Share files as content, not as an attachment**: a file goes as a
+  `codefile` type message (new `kind` column in `messages`); the `body`
+  carries a **one-line JSON envelope** with the metadata (`name`, `lang`,
+  `lines`, `size`, `sha`, `key`, `expiresAt`) and the content lives in **R2**
+  (private bucket `scrakk-chat-files`). Normal messages stay intact
+  (4000 chars, same CHECK).
+- **Gatekeeper**: the R2 credentials **do not travel in the app**. Everything goes through
+  the `social-file` Edge Function, which validates JWT, friendship, **limits** (10,000
+  lines / 512 KB), **quota**, and only then uploads or signs a **short-lived URL**
+  for the receiver (with `sha256` verification on download).
+- **Deletable quota + expiry**: 15 live files per conversation; deleting a
+  file frees quota instantly and after **60 days** the R2 lifecycle
+  deletes them on its own (the card becomes "expired").
+- **The gatekeeper does the INSERT**: the Edge Function validates, uploads to R2, **and
+  creates the message**, so the quota counts real files and the **DB rate
+  limit** applies even if the client is modified (before you could upload without a
+  message → orphan objects with no rate cap). If the INSERT fails, it deletes the
+  object. The `sha256` and the lines are computed by the **server**, not the client.
+- **Envelope validated in the DB**: a CHECK requires that a `codefile` message carries a
+  valid JSON envelope (`v`, `kind`, `name`, `key`) — not even with direct SQL can
+  a junk file slip through. The `body` of normal messages stays capped at 4000.
+- **Card in the message**: header with the **icon of the active fileIcons theme**
+  (nothing hardcoded), name, lines, size, and expiry; the body downloads the
+  content on demand and paints it highlighted.
+- **Real rate limit**: the `messages_rate_limit` trigger was applied (7 in 5 s),
+  which until now was written but **not applied** (the client's `msg_ratelimited`
+  was dead code).
+- **Composer**: Discord-style character counter (it shows what is left and
+  warns when going over the cap, blocking send) and the emoji button now uses
+  a `ProductIcon` (`emoji`) instead of the hardcoded glyph.
+- **Share from the context menu**: "Share to Social" option in the
+  **Explorer** and in the **right-click of file tabs**, via the
+  global context menu API.
+- **Drag & drop to the input**: drag a **tab** or an **Explorer file**
+  straight to the Social panel composer. It is added as a **linked file**
+  with its mini-card (pack icon + name) next to the input, like attachments;
+  on send, each one is shared as a `codefile` message. The tab uses the layout's
+  pointer drag (new *drop sink*, without touching the tab resolver) and the
+  Explorer the native resource drag.
 
-### Chat Social — rendimiento (lag con conversaciones largas)
-- **El `memo` de cada mensaje volvió a funcionar**: el perfil del remitente se
-  armaba como **objeto nuevo en cada render**, así que la comparación de `memo`
-  fallaba siempre y **todos** los mensajes se re-renderizaban aunque solo
-  hubiera cambiado la presencia de un amigo. Ahora el perfil se cachea **por
-  remitente** y conserva su identidad mientras sus datos no cambien.
-- **La lista de mensajes está memoizada** y todo lo derivado se calcula en una
-  sola pasada: los `Map` de nombre/avatar ya no se reconstruyen en cada render.
-- **Formateadores de fecha cacheados**: `toLocaleTimeString` /
-  `toLocaleDateString` construyen un `Intl.DateTimeFormat` nuevo en cada llamada,
-  y se llamaban una o dos veces **por mensaje y por render** (con `new Date()`
-  extra para detectar "hoy"/"ayer"). Ahora el formateador y el resultado se
-  cachean por locale y por timestamp.
-- **Realtime es la fuente de verdad, no el refetch**: cada evento de presencia
-  llegaba **sin datos** y el renderer respondía con un refetch completo (amigos +
-  solicitudes + presencia). Ahora el evento **trae la fila** y se actualiza solo
-  esa entrada: un latido ya no son 3 queries ni un render del panel entero.
-- **La suscripción de Realtime no se re-engancha sola**: dependía de `friends`,
-  que cambiaba de identidad en cada poll, así que los 7 canales se desuscribían y
-  se volvían a suscribir cada 15s (con una ventana ciega donde se perdían
-  eventos). Ahora se engancha una vez y lee siempre lo fresco por ref.
-- **El estado no cambia de identidad si no cambia**: `friends`, `requests` y el
-  mapa de presencia comparan contenido antes de reemplazarse, así que un poll
-  que no trae diferencias ya no invalida los `memo` de la lista.
-- **Menos polling**: los refrescos de seguridad bajaron de **3s a 20s**
-  (mensajes), **10s a 60s** (presencia) y **15s a 120s** (amigos/solicitudes).
-  El canal ya cubre INSERT, UPDATE y DELETE de `messages`, así que la red de
-  seguridad sigue existiendo pero sin pagarse seis veces por minuto.
-- **Publicar presencia solo si cambia**: abrir o cambiar de archivo en el editor
-  republicaba presencia aunque el contenido fuera idéntico (una escritura y un
-  evento Realtime para todos los amigos por cada archivo tocado). Ahora se
-  compara antes de escribir; el latido de 45s sigue refrescando la presencia.
-- **El propio latido se ignora**: la propia presencia vuelve por el mismo canal
-  (uno también cumple la política de "amigos") y provocaba un re-render cada
-  45s. El estado local ya es la fuente de verdad, así que se descarta.
-- **Tipado funcionando**: el indicador de "está escribiendo" usaba un canal
-  `broadcast` (`typing:<uid>`) y **no tenía políticas** en `realtime.messages`,
-  así que con la autorización de Realtime el `.subscribe()` connectaba pero el
-  evento **nunca llegaba, sin error visible**. Se aplicaron las dos políticas que
-  faltaban (enviar sólo al canal de un amigo, leer sólo el propio).
+### Social Chat — performance (lag with long conversations)
+- **Each message's `memo` works again**: the sender's profile was
+  built as a **new object on every render**, so the `memo` comparison
+  always failed and **all** messages re-rendered even if only
+  a friend's presence had changed. Now the profile is cached **per
+  sender** and keeps its identity as long as its data does not change.
+- **The message list is memoized** and everything derived is computed in a
+  single pass: the name/avatar `Map`s are no longer rebuilt on every render.
+- **Cached date formatters**: `toLocaleTimeString` /
+  `toLocaleDateString` build a new `Intl.DateTimeFormat` on every call,
+  and they were called once or twice **per message and per render** (with an extra
+  `new Date()` to detect "today"/"yesterday"). Now the formatter and the result are
+  cached per locale and per timestamp.
+- **Realtime is the source of truth, not the refetch**: each presence event
+  arrived **with no data** and the renderer responded with a full refetch (friends +
+  requests + presence). Now the event **brings the row** and only
+  that entry is updated: a heartbeat is no longer 3 queries or a render of the whole panel.
+- **The Realtime subscription does not re-attach on its own**: it depended on `friends`,
+  which changed identity on every poll, so the 7 channels unsubscribed and
+  resubscribed every 15s (with a blind window where events were lost).
+  Now it attaches once and always reads the fresh value via ref.
+- **State does not change identity if it does not change**: `friends`, `requests`, and the
+  presence map compare content before being replaced, so a poll
+  that brings no differences no longer invalidates the list's `memo`s.
+- **Less polling**: safety refreshes dropped from **3s to 20s**
+  (messages), **10s to 60s** (presence), and **15s to 120s** (friends/requests).
+  The channel already covers INSERT, UPDATE, and DELETE of `messages`, so the safety
+  net still exists but without paying six times a minute.
+- **Publish presence only if it changes**: opening or switching files in the editor
+  republished presence even if the content was identical (a write and a
+  Realtime event for all friends for every file touched). Now it
+  compares before writing; the 45s heartbeat still refreshes presence.
+- **The heartbeat itself is ignored**: one's own presence comes back through the same channel
+  (you also match the "friends" policy) and caused a re-render every
+  45s. The local state is already the source of truth, so it is discarded.
+- **Typing working**: the "is typing" indicator used a
+  `broadcast` channel (`typing:<uid>`) and **had no policies** in `realtime.messages`,
+  so with Realtime authorization the `.subscribe()` connected but the
+  event **never arrived, with no visible error**. The two missing policies were
+  applied (send only to a friend's channel, read only your own).
 
-### Editor — visores por formato (fileHandlers)
-- **Registry de excepciones por formato**: cada uno vive en **su propia carpeta**
-  (como los tools de la IA) y declara qué agarra + cómo se muestra:
-  `match` (extensión/glob/languageId/esquema) y `mode` (`view` = pieza,
-  `text` = editor, `both` = intermedio). **Nada hardcodeado en el editor**: el
-  área central consulta el registry y, si no hay match, abre con Innerta.
-- **Visores incluidos**: **imagen** (`view`), **SVG** (`both`) y **markdown**
-  (`both`). El markdown es el caso intermedio: se ve renderizado o se edita.
-  Los formatos `both` abren **directo en modo visor**.
-- **Alternar visor ⇄ editor**: en el **menú de click derecho de la pestaña**
-  ("Ver como texto" / "Ver como visor", con el icono del ojo), junto a
-  "Compartir en Social". Solo aparece en los formatos que admiten los dos modos;
-  la preferencia se guarda **por archivo**.
-- **Toolbar del visor**: cada handler puede declarar sus **acciones** (`actions[]`)
-  y se dibujan arriba del contenido (con los iconos del pack, nunca glifos).
-  Ninguno de los tres visores incluidos las usa: la barra no aparece.
-- **Registro en el arranque**: los handlers built-in quedan listos antes del
-  primer render (`main.tsx`), así no dependen del orden de montaje de paneles.
-- **Lectura binaria** (`fs:read-binary`): los visores de imagen reciben
-  `base64` + mime y se pintan como `data:` (la CSP del renderer no permite
-  `file:`). El motor Innerta queda montado y oculto mientras manda el visor,
-  así no se pierden undo/scroll al volver.
-- **Fondo del visor**: usa la variable **`surface`** del theme (no `bg`), así
-  se ve como el resto de superficies del chrome y no como el fondo de la app.
-- **Tabs virtuales** (`scrakk-view://<handlerId>/<payload>`): el mismo visor
-  sirve como tab sobre contenido que no es un archivo (por ejemplo la card de
-  un `codefile` del chat). Se resuelve **por id**, viaja por el mismo bus de
-  archivos y no toca el disco.
-- **`contributes.fileHandlers`**: una extensión aporta sus propios formatos al
-  **mismo registry** que los built-in (segunda puerta al mismo store), con
-  ownership para desinstalar limpio. El visor se resuelve por import dinámico
-  del paquete, nunca con un `ComponentType` directo.
+### Editor — per-format viewers (fileHandlers)
+- **Per-format exception registry**: each one lives in **its own folder**
+  (like the AI tools) and declares what it catches + how it is shown:
+  `match` (extension/glob/languageId/scheme) and `mode` (`view` = piece,
+  `text` = editor, `both` = intermediate). **Nothing hardcoded in the editor**: the
+  central area queries the registry and, if there is no match, opens with Innerta.
+- **Included viewers**: **image** (`view`), **SVG** (`both`), and **markdown**
+  (`both`). Markdown is the intermediate case: it is shown rendered or edited.
+  `both` formats open **straight in viewer mode**.
+- **Toggle viewer ⇄ editor**: in the **tab's right-click menu**
+  ("View as text" / "View as viewer", with the eye icon), next to
+  "Share to Social". It only appears on formats that support both modes;
+  the preference is saved **per file**.
+- **Viewer toolbar**: each handler can declare its **actions** (`actions[]`)
+  and they are drawn above the content (with the pack icons, never glyphs).
+  None of the three included viewers use them: the bar does not appear.
+- **Registration at startup**: the built-in handlers are ready before the
+  first render (`main.tsx`), so they do not depend on the panel mount order.
+- **Binary read** (`fs:read-binary`): the image viewers receive
+  `base64` + mime and are painted as `data:` (the renderer's CSP does not allow
+  `file:`). The Innerta engine stays mounted and hidden while the viewer is in charge,
+  so undo/scroll is not lost when coming back.
+- **Viewer background**: it uses the theme's **`surface`** variable (not `bg`), so
+  it looks like the rest of the chrome's surfaces and not like the app's background.
+- **Virtual tabs** (`scrakk-view://<handlerId>/<payload>`): the same viewer
+  serves as a tab over content that is not a file (for example the card of
+  a chat `codefile`). It is resolved **by id**, travels through the same file
+  bus, and does not touch the disk.
+- **`contributes.fileHandlers`**: an extension contributes its own formats to the
+  **same registry** as the built-ins (a second door to the same store), with
+  ownership for a clean uninstall. The viewer is resolved by dynamic import
+  of the package, never with a direct `ComponentType`.
 
-### Correcciones
-- **La bienvenida mostraba una versión vieja en Anuncios**: el release remoto
-  ganaba **siempre** que trajera notas, sin comparar versiones, así que mientras
-  la release publicada seguía siendo la anterior, el panel mostraba esa aunque
-  el repo ya tuviera el changelog nuevo. Ahora se elige **el más nuevo** de los
-  dos (comparando por segmentos: `0.1.10` > `0.1.9`), y el "visto" se marca
-  sobre el anuncio que realmente se mostró. Efecto secundario útil: ya no hace
-  falta publicar la release para ver los anuncios de una versión nueva.
-- **No se podía enviar mensajes de texto en el chat Social**: la migración
-  `0022` agregó el CHECK `messages_codefile_body_check`, que llama a
-  `is_codefile_body(body)`, y acto seguido le **revocó EXECUTE** a
-  `authenticated`. PostgreSQL exige EXECUTE sobre las funciones referenciadas
-  por un CHECK **para el rol que hace el INSERT, aunque la rama no se evalúe**,
-  así que **todo** mensaje de texto moría con
-  `42501 permission denied for function is_codefile_body`. Los **archivos
-  compartidos seguían funcionando** porque los inserta la Edge Function con
-  `service_role`, que sí tenía el permiso — de ahí que el fallo pareciera
-  arbitrario. Se concedió EXECUTE a `authenticated` (migración
-  `0024_codefile_body_execute.sql`); la función es `IMMUTABLE` y no es
-  `SECURITY DEFINER`, así que el CHECK sigue impidiendo sobres inválidos.
-- **El error de envío culpaba al usuario de un fallo del servidor**:
-  `42501` es el código genérico de falta de permiso, y el mapeo mostraba
-  *"Solo puedes escribirle a tus amigos"* para cualquier caso. Un problema de
-  privilegios de la base se veía como *"no sos amigo"* (y re-loguearse no
-  cambiaba nada, porque la sesión era válida). Ahora los fallos de
-  infraestructura tienen su propio mensaje ("Error interno del servidor") y se
-  registran en el log con el texto crudo, la sesión ausente se distingue, y el
-  mensaje de amistad solo aparece si el error habla de políticas.
-- **Un cliente Supabase podía quedar sin sesión y usarse igual**: `setSession`
-  no rechaza cuando falla, devuelve `{ error }`, y se ignoraba; el login
-  guardaba tokens nuevos sin invalidar el cliente cacheado por cuenta. Ahora el
-  login lo invalida, y `getClientFor` no entrega nunca un cliente sin sesión
-  (le inyecta los tokens guardados al mismo cliente para no perder los canales
-  de Realtime, y si no hay sesión devuelve `null` para que la UI pida iniciar
-  sesión en vez de fingir que estás adentro).
-- **Los visores de formato no se montaban**: el dispatcher estaba en el panel
-  `editor` (el clásico de una sola vista), pero el contenido de una tab de
-  archivo lo monta otro componente. Resultado: un PNG siempre caía en Innerta
-  aunque el registry, los handlers y el bundle estuvieran perfectos — y el
-  toggle visor⇄editor no aparecía en el menú (para un formato `view` no hay
-  modo texto que alternar, así que solo salía "Compartir en Social"). Ahora
-  **`FileTabView`** consulta el registry, y para un formato con visor ni
-  siquiera se adjunta la sesión de Innerta (leería bytes como texto).
-- **Crash del WASM al abrir un visor**: ocultar el host del engine lo dejaba
-  midiendo 0×0, y el módulo **aborta** ante cualquier dimensión cero (está
-  compilado sin exception catching, así que no lanza una excepción capturable:
-  tumba la tab entera). Ahora el motor **saltea** el `setBounds` mientras el host
-  no tenga área y el `ResizeObserver` lo reaplica cuando vuelve.
-- **Visor markdown sin aire**: `.view` y la columna del documento iban en el
-  mismo elemento, así que el padding competía con el centrado y el texto
-  quedaba pegado a los bordes. Ahora el scroller y la columna están separados.
-- **Emoji: ancho de 2 celdas y nítidos**: el layout era `x = columna × ancho`
-  puro, así que un emoji avanzaba **una** celda y se pisaba con el vecino (y el
-  caret quedaba mal). Ahora el layout es **consciente del ancho** (emoji del
-  plano suplementario y CJK ancho = 2 celdas; ZWJ/selectores/combinantes = 0) y
-  el caret, el hit-test, los rangos y el ancho de la línea lo respetan. Además
-  el bitmap de color se carga a **3× y se baja con filtro lineal**: se acabó el
-  emoji borroso.
-- **Emojis en color (los del sistema)**: el motor no puede sacarlos de FreeType
-  en WASM (los emoji del sistema son bitmaps de color y su strike es de 136 px),
-  así que los **rasteriza el host** con el navegador (Noto Color Emoji / Apple
-  Color Emoji / Segoe UI Emoji) y el motor los pinta como un glifo provisto por
-  el host — el mismo reparto que tokens, subrayados o indentación. Si el canvas
-  no dibuja nada, no se empuja: queda el respaldo monocromo embebido.
-- **Emojis y símbolos no se veían**: la cadena de fuentes de respaldo del motor
-  apuntaba a rutas del sistema, que **no existen en el build web**, así que
-  quedaba vacía y todo lo que la fuente del editor no tiene (símbolos, emoji del
-  plano suplementario) se dibujaba con avance 0. Ahora se **embeben** dos fuentes
-  recortadas (símbolos BMP y emoji astral) y el atlas las usa como respaldo:
-  `😀 🚀 👍 ❤ ✔ ⚠` y los dibujos de caja se ven.
-- **Editor en varios paneles**: al abrir un archivo en un segundo panel, el
-  editor quedaba **vacío** porque los paneles compartían un único módulo WASM y
-  canvas. Ahora **cada panel monta su motor aislado**.
-- **Mover una tab de archivo entre paneles**: el motor podía quedarse **sin
-  cargar** (la espera del módulo no se resolvía nunca y el panel de origen
-  acumulaba motores). Ahora la espera termina siempre y el panel que queda
-  **vacío libera su motor** (WASM + contexto GL).
-- **Bienvenida → Consejos**: el indicador de puntos (que marca en qué consejo
-  vas) se aplastaba y quedaba **superpuesto** cuando el panel no tenía ancho.
-  Ahora no se encoge, baja de línea si hace falta y, si sigue sin caber, se
-  **resume a `n/total`**.
-- **Bienvenida → Acciones**: en paneles muy angostos, las 3 tarjetas de arriba
-  (*Nuevo archivo*, *Abrir archivo*, *Abrir carpeta*) pasan a **texto simple**,
-  sin ícono ni tarjeta, con el atajo alineado a la derecha.
-- **Chat de IA**: los **iconos de las tools** ahora usan el mismo color que el
-  texto de la tool (`--color-text-muted`); antes heredaban el color del chat y
-  se veían más brillantes.
-- **Explorer**: el input de **renombrar/crear** archivo ya no usa el borde de
-  acento ni un radio grande; ahora **no tiene borde** (solo fondo), radio chico
-  y sin contorno. Su texto (y el placeholder) usa el tamaño de las filas
-  (`--text-xs`, 12px); antes el de crear heredaba un tamaño mayor.
-- **Breadcrumb, tab activa y editor (Innerta)**: los tres usan el mismo fondo
-  que las activity bars (`--activitybar-bg`/surface): el breadcrumb dejó de ser
-  transparente, la tab activa dejó el tinte de hover y el buffer del editor
-  ahora matchea el chrome.
-- **Bienvenida → Anuncios**: el punto de "novedades" ahora también detecta el
-  **changelog local**: si el `changelog-x.x.x.md` más nuevo supera la versión de
-  la app, aparece el badge (sin depender del release remoto), y al abrir
-  Anuncios queda como visto.
-- **Tabs**: el strip scrollea en horizontal con la **rueda** del mouse cuando
-  las tabs desbordan (antes solo con trackpad o Shift+rueda).
-- **Tabs / layout**: se corrigió un loop de updates (*"Maximum update depth
-  exceeded"*) al montar **muchos paneles**: el ref combinado del strip cambiaba
-  de identidad en cada render y React hacía detach/attach llamando `setState`
-  en bucle. Ahora es estable.
-- **Desarrollo — hot reload (Vite HMR)**: en casos aislados, un *full reload* del
-  dev server (por ejemplo al reconstruirse el preload o al re-optimizar
-  dependencias) abría el proyecto en el **navegador del sistema** con
-  `localhost` y dejaba la ventana de la app **congelada**. El handler global de
-  `will-navigate` mandaba a `openExternal` hasta la URL del propio dev server;
-  ahora las navegaciones al dev server (reload de HMR y links internos) se
-  resuelven **dentro** de la ventana y solo las URLs externas salen al navegador.
-- **Ajustes → Chat → Proveedores**: los iconos de la lista quedaban **pegados
-  arriba** (más aire abajo que arriba); ahora van **centrados**. Además los
-  **logos de models.dev** se pintan como **silueta con el color del tema**
-  (antes el `<img>` no heredaba el color y salían negros), con el mismo patrón
-  de máscara que el logo de la bienvenida.
+### Fixes
+- **The welcome screen showed an old version in Announcements**: the remote release
+  won **always** as long as it brought notes, without comparing versions, so while
+  the published release was still the previous one, the panel showed that one even if
+  the repo already had the new changelog. Now **the newest** of the
+  two is chosen (comparing by segments: `0.1.10` > `0.1.9`), and "seen" is marked
+  on the announcement that was actually shown. Useful side effect: it is no longer
+  necessary to publish the release to see the announcements of a new version.
+- **Text messages could not be sent in the Social chat**: migration
+  `0022` added the `messages_codefile_body_check` CHECK, which calls
+  `is_codefile_body(body)`, and right after **revoked EXECUTE** from
+  `authenticated`. PostgreSQL requires EXECUTE on the functions referenced
+  by a CHECK **for the role doing the INSERT, even if the branch is not evaluated**,
+  so **every** text message died with
+  `42501 permission denied for function is_codefile_body`. **Shared
+  files kept working** because the Edge Function inserts them with
+  `service_role`, which did have the permission — hence the failure seemed
+  arbitrary. EXECUTE was granted to `authenticated` (migration
+  `0024_codefile_body_execute.sql`); the function is `IMMUTABLE` and is not
+  `SECURITY DEFINER`, so the CHECK still prevents invalid envelopes.
+- **The send error blamed the user for a server failure**:
+  `42501` is the generic permission-denied code, and the mapping showed
+  *"You can only write to your friends"* in any case. A database
+  privilege problem looked like *"you're not friends"* (and logging back in
+  changed nothing, because the session was valid). Now infrastructure
+  failures have their own message ("Internal server error") and are
+  logged with the raw text, a missing session is distinguished, and the
+  friendship message only appears if the error talks about policies.
+- **A Supabase client could end up with no session and still be used**: `setSession`
+  does not reject when it fails, it returns `{ error }`, and it was ignored; login
+  saved new tokens without invalidating the per-account cached client. Now
+  login invalidates it, and `getClientFor` never returns a client with no session
+  (it injects the saved tokens into the same client so as not to lose the Realtime
+  channels, and if there is no session it returns `null` so the UI asks you to sign in
+  instead of pretending you are inside).
+- **Format viewers were not mounting**: the dispatcher was in the
+  `editor` panel (the classic single-view one), but the content of a file
+  tab is mounted by another component. Result: a PNG always fell back to Innerta
+  even if the registry, the handlers, and the bundle were perfect — and the
+  viewer⇄editor toggle did not appear in the menu (for a `view` format there is no
+  text mode to toggle, so only "Share to Social" showed). Now
+  **`FileTabView`** queries the registry, and for a format with a viewer the
+  Innerta session is not even attached (it would read bytes as text).
+- **WASM crash when opening a viewer**: hiding the engine host left it
+  measuring 0×0, and the module **aborts** on any zero dimension (it is
+  compiled without exception catching, so it does not throw a catchable exception:
+  it takes down the whole tab). Now the engine **skips** `setBounds` while the host
+  has no area and the `ResizeObserver` reapplies it when it comes back.
+- **Markdown viewer without breathing room**: `.view` and the document column were in the
+  same element, so the padding competed with the centering and the text
+  stuck to the edges. Now the scroller and the column are separate.
+- **Emoji: 2-cell width and sharp**: the layout was `x = column × width`
+  pure, so an emoji advanced **one** cell and overlapped with its neighbor (and the
+  caret was wrong). Now the layout is **width-aware** (supplementary-plane
+  emoji and wide CJK = 2 cells; ZWJ/selectors/combining = 0) and
+  the caret, the hit-test, the ranges, and the line width respect it. Also
+  the color bitmap is loaded at **3× and downscaled with a linear filter**: blurry
+  emoji are gone.
+- **Color emoji (system ones)**: the engine cannot get them out of FreeType
+  in WASM (system emoji are color bitmaps and their strike is 136 px),
+  so the **host rasterizes them** with the browser (Noto Color Emoji / Apple
+  Color Emoji / Segoe UI Emoji) and the engine paints them as a glyph provided by
+  the host — the same split as tokens, underlines, or indentation. If the canvas
+  draws nothing, nothing is pushed: the embedded monochrome fallback remains.
+- **Emoji and symbols were not visible**: the engine's fallback font
+  chain pointed to system paths, which **do not exist in the web build**, so it
+  was empty and everything the editor font does not have (symbols, supplementary-plane
+  emoji) was drawn with 0 advance. Now two trimmed fonts are **embedded**
+  (BMP symbols and astral emoji) and the atlas uses them as fallback:
+  `😀 🚀 👍 ❤ ✔ ⚠` and the box drawings show up.
+- **Editor in several panels**: when opening a file in a second panel, the
+  editor was **empty** because the panels shared a single WASM module and
+  canvas. Now **each panel mounts its own isolated engine**.
+- **Moving a file tab between panels**: the engine could stay **not
+  loaded** (the module wait never resolved and the source panel
+  accumulated engines). Now the wait always ends and the panel that is left
+  **empty frees its engine** (WASM + GL context).
+- **Welcome → Tips**: the dot indicator (which marks which tip
+  you are on) was squashed and ended up **overlapping** when the panel had no width.
+  Now it does not shrink, it wraps if needed and, if it still does not fit, it
+  **collapses to `n/total`**.
+- **Welcome → Actions**: in very narrow panels, the 3 top cards
+  (*New file*, *Open file*, *Open folder*) become **plain text**,
+  with no icon or card, with the shortcut aligned to the right.
+- **AI chat**: the **tool icons** now use the same color as the
+  tool text (`--color-text-muted`); before they inherited the chat color and
+  looked brighter.
+- **Explorer**: the **rename/create** file input no longer uses the accent
+  border or a large radius; now it **has no border** (just background), a small radius
+  and no outline. Its text (and the placeholder) uses the row size
+  (`--text-xs`, 12px); before the create one inherited a larger size.
+- **Breadcrumb, active tab, and editor (Innerta)**: all three use the same background
+  as the activity bars (`--activitybar-bg`/surface): the breadcrumb stopped being
+  transparent, the active tab dropped the hover tint and the editor buffer
+  now matches the chrome.
+- **Welcome → Announcements**: the "what's new" dot now also detects the
+  **local changelog**: if the newest `changelog-x.x.x.md` exceeds the app
+  version, the badge appears (without depending on the remote release), and when opening
+  Announcements it is marked as seen.
+- **Tabs**: the strip scrolls horizontally with the mouse **wheel** when
+  the tabs overflow (before only with a trackpad or Shift+wheel).
+- **Tabs / layout**: an update loop (*"Maximum update depth
+  exceeded"*) when mounting **many panels** was fixed: the strip's combined ref changed
+  identity on every render and React did detach/attach calling `setState`
+  in a loop. Now it is stable.
+- **Development — hot reload (Vite HMR)**: in isolated cases, a *full reload* of the
+  dev server (for example when the preload is rebuilt or dependencies are
+  re-optimized) opened the project in the **system browser** with
+  `localhost` and left the app window **frozen**. The global `will-navigate`
+  handler sent even the dev server's own URL to `openExternal`;
+  now navigations to the dev server (HMR reload and internal links) are
+  resolved **inside** the window and only external URLs go out to the browser.
+- **Settings → Chat → Providers**: the list icons were **stuck
+  at the top** (more air below than above); now they are **centered**. Also the
+  **models.dev logos** are painted as a **silhouette with the theme color**
+  (before the `<img>` did not inherit the color and they came out black), with the same
+  mask pattern as the welcome logo.
