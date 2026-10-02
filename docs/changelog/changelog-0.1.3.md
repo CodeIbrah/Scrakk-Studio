@@ -60,9 +60,13 @@ published are not edited. The file goes per version:
   consumer does not have to replicate CSS or reach into the row layout.
 
 ### AI chat (UI)
+- **The "Thought" block no longer falls far from the tools above it**: the air
+  came from three places adding up — the tools block's bottom margin (2px), the
+  assistant bubble's padding (4px) and the 8px gap between messages. The
+  between-messages gap is now `--space-1` (4px) and a message's inner gap is 0
+  (the bubble already carries its own padding).
 - **Tool rows highlight on hover and open their result on click**, with the
-  decision living in **each tool's folder**, not in the chat block:
-  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
+  decision living in **each tool's folder**, not in the chat block:  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
     button with hover and, on click, opens the tool's **result in a modal** (the
     same `plain` pattern as the subagent chat: mounted inside the chat panel, no
     overlay, so you can keep interacting). The modal shows the **arguments** the

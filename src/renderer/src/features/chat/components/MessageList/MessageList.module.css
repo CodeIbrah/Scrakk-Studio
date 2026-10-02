@@ -9,7 +9,10 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  /* Aire entre mensajes. Estaba en --space-2 (8px) y, sumado al padding del
+     bubble y al margen del bloque de tools, dejaba al "Thought" muy lejos de
+     los tools que lo preceden. */
+  gap: var(--space-1);
   height: 100%;
   min-height: 0;
   overflow-y: auto;
@@ -21,7 +24,9 @@
 .messageWrap {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  /* Dentro de un mismo mensaje no hace falta aire extra: el bubble ya trae su
+     padding (el thought va pegado arriba de su respuesta). */
+  gap: 0;
   /* Mensajes fuera de pantalla: no se pintan (el historial largo no cuesta).
      `contain-intrinsic-size` evita saltos de scroll al no medirlos. */
   content-visibility: auto;
