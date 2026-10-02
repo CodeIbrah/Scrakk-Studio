@@ -89,6 +89,15 @@ export interface WorkspaceApi {
   toggleFolder: (dirPath: string) => void
   /** Asegura una carpeta expandida+cargada (vistas filtradas). Nunca colapsa. */
   ensureExpanded: (dirPath: string) => void
+  /**
+   * Igual que `ensureExpanded` pero para VARIAS carpetas en un solo render.
+   *
+   * Las vistas filtradas (sección Cambios de git) auto-expanden los ancestros
+   * de los archivos que muestran. Llamar `ensureExpanded` en un bucle producía
+   * **un render por carpeta** (y cada render re-aplana el árbol entero), así que
+   * abrir el panel con cambios repartidos en N carpetas costaba N renders.
+   */
+  ensureExpandedMany: (dirPaths: Iterable<string>) => void
   /** Recarga la raíz completa. */
   refresh: () => void
   /** Recarga un directorio puntual (invalida su cache). */
@@ -322,6 +331,34 @@ export function useWorkspaceState(rootOverride?: string): WorkspaceApi {
     [bump, loadDir, ensureWatched]
   )
 
+  /**
+   * Varias carpetas en UN render.
+   *
+   * La vista filtrada (sección Cambios de git) hacía
+   * `for (dir of ancestors) ensureExpanded(dir)`, y cada llamada era un
+   * `bump()`: con los cambios repartidos en N carpetas eso eran N renders, y
+   * cada render re-aplana el árbol completo. Acá se juntan en un solo `bump()`.
+   */
+  const ensureExpandedMany = useCallback(
+    (dirPaths: Iterable<string>): void => {
+      let changed = false
+      for (const dirPath of dirPaths) {
+        if (expandedRef.current.has(dirPath)) continue
+        expandedRef.current.add(dirPath)
+        changed = true
+      }
+      if (changed) bump()
+      for (const dirPath of dirPaths) {
+        if (!loadedRef.current.has(dirPath) && !loadingRef.current.has(dirPath)) {
+          void loadDir(dirPath, 0)
+        } else {
+          ensureWatched(dirPath)
+        }
+      }
+    },
+    [bump, loadDir, ensureWatched]
+  )
+
   const refresh = useCallback((): void => {
     if (!rootPath) return
     generationRef.current++
@@ -449,6 +486,7 @@ export function useWorkspaceState(rootOverride?: string): WorkspaceApi {
     isLoadingRoot,
     toggleFolder,
     ensureExpanded,
+    ensureExpandedMany,
     refresh,
     refreshNode,
     collapseAll,

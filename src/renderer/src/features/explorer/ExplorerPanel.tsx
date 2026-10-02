@@ -200,8 +200,12 @@ export function ExplorerPanel({
 
   useEffect(() => {
     if (!visiblePaths) return
-    for (const dir of ancestors) workspace.ensureExpanded(dir)
-  }, [visiblePaths, ancestors, workspace])
+    // UNA vez para todas las carpetas: llamar `ensureExpanded` en bucle costaba
+    // un render por carpeta (y cada render re-aplana el árbol completo).
+    // Además se depende del callback (estable) y no del objeto `workspace`, que
+    // cambia de identidad en cada render y hacía que el efecto corriera siempre.
+    workspace.ensureExpandedMany(ancestors)
+  }, [visiblePaths, ancestors, workspace.ensureExpandedMany])
   // Selección hacia afuera (acciones bulk externas).
   useEffect(() => {
     onSelectionChange?.([...selection.selected])

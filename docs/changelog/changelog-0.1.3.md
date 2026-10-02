@@ -58,11 +58,25 @@ published are not edited. The file goes per version:
   (`rowActions?: (node) => RowAction[]`): the explorer draws them with its own
   style (size, color, and the same hover reveal as the `…` button), so a
   consumer does not have to replicate CSS or reach into the row layout.
+
+### Explorer (UI)
+- **The filtered tree (Git → Changes) no longer costs a render per folder**: the
+  view auto-expands the ancestors of the files it shows, and it did it with
+  `for (dir of ancestors) ensureExpanded(dir)` — each call triggered a state
+  update, so changes spread across N folders meant **N renders**, each one
+  re-flattening the whole tree (that is what made opening the Git panel heavy).
+  There is now `ensureExpandedMany(...)`, which batches every new folder into a
+  **single** update. The effect also depended on the `workspace` object, which
+  changes identity on every render, so that loop ran on all of them; it now
+  depends on the stable callback.
 - **Rubber-band to stage**: the selection rectangle's action is now the
   consumer's (`onLasso`), and it receives the swept paths **plus the default
   `select`** so it can compose instead of replacing:
   ```ts
-  onLasso: (paths, select) => { select(paths); stage(paths) }
+  onLasso: (paths, { select, additive }) => {
+    select(additive ? [...selected, ...paths] : paths)
+    stage(paths)
+  }
   ```
   The Git panel uses exactly that: sweeping the box selects and **stages**
   whatever was not staged yet. The default (no `onLasso`) is unchanged: the
