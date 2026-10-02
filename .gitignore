@@ -39,3 +39,6 @@ build-resources/
 
 # Bundle de docs generado (lo publica el workflow a R2)
 docs/.generated/
+
+# Caché local de la CLI de Supabase
+supabase/.temp/
