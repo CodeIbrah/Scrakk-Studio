@@ -27,10 +27,11 @@
   /* Dentro de un mismo mensaje no hace falta aire extra: el bubble ya trae su
      padding (el thought va pegado arriba de su respuesta). */
   gap: 0;
-  /* OJO: acá había `content-visibility: auto` + `contain-intrinsic-size: auto
-     160px`. El navegador usa el tamaño RECORDADO/estimado para los mensajes
-     fuera de pantalla, y cuando la estimación no coincide con el alto real
-     queda un hueco de decenas de píxeles (el "Thought" se veía lejísimos de los
-     tools de la ronda anterior). El memo de `MessageBubble` ya evita re-render;
-     esto sólo evitaba el PINTADO y no valía el artefacto de layout. */
+}
+
+/* El Thought va PEGADO arriba: cancela el gap que la lista pone entre mensajes.
+   Las rondas de un mismo turno (tools → thought) son un solo bloque, así que el
+   aire que aportaba el gap entre la ronda anterior y el thought no va. */
+.messageWrap[data-thought] {
+  margin-top: calc(-1 * var(--space-1));
 }

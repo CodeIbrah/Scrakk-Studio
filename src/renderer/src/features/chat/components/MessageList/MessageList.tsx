@@ -109,7 +109,14 @@ export const MessageList = memo(function MessageList({
         const hasToolCalls = Boolean(message.role === 'assistant' && message.tool_calls?.length)
         const showThinking = isPending && !message.content && !hasToolCalls
         return (
-          <div key={message.id} className={styles.messageWrap}>
+          <div
+            key={message.id}
+            className={styles.messageWrap}
+            // El Thought cancela el gap de arriba: las rondas de un mismo turno
+            // son UN bloque, no mensajes independientes (el aire que se veía
+            // era el `gap` de la lista entre la ronda de tools y la siguiente).
+            data-thought={hasReasoning ? '' : undefined}
+          >
             {hasReasoning ? (
               // thinking = está razonando todavía (sin contenido): el header
               // del bloque muestra "Thinking"; al empezar el contenido pasa
