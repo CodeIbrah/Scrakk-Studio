@@ -9,19 +9,24 @@
  * panel de chat): la fila de la tool es clickeable y acá se ve **qué recibió**
  * la IA — el resultado completo, que en la línea del chat no entra.
  *
- * Solo se abre para las tools SIN visual propio (`renderBody`): las que lo
- * tienen (el subagente, los diffs…) ya saben qué hacer al click y no queremos
- * pisarles la interacción.
+ * OJO con el `plain`: el host NO aporta header, título visible ni padding (el
+ * `spec.title` sólo se usa como `aria-label`). Todo eso lo pone esta vista.
+ *
+ * La interacción la decide cada tool con su `onOpen`: las que declaran `'self'`
+ * (el subagente) nunca llegan acá.
  */
 
 import type { JSX } from 'react'
 import { showModal } from '@services/modals'
+import { ToolCallIcon } from './ToolCallIcon'
 import { t } from '@core/i18n'
 import styles from './ToolResultModal.module.css'
 
 export interface ToolResultInput {
   /** Nombre visible de la tool (ya resuelto). */
   label: string
+  /** Nombre técnico de la tool: resuelve el ícono con el mapa canónico. */
+  toolName: string
   /** Argumentos con los que se llamó. */
   args: Record<string, unknown>
   /** Resultado devuelto (texto). */
@@ -30,41 +35,57 @@ export interface ToolResultInput {
   status: string
 }
 
+function statusLabel(status: string): string {
+  if (status === 'error') return t('chat.tool.fallo')
+  if (status === 'running' || status === 'streaming' || status === 'pending') {
+    return t('chat.tool.corriendo')
+  }
+  return t('chat.tool.listo')
+}
+
 function ToolResultView({
+  label,
+  toolName,
   args,
   result,
   status,
   onClose
 }: ToolResultInput & { onClose: () => void }): JSX.Element {
   const hasArgs = Object.keys(args).length > 0
-  const isError = status === 'error'
+  const running = status === 'running' || status === 'streaming' || status === 'pending'
 
   return (
     <div className={styles.panel}>
-      <div className={styles.head}>
-        <span className={styles.status} data-error={isError ? '' : undefined}>
-          {isError ? t('chat.tool.fallo') : t('chat.tool.resultado')}
+      <header className={styles.head}>
+        <ToolCallIcon toolName={toolName} size={14} />
+        <span className={styles.title}>{label}</span>
+        <span className={styles.status} data-status={status}>
+          {statusLabel(status)}
         </span>
         <button type="button" className={styles.close} onClick={onClose}>
           {t('common.cerrar')}
         </button>
+      </header>
+
+      <div className={styles.body}>
+        {hasArgs ? (
+          <section className={styles.section}>
+            <h4 className={styles.caption}>{t('chat.tool.argumentos')}</h4>
+            <pre className={styles.code}>{JSON.stringify(args, null, 2)}</pre>
+          </section>
+        ) : null}
+
+        <section className={styles.section}>
+          <h4 className={styles.caption}>{t('chat.tool.salida')}</h4>
+          {result ? (
+            <pre className={styles.code}>{result}</pre>
+          ) : (
+            <p className={styles.empty}>
+              {running ? t('chat.tool.todavia.corriendo') : t('chat.tool.sin.salida')}
+            </p>
+          )}
+        </section>
       </div>
-
-      {hasArgs ? (
-        <>
-          <h4 className={styles.caption}>{t('chat.tool.argumentos')}</h4>
-          <pre className={styles.code}>{JSON.stringify(args, null, 2)}</pre>
-        </>
-      ) : null}
-
-      <h4 className={styles.caption}>{t('chat.tool.salida')}</h4>
-      {result ? (
-        <pre className={styles.code}>{result}</pre>
-      ) : (
-        <p className={styles.empty}>
-          {status === 'running' ? t('chat.tool.todavia.corriendo') : t('chat.tool.sin.salida')}
-        </p>
-      )}
     </div>
   )
 }

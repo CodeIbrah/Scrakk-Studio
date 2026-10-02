@@ -120,6 +120,7 @@ export function ToolCallShell({ execution, meta, children }: ToolCallShellProps)
     }
     openToolResultModal({
       label,
+      toolName: toolCall.function.name,
       args,
       result,
       status

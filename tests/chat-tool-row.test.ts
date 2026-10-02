@@ -46,6 +46,10 @@ describe('fila de tool: el shell provee, la tool declara', () => {
     const css = src(SHELL_CSS)
     expect(css).toMatch(/\.row:hover/)
     expect(css).toMatch(/cursor: pointer/)
+    // El hover es SOLO brillo del texto: nada de fondo ni caja.
+    const hoverRule = css.slice(css.indexOf('.row:hover'))
+    expect(hoverRule).toMatch(/color:\s*var\(--color-text\)/)
+    expect(hoverRule.slice(0, 120)).not.toContain('background')
   })
 
   it('el bloque del chat NO decide la interacción (nada hardcodeado)', () => {

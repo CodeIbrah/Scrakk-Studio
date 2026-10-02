@@ -72,6 +72,19 @@ published are not edited. The file goes per version:
     generic result modal, `'self'` means the tool already handles the click, and
     a function means a custom handler. The subagent (`task`) declares
     `onOpen: 'self'` because its card opens the subagent's chat.
+  - The **hover is only a brightness change**: the row's text goes from
+    `--color-text-muted` to `--color-text`, with **no background or box** (the
+    first version added a highlighted background and looked wrong). The tool
+    **icon brightens too** (it lives outside the shell's button, so the chat sets
+    it on the row), and tool visuals that carry their own color —diffs,
+    previews— keep it.
+  - The row is a full-width block, so the text wraps **exactly** at the
+    available width: as an inline button it shrank to fit and the text broke to
+    the next line even when there was room beside it.
+  - The result modal provides its own frame: the `plain` host adds **no padding,
+    no visible title and no close button** (`spec.title` is only the
+    `aria-label`), so the view draws the header (tool icon + name + status +
+    close) and a body that scrolls on its own, keeping the header fixed.
 - The first attempt decided this in the chat block by looking at `renderBody` —
   and since **27 tools ship their own visual**, the `!renderBody` condition left
   every one of them out and nothing was clickable. That coupling is what the

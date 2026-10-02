@@ -26,6 +26,12 @@
   padding-top: 1px;
 }
 
+/* El icono está FUERA del botón del shell, así que su brillo en hover es cosa
+   del consumidor: junto con el texto de la tool, la fila entera sube de brillo. */
+.toolRow:hover .toolIconBox {
+  color: var(--color-text);
+}
+
 
 .toolVisual {
   flex: 1;
