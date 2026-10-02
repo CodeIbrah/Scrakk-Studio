@@ -38,6 +38,39 @@ export const MessageList = memo(function MessageList({
   const listRef = useRef<HTMLDivElement>(null)
   const mountedRef = useRef(false)
 
+  /**
+   * Sonda de huecos (solo DEV).
+   *
+   * El "Thought" aparecía lejísimos de los tools de la ronda anterior y los
+   * `gap` del CSS no lo explicaban. Esto mide el hueco REAL entre mensajes
+   * consecutivos y lo reporta cuando pasa de un umbral, con el índice del
+   * mensaje: así se ve si el aire es de un margen o de un elemento con altura
+   * (un bloque colapsado, un placeholder, un tamaño estimado).
+   */
+  useEffect(() => {
+    if (!import.meta.env.DEV) return
+    const el = listRef.current
+    if (!el) return
+    const handle = requestAnimationFrame(() => {
+      const wraps = el.querySelectorAll<HTMLElement>(':scope > div')
+      let prevBottom = Number.NaN
+      wraps.forEach((wrap, index) => {
+        const rect = wrap.getBoundingClientRect()
+        const gap = rect.top - prevBottom
+        if (Number.isFinite(gap) && gap > 16) {
+          const hasThought = Boolean(wrap.querySelector('[aria-expanded]'))
+          console.warn(
+            `[chat] hueco de ${Math.round(gap)}px antes del mensaje #${index}` +
+              `${hasThought ? ' (Thought)' : ''} — alto del anterior: ` +
+              `${Math.round(wraps[index - 1]?.getBoundingClientRect().height ?? 0)}px`
+          )
+        }
+        prevBottom = rect.bottom
+      })
+    })
+    return () => cancelAnimationFrame(handle)
+  }, [messages])
+
   // Scroll automático: al montar al fondo; al crecer, solo si está cerca.
   useEffect(() => {
     const el = listRef.current
