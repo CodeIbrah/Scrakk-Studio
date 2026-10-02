@@ -10,6 +10,7 @@ import { markSeen, useUpdates } from '@services/updates'
 import type { ReleaseInfo } from '@shared/updates'
 import { loadTips } from "./tips";
 import { loadAnnouncement, parseLatestEntry, changelogHasNews, markChangelogSeen, pickAnnouncement, type WelcomeAnnouncement } from "./changelog";
+import { createNewFile, openFilesViaDialog, openFolderViaDialog } from "@features/explorer";
 import { t } from '@core/i18n'
 import "./WelcomePanel.css";
 
@@ -43,6 +44,12 @@ function announcementFromRelease(release: ReleaseInfo): WelcomeAnnouncement {
 }
 
 interface WelcomePanelProps {
+  /**
+   * Los tres botones ya NO dependen de props: el `PanelHost` monta el panel sin
+   * props, así que los defaults eran no-ops y los botones no hacían nada. Ahora
+   * llaman a las acciones reales (`./actions`). Las props quedan para poder
+   * inyectar comportamiento en tests o en otro host.
+   */
   onNewFile?: () => void
   onOpenFile?: () => void
   onOpenFolder?: () => void
@@ -55,9 +62,9 @@ interface Workspace {
 }
 
 export function WelcomePanel({
-  onNewFile = () => {},
-  onOpenFile = () => {},
-  onOpenFolder = () => {}
+  onNewFile = () => void createNewFile(),
+  onOpenFile = () => void openFilesViaDialog(),
+  onOpenFolder = () => void openFolderViaDialog()
 }: WelcomePanelProps) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [hoveredAction, setHoveredAction] = useState<string | null>(null);

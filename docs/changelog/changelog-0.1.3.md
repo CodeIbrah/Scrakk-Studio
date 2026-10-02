@@ -17,6 +17,17 @@ published are not edited. The file goes per version:
 
 ## 0.1.3 — TBD
 
+### Welcome (UI)
+- **The 3 buttons on the welcome screen actually work**: they called props that
+  **nobody passed** (`PanelHost` mounts the panel with no props, so the
+  `() => {}` defaults made them look perfect and do **nothing**). Now **New
+  file**, **Open file**, and **Open folder** call the real actions: the native
+  file dialog (multi-selection, each file opens in the editor), the native
+  folder dialog (the chosen folder becomes the workspace), and creating a new
+  file in the workspace — if no workspace is open, the folder is requested first
+  — which opens in the editor. The three live in `@features/explorer` and the
+  **File menu reuses them** instead of keeping its own copy.
+
 ### Fixes
 - **Sending a photo no longer adds a 📷 next to it**: the `body` of a message
   could not be empty (`messages_body_check` required

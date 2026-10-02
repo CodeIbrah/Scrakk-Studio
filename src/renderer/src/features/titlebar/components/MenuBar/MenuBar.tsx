@@ -13,8 +13,8 @@ import {
 } from 'react'
 import { Modal, ContextMenu, type ContextMenuItem } from '@ui'
 import { isHistoryViewOpen, setSkillsViewOpen, subscribeToHistoryView, toggleHistoryView, useLayout } from '@features/layout'
-import { getEditorFiles, openFileInEditor, requestCloseFile } from '@features/editor'
-import { setWorkspaceRoot } from '@features/explorer'
+import { getEditorFiles, requestCloseFile } from '@features/editor'
+import { openFilesViaDialog, openFolderViaDialog } from '@features/explorer'
 import { useTheme } from '@core/theme/ThemeProvider'
 import styles from './MenuBar.module.css'
 
@@ -29,10 +29,6 @@ function runCommand(command: string): void {
   } catch {
     // Comando no soportado por el entorno: no-op.
   }
-}
-
-function baseNameOf(filePath: string): string {
-  return filePath.slice(Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\')) + 1)
 }
 
 /**
@@ -69,22 +65,8 @@ export function MenuBar(): JSX.Element {
   }, [])
 
   // ── Acciones del menú Archivo ────────────────────────────────────────────
-  const openFilesViaDialog = useCallback(async (): Promise<void> => {
-    const res = await window.api.fs.pickFile()
-    if (res.success && res.paths) {
-      for (const filePath of res.paths) {
-        openFileInEditor(filePath, baseNameOf(filePath))
-      }
-    }
-  }, [])
-
-  const openFolderViaDialog = useCallback(async (): Promise<void> => {
-    const res = await window.api.fs.pickFolder()
-    if (res.success && res.path) {
-      setWorkspaceRoot(res.path)
-    }
-  }, [])
-
+  // Salen de `@features/explorer` (mismas que la bienvenida): antes estaban
+  // duplicadas acá y allá.
   const closeActiveFile = useCallback((): void => {
     const { activePath } = getEditorFiles()
     // Guardia dirty: ofrece Guardar/Cerrar sin guardar antes de tirar el buffer.

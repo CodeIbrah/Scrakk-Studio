@@ -8,7 +8,8 @@
  */
 
 export { ExplorerPanel } from './ExplorerPanel'
-export { setWorkspaceRoot } from './hooks/useWorkspaceState'
+export { setWorkspaceRoot, getWorkspaceRoot } from './hooks/useWorkspaceState'
+export { createNewFile, openFilesViaDialog, openFolderViaDialog } from './fileActions'
 export { ExplorerView } from './ExplorerView'
 export {
   registerFileDecorationProvider,
