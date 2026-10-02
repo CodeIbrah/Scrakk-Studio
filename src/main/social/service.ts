@@ -400,7 +400,7 @@ export async function sendMessage(
   if (text.length > SOCIAL_RULES.messageMax) return fail(t('main.mensaje.demasiado.largo'))
   if (attachments.length > 8) return fail(t('main.maximo.8.imagenes.por.mensaje'))
   const supabase = await clientOf(accountId)
-  if (!supabase) return fail(t('main.cuenta.no.encontrada'))
+  if (!supabase) return fail(t('main.necesitas.iniciar.sesion'))
   // Validate reply_to belongs to same DM if provided
   if (replyTo) {
     const { data: parent, error: parentErr } = await supabase

@@ -44,7 +44,19 @@ function build(accountId: string): Promise<SupabaseClient> {
   })
   return client.auth
     .setSession({ access_token: account.accessToken, refresh_token: account.refreshToken })
-    .then(() => client)
+    .then(async ({ error }) => {
+      if (!error) return client
+      // `setSession` NO rechaza cuando falla: devuelve `{ error }`. Al ignorarlo,
+      // el cliente quedaba SIN sesión (rol `anon`) y todo lo que escribía moría
+      // con 42501 "permission denied for table messages" — que el chat mostraba
+      // como "sin permiso" o (peor) "solo puedes escribirle a tus amigos".
+      //
+      // Antes de darlo por muerto: el access token pudo vencer y el refresh
+      // token seguir siendo válido, así que se intenta refrescar una vez.
+      const { error: refreshError } = await client.auth.refreshSession()
+      if (!refreshError) return client
+      throw new Error(`session_invalid: ${refreshError.message}`)
+    })
 }
 
 /** Cliente autenticado de una cuenta (lo crea y le inyecta su sesión).

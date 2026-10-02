@@ -322,14 +322,22 @@ async function applyProfile(
 export async function current(accountId: string): Promise<AccountResult<AccountProfile | null>> {
   const stored = getAccount(accountId)
   if (!stored) return { ok: true, data: null }
+  // La sesión guardada no se pudo rearmar (refresh token revocado/rotado): NO
+  // se simula "logueado" con el snapshot local. Antes el `catch` de abajo
+  // devolvía el perfil cacheado y la app parecía logueada mientras TODA
+  // escritura fallaba con 42501 (el chat lo mostraba como "sin permiso" o
+  // "solo puedes escribirle a tus amigos"). Devolver null manda a la UI al
+  // login, que es lo único que puede arreglarlo.
+  const client = await getClientFor(accountId)
+  if (!client) return { ok: true, data: null }
   try {
     const profile = await fetchProfile(accountId)
     if (profile) {
       updateProfileSnapshot(profile)
       return { ok: true, data: profile }
     }
-    // Fallback: si la red/sesión falló transitoriamente, usar el snapshot
-    // guardado para no “perder” la cuenta al cambiar.
+    // Fallback: si la red falló transitoriamente, usar el snapshot guardado
+    // para no “perder” la cuenta al cambiar.
     return { ok: true, data: stored.profile }
   } catch {
     return { ok: true, data: stored.profile }
