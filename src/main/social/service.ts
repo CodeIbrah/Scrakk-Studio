@@ -379,11 +379,23 @@ export function describeSendError(
   if (m.includes('messages_immutable')) return t('main.el.mensaje.no.se.puede.modificar.asi')
   if (m.includes('not_sender')) return t('main.no.puedes.editar.ese.mensaje')
   if (looksLikeMissingSession(raw)) return t('main.necesitas.iniciar.sesion')
+  // Fallo de INFRAESTRUCTURA (ACL/privilegios del servidor), no del usuario.
+  //
+  // Esto es lo que convirtió el bug de la migración 0022 en un falso "no sos
+  // amigo" durante días: `permission denied for function is_codefile_body` es
+  // un 42501 sin la palabra "policy", así que caía en el mensaje de permisos
+  // DEL USUARIO y parecía que el usuario no podía escribirle a su amigo.
+  if (m.includes('permission denied for function') || m.includes('permission denied for table')) {
+    console.error('[social] error de privilegios en la DB (no es del usuario):', raw)
+    return t('main.error.interno.del.servidor.reintenta')
+  }
   // 42501 que SÍ viene de la RLS de amistad: el texto dice "policy".
   if (code === '42501') {
-    return m.includes('policy') || m.includes('row-level security')
-      ? t('main.solo.puedes.escribirle.a.tus')
-      : t('main.sin.permiso.para.enviar.este.mensaje')
+    if (m.includes('policy') || m.includes('row-level security')) {
+      return t('main.solo.puedes.escribirle.a.tus')
+    }
+    console.error('[social] 42501 sin causa reconocida:', raw)
+    return t('main.error.interno.del.servidor.reintenta')
   }
   return cleanError(raw)
 }

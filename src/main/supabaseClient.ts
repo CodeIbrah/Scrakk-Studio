@@ -48,31 +48,18 @@ function build(accountId: string): Promise<SupabaseClient> {
       if (!error) return client
       // `setSession` NO rechaza cuando falla: devuelve `{ error }`. Al ignorarlo,
       // el cliente quedaba SIN sesión (rol `anon`) y todo lo que escribía moría
-      // con 42501 "permission denied for table messages" — que el chat mostraba
-      // como "sin permiso" o (peor) "solo puedes escribirle a tus amigos".
-      //
-      // Solo se da la sesión por MUERTA si el error es de credenciales (token
-      // inválido/vencido/revocado). Un fallo de RED no debe desloguear: el
-      // access token pudo vencer y el refresh token seguir siendo válido.
-      if (!isCredentialError(error.message)) return client
+      // con 42501 `permission denied for table messages`, mentido como un
+      // problema de permisos del usuario. El access token pudo vencer y el
+      // refresh token seguir siendo válido, así que se intenta refrescar.
       const { error: refreshError } = await client.auth.refreshSession()
       if (!refreshError) return client
-      if (isCredentialError(refreshError.message)) {
-        throw new Error(`session_invalid: ${refreshError.message}`)
-      }
-      // Red u otro fallo transitorio: se conserva el cliente (modo offline).
-      return client
+      // Última red: si después de los intentos NO hay sesión, NUNCA se devuelve
+      // el cliente (sería un cliente anónimo que envenena cada llamada). Se
+      // rechaza y `getClientFor` devuelve null → la UI pide iniciar sesión.
+      const { data } = await client.auth.getSession()
+      if (data.session) return client
+      throw new Error(`session_invalid: ${refreshError.message || error.message}`)
     })
-}
-
-/**
- * ¿El error es de credenciales (token inválido/vencido/revocado) y no de red?
- *
- * Distinguirlo importa: la primera vez que refresh falla por red, descartar el
- * cliente dejaría al usuario en la pantalla de login sin motivo.
- */
-function isCredentialError(message: string | undefined): boolean {
-  return /invalid|expired|revoked|not found|malformed/i.test(message ?? '')
 }
 
 /** Cliente autenticado de una cuenta (lo crea y le inyecta su sesión).
@@ -116,11 +103,17 @@ async function ensureSession(
   })
   if (!error) return client
   const { error: refreshError } = await client.auth.refreshSession()
-  if (refreshError && isCredentialError(refreshError.message)) {
-    clients.delete(accountId)
-    return null
-  }
-  return client
+  if (!refreshError) return client
+  // Sin sesión tras los dos intentos: se descarta el cliente en vez de
+  // entregarlo anónimo (cada request suya saldría sin JWT → 42501).
+  //
+  // OJO con el texto del error: supabase-js usa "Auth session missing!" para
+  // `AuthSessionMissingError`, que NO matchea /invalid|expired/. Por eso acá no
+  // se clasifica el error: se comprueba el hecho (¿hay sesión o no?).
+  const { data: after } = await client.auth.getSession()
+  if (after.session) return client
+  clients.delete(accountId)
+  return null
 }
 
 /** Descarta el cliente de una cuenta (al quitarla). */

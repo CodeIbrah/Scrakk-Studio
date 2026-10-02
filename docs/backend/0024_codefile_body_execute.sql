@@ -1,0 +1,45 @@
+-- Copyright 2026 Scrakk Studio
+-- SPDX-License-Identifier: Apache-2.0
+-- Licencia completa en LICENSE (Apache License 2.0).
+
+-- 0024: EXECUTE para el CHECK de `messages` que llama a `is_codefile_body`.
+-- Proyecto: scrakk-cli (Supabase)
+--
+-- SÍNTOMA: al enviar un mensaje de TEXTO desde el cliente, la app mostraba
+-- "Solo puedes escribirle a tus amigos" / "Sin permiso para enviar este
+-- mensaje". Re-loguearse no cambiaba nada. Y los CODEFILES sí se enviaban.
+--
+-- CAUSA: la migración 0022 agregó el CHECK `messages_codefile_body_check`, que
+-- invoca `public.is_codefile_body(body)`, y acto seguido revocó EXECUTE sobre
+-- esa función para `public`, `anon` y `authenticated`:
+--
+--     revoke all on function public.is_codefile_body(text) from authenticated;
+--
+-- PostgreSQL exige EXECUTE sobre TODA función referenciada en la expresión de
+-- un CHECK para el rol que ejecuta el DML, **aunque la rama no se evalúe**. El
+-- INSERT del cliente no manda `kind` (usa el default 'normal'), así que
+-- `kind <> 'codefile'` ya era verdadero y la función no debía correr: aun así
+-- el planner exige el privilegio y el INSERT moría con:
+--
+--     ERROR: 42501: permission denied for function is_codefile_body
+--
+-- Ese 42501 no menciona "policy", así que el mapeo de errores de la app lo
+-- mostraba como un problema de permisos DEL USUARIO (y antes, como "no sos
+-- amigo"). Todo INSERT de `messages` hecho por el cliente autenticado fallaba.
+-- Los codefiles zafaban porque la Edge Function `social-file` inserta con
+-- `service_role`, que sí tenía EXECUTE.
+--
+-- FIX: conceder EXECUTE a `authenticated` (el rol que hace el INSERT).
+--
+-- Seguro: la función es IMMUTABLE, NO es SECURITY DEFINER y solo inspecciona
+-- el texto para devolver boolean. El CHECK sigue impidiendo sobres inválidos:
+-- no se debilita nada de 0022.
+--
+-- No hace falta EXECUTE para `anon`: no tiene ningún privilegio sobre
+-- `messages`, así que su INSERT falla antes (a nivel tabla).
+
+grant execute on function public.is_codefile_body(text) to authenticated;
+
+-- Verificación (debe listar authenticated):
+--   select proacl from pg_proc where proname = 'is_codefile_body';
+-- Y un INSERT de texto entre dos amigos debe devolver una fila con kind='normal'.

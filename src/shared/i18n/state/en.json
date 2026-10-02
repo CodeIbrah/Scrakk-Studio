@@ -10880,13 +10880,13 @@
       "at": "2026-10-02T00:48:10.112Z",
       "approvedAt": "2026-10-02T00:48:10.481Z"
     },
-    "main.sin.permiso.para.enviar.este.mensaje": {
-      "src": "70bcac5f1af48e0d",
+    "main.error.interno.del.servidor.reintenta": {
+      "src": "3919499dce338e63",
       "area": "main",
       "machine": true,
       "needsReview": false,
-      "at": "2026-10-02T00:48:10.112Z",
-      "approvedAt": "2026-10-02T00:48:10.481Z"
+      "at": "2026-10-02T04:25:35.047Z",
+      "approvedAt": "2026-10-02T04:25:35.218Z"
     }
   },
   "version": 1

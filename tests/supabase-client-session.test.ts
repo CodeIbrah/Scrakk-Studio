@@ -57,8 +57,13 @@ describe('cliente por cuenta — la sesión no puede quedar desfasada', () => {
   it('el error de 42501 no se traduce siempre como "amigos"', () => {
     const social = src('src/main/social/service.ts')
     expect(social).toContain('describeSendError')
-    // El mensaje de amistad sólo puede salir si el texto habla de políticas.
-    const fn = social.slice(social.indexOf('export function describeSendError'))
-    expect(fn.slice(0, 1200)).toContain('row-level security')
+    // El mensaje de amistad sólo puede salir si el texto habla de políticas, y
+    // los fallos de infraestructura tienen su propio mensaje.
+    const start = social.indexOf('export function describeSendError')
+    const end = social.indexOf('export async function sendMessage', start)
+    const fn = social.slice(start, end === -1 ? start + 3000 : end)
+    expect(fn).toContain('row-level security')
+    expect(fn).toContain('permission denied for function')
+    expect(fn).toContain('error.interno.del.servidor')
   })
 })

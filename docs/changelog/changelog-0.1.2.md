@@ -408,6 +408,33 @@ publicadas no se editan. El archivo va por versión:
   del paquete, nunca con un `ComponentType` directo.
 
 ### Correcciones
+- **No se podía enviar mensajes de texto en el chat Social**: la migración
+  `0022` agregó el CHECK `messages_codefile_body_check`, que llama a
+  `is_codefile_body(body)`, y acto seguido le **revocó EXECUTE** a
+  `authenticated`. PostgreSQL exige EXECUTE sobre las funciones referenciadas
+  por un CHECK **para el rol que hace el INSERT, aunque la rama no se evalúe**,
+  así que **todo** mensaje de texto moría con
+  `42501 permission denied for function is_codefile_body`. Los **archivos
+  compartidos seguían funcionando** porque los inserta la Edge Function con
+  `service_role`, que sí tenía el permiso — de ahí que el fallo pareciera
+  arbitrario. Se concedió EXECUTE a `authenticated` (migración
+  `0024_codefile_body_execute.sql`); la función es `IMMUTABLE` y no es
+  `SECURITY DEFINER`, así que el CHECK sigue impidiendo sobres inválidos.
+- **El error de envío culpaba al usuario de un fallo del servidor**:
+  `42501` es el código genérico de falta de permiso, y el mapeo mostraba
+  *"Solo puedes escribirle a tus amigos"* para cualquier caso. Un problema de
+  privilegios de la base se veía como *"no sos amigo"* (y re-loguearse no
+  cambiaba nada, porque la sesión era válida). Ahora los fallos de
+  infraestructura tienen su propio mensaje ("Error interno del servidor") y se
+  registran en el log con el texto crudo, la sesión ausente se distingue, y el
+  mensaje de amistad solo aparece si el error habla de políticas.
+- **Un cliente Supabase podía quedar sin sesión y usarse igual**: `setSession`
+  no rechaza cuando falla, devuelve `{ error }`, y se ignoraba; el login
+  guardaba tokens nuevos sin invalidar el cliente cacheado por cuenta. Ahora el
+  login lo invalida, y `getClientFor` no entrega nunca un cliente sin sesión
+  (le inyecta los tokens guardados al mismo cliente para no perder los canales
+  de Realtime, y si no hay sesión devuelve `null` para que la UI pida iniciar
+  sesión en vez de fingir que estás adentro).
 - **Los visores de formato no se montaban**: el dispatcher estaba en el panel
   `editor` (el clásico de una sola vista), pero el contenido de una tab de
   archivo lo monta otro componente. Resultado: un PNG siempre caía en Innerta

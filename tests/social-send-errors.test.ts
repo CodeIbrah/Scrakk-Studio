@@ -55,9 +55,21 @@ describe('describeSendError', () => {
     ).toMatch(/amigos/)
   })
 
-  it('42501 sin texto de política ya NO culpa a la amistad', () => {
-    // Este es el caso que mentía: 42501 genérico → mensaje de permisos.
-    expect(describeSendError('permission denied', '42501')).not.toMatch(/amigos/)
+  it('un fallo de PRIVILEGIOS de la DB NO culpa al usuario', () => {
+    // Este es el bug real que tuvo el chat roto durante días: la migración 0022
+    // revocó EXECUTE sobre is_codefile_body, que un CHECK de `messages` llama.
+    // PostgREST devolvía 42501 "permission denied for function is_codefile_body"
+    // y la app lo mostraba como "no sos amigo" / "sin permiso".
+    const msg = describeSendError('permission denied for function is_codefile_body', '42501')
+    expect(msg).not.toMatch(/amigos/)
+    expect(msg).not.toMatch(/sin permiso para enviar/i)
+    expect(msg).toMatch(/servidor/i)
+    expect(describeSendError('permission denied for table messages', '42501')).toMatch(/servidor/i)
+  })
+
+  it('42501 sin causa reconocida tampoco culpa al usuario', () => {
+    expect(describeSendError('algo raro', '42501')).not.toMatch(/amigos/)
+    expect(describeSendError('algo raro', '42501')).toMatch(/servidor/i)
   })
 
   it('sesión ausente/vencida pide loguearse, no amistad', () => {
