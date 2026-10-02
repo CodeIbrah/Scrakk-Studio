@@ -30,7 +30,8 @@ export function registerSocialIpc(): void {
         broadcast(SOCIAL_IPC.messageDeleted, { accountId, ...payload }),
       requestsChanged: () => broadcast(SOCIAL_IPC.requestsChanged, { accountId }),
       friendsChanged: () => broadcast(SOCIAL_IPC.friendsChanged, { accountId }),
-      presenceChanged: () => broadcast(SOCIAL_IPC.presenceChanged, { accountId }),
+      presenceChanged: (presence) =>
+        broadcast(SOCIAL_IPC.presenceChanged, { accountId, presence }),
       typingChanged: (payload) => broadcast(SOCIAL_IPC.typingChanged, { accountId, ...payload })
     })
     return { ok: true, data: null }

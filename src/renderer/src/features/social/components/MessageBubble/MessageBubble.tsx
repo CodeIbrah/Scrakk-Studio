@@ -14,21 +14,61 @@ import { showFloatingProfile } from '../ProfileFloating/ProfileFloating'
 import styles from './MessageBubble.module.css'
 
 import { t } from '@core/i18n'
+/**
+ * Perfil del remitente que se muestra en la card flotante.
+ *
+ * Exportado para que `MessageList` lo construya una vez por REMITENTE (con
+ * identidad estable) y no una vez por mensaje: un objeto nuevo por mensaje
+ * rompe el `memo` de abajo y re-renderiza el chat entero.
+ */
+export interface SenderProfile {
+  handle?: string | null
+  bio?: string | null
+  gender?: string | null
+  customStatus?: string | null
+  customStatusExpiresAt?: string | null
+  presence?: string
+  statusLabel?: string
+  project?: string | null
+  file?: string | null
+}
+
 interface MessageBubbleProps {
   message: DirectMessage
   isOwn: boolean
   showHeader: boolean
   senderName: string
   avatarUrl?: string | null
-  senderProfile?: { handle?: string | null; bio?: string | null; gender?: string | null; customStatus?: string | null; customStatusExpiresAt?: string | null; presence?: string; statusLabel?: string; project?: string | null; file?: string | null }
+  senderProfile?: SenderProfile
   onReply?: (message: DirectMessage) => void
   onEdit?: (id: string, body: string) => void
   onDelete?: (id: string) => void
   replySenderName?: string
 }
 
+/**
+ * Reloj del bubble. `toLocaleTimeString` construye un `Intl.DateTimeFormat`
+ * nuevo en cada llamada; se cachea el formateador por locale y el resultado
+ * por timestamp (un mensaje repite su hora en dos sitios).
+ */
+const timeCache = new Map<string, string>()
+let timeFormatter: Intl.DateTimeFormat | null = null
+let timeFormatterLocale = ''
+
 function timeOf(timestamp: string): string {
-  return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  const hit = timeCache.get(timestamp)
+  if (hit !== undefined) return hit
+  const locale = typeof navigator === 'undefined' ? '' : navigator.language
+  if (!timeFormatter || timeFormatterLocale !== locale) {
+    timeFormatter = new Intl.DateTimeFormat(locale || undefined, {
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+    timeFormatterLocale = locale
+  }
+  const label = timeFormatter.format(new Date(timestamp))
+  timeCache.set(timestamp, label)
+  return label
 }
 
 /** Render body with @mentions highlighted like Discord */

@@ -177,6 +177,17 @@ export interface MessageDeleteEvent {
 export interface AccountEvent {
   accountId: string
 }
+/**
+ * Evento de presencia con la fila ya resuelta.
+ *
+ * Antes era un `AccountEvent` pelado y el renderer respondía refetcheando
+ * amigos + solicitudes + presencia (3 queries y un re-render del panel por
+ * cada latido de cada amigo). Ahora trae el `UserPresence` para actualizar
+ * una sola entrada.
+ */
+export interface PresenceEvent extends AccountEvent {
+  presence: UserPresence
+}
 export interface TypingEvent {
   accountId: string
   peerId: string
@@ -259,7 +270,7 @@ export interface SocialApi {
   onMessageDeleted: (callback: (event: MessageDeleteEvent) => void) => () => void
   onRequestsChanged: (callback: (event: AccountEvent) => void) => () => void
   onFriendsChanged: (callback: (event: AccountEvent) => void) => () => void
-  onPresenceChanged: (callback: (event: AccountEvent) => void) => () => void
+  onPresenceChanged: (callback: (event: PresenceEvent) => void) => () => void
   onTypingChanged: (callback: (event: TypingEvent) => void) => () => void
 }
 

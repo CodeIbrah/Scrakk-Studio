@@ -630,7 +630,15 @@ export interface SocialRealtimeHandlers {
   messageDeleted: (payload: { messageId: string; peerId: string }) => void
   requestsChanged: () => void
   friendsChanged: () => void
-  presenceChanged: () => void
+  /**
+   * Cambio de presencia CON la fila ya resuelta.
+   *
+   * Antes iba sin payload y el renderer respondía con un refetch completo
+   * (amigos + solicitudes + presencia): cada latido de cada amigo disparaba 3
+   * queries y un re-render del panel entero. Con la fila sólo se actualiza la
+   * entrada de ese amigo.
+   */
+  presenceChanged: (presence: UserPresence) => void
   typingChanged: (payload: { userId: string; peerId: string; typing: boolean }) => void
 }
 
@@ -773,7 +781,7 @@ export async function watchAccount(
     .on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'presence' },
-      () => handlers.presenceChanged()
+      (payload) => handlers.presenceChanged(mapPresence(payload.new as PresenceRow))
     )
   // Adjuntos: llegan DESPUÉS del INSERT del mensaje (el emisor sube las
   // imágenes antes de crear la fila, pero las filas de adjuntos se insertan

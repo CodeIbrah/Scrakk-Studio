@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // Licencia completa en LICENSE (Apache License 2.0).
 
-import { useEffect, useRef, type JSX, type UIEvent } from 'react'
+import { memo, useEffect, useMemo, useRef, type JSX, type UIEvent } from 'react'
 import type { DirectMessage, Friend } from '@shared/social'
 import type { MyProfile } from '../../state/types'
-import { MessageBubble } from '../MessageBubble/MessageBubble'
+import { MessageBubble, type SenderProfile } from '../MessageBubble/MessageBubble'
 import styles from './MessageList.module.css'
 
-import { t } from '@core/i18n'
+import { t, useLocale } from '@core/i18n'
 interface MessageListProps {
   messages: DirectMessage[]
   /** Tu id (para distinguir propios de ajenos). */
@@ -45,16 +45,58 @@ const BOTTOM_THRESHOLD = 120
 /** A qué distancia del techo se pide la página anterior. */
 const LOAD_MORE_THRESHOLD = 120
 
-/** Etiqueta del separador de día ("Hoy", "Ayer" o la fecha corta). */
-function dayLabel(timestamp: string): string {
+/**
+ * Formateadores de fecha cacheados a nivel de módulo.
+ *
+ * `toLocaleTimeString()` / `toLocaleDateString()` construyen un
+ * `Intl.DateTimeFormat` nuevo en CADA llamada, y acá se llaman una vez por
+ * mensaje (más el reloj de cada bubble). Con un chat largo eso son cientos de
+ * construcciones de formateador por render. `Intl` sí cachea internamente los
+ * datos regionalizados, pero no el objeto formatter.
+ */
+const FORMATTERS = new Map<string, Intl.DateTimeFormat>()
+
+function cachedFormatter(kind: 'day' | 'time', locale: string): Intl.DateTimeFormat {
+  const key = `${kind}:${locale}`
+  let hit = FORMATTERS.get(key)
+  if (!hit) {
+    hit =
+      kind === 'day'
+        ? new Intl.DateTimeFormat(locale || undefined, { day: '2-digit', month: 'short' })
+        : new Intl.DateTimeFormat(locale || undefined, { hour: '2-digit', minute: '2-digit' })
+    FORMATTERS.set(key, hit)
+  }
+  return hit
+}
+
+/** Clave de día local (`año-mes-día`) sin pasar por `toDateString()`. */
+function dayKey(date: Date): string {
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+}
+
+/**
+ * Etiqueta del separador de día ("Hoy", "Ayer" o la fecha corta).
+ *
+ * `todayKey`/`yesterdayKey` se calculan UNA vez por pasada (no dos `Date` por
+ * mensaje) y el resultado se cachea por texto de timestamp: cambiar la
+ * presencia de un amigo re-renderiza la lista y no debe reformatear fechas.
+ */
+const dayLabelCache = new Map<string, string>()
+
+function dayLabel(
+  timestamp: string,
+  todayKey: string,
+  yesterdayKey: string,
+  locale: string
+): string {
+  const hit = dayLabelCache.get(timestamp)
+  if (hit !== undefined) return hit
   const date = new Date(timestamp)
-  const today = new Date()
-  const yesterday = new Date()
-  yesterday.setDate(today.getDate() - 1)
-  const sameDay = (a: Date, b: Date): boolean => a.toDateString() === b.toDateString()
-  if (sameDay(date, today)) return t('social.hoy')
-  if (sameDay(date, yesterday)) return t('social.ayer')
-  return date.toLocaleDateString([], { day: '2-digit', month: 'short' })
+  const key = dayKey(date)
+  const label =
+    key === todayKey ? t('social.hoy') : key === yesterdayKey ? t('social.ayer') : cachedFormatter('day', locale).format(date)
+  dayLabelCache.set(timestamp, label)
+  return label
 }
 
 function statusLabel(status: string): string {
@@ -76,7 +118,12 @@ const GROUP_WINDOW_MS = 5 * 60 * 1000
  * Lista Discord-style: agrupa mensajes del mismo autor dentro de 5m.
  * Solo el líder del grupo muestra header (nombre + hora).
  */
-export function MessageList({ messages, meId, friends, meName, meAvatar, meProfile, friendsPresence, className, onReply, onEdit, onDelete, hasMore, loadingMore, onLoadMore, conversationId }: MessageListProps): JSX.Element {
+/**
+ * `memo`: el panel Social re-renderiza seguido (contexto grande) y esta lista
+ * sólo depende de los mensajes y de los perfiles. Con esto, un cambio que no
+ * toca los mensajes (presencia, typing, cuentas) no la recorre.
+ */
+function MessageListImpl({ messages, meId, friends, meName, meAvatar, meProfile, friendsPresence, className, onReply, onEdit, onDelete, hasMore, loadingMore, onLoadMore, conversationId }: MessageListProps): JSX.Element {
   const listRef = useRef<HTMLDivElement>(null)
   const prevHeightRef = useRef(0)
   const pendingScrollRef = useRef<
@@ -161,20 +208,90 @@ export function MessageList({ messages, meId, friends, meName, meAvatar, meProfi
     }
   }
 
+  // ── Datos derivados, memoizados ────────────────────────────────────────────
+  // Antes se armaban en CADA render: con un chat largo eso son 3 Maps por
+  // render, y lo peor, un objeto `senderProfile` NUEVO por mensaje, que hace
+  // fallar la comparación de `memo(MessageBubble)` → todos los bubbles se
+  // re-renderizaban aunque solo cambiara la presencia de un amigo.
+
+  const { nameById, avatarById } = useMemo(() => {
+    const names = new Map<string, string>()
+    const avatars = new Map<string, string | null>()
+    for (const f of friends) {
+      names.set(f.id, f.displayName ?? f.handle ?? t('social.usuario'))
+      avatars.set(f.id, f.avatarUrl)
+    }
+    names.set(meId, meName)
+    if (meAvatar) avatars.set(meId, meAvatar)
+    return { nameById: names, avatarById: avatars }
+  }, [friends, meId, meName, meAvatar])
+
+  /**
+   * Perfil por REMITENTE (no por mensaje), con identidad estable.
+   *
+   * La clave para que `memo` sirva: si el objeto se reconstruye, todos los
+   * mensajes de ese remitente se re-renderizan. Se cachea por id y solo se
+   * invalida cuando sus datos cambian de verdad (presencia, bio, actividad).
+   */
+  const profileCacheRef = useRef(new Map<string, { sig: string; value: SenderProfile }>())
+
+  const profileBySender = useMemo(() => {
+    const cache = profileCacheRef.current
+    const next = new Map<string, SenderProfile>()
+
+    const keep = (id: string, value: SenderProfile): void => {
+      const sig = JSON.stringify(value)
+      const hit = cache.get(id)
+      if (hit && hit.sig === sig) {
+        next.set(id, hit.value)
+        return
+      }
+      cache.set(id, { sig, value })
+      next.set(id, value)
+    }
+
+    if (meProfile) {
+      keep(meId, {
+        handle: meProfile.handle || null,
+        bio: meProfile.description ?? null,
+        gender: meProfile.gender ?? null,
+        customStatus: meProfile.customStatus ?? null,
+        customStatusExpiresAt: meProfile.customStatusExpiresAt ?? null,
+        presence: meProfile.presence,
+        statusLabel: meProfile.presence ? statusLabel(meProfile.presence) : undefined,
+        project: meProfile.activity?.project ?? null,
+        file: meProfile.activity?.file ?? null
+      })
+    }
+    for (const f of friends) {
+      const presence = friendsPresence?.[f.id]
+      keep(f.id, {
+        handle: f.handle,
+        bio: f.bio,
+        gender: f.gender,
+        customStatus: f.customStatus,
+        customStatusExpiresAt: f.customStatusExpiresAt,
+        presence: presence?.status,
+        statusLabel: presence ? statusLabel(presence.status) : undefined,
+        project: presence?.activity.project ?? null,
+        file: presence?.activity.file ?? null
+      })
+    }
+
+    // Poda: amigos que ya no están (el Map no crece con el churn).
+    for (const id of [...cache.keys()]) if (!next.has(id)) cache.delete(id)
+    return next
+  }, [friends, friendsPresence, meProfile, meId])
+
   let lastDay = ''
   let lastSender: string | null = null
   let lastTime = 0
-
-  const nameById = new Map<string, string>()
-  const avatarById = new Map<string, string | null>()
-  const friendById = new Map<string, Friend>()
-  for (const f of friends) {
-    nameById.set(f.id, f.displayName ?? f.handle ?? t('social.usuario'))
-    avatarById.set(f.id, f.avatarUrl)
-    friendById.set(f.id, f)
-  }
-  nameById.set(meId, meName)
-  if (meAvatar) avatarById.set(meId, meAvatar)
+  const locale = useLocale()
+  const today = new Date()
+  const yesterday = new Date()
+  yesterday.setDate(today.getDate() - 1)
+  const todayKey = dayKey(today)
+  const yesterdayKey = dayKey(yesterday)
 
   return (
     <div
@@ -199,12 +316,14 @@ export function MessageList({ messages, meId, friends, meName, meAvatar, meProfi
         <p className={styles.empty}>{t('social.todavia.no.hay.mensajes.escribe')}</p>
       ) : (
         messages.map((message) => {
-          const day = dayLabel(message.createdAt)
+          const day = dayLabel(message.createdAt, todayKey, yesterdayKey, locale)
           const showDay = day !== lastDay
           if (showDay) lastDay = day
 
           const isOwn = message.senderId === meId
-          const time = new Date(message.createdAt).getTime()
+          // `Date.parse` en vez de `new Date(...).getTime()`: mismo número, sin
+          // construir un objeto Date por mensaje.
+          const time = Date.parse(message.createdAt)
           const isSameSender = lastSender === message.senderId
           const withinWindow = isSameSender && time - lastTime < GROUP_WINDOW_MS
           const showHeader = showDay || !withinWindow
@@ -215,37 +334,8 @@ export function MessageList({ messages, meId, friends, meName, meAvatar, meProfi
 
           const senderName = nameById.get(message.senderId) ?? t('social.usuario')
           const senderAvatar = avatarById.get(message.senderId) ?? (message.senderId === meId ? meAvatar : null)
-          const friend = friendById.get(message.senderId)
-          const presence = friendsPresence?.[message.senderId]
-          const senderProfile = isOwn
-            ? meProfile
-              ? {
-                  handle: meProfile.handle || null,
-                  bio: meProfile.description ?? null,
-                  gender: meProfile.gender ?? null,
-                  customStatus: meProfile.customStatus ?? null,
-                  customStatusExpiresAt: meProfile.customStatusExpiresAt ?? null,
-                  createdAt: meProfile.createdAt ?? null,
-                  presence: meProfile.presence,
-                  statusLabel: meProfile.presence ? statusLabel(meProfile.presence) : undefined,
-                  project: meProfile.activity?.project ?? null,
-                  file: meProfile.activity?.file ?? null
-                }
-              : undefined
-            : friend
-              ? {
-                  handle: friend.handle,
-                  bio: friend.bio,
-                  gender: friend.gender,
-                  customStatus: friend.customStatus,
-                  customStatusExpiresAt: friend.customStatusExpiresAt,
-                  createdAt: friend.createdAt ?? null,
-                  presence: presence?.status,
-                  statusLabel: presence ? statusLabel(presence.status) : undefined,
-                  project: presence?.activity.project ?? null,
-                  file: presence?.activity.file ?? null
-                }
-              : undefined
+          // Del cache por remitente: identidad estable → `memo` funciona.
+          const senderProfile = profileBySender.get(message.senderId)
           const replySenderName = message.replyPreview
             ? nameById.get(message.replyPreview.senderId) ?? t('social.usuario')
             : undefined
@@ -276,3 +366,5 @@ export function MessageList({ messages, meId, friends, meName, meAvatar, meProfi
     </div>
   )
 }
+
+export const MessageList = memo(MessageListImpl)

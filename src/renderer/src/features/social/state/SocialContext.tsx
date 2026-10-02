@@ -31,6 +31,7 @@ import type {
 } from '@shared/social'
 import { SOCIAL_RULES } from '@shared/social'
 import type { MyProfile, SocialView } from './types'
+import { sameFriends, samePresenceMap, sameRequests } from './equality'
 
 import { t } from '@core/i18n'
 import { setActiveSocialSession } from '../actions/shareFile'
@@ -233,6 +234,14 @@ export function SocialProvider({
   const activePeerRef = useRef<Friend | null>(activePeer)
   activePeerRef.current = activePeer
   const reloadRef = useRef<() => void>(() => {})
+  // Refs "latest" para los handlers de Realtime: Allows que el efecto de
+  // suscripción NO dependa de `account`/`friends` y se enganche UNA vez. Antes
+  // `friends` cambiaba de identidad en cada poll (15s) y eso desenganchaba y
+  // reenganchaba los 7 canales, con una ventana ciega donde se perdían eventos.
+  const accountRef = useRef<AccountProfile | null>(account)
+  accountRef.current = account
+  const friendsRef = useRef<Friend[]>(friends)
+  friendsRef.current = friends
 
   // Publica la conversación activa para la acción global "Compartir en Social"
   // (el menú contextual del Explorer y de las tabs vive fuera de este panel).
@@ -323,7 +332,9 @@ export function SocialProvider({
     if (!result.ok || accountIdRef.current !== id) return
     const map: Record<string, UserPresence> = {}
     for (const entry of result.data) map[entry.userId] = entry
-    setPresenceMap(map)
+    // Igual que en `loadSocial`: si no cambió nada, se conserva la identidad
+    // para no invalidar los `memo` del panel.
+    setPresenceMap((prev) => (samePresenceMap(prev, map) ? prev : map))
   }, [])
 
   const loadSocial = useCallback(async (id: string): Promise<void> => {
@@ -332,8 +343,11 @@ export function SocialProvider({
       social.listRequests(id)
     ])
     if (accountIdRef.current !== id) return
-    if (friendsResult.ok) setFriends(friendsResult.data)
-    if (requestsResult.ok) setRequests(requestsResult.data)
+    // Sólo se reemplaza si el CONTENIDO cambió. Antes, cada poll (15s) ponía un
+    // array nuevo: eso invalidaba el `memo` del panel, de la lista de mensajes
+    // y de cada bubble, y además re-suscribía los canales de Realtime.
+    if (friendsResult.ok) setFriends((prev) => (sameFriends(prev, friendsResult.data) ? prev : friendsResult.data))
+    if (requestsResult.ok) setRequests((prev) => (sameRequests(prev, requestsResult.data) ? prev : requestsResult.data))
   }, [])
 
   const refresh = useCallback(async (): Promise<void> => {
@@ -365,10 +379,15 @@ export function SocialProvider({
     const read = (): void => {
       const root = readWorkspaceRoot()
       const active = getEditorFiles().activePath
-      setIdeContext({
-        project: root ? baseName(root) : undefined,
-        file: active ? baseName(active) : undefined
-      })
+      const project = root ? baseName(root) : undefined
+      const file = active ? baseName(active) : undefined
+      // Identidad estable: `subscribeToEditorFiles` emite en cada cambio de
+      // archivo y `workspace-changed` en cada workspace. Antes se ponía un
+      // objeto nuevo siempre → re-render del panel entero + republicar
+      // presencia, aunque los valores fueran los mismos.
+      setIdeContext((prev) =>
+        prev.project === project && prev.file === file ? prev : { project, file }
+      )
     }
     read()
     const unsubscribe = subscribeToEditorFiles(read)
@@ -433,18 +452,15 @@ export function SocialProvider({
   useEffect(() => {
     const unsubMessage = social.onIncomingMessage(({ accountId: acc, message }) => {
       if (acc !== accountIdRef.current) return
-      if (import.meta.env.DEV) {
-        console.log('[social] mensaje de', message.senderId, '→', message.body.slice(0, 40))
-      }
       // Notificación según estado
       const myStatus = statusRef.current
       const isOwn = message.senderId === acc
       const isViewing = activePeerRef.current?.id === message.senderId
       if (!isOwn && !isViewing && shouldNotify(myStatus)) {
         // Check mention: if body contains @myHandle, highlight
-        const myHandle = account?.handle ?? ''
+        const myHandle = accountRef.current?.handle ?? ''
         const isMention = myHandle && message.body.toLowerCase().includes(`@${myHandle.toLowerCase()}`)
-        const sender = friends.find((f) => f.id === message.senderId)
+        const sender = friendsRef.current.find((f) => f.id === message.senderId)
         const senderName = sender?.displayName ?? sender?.handle ?? t('social.alguien')
         notify({
           title: isMention ? `${senderName} te mencionó` : `Mensaje de ${senderName}`,
@@ -496,8 +512,24 @@ export function SocialProvider({
     const unsubFriends = social.onFriendsChanged(({ accountId: acc }) => {
       if (acc === accountIdRef.current) reloadRef.current()
     })
-    const unsubPresence = social.onPresenceChanged(({ accountId: acc }) => {
-      if (acc === accountIdRef.current) reloadRef.current()
+    const unsubPresence = social.onPresenceChanged(({ accountId: acc, presence }) => {
+      if (acc !== accountIdRef.current) return
+      // Quirúrgico: la fila viene en el evento, así que NO se refetchea nada.
+      // Antes llamaba a `reloadRef.current()` → 3 queries (amigos + solicitudes +
+      // presencia) y un re-render del panel entero por CADA latido de CADA
+      // amigo: con 20 amigos en línea, un refresh cada ~2s.
+      setPresenceMap((prev) => {
+        const existing = prev[presence.userId]
+        // Mismo estado y misma actividad → no hay nada que pintar.
+        if (
+          existing &&
+          existing.status === presence.status &&
+          JSON.stringify(existing.activity) === JSON.stringify(presence.activity)
+        ) {
+          return prev
+        }
+        return { ...prev, [presence.userId]: presence }
+      })
     })
     return () => {
       unsubMessage()
@@ -508,11 +540,22 @@ export function SocialProvider({
       unsubFriends()
       unsubPresence()
     }
-  }, [account, friends])
+    // Sin dependencias: los handlers leen SIEMPRE lo fresco por ref (arriba).
+  }, [])
 
-  // Publicar mi estado/actividad cuando cambian.
+  // Publicar mi estado/actividad cuando cambian (y SOLO si cambian de verdad).
+  //
+  // `sharedActivity` se rehace en cada `ideContext`, y `ideContext` se rehace en
+  // cada cambio del editor: abrir/cambiar de archivo publicaba presencia sin que
+  // el contenido fuera distinto → una escritura + un evento Realtime para todos
+  // los amigos, por cada archivo que tocabas. El heartbeat de abajo sigue
+  // refrescando `updated_at`, que es lo que mantiene el "online".
+  const lastPresencePublishRef = useRef('')
   useEffect(() => {
     if (!accountId || !me) return
+    const signature = JSON.stringify([status, sharedActivity])
+    if (lastPresencePublishRef.current === signature) return
+    lastPresencePublishRef.current = signature
     void social.setPresence(accountId, status, sharedActivity)
   }, [accountId, me, status, sharedActivity])
 
@@ -534,21 +577,29 @@ export function SocialProvider({
     return () => clearInterval(timer)
   }, [accountId])
 
-  // Red de seguridad: refresca presencia (10s) y amigos/solicitudes (15s) por si
-  // el push de Realtime fallara. Con Realtime andando, es un no-op barato.
+  // Red de seguridad: refresca presencia (60s) y amigos/solicitudes (120s) por si
+  // el push de Realtime fallara. Estaban en 10s/15s, que era un refetch por
+  // minuto CON el Realtime funcionando (que ya notifica cada cambio).
+  // `loadSocial`/`loadPresence` no cambian la identidad si nada cambió, así que
+  // con todo sano estos timers no renderizan nada.
   useEffect(() => {
     if (!accountId) return undefined
-    const presenceTimer = setInterval(() => void loadPresence(accountId), 10_000)
-    const socialTimer = setInterval(() => void loadSocial(accountId), 15_000)
+    const presenceTimer = setInterval(() => void loadPresence(accountId), 60_000)
+    const socialTimer = setInterval(() => void loadSocial(accountId), 120_000)
     return () => {
       clearInterval(presenceTimer)
       clearInterval(socialTimer)
     }
   }, [accountId, loadPresence, loadSocial])
 
-  // Red de seguridad: mientras un chat está abierto, refresca cada 3s y mergea
-  // los mensajes nuevos (dedupe por id). Así los mensajes aparecen aunque el
-  // push de Realtime falle; con Realtime andando, el merge es un no-op.
+  // Red de seguridad: mientras un chat está abierto, refresca cada 20s y mergea
+  // los mensajes nuevos (dedupe por id).
+  //
+  // Estaba en 3s, y cada pasada son hasta 3 round-trips secuenciales (mensajes →
+  // reply previews → adjuntos, ver `listMessages` en el main) + un O(n) sobre
+  // todo el historial cargado. El canal de Realtime ya cubre INSERT, UPDATE y
+  // DELETE de `messages`, así que 20s es una red real (cubre un push perdido)
+  // sin pagar el peaje 6 veces por minuto.
   useEffect(() => {
     if (view !== 'chat' || !activePeer || !accountId) return undefined
     const peerId = activePeer.id
@@ -565,7 +616,7 @@ export function SocialProvider({
           return merged
         })
       })
-    }, 3000)
+    }, 20_000)
     return () => {
       cancelled = true
       clearInterval(timer)

@@ -20,6 +20,7 @@ import type {
   MessageDeleteEvent,
   MessageUpdateEvent,
   PresenceActivity,
+  PresenceEvent,
   PresenceStatus,
   SocialResult,
   SocialUser,
@@ -93,7 +94,7 @@ export const social = {
     window.api.social.onRequestsChanged(callback),
   onFriendsChanged: (callback: (event: AccountEvent) => void): (() => void) =>
     window.api.social.onFriendsChanged(callback),
-  onPresenceChanged: (callback: (event: AccountEvent) => void): (() => void) =>
+  onPresenceChanged: (callback: (event: PresenceEvent) => void): (() => void) =>
     window.api.social.onPresenceChanged(callback),
   onTypingChanged: (callback: (event: TypingEvent) => void): (() => void) =>
     window.api.social.onTypingChanged(callback)
@@ -108,6 +109,7 @@ export type {
   MessageDeleteEvent,
   MessageUpdateEvent,
   PresenceActivity,
+  PresenceEvent,
   PresenceStatus,
   SocialResult,
   SocialUser,

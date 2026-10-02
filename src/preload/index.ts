@@ -58,6 +58,7 @@ import {
 import {
   SOCIAL_IPC,
   type AccountEvent,
+  type PresenceEvent,
   type ImageUpload,
   type IncomingMessageEvent,
   type MessageDeleteEvent,
@@ -533,8 +534,8 @@ const api: WindowApi = {
       ipcRenderer.invoke(SOCIAL_IPC.setPresence, accountId, status, activity),
     sendTyping: (accountId: string, peerId: string, typing: boolean) =>
       ipcRenderer.invoke(SOCIAL_IPC.sendTyping, accountId, peerId, typing),
-    onPresenceChanged: (callback: (event: AccountEvent) => void) => {
-      const listener = (_event: IpcRendererEvent, payload: AccountEvent): void => callback(payload)
+    onPresenceChanged: (callback: (event: PresenceEvent) => void) => {
+      const listener = (_event: IpcRendererEvent, payload: PresenceEvent): void => callback(payload)
       ipcRenderer.on(SOCIAL_IPC.presenceChanged, listener)
       return () => {
         ipcRenderer.removeListener(SOCIAL_IPC.presenceChanged, listener)
