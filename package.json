@@ -1,6 +1,6 @@
 {
   "name": "scrakk-studio",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Scrakk Studio — IDE modular — React + TypeScript + Vite (hot reload) + Electron",
   "author": {
     "name": "Scrakk",
@@ -20,8 +20,8 @@
     "dist": "electron-vite build && electron-builder",
     "dist:dir": "electron-vite build && electron-builder --dir",
     "up": "node tools/bump.mjs",
-  "i18n": "node tools/i18n.mjs",
-  "i18n:extract": "node tools/i18n-extract.mjs",
+    "i18n": "node tools/i18n.mjs",
+    "i18n:extract": "node tools/i18n-extract.mjs",
     "pack:audit": "node tools/pack-audit.mjs",
     "perf:baseline": "node tools/perf/baseline.mjs",
     "perf:baseline:runtime": "node tools/perf/baseline.mjs --runtime",
