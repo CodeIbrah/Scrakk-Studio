@@ -75,9 +75,18 @@ function SocialPanelInner(): JSX.Element {
   const [editingProfile, setEditingProfile] = useState(false)
 
   const panelHeader = usePanelTitleOptional()
+  /**
+   * `setActions` es estable (useCallback con deps vacías), pero el OBJETO del
+   * contexto cambia de identidad cada vez que las acciones cambian. Depender
+   * del objeto entero hacía que este efecto se auto-reactivara en bucle:
+   * setActions → contexto nuevo → cleanup (setActions(null)) → contexto nuevo
+   * → efecto → ... ("Maximum update depth exceeded"). El bucle saturaba el
+   * hilo principal, y de ahí el "fetch failed" al enviar mensajes.
+   */
+  const setHeaderActions = panelHeader?.setActions ?? null
   useEffect(() => {
-    if (!panelHeader) return undefined
-    panelHeader.setActions(() => {
+    if (!setHeaderActions) return undefined
+    setHeaderActions(() => {
       if (view === 'accounts' || view === 'addAccount' || view === 'profile') {
         return (
           <HeaderActionButton
@@ -115,8 +124,8 @@ function SocialPanelInner(): JSX.Element {
         </>
       )
     })
-    return () => panelHeader.setActions(null)
-  }, [panelHeader, view, me, setView])
+    return () => setHeaderActions(null)
+  }, [setHeaderActions, view, me, setView])
 
   // Sin sesión (o cuenta vencida) → email + código (mismo login que el CLI).
   if (!me) {

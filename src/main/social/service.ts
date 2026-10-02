@@ -12,7 +12,7 @@
 
 import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
-import { getClientFor, dropClient } from '../supabaseClient'
+import { getClientFor, forgetClient } from '../supabaseClient'
 import { IMAGE_RULES } from '@shared/social'
 import { isR2Configured, sniffMime, uploadToR2 } from '../images/r2'
 import {
@@ -340,6 +340,54 @@ export async function uploadImage(
   return ok({ path, url: data.publicUrl, mime: image.mime, sizeBytes: valid.bytes.length })
 }
 
+/**
+ * ¿Este error es "no hay sesión" y no "no sos amigo"?
+ *
+ * `42501` (insufficient_privilege) es el código de CUALQUIER cosa: la RLS de
+ * amistad, un token vencido, un claim raro… Con el mismo código la app报告显示
+ * "solo puedes escribirle a tus amigos" incluso cuando la amistad existe y lo
+ * que faltaba era el JWT. Estos son los mensajes que emite PostgREST/GoTrue.
+ */
+export function looksLikeMissingSession(message: string | undefined): boolean {
+  const m = (message ?? '').toLowerCase()
+  return (
+    m.includes('jwt') ||
+    m.includes('invalid claim') ||
+    m.includes('missing claim') ||
+    m.includes('token is expired') ||
+    m.includes('no authorization') ||
+    m.includes('auth session missing')
+  )
+}
+
+/**
+ * Traduce el error del INSERT a un mensaje honesto.
+ *
+ * Antes: cualquier 42501 → "solo puedes escribirle a tus amigos". Con 42501
+ * siendo el código genérico de falta de permiso, eso convertía un token
+ * vencido en un mensaje falso (y hacía pensar que se habían perdido los datos).
+ */
+export function describeSendError(
+  message: string | undefined,
+  code?: string
+): string {
+  const raw = message ?? ''
+  const m = raw.toLowerCase()
+  // El slowmode de la DB: el trigger levanta 'msg_ratelimited' (22023).
+  if (m.includes('msg_ratelimited')) return 'msg_ratelimited'
+  if (m.includes('reply_not_in_dm')) return t('main.no.puedes.citar.un.mensaje')
+  if (m.includes('messages_immutable')) return t('main.el.mensaje.no.se.puede.modificar.asi')
+  if (m.includes('not_sender')) return t('main.no.puedes.editar.ese.mensaje')
+  if (looksLikeMissingSession(raw)) return t('main.necesitas.iniciar.sesion')
+  // 42501 que SÍ viene de la RLS de amistad: el texto dice "policy".
+  if (code === '42501') {
+    return m.includes('policy') || m.includes('row-level security')
+      ? t('main.solo.puedes.escribirle.a.tus')
+      : t('main.sin.permiso.para.enviar.este.mensaje')
+  }
+  return cleanError(raw)
+}
+
 export async function sendMessage(
   accountId: string,
   toUserId: string,
@@ -382,17 +430,39 @@ export async function sendMessage(
     })
   }
   // 2) Crear el mensaje.
-  const { data, error } = await supabase
-    .from('messages')
-    .insert({ sender_id: accountId, recipient_id: toUserId, body: text, reply_to: replyTo })
-    .select('id,sender_id,recipient_id,kind,body,created_at,read_at,reply_to,edited_at')
-    .single()
-  if (error) {
-    if (error.code === '42501') return fail(t('main.solo.puedes.escribirle.a.tus'))
-    if (error.message.includes('msg_ratelimited')) return fail('msg_ratelimited')
-    return fail(cleanError(error.message))
+  //
+  // El INSERT va en un helper porque hay que poder reintentarlo: si la sesión
+  // se perdió en vuelo (el cliente quedó sin JWT), la RLS responde 42501 y el
+  // mensaje se perdía. Un reintento con el cliente rearmado lo resuelve sin que
+  // el usuario tenga que volver a loguearse.
+  let data: MessageRow | null = null
+  let insertError: { code?: string; message?: string } | null = null
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const ins = await supabase
+      .from('messages')
+      .insert({ sender_id: accountId, recipient_id: toUserId, body: text, reply_to: replyTo })
+      .select('id,sender_id,recipient_id,kind,body,created_at,read_at,reply_to,edited_at')
+      .single()
+    if (!ins.error) {
+      data = ins.data as MessageRow
+      insertError = null
+      break
+    }
+    insertError = ins.error
+    // Reintento único y sólo si parece sesión: si no hay JWT, `auth.uid()` es
+    // NULL y la política de amistad rechaza el INSERT con 42501.
+    if (attempt === 0 && looksLikeMissingSession(ins.error.message)) {
+      forgetClient(accountId)
+      const rebuilt = await clientOf(accountId)
+      if (!rebuilt) break
+      continue
+    }
+    break
   }
-  const mapped = mapMessage(data as MessageRow)
+  if (insertError || !data) {
+    return fail(describeSendError(insertError?.message, insertError?.code))
+  }
+  const mapped = mapMessage(data)
   // Hydrate preview if reply
   if (mapped.replyTo) {
     const { data: parent } = await supabase
@@ -731,9 +801,16 @@ export async function watchAccount(
     if (process.env.NODE_ENV !== 'production') {
       console.warn('[social-rt] sesión no válida para', accountId.slice(0, 8), '→ reintento')
     }
-    // El cliente cacheado quedó con una sesión inválida: se descarta para
-    // reconstruirlo desde los tokens guardados en el próximo intento.
-    dropClient(accountId)
+    // El cliente cacheado quedó con una sesión inválida: se saca del pool para
+    // que el próximo intento lo rearme desde los tokens guardados.
+    //
+    // OJO: `forgetClient`, NO `dropClient`. `dropClient` hace `signOut` sobre el
+    // MISMO objeto cliente, y ese cliente puede estar en manos de una operación
+    // en vuelo (el INSERT de un mensaje, un poll): al firmarlo, esa request sale
+    // sin JWT, `auth.uid()` queda NULL y la RLS rechaza el INSERT con 42501.
+    // Como 42501 es el código de cualquier falta de permiso, el chat lo
+    // reportaba como "solo puedes escribirle a tus amigos".
+    forgetClient(accountId)
     scheduleReconnect(accountId, handlers)
     return
   }

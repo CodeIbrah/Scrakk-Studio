@@ -77,14 +77,24 @@ export function ChatPanel(): JSX.Element {
   // izquierda), así que el botón sólo alterna el flag del store. Los dos
   // botones son arrastrables (HeaderActionButton): el usuario decide el orden.
   const panelHeader = usePanelTitleOptional()
+  /**
+   * Del contexto del header nos interesa SOLO la función: `setActions` y
+   * `setTitle` son estables (useCallback con deps vacías), pero el objeto del
+   * contexto cambia de identidad cada vez que el título o las acciones cambian.
+   * Depender del objeto entero hace que estos efectos se auto-reactiven en
+   * bucle (setActions → contexto nuevo → cleanup → setActions(null) → contexto
+   * nuevo → efecto → ...), con "Maximum update depth exceeded".
+   */
+  const setHeaderActions = panelHeader?.setActions ?? null
+  const setHeaderTitle = panelHeader?.setTitle ?? null
   const [showHistory, setShowHistory] = useState(() => isHistoryViewOpen())
   useEffect(() => subscribeToHistoryView(() => setShowHistory(isHistoryViewOpen())), [])
   // Vista de skills: misma mecánica que el historial (reemplaza el contenido).
   const [showSkills, setShowSkills] = useState(() => isSkillsViewOpen())
   useEffect(() => subscribeToSkillsView(() => setShowSkills(isSkillsViewOpen())), [])
   useEffect(() => {
-    if (!panelHeader) return undefined
-    panelHeader.setActions(() => {
+    if (!setHeaderActions) return undefined
+    setHeaderActions(() => {
       // Vista de skills abierta: el header queda SÓLO con la salida. La `key`
       // distinta por vista fuerza el remount y dispara la animación de entrada.
       if (showSkills) {
@@ -143,27 +153,27 @@ export function ChatPanel(): JSX.Element {
         </>
       )
     })
-    return () => panelHeader.setActions(null)
-  }, [panelHeader, createSession, showSkills, showHistory])
+    return () => setHeaderActions(null)
+  }, [setHeaderActions, createSession, showSkills, showHistory])
 
   // Título del header: "Chat: {nombre}" con el título real de la sesión (lo
   // setea solo con el primer mensaje o la tool history_title). Sin sesión o
   // sin título propio queda "Chat" a secas. Cuando hay una vista embebida
   // abierta, el header deja de ser el chat: pasa a "Skills" o "Historial".
   useEffect(() => {
-    if (!panelHeader) return undefined
+    if (!setHeaderTitle) return undefined
     if (showSkills) {
-      panelHeader.setTitle('Skills')
+      setHeaderTitle('Skills')
       return undefined
     }
     if (showHistory) {
-      panelHeader.setTitle('Historial')
+      setHeaderTitle('Historial')
       return undefined
     }
     const name = activeSession?.title?.trim()
-    panelHeader.setTitle(name && name !== 'Nuevo chat' ? `Chat: ${name}` : t('layout.panel.chat'))
+    setHeaderTitle(name && name !== 'Nuevo chat' ? `Chat: ${name}` : t('layout.panel.chat'))
     return undefined
-  }, [panelHeader, activeSession?.title, showSkills, showHistory])
+  }, [setHeaderTitle, activeSession?.title, showSkills, showHistory])
 
   // API pública del chat: cualquier subsistema puede insertar contenido
   // (skills desde una librería, texto de un panel) y cae como mensaje del

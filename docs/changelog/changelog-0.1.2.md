@@ -333,6 +333,47 @@ publicadas no se editan. El archivo va por versión:
   pointer del layout (nuevo *drop sink*, sin tocar el resolver de tabs) y el
   Explorer el drag nativo de recursos.
 
+### Chat Social — rendimiento (lag con conversaciones largas)
+- **El `memo` de cada mensaje volvió a funcionar**: el perfil del remitente se
+  armaba como **objeto nuevo en cada render**, así que la comparación de `memo`
+  fallaba siempre y **todos** los mensajes se re-renderizaban aunque solo
+  hubiera cambiado la presencia de un amigo. Ahora el perfil se cachea **por
+  remitente** y conserva su identidad mientras sus datos no cambien.
+- **La lista de mensajes está memoizada** y todo lo derivado se calcula en una
+  sola pasada: los `Map` de nombre/avatar ya no se reconstruyen en cada render.
+- **Formateadores de fecha cacheados**: `toLocaleTimeString` /
+  `toLocaleDateString` construyen un `Intl.DateTimeFormat` nuevo en cada llamada,
+  y se llamaban una o dos veces **por mensaje y por render** (con `new Date()`
+  extra para detectar "hoy"/"ayer"). Ahora el formateador y el resultado se
+  cachean por locale y por timestamp.
+- **Realtime es la fuente de verdad, no el refetch**: cada evento de presencia
+  llegaba **sin datos** y el renderer respondía con un refetch completo (amigos +
+  solicitudes + presencia). Ahora el evento **trae la fila** y se actualiza solo
+  esa entrada: un latido ya no son 3 queries ni un render del panel entero.
+- **La suscripción de Realtime no se re-engancha sola**: dependía de `friends`,
+  que cambiaba de identidad en cada poll, así que los 7 canales se desuscribían y
+  se volvían a suscribir cada 15s (con una ventana ciega donde se perdían
+  eventos). Ahora se engancha una vez y lee siempre lo fresco por ref.
+- **El estado no cambia de identidad si no cambia**: `friends`, `requests` y el
+  mapa de presencia comparan contenido antes de reemplazarse, así que un poll
+  que no trae diferencias ya no invalida los `memo` de la lista.
+- **Menos polling**: los refrescos de seguridad bajaron de **3s a 20s**
+  (mensajes), **10s a 60s** (presencia) y **15s a 120s** (amigos/solicitudes).
+  El canal ya cubre INSERT, UPDATE y DELETE de `messages`, así que la red de
+  seguridad sigue existiendo pero sin pagarse seis veces por minuto.
+- **Publicar presencia solo si cambia**: abrir o cambiar de archivo en el editor
+  republicaba presencia aunque el contenido fuera idéntico (una escritura y un
+  evento Realtime para todos los amigos por cada archivo tocado). Ahora se
+  compara antes de escribir; el latido de 45s sigue refrescando la presencia.
+- **El propio latido se ignora**: la propia presencia vuelve por el mismo canal
+  (uno también cumple la política de "amigos") y provocaba un re-render cada
+  45s. El estado local ya es la fuente de verdad, así que se descarta.
+- **Tipado funcionando**: el indicador de "está escribiendo" usaba un canal
+  `broadcast` (`typing:<uid>`) y **no tenía políticas** en `realtime.messages`,
+  así que con la autorización de Realtime el `.subscribe()` connectaba pero el
+  evento **nunca llegaba, sin error visible**. Se aplicaron las dos políticas que
+  faltaban (enviar sólo al canal de un amigo, leer sólo el propio).
+
 ### Editor — visores por formato (fileHandlers)
 - **Registry de excepciones por formato**: cada uno vive en **su propia carpeta**
   (como los tools de la IA) y declara qué agarra + cómo se muestra:
@@ -346,15 +387,17 @@ publicadas no se editan. El archivo va por versión:
   ("Ver como texto" / "Ver como visor", con el icono del ojo), junto a
   "Compartir en Social". Solo aparece en los formatos que admiten los dos modos;
   la preferencia se guarda **por archivo**.
-- **Toolbar del visor**: cada handler declara sus **acciones** (`actions[]`) y se
-  dibujan arriba del contenido — markdown: Copiar; imagen: Abrir en el
-  explorador. Las mismas acciones entran al menú ⋮ de la pestaña.
+- **Toolbar del visor**: cada handler puede declarar sus **acciones** (`actions[]`)
+  y se dibujan arriba del contenido (con los iconos del pack, nunca glifos).
+  Ninguno de los tres visores incluidos las usa: la barra no aparece.
 - **Registro en el arranque**: los handlers built-in quedan listos antes del
   primer render (`main.tsx`), así no dependen del orden de montaje de paneles.
 - **Lectura binaria** (`fs:read-binary`): los visores de imagen reciben
   `base64` + mime y se pintan como `data:` (la CSP del renderer no permite
   `file:`). El motor Innerta queda montado y oculto mientras manda el visor,
   así no se pierden undo/scroll al volver.
+- **Fondo del visor**: usa la variable **`surface`** del theme (no `bg`), así
+  se ve como el resto de superficies del chrome y no como el fondo de la app.
 - **Tabs virtuales** (`scrakk-view://<handlerId>/<payload>`): el mismo visor
   sirve como tab sobre contenido que no es un archivo (por ejemplo la card de
   un `codefile` del chat). Se resuelve **por id**, viaja por el mismo bus de
@@ -365,6 +408,22 @@ publicadas no se editan. El archivo va por versión:
   del paquete, nunca con un `ComponentType` directo.
 
 ### Correcciones
+- **Los visores de formato no se montaban**: el dispatcher estaba en el panel
+  `editor` (el clásico de una sola vista), pero el contenido de una tab de
+  archivo lo monta otro componente. Resultado: un PNG siempre caía en Innerta
+  aunque el registry, los handlers y el bundle estuvieran perfectos — y el
+  toggle visor⇄editor no aparecía en el menú (para un formato `view` no hay
+  modo texto que alternar, así que solo salía "Compartir en Social"). Ahora
+  **`FileTabView`** consulta el registry, y para un formato con visor ni
+  siquiera se adjunta la sesión de Innerta (leería bytes como texto).
+- **Crash del WASM al abrir un visor**: ocultar el host del engine lo dejaba
+  midiendo 0×0, y el módulo **aborta** ante cualquier dimensión cero (está
+  compilado sin exception catching, así que no lanza una excepción capturable:
+  tumba la tab entera). Ahora el motor **saltea** el `setBounds` mientras el host
+  no tenga área y el `ResizeObserver` lo reaplica cuando vuelve.
+- **Visor markdown sin aire**: `.view` y la columna del documento iban en el
+  mismo elemento, así que el padding competía con el centrado y el texto
+  quedaba pegado a los bordes. Ahora el scroller y la columna están separados.
 - **Emoji: ancho de 2 celdas y nítidos**: el layout era `x = columna × ancho`
   puro, así que un emoji avanzaba **una** celda y se pisaba con el vecino (y el
   caret quedaba mal). Ahora el layout es **consciente del ancho** (emoji del

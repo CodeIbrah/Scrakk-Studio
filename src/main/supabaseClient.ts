@@ -72,6 +72,22 @@ export function dropClient(accountId: string): void {
     })
 }
 
+/**
+ * Saca el cliente del pool **sin** cerrar su sesión.
+ *
+ * `dropClient` además hace `signOut`, y ese mismo objeto puede estar en manos
+ * de una operación en vuelo (un INSERT, un poll): al firmarlo, esa request sale
+ * sin JWT → `auth.uid()` es NULL → la RLS rechaza con 42501, y el chat muestra
+ * "solo puedes escribirle a tus amigos" aunque sí seas amigo (42501 es el
+ * código de CUALQUIER falta de permiso, no solo el de la amistad).
+ *
+ * Para reconstruir no hace falta cerrar nada: el próximo `getClientFor` arma un
+ * cliente nuevo desde los tokens guardados, que siguen intactos.
+ */
+export function forgetClient(accountId: string): void {
+  clients.delete(accountId)
+}
+
 /** Persiste los tokens actuales de TODAS las cuentas (flush al cerrar). */
 export async function flushAllTokens(): Promise<void> {
   for (const [accountId, pending] of clients) {

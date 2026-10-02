@@ -8913,12 +8913,12 @@
       "approvedAt": "2026-09-25T17:59:30.392Z"
     },
     "main.necesitas.iniciar.sesion": {
-      "src": "8ee7df164f7bd60b",
+      "src": "b6b2871aff6d53c0",
       "area": "main",
       "machine": true,
       "needsReview": false,
-      "at": "2026-09-25T17:59:23.544Z",
-      "approvedAt": "2026-09-25T17:59:30.392Z"
+      "at": "2026-10-02T00:48:10.112Z",
+      "approvedAt": "2026-10-02T00:48:10.481Z"
     },
     "main.no.se.pudo.enviar.el": {
       "src": "6d9fd7e024630d76",
@@ -10863,6 +10863,30 @@
       "needsReview": false,
       "at": "2026-10-01T15:15:47.635Z",
       "approvedAt": "2026-10-01T15:15:47.820Z"
+    },
+    "main.el.mensaje.no.se.puede.modificar.asi": {
+      "src": "a653bb5b611b6742",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-02T00:48:10.111Z",
+      "approvedAt": "2026-10-02T00:48:10.481Z"
+    },
+    "main.no.puedes.editar.ese.mensaje": {
+      "src": "b8aa388208822653",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-02T00:48:10.112Z",
+      "approvedAt": "2026-10-02T00:48:10.481Z"
+    },
+    "main.sin.permiso.para.enviar.este.mensaje": {
+      "src": "70bcac5f1af48e0d",
+      "area": "main",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-02T00:48:10.112Z",
+      "approvedAt": "2026-10-02T00:48:10.481Z"
     }
   },
   "version": 1
