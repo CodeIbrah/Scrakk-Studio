@@ -103,7 +103,7 @@ describe('tablas de markdown', () => {
     const actionsCss = read(
       'src/renderer/src/features/chat/components/MessageActions/MessageActions.module.css'
     )
-    expect(actionsCss).toMatch(/\.nudge\s*\{[^}]*transform: translate\(5px, 3px\)/)
+    expect(actionsCss).toMatch(/\.nudge\s*\{[^}]*transform: translateX\(5px\)/)
     // La barra sigue alineándose por variable (el usuario, a la derecha).
     const bubble = read(BUBBLE_CSS)
     const block = bubble.slice(
@@ -113,7 +113,7 @@ describe('tablas de markdown', () => {
     expect(block).toContain('--msg-actions-justify: flex-end')
     // Los botones van en la MISMA fila que el texto: un mensaje de una línea da
     // una burbuja de una línea (en su propia fila le sumaban alto entero).
-    expect(block).toContain('align-items: flex-end')
+    expect(block).toContain('align-items: center')
     expect(block).toContain('--msg-actions-margin-top: 0')
     expect(css).toContain('.userText {')
   })

@@ -20,8 +20,9 @@
   justify-content: var(--msg-actions-justify, flex-start);
 }
 
-/* Nudge óptico: el del botón de enviar del input (3px abajo) más 5px extra a la
-   derecha. */
+/* Nudge óptico: sólo horizontal (5px a la derecha, para encajar con el borde).
+   El vertical no va acá: con los botones en la MISMA fila que el texto, el
+   centrado lo maneja el layout — moverlos a mano descentraba al texto. */
 .nudge {
-  transform: translate(5px, 3px);
+  transform: translateX(5px);
 }

@@ -60,12 +60,13 @@
   /* El ancho lo decide la PILA (`.stackUser`), que ocupa la fila: la burbuja no
      tiene tope propio. */
   max-width: 100%;
-  /* Una SOLA fila de contenido: el texto y las acciones, alineadas abajo. Los
-     botones ocupan el mismo alto que la línea de texto, así un mensaje de una
-     línea da una burbuja de una línea (antes iban en su propia fila y le
-     sumaban alto). */
+  /* Una SOLA fila de contenido: el texto y las acciones, centrados en vertical.
+     Los botones ocupan el mismo alto que la línea de texto, así un mensaje de
+     una línea da una burbuja de una línea (antes iban en su propia fila y le
+     sumaban alto entero). Centrados y no al fondo: los botones son un par de
+     píxeles más altos que la línea, y alineados abajo el texto quedaba alto. */
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: var(--space-2);
   /* Las acciones de ESTA burbuja van al borde DERECHO: los botones son el
      `IconButton` del input y traen su propio color y tamaño. */
