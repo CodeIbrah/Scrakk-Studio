@@ -16,8 +16,8 @@
   justify-content: var(--msg-actions-justify, flex-start);
 }
 
-/* Nudge óptico: el MISMO del botón de enviar del input (2px a la derecha, 3px
-   abajo), que es lo que hace que la fila se vea alineada como la del composer. */
+/* Nudge óptico: el del botón de enviar del input (3px abajo) más 2px extra a la
+   derecha. */
 .nudge {
-  transform: translate(2px, 3px);
+  transform: translate(4px, 3px);
 }

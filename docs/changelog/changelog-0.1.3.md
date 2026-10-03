@@ -126,21 +126,16 @@ published are not edited. The file goes per version:
   view from off-screen (a flicker) but also added work to every scroll event.
 - **The user bubble is opaque again**: `--color-active` is a TINT — `scrakk-night`,
   the default theme, has `rgba(255, 255, 255, 0.12)` — so a plain
-  `background: var(--color-active)` let the chat show through the bubble. It is
-  composited over the background now (`linear-gradient(tint, tint), --color-bg`),
-  which also makes the anchored question opaque enough to cover what scrolls
-  behind it — helped by a shadow towards the bottom (`0 2px 6px rgba(0,0,0,·)`),
+  `background: var(--color-active)` let the chat show through the bubble. It uses
+  the composer's variable now (`var(--activitybar-bg, var(--color-surface))`),
+  which is opaque and follows the theme, so the anchored question also covers
+  what scrolls behind it — helped by a shadow towards the bottom (`0 2px 6px rgba(0,0,0,·)`),
   so the pinned bubble reads as floating over the reply.
 - **The last question can be edited while the model is answering**: it is the one
   you are looking at, and its edit button used to disappear for the whole
   stream. Editing it ABORTS the stream and waits for it to close before
   re-sending — without waiting, the aborted run's `finally` would clear the new
   stream's busy flag and both would write the same session.
-- **The message action buttons are the composer's buttons**: the same
-  `IconButton` primitive as the send button, with `shape="rounded"` (the radius
-  documented as "fits the input") and `size="sm"`, plus its optical nudge
-  (`translate(2px, 3px)`). The bubble's background is the composer's variable
-  (`--activitybar-bg`) too, instead of the `--color-active` tint.
 - **"Back to the message" on the anchored question**: an `arrow-up` action that
   scrolls to the question's real place, which is where its answer begins. It is
   the way back when you are deep in a long reply with the question pinned at the

@@ -60,7 +60,6 @@ export function MessageActions({
   return (
     <div className={styles.actions}>
       <IconButton
-        variant="accent"
         shape="rounded"
         size="sm"
         className={styles.nudge}
@@ -72,7 +71,6 @@ export function MessageActions({
 
       {onEdit ? (
         <IconButton
-          variant="accent"
           shape="rounded"
           size="sm"
           className={styles.nudge}
@@ -85,7 +83,6 @@ export function MessageActions({
 
       {onJumpTo ? (
         <IconButton
-          variant="accent"
           shape="rounded"
           size="sm"
           className={styles.nudge}
@@ -98,7 +95,6 @@ export function MessageActions({
 
       {onRegenerate ? (
         <IconButton
-          variant="accent"
           shape="rounded"
           size="sm"
           className={styles.nudge}
