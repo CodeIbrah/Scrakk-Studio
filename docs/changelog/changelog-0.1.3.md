@@ -102,6 +102,11 @@ published are not edited. The file goes per version:
   The handler is passed to every bubble, so it reads the live messages through a
   ref: depending on `messages` would change its identity on every streamed token
   and defeat the bubble memo, re-parsing the whole history per token.
+- **The user's message spans the full width**, like the assistant's: it used to
+  be a shrink-to-fit box capped at 60% and pushed against the right edge, so it
+  read as a small card next to a wide reply. Both stacks fill the row now, so
+  the message sits centered in the chat and its actions line up with the ones
+  under the reply.
 - **Tool rows highlight on hover and open their result on click**, with the
   decision living in **each tool's folder**, not in the chat block:  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
     button with hover and, on click, opens the tool's **result in a modal** (the

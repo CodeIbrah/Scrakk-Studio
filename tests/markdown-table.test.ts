@@ -65,6 +65,22 @@ describe('tablas de markdown', () => {
     expect(block).toContain('min-width: 0')
   })
 
+  it('el mensaje del usuario también llena el ancho (no una cajita a la derecha)', () => {
+    const css = read(BUBBLE_CSS)
+    const stack = css.slice(
+      css.indexOf('.stackUser {'),
+      css.indexOf('}', css.indexOf('.stackUser {'))
+    )
+    expect(stack).toContain('flex: 1 1 auto')
+    // El tope del 60% que lo dejaba como una cajita pegada al borde derecho.
+    expect(stack).not.toContain('60%')
+    const bubble = css.slice(
+      css.indexOf('.bubbleUser {'),
+      css.indexOf('}', css.indexOf('.bubbleUser {'))
+    )
+    expect(bubble).not.toContain('60%')
+  })
+
   it('las acciones van DEBAJO de la burbuja, no dentro de su fondo', () => {
     const bubble = read('src/renderer/src/features/chat/components/MessageBubble/MessageBubble.tsx')
     // El `MessageActions` tiene que ser hermano de la burbuja dentro de la pila:

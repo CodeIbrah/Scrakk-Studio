@@ -33,12 +33,13 @@
   align-items: flex-start;
 }
 
-/* Usuario: la burbuja se ajusta a su texto y el 60% es el tope — el límite va
-   en la PILA para que las acciones entren en la misma caja. Alineadas al borde
-   derecho, como la burbuja. */
+/* Usuario: la pila ocupa el ancho de la fila, igual que la de la IA. Antes era
+   una cajita shrink-to-fit pegada a la derecha (tope 60%): con el ancho
+   completo el mensaje queda centrado en el chat y las acciones alineadas con
+   las de la respuesta. */
 .stackUser {
-  align-items: flex-end;
-  max-width: 60%;
+  flex: 1 1 auto;
+  align-items: stretch;
 }
 
 .bubble {
@@ -56,7 +57,8 @@
    pre-wrap solo aquí: el texto plano del usuario conserva sus saltos de
    línea. El markdown de la IA NO (los \n se duplicarían con remark-breaks). */
 .bubbleUser {
-  /* El tope del 60% vive en `.stackUser` (la pila incluye las acciones). */
+  /* El ancho lo decide la PILA (`.stackUser`), que ocupa la fila: la burbuja no
+     tiene tope propio. */
   max-width: 100%;
   background: var(--color-active);
   color: var(--color-text);
