@@ -97,11 +97,14 @@ describe('tablas de markdown', () => {
     )
     // Sin esto el muted por defecto queda casi invisible sobre el acento.
     expect(block).toContain('--msg-action-color:')
+    // Y alineadas al borde derecho (el mensaje es del usuario).
+    expect(block).toContain('--msg-actions-justify: flex-end')
     // Y la barra los consume con fallback, así la IA no cambia.
     const actionsCss = read(
       'src/renderer/src/features/chat/components/MessageActions/MessageActions.module.css'
     )
     expect(actionsCss).toContain('var(--msg-action-color, var(--color-text-muted))')
+    expect(actionsCss).toContain('var(--msg-actions-justify, flex-start)')
   })
 
   it('la tabla es un <table> real dentro del contenedor con scroll', () => {

@@ -66,6 +66,8 @@
   --msg-action-color: var(--color-text);
   --msg-action-color-hover: var(--color-text);
   --msg-action-hover-bg: color-mix(in srgb, var(--color-text) 12%, transparent);
+  /* Y alineadas al borde DERECHO de la burbuja (el mensaje es tuyo). */
+  --msg-actions-justify: flex-end;
   background: var(--color-active);
   color: var(--color-text);
   border: 1px solid transparent;

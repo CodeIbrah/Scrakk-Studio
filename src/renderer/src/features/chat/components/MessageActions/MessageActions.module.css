@@ -11,6 +11,10 @@
   /* Misma separación que los chats del panel derecho (lista con gap 2px). */
   gap: 2px;
   margin-top: var(--space-2);
+  /* Alineación por variable: la barra va debajo de la respuesta (a la
+     izquierda) pero DENTRO de la burbuja del usuario, donde va al borde
+     derecho. */
+  justify-content: var(--msg-actions-justify, flex-start);
 }
 
 /* Botones solo-ícono, cuadrados y chicos.
