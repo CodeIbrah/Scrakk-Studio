@@ -95,17 +95,22 @@ export const MessageBubble = memo(function MessageBubble({
         <div className={`${styles.bubble} ${bubbleClass}`}>
           {editing ? (
             <div className={styles.editBox}>
-              <textarea
-                className={styles.editArea}
-                value={draft}
-                onChange={(event) => setDraft(event.target.value)}
-                onKeyDown={onEditKeyDown}
-                // Alto según las líneas reales (acotado): editar un párrafo largo
-                // no arranca en un input de una línea.
-                rows={Math.min(12, Math.max(2, draft.split('\n').length))}
-                autoFocus
-                aria-label={t('chat.editar.mensaje')}
-              />
+              {/* El marco lo lleva el CONTENEDOR y sólo al enfocar: el textarea
+                  va sin borde, sin fondo y sin resize. Mismo criterio que el
+                  composer del chat (el handle nativo dibujaba un grip de más). */}
+              <div className={styles.editField}>
+                <textarea
+                  className={styles.editArea}
+                  value={draft}
+                  onChange={(event) => setDraft(event.target.value)}
+                  onKeyDown={onEditKeyDown}
+                  // Alto según las líneas reales (acotado): editar un párrafo largo
+                  // no arranca en un input de una línea.
+                  rows={Math.min(12, Math.max(2, draft.split('\n').length))}
+                  autoFocus
+                  aria-label={t('chat.editar.mensaje')}
+                />
+              </div>
               <div className={styles.editActions}>
                 <button
                   type="button"

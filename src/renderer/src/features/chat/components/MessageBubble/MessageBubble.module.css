@@ -97,26 +97,45 @@
   min-width: 0;
 }
 
+/* Contenedor del textarea: lleva el marco y SÓLO al enfocar. Un borde
+   permanente alrededor de un textarea que ya vive dentro de una burbuja se ve
+   como un cajón de más (y el composer del chat no lo hace). */
+.editField {
+  display: flex;
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid transparent;
+  border-radius: var(--radius-input);
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.editField:focus-within {
+  border-color: var(--color-border-strong);
+}
+
 .editArea {
   width: 100%;
-  box-sizing: border-box;
-  /* Se puede arrastrar el alto, y arranca con 2 filas. */
-  resize: vertical;
-  min-height: 52px;
-  max-height: 340px;
-  padding: var(--space-2);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
+  min-height: 40px;
+  max-height: 300px;
+  /* Sin resize: el handle nativo pinta un grip en la esquina que no aporta
+     nada acá (el alto lo decide el contenido). */
+  resize: none;
+  padding: 0;
+  background: transparent;
+  border: none;
+  outline: none;
   color: var(--color-text);
   font-family: inherit;
   font-size: var(--text-md);
-  line-height: 1.5;
+  line-height: var(--leading-normal);
+  user-select: text;
+  -webkit-user-select: text;
 }
 
-.editArea:focus {
+.editArea:focus,
+.editArea:focus-visible {
   outline: none;
-  border-color: var(--color-accent);
+  box-shadow: none;
 }
 
 .editActions {

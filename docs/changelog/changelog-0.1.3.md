@@ -90,7 +90,10 @@ published are not edited. The file goes per version:
   the bubble: it used to be inside it, so on the user's message the icons landed
   on the bubble's colored background. The row is now a stack (bubble + actions)
   — which also moved the user's 60% width cap to the stack and the assistant's
-  "fill the row" to it, so both the cap and the table fix keep holding.
+  "fill the row" to it, so both the cap and the table fix keep holding. The
+  inline editor follows the composer's rule: the textarea itself has **no**
+  border, background or resize handle — the frame lives on a container and only
+  shows on focus (the native resize grip drew a corner the box did not need).
   Saving is functional,
   not decorative: editing a **user** message updates it and **re-sends** — what
   followed answered a text that no longer exists, so it is dropped and the

@@ -61,6 +61,19 @@ describe('editar es funcional, no decorativo', () => {
     expect(read(LIST)).toContain('canEdit={!isStreaming}')
   })
 
+  it('el textarea no tiene borde propio ni resize; el marco lo lleva el contenedor', () => {
+    const css = read('src/renderer/src/features/chat/components/MessageBubble/MessageBubble.module.css')
+    const area = css.slice(css.indexOf('.editArea {'), css.indexOf('}', css.indexOf('.editArea {')))
+    // El handle nativo del resize pintaba un grip en la esquina.
+    expect(area).toContain('resize: none')
+    // Un borde permanente en el textarea era el "contorno de más".
+    expect(area).not.toMatch(/border:\s*1px/)
+    // El marco vive en el contenedor y SÓLO al enfocar (como el composer).
+    const field = css.slice(css.indexOf('.editField {'), css.indexOf('}', css.indexOf('.editField {')))
+    expect(field).toContain('border: 1px solid transparent')
+    expect(css).toMatch(/\.editField:focus-within[^}]*border-color: var\(--color-border-strong\)/)
+  })
+
   it('editar un mensaje del USUARIO reenvía (lo de después ya no responde a ese texto)', () => {
     const src = read(PANEL)
     const start = src.indexOf('const handleEditMessage')
