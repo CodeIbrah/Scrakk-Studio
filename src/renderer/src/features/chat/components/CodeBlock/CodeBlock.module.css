@@ -47,14 +47,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  width: 32px;
+  /* Chip compacto y redondeado en las CUATRO esquinas. Antes ocupaba todo el
+     header (32×28) y sólo redondeaba la superior derecha, así que el hover se
+     veía como un cuadrado de esquinas duras pegado al borde. */
+  width: 24px;
+  height: 24px;
+  margin-right: 2px;
+  border-radius: var(--radius-sm);
   background-color: transparent;
   border: none;
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: background-color 120ms ease, color 120ms ease;
-  border-top-right-radius: var(--radius-sm);
   flex: none;
 }
 

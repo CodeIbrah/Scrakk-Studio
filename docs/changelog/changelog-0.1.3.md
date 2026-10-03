@@ -74,6 +74,10 @@ published are not edited. The file goes per version:
   now fills the row (`flex: 1 1 auto; min-width: 0`) and the table uses its
   natural width up to 100% (`width: max-content; min-width: 100%`): it fills the
   panel when it fits and the wrapper scrolls when it does not.
+- **The copy button on a code block is a proper rounded button**: it filled the
+  whole 28px header (32×28) with only its top-right corner rounded, so the hover
+  highlight read as a hard-edged square flush against the block's corner. It is
+  now a compact 24px chip, rounded on all four corners and inset from the edge.
 - **Tool rows highlight on hover and open their result on click**, with the
   decision living in **each tool's folder**, not in the chat block:  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
     button with hover and, on click, opens the tool's **result in a modal** (the
