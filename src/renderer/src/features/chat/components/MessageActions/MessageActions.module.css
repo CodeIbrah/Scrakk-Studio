@@ -4,55 +4,20 @@
  * Licencia completa en LICENSE (Apache License 2.0).
  */
 
-/* Barra de acciones del mensaje de la IA: plana, chica, sin glow ni sombras. */
+/* Barra de acciones del mensaje. Los BOTONES son el `IconButton` compartido
+   (el mismo del input), así que acá sólo vive la barra. */
 .actions {
   display: flex;
   align-items: center;
   /* Misma separación que los chats del panel derecho (lista con gap 2px). */
   gap: 2px;
-  margin-top: var(--space-2);
-  /* Alineación por variable: la barra va debajo de la respuesta (a la
-     izquierda) pero DENTRO de la burbuja del usuario, donde va al borde
-     derecho. */
+  /* Alineación por variable: debajo de la respuesta va a la izquierda, DENTRO
+     de la burbuja del usuario va al borde derecho. */
   justify-content: var(--msg-actions-justify, flex-start);
 }
 
-/* Botones solo-ícono, cuadrados y chicos.
-   El color sale de variables para que el contenedor lo ajuste: la respuesta de
-   la IA los quiere apagados (`muted`), pero la burbuja del usuario los pone
-   sobre el color de acento, donde el muted queda casi invisible. */
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--msg-action-color, var(--color-text-muted));
-  font-family: inherit;
-  cursor: pointer;
-  /* Hover inmediato, sin animación (igual que los chats del panel derecho). */
-  transition: none;
-}
-
-.button:hover {
-  color: var(--msg-action-color-hover, var(--color-text-secondary));
-  background: var(--msg-action-hover-bg, var(--color-hover));
-}
-
-.icon {
-  width: 14px;
-  height: 14px;
-  flex: none;
-}
-
-/* Feedback de copiado: check en accent para que se note el cambio. */
-.iconCopied {
-  width: 14px;
-  height: 14px;
-  flex: none;
-  color: var(--color-accent);
+/* Nudge óptico: el MISMO del botón de enviar del input (2px a la derecha, 3px
+   abajo), que es lo que hace que la fila se vea alineada como la del composer. */
+.nudge {
+  transform: translate(2px, 3px);
 }

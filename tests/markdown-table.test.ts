@@ -89,22 +89,28 @@ describe('tablas de markdown', () => {
     )
   })
 
-  it('las acciones dentro de la burbuja del usuario se pintan legibles', () => {
-    const css = read(BUBBLE_CSS)
-    const block = css.slice(
-      css.indexOf('.bubbleUser {'),
-      css.indexOf('}', css.indexOf('.bubbleUser {'))
+  it('los botones de las acciones son el IconButton del input (mismo nudge)', () => {
+    const actions = read(
+      'src/renderer/src/features/chat/components/MessageActions/MessageActions.tsx'
     )
-    // Sin esto el muted por defecto queda casi invisible sobre el acento.
-    expect(block).toContain('--msg-action-color:')
-    // Y alineadas al borde derecho (el mensaje es del usuario).
-    expect(block).toContain('--msg-actions-justify: flex-end')
-    // Y la barra los consume con fallback, así la IA no cambia.
+    // Mismo primitivo y misma forma que el botón de enviar del composer.
+    expect(actions).toContain("from '@ui'")
+    expect(actions).toContain('<IconButton')
+    expect(actions).toContain('shape="rounded"')
+    expect(actions).toContain('size="sm"')
+    // Y su nudge óptico (el "más a la derecha y un poco más abajo").
+    expect(actions).toContain('className={styles.nudge}')
     const actionsCss = read(
       'src/renderer/src/features/chat/components/MessageActions/MessageActions.module.css'
     )
-    expect(actionsCss).toContain('var(--msg-action-color, var(--color-text-muted))')
-    expect(actionsCss).toContain('var(--msg-actions-justify, flex-start)')
+    expect(actionsCss).toMatch(/\.nudge\s*\{[^}]*transform: translate\(2px, 3px\)/)
+    // La barra sigue alineándose por variable (el usuario, a la derecha).
+    const bubble = read(BUBBLE_CSS)
+    const block = bubble.slice(
+      bubble.indexOf('.bubbleUser {'),
+      bubble.indexOf('}', bubble.indexOf('.bubbleUser {'))
+    )
+    expect(block).toContain('--msg-actions-justify: flex-end')
   })
 
   it('la tabla es un <table> real dentro del contenedor con scroll', () => {

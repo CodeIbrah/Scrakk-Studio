@@ -60,28 +60,24 @@
   /* El ancho lo decide la PILA (`.stackUser`), que ocupa la fila: la burbuja no
      tiene tope propio. */
   max-width: 100%;
-  /* Las acciones van DENTRO de esta burbuja, sobre el color de acento: el
-     `--color-text-muted` con el que se ven debajo de la respuesta acá queda
-     casi invisible (contraste ~1.8:1). Se pintan con el color del texto. */
-  --msg-action-color: var(--color-text);
-  --msg-action-color-hover: var(--color-text);
-  --msg-action-hover-bg: color-mix(in srgb, var(--color-text) 12%, transparent);
-  /* Y alineadas al borde DERECHO de la burbuja (el mensaje es tuyo). */
+  /* Las acciones de ESTA burbuja van al borde DERECHO: los botones son el
+     `IconButton` del input y traen su propio color y tamaño. */
   --msg-actions-justify: flex-end;
-  /* `--color-active` es un TINTE, no un color: en `scrakk-night` (el default)
-     es `rgba(255, 255, 255, 0.12)`, así que la burbuja dejaba ver el chat a
-     través. Se compone sobre el fondo para que quede OPACA (y para que el
-     mensaje anclado tape lo que pasa por detrás). */
-  background:
-    linear-gradient(var(--color-active), var(--color-active)),
-    var(--color-bg);
+  /* Mismo fondo que el composer (`--activitybar-bg`, con el surface de
+     fallback): sigue al tema y es OPACO. */
+  background: var(--activitybar-bg, var(--color-surface));
   color: var(--color-text);
   border: 1px solid transparent;
   white-space: pre-wrap;
-  /* Sombra hacia ABAJO: despega la burbuja del chat y, cuando la pregunta queda
-     anclada arriba, la separa del contenido que pasa por detrás. Mismo lenguaje
-     que el resto de la app (`rgba(0,0,0,·)` con offset). */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+  /* Sombra hacia ABAJO, con el peso de la del popover del input
+     (`0 8px 24px rgba(0,0,0,.28)`): el borde de la burbuja se DESVANECE en el
+     chat en vez de cortarse, y cuando la pregunta queda anclada arriba la
+     separa de lo que pasa por detrás.
+     El `-8px` de spread es a propósito: la lista recorta en su padding box
+     (4px a la izquierda, 8px a la derecha), así que una difusión completa se
+     vería cortada en los costados. Encogida, la sombra entra en ese margen y
+     sólo se ve abajo. */
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.35);
 }
 
 /* Mensajes de la IA: texto plano, sin fondo ni borde. El ancho llega hasta

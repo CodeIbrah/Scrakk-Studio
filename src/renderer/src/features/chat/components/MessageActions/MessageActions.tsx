@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // Licencia completa en LICENSE (Apache License 2.0).
 
+import { IconButton } from '@ui'
 import { ProductIcon } from '@services/productIcons/components'
 import { useEffect, useRef, useState, type JSX } from 'react'
 import styles from './MessageActions.module.css'
 
 import { t } from '@core/i18n'
+
 interface MessageActionsProps {
   /** Contenido del mensaje a copiar. */
   content: string
@@ -14,8 +16,7 @@ interface MessageActionsProps {
   onRegenerate?: () => void
   /**
    * Si viene, se muestra el botón "Editar": el llamador abre el editor inline
-   * del mensaje. Es del MENSAJE (cualquiera de los dos roles), por eso no
-   * depende de `onRegenerate` — que sólo tiene la última respuesta.
+   * del mensaje.
    */
   onEdit?: () => void
   /**
@@ -27,8 +28,11 @@ interface MessageActionsProps {
 }
 
 /**
- * Barra de acciones debajo de un mensaje: copiar, editar, volver y regenerar.
- * Botones planos, chicos, sin fondo hasta el hover, alineados a la izquierda.
+ * Barra de acciones de un mensaje: copiar, editar, volver y regenerar.
+ *
+ * Los botones son el MISMO `IconButton` que el de enviar del input (mismo
+ * primitivo, `shape="rounded"` —el que "encaja" con el input— y `size="sm"`),
+ * con su mismo nudge óptico. Así la fila se ve igual que la del composer.
  */
 export function MessageActions({
   content,
@@ -55,54 +59,54 @@ export function MessageActions({
 
   return (
     <div className={styles.actions}>
-      <button
-        type="button"
-        className={styles.button}
+      <IconButton
+        variant="accent"
+        shape="rounded"
+        size="sm"
+        className={styles.nudge}
+        label={copied ? t('chat.copiado-2') : t('chat.copiar.mensaje')}
         onClick={handleCopy}
-        aria-label={copied ? t('chat.copiado-2') : t('chat.copiar.mensaje')}
-        title={copied ? t('chat.copiado-2') : t('chat.copiar')}
       >
-        {copied ? (
-          <ProductIcon id="check" size={14} className={styles.iconCopied} aria-hidden="true" />
-        ) : (
-          <ProductIcon id="copy" size={14} className={styles.icon} aria-hidden="true" />
-        )}
-      </button>
+        <ProductIcon id={copied ? 'check' : 'copy'} size={14} />
+      </IconButton>
 
       {onEdit ? (
-        <button
-          type="button"
-          className={styles.button}
+        <IconButton
+          variant="accent"
+          shape="rounded"
+          size="sm"
+          className={styles.nudge}
+          label={t('chat.editar.mensaje')}
           onClick={onEdit}
-          aria-label={t('chat.editar.mensaje')}
-          title={t('chat.editar')}
         >
-          <ProductIcon id="pencil" size={14} className={styles.icon} aria-hidden="true" />
-        </button>
+          <ProductIcon id="pencil" size={14} />
+        </IconButton>
       ) : null}
 
       {onJumpTo ? (
-        <button
-          type="button"
-          className={styles.button}
+        <IconButton
+          variant="accent"
+          shape="rounded"
+          size="sm"
+          className={styles.nudge}
+          label={t('chat.volver.al.mensaje')}
           onClick={onJumpTo}
-          aria-label={t('chat.volver.al.mensaje')}
-          title={t('chat.volver.al.mensaje')}
         >
-          <ProductIcon id="arrow-up" size={14} className={styles.icon} aria-hidden="true" />
-        </button>
+          <ProductIcon id="arrow-up" size={14} />
+        </IconButton>
       ) : null}
 
       {onRegenerate ? (
-        <button
-          type="button"
-          className={styles.button}
+        <IconButton
+          variant="accent"
+          shape="rounded"
+          size="sm"
+          className={styles.nudge}
+          label={t('chat.regenerar.respuesta')}
           onClick={onRegenerate}
-          aria-label={t('chat.regenerar.respuesta')}
-          title={t('chat.regenerar')}
         >
-          <ProductIcon id="refresh" size={14} className={styles.icon} aria-hidden="true" />
-        </button>
+          <ProductIcon id="refresh" size={14} />
+        </IconButton>
       ) : null}
     </div>
   )
