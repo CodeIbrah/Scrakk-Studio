@@ -40,6 +40,27 @@
   gap: 0;
 }
 
+/* Un turno: tu mensaje + lo que vino después. El gap es el MISMO que el de la
+   lista, así el aire entre mensajes no cambia al agruparlos. */
+.turn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Tu mensaje se queda pegado arriba mientras leés su respuesta. El `sticky` va
+   acá DENTRO del turno: al terminar el turno, el que sigue lo empuja afuera (el
+   comportamiento de un encabezado sticky), y al subir vuelve solo a su lugar.
+   Puro CSS: no hay nada que recalcular en el scroll (con JS y una clase el
+   ancla parpadeaba y sumaba trabajo por evento).
+   `z-index` porque es un hermano ANTERIOR: sin él, la respuesta se pintaría
+   encima de él cuando pasa por detrás. */
+.userWrap {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
 /* El Thought va PEGADO arriba: cancela el gap que la lista pone entre mensajes.
    Las rondas de un mismo turno (tools → thought) son un solo bloque, así que el
    aire que aportaba el gap entre la ronda anterior y el thought no va. */

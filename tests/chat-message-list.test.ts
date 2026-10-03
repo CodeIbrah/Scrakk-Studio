@@ -66,4 +66,28 @@ describe('lista de mensajes', () => {
     expect(src).toContain("last?.role === 'user'")
     expect(src).toContain('el.scrollTop = el.scrollHeight')
   })
+
+  it('tu mensaje se ancla arriba mientras leés su respuesta', () => {
+    const src = read(LIST_TSX)
+    // Los mensajes se agrupan en TURNOS: el tuyo + lo que vino después.
+    expect(src).toContain('const turns:')
+    expect(src).toContain("message.role === 'user' || turns.length === 0")
+    expect(src).toContain('styles.userWrap')
+    const css = read(LIST_CSS)
+    const block = css.slice(css.indexOf('.userWrap {'), css.indexOf('}', css.indexOf('.userWrap {')))
+    expect(block).toContain('position: sticky')
+    expect(block).toContain('top: 0')
+    // Es un hermano ANTERIOR: sin z-index, la respuesta se pinta encima.
+    expect(block).toContain('z-index: 1')
+    // El turno es lo que le pone el límite al sticky (el que sigue lo empuja).
+    expect(css).toMatch(/\.turn \{[\s\S]*?display: flex/)
+  })
+
+  it('el ancla es PURA CSS: nada que recalcular en el scroll', () => {
+    const src = read(LIST_TSX)
+    // Con un listener que cambiaba la clase del ancla, el nuevo elemento se
+    // teleportaba al tope y parpadeaba, y cada evento sumaba trabajo.
+    expect(src).not.toContain("addEventListener('scroll'")
+    expect(src).not.toContain('anchorId')
+  })
 })

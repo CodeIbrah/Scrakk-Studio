@@ -116,6 +116,15 @@ published are not edited. The file goes per version:
   were reading history, sending and not seeing what you sent is worse than
   losing the spot (while the model replies it keeps the old "only if you are
   near the bottom" rule, so reading is never interrupted).
+- **Your question stays anchored at the top while you read the answer**: the
+  messages are grouped into turns (your message plus what followed), and your
+  message is `position: sticky` inside its turn — it pins while you scroll
+  through its answer and the next turn pushes it out (sticky-header behaviour),
+  and scrolling back up puts it back in place and hands the anchor to the
+  previous question, and so on. It is **pure CSS**: the first attempt picked the
+  anchor with JS and toggled a class on scroll, which not only made the new
+  anchor teleport into view from off-screen (a flicker) but also added work to
+  every scroll event.
 - **Tool rows highlight on hover and open their result on click**, with the
   decision living in **each tool's folder**, not in the chat block:  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
     button with hover and, on click, opens the tool's **result in a modal** (the

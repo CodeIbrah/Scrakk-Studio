@@ -58,7 +58,8 @@ export const MessageList = memo(function MessageList({
     const el = listRef.current
     if (!el) return
     const handle = requestAnimationFrame(() => {
-      const wraps = el.querySelectorAll<HTMLElement>(':scope > div')
+      // Los mensajes viven dentro del turno: `:scope > div` serían los turnos.
+      const wraps = el.querySelectorAll<HTMLElement>(':scope > div > div')
       let prevBottom = Number.NaN
       const report: string[] = []
       wraps.forEach((wrap, index) => {
@@ -79,7 +80,9 @@ export const MessageList = memo(function MessageList({
     return () => cancelAnimationFrame(handle)
   }, [messages])
 
-  // Scroll automático: al montar al fondo; al crecer, solo si está cerca.
+  // Scroll automático: al montar al fondo; después, la última burbuja se ancla
+  // ARRIBA mientras crece (para leerla desde el principio) y, si ya entra en el
+  // viewport, se sigue el fondo como siempre.
   useEffect(() => {
     const el = listRef.current
     if (!el) return
@@ -90,16 +93,40 @@ export const MessageList = memo(function MessageList({
       return
     }
 
-    const last = messages[messages.length - 1]
     // Un mensaje TUYO es una acción tuya: se baja siempre. Si estabas leyendo
-    // historial, mandar y no ver lo que mandaste es peor que perder el lugar
-    // (mientras el modelo responde se mantiene el criterio de abajo, así leer
-    // el historial no se interrumpe solo).
+    // historial, mandar y no ver lo que mandaste es peor que perder el lugar.
+    const last = messages[messages.length - 1]
+    if (last?.role === 'user') {
+      el.scrollTop = el.scrollHeight
+      return
+    }
+
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
-    if (last?.role === 'user' || distanceFromBottom < 100) {
+    if (distanceFromBottom < 100) {
       el.scrollTop = el.scrollHeight
     }
   }, [messages])
+
+  /**
+   * TURNOS: un mensaje tuyo + lo que vino después hasta el próximo tuyo.
+   *
+   * Es lo que hace posible el ancla SIN tocar el scroll: el mensaje tuyo es
+   * `position: sticky` dentro de su turno, así se queda pegado arriba mientras
+   * leés su respuesta y el turno siguiente lo empuja afuera (el comportamiento
+   * de un encabezado sticky). Recalcular el ancla con JS y una clase parpadeaba:
+   * al mover el sticky de un mensaje a otro, el nuevo aparecía de golpe en el
+   * tope desde afuera de la pantalla.
+   */
+  const turns: Array<{ key: string; items: ChatMessage[] }> = []
+  for (const message of messages) {
+    // Sin un mensaje tuyo al principio (sesión restaurada), el primer turno
+    // arranca igual: es la respuesta la que va arriba.
+    if (message.role === 'user' || turns.length === 0) {
+      turns.push({ key: message.id, items: [] })
+    }
+    turns[turns.length - 1].items.push(message)
+  }
+  const lastId = messages[messages.length - 1]?.id
 
   return (
     <div
@@ -108,56 +135,69 @@ export const MessageList = memo(function MessageList({
       role="log"
       aria-live="polite"
     >
-      {messages.map((message, index) => {
-        const isLast = index === messages.length - 1
-        const isPending = isLast && message.role === 'assistant' && isStreaming
-        const hasReasoning = Boolean(message.role === 'assistant' && message.reasoning)
-        // Con tool calls el bubble SÍ se dibuja aunque no haya texto todavía:
-        // es lo único que muestra la card de la tool (y el subagente en vivo).
-        // Sin esto, mientras la tool corre el panel quedaba clavado en
-        // "Thinking" y la card recién aparecía al terminar la ronda (o al
-        // apretar Detener, que apaga isStreaming).
-        const hasToolCalls = Boolean(message.role === 'assistant' && message.tool_calls?.length)
-        const showThinking = isPending && !message.content && !hasToolCalls
-        return (
-          <div
-            key={message.id}
-            className={styles.messageWrap}
-            // El Thought cancela el gap de arriba: las rondas de un mismo turno
-            // son UN bloque, no mensajes independientes (el aire que se veía
-            // era el `gap` de la lista entre la ronda de tools y la siguiente).
-            data-thought={hasReasoning ? '' : undefined}
-          >
-            {hasReasoning ? (
-              // thinking = está razonando todavía (sin contenido): el header
-              // del bloque muestra "Thinking"; al empezar el contenido pasa
-              // a "Thought for Ns" con el tiempo que pensó.
-              <ThoughtBlock
-                reasoning={message.reasoning ?? ''}
-                thinking={isPending && !message.content && !hasToolCalls}
-              />
-            ) : null}
-            {showThinking ? (
-              // Sin razonamiento visible: el indicador Thinking va solo.
-              hasReasoning ? null : <ThinkingState />
-            ) : (
-              <MessageBubble
-                message={message}
-                // Mientras el stream arma el mensaje: sin acciones, y sin
-                // Regenerar hasta que sea la última respuesta ya terminada.
-                pending={isPending}
-                onRegenerate={
-                  message.role === 'assistant' && isLast && !isPending ? onRegenerate : undefined
+      {turns.map((turn) => (
+        <div key={turn.key} className={styles.turn}>
+          {turn.items.map((message) => {
+            const isLast = message.id === lastId
+            const isPending = isLast && message.role === 'assistant' && isStreaming
+            const hasReasoning = Boolean(message.role === 'assistant' && message.reasoning)
+            // Con tool calls el bubble SÍ se dibuja aunque no haya texto todavía:
+            // es lo único que muestra la card de la tool (y el subagente en vivo).
+            // Sin esto, mientras la tool corre el panel quedaba clavado en
+            // "Thinking" y la card recién aparecía al terminar la ronda (o al
+            // apretar Detener, que apaga isStreaming).
+            const hasToolCalls = Boolean(
+              message.role === 'assistant' && message.tool_calls?.length
+            )
+            const showThinking = isPending && !message.content && !hasToolCalls
+            const isUserMessage = message.role === 'user'
+            return (
+              <div
+                key={message.id}
+                className={
+                  isUserMessage
+                    ? `${styles.messageWrap} ${styles.userWrap}`
+                    : styles.messageWrap
                 }
-                onEditSave={onEditMessage}
-                // Editar mientras el modelo genera dejaría dos verdades a la
-                // vez: el texto nuevo y el stream en curso.
-                canEdit={!isStreaming}
-              />
-            )}
-          </div>
-        )
-      })}
+                // El Thought cancela el gap de arriba: las rondas de un mismo turno
+                // son UN bloque, no mensajes independientes (el aire que se veía
+                // era el `gap` de la lista entre la ronda de tools y la siguiente).
+                data-thought={hasReasoning ? '' : undefined}
+              >
+                {hasReasoning ? (
+                  // thinking = está razonando todavía (sin contenido): el header
+                  // del bloque muestra "Thinking"; al empezar el contenido pasa
+                  // a "Thought for Ns" con el tiempo que pensó.
+                  <ThoughtBlock
+                    reasoning={message.reasoning ?? ''}
+                    thinking={isPending && !message.content && !hasToolCalls}
+                  />
+                ) : null}
+                {showThinking ? (
+                  // Sin razonamiento visible: el indicador Thinking va solo.
+                  hasReasoning ? null : <ThinkingState />
+                ) : (
+                  <MessageBubble
+                    message={message}
+                    // Mientras el stream arma el mensaje: sin acciones, y sin
+                    // Regenerar hasta que sea la última respuesta ya terminada.
+                    pending={isPending}
+                    onRegenerate={
+                      message.role === 'assistant' && isLast && !isPending
+                        ? onRegenerate
+                        : undefined
+                    }
+                    onEditSave={onEditMessage}
+                    // Editar mientras el modelo genera dejaría dos verdades a la
+                    // vez: el texto nuevo y el stream en curso.
+                    canEdit={!isStreaming}
+                  />
+                )}
+              </div>
+            )
+          })}
+        </div>
+      ))}
     </div>
   )
 })
