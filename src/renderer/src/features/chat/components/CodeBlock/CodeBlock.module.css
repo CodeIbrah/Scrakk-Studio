@@ -32,12 +32,13 @@
 }
 
 .cbLang {
-  font-size: 11px;
+  /* La fuente del IDE, no la monoespaciada: el lenguaje es una ETIQUETA de UI,
+     no código. Y sin mayúsculas ni letter-spacing: el nombre real (`tsx`,
+     `bash`) se lee mejor tal cual viene. */
+  font-family: var(--theme-font-ui, inherit);
+  font-size: 12px;
+  font-weight: 500;
   color: var(--color-text-secondary);
-  font-weight: 600;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -47,12 +48,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Chip compacto y redondeado en las CUATRO esquinas. Antes ocupaba todo el
-     header (32×28) y sólo redondeaba la superior derecha, así que el hover se
-     veía como un cuadrado de esquinas duras pegado al borde. */
-  width: 24px;
-  height: 24px;
-  margin-right: 2px;
+  /* Chip chico y redondeado con el MISMO radio que el bloque (`--radius-sm`):
+     así el hover encaja con la esquina del codeblock en vez de taparla. Antes
+     medía 24×24 y el tinte se veía más grande que el ícono. */
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
   border-radius: var(--radius-sm);
   background-color: transparent;
   border: none;
@@ -60,6 +61,7 @@
   cursor: pointer;
   transition: background-color 120ms ease, color 120ms ease;
   flex: none;
+  padding: 0;
 }
 
 .cbCopy:hover {

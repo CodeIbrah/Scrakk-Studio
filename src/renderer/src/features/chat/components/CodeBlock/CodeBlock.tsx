@@ -50,8 +50,10 @@ export const CodeBlock = memo(function CodeBlock({
     if (nameMatch?.[1]) filename = nameMatch[1]
   }
 
-  const displayLang =
-    language && language !== 'plaintext' ? language.toUpperCase() : 'TEXT'
+  // El nombre del lenguaje TAL COMO lo escribió el fence (`tsx`, `bash`): sin
+  // mayúsculas forzadas, que en una etiqueta de UI se leen como un grito y no
+  // como el nombre real del lenguaje.
+  const displayLang = language && language !== 'plaintext' ? language : 'text'
 
   const copy = (): void => {
     navigator.clipboard.writeText(contentString)
