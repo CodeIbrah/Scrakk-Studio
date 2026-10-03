@@ -164,17 +164,31 @@ published are not edited. The file goes per version:
   caller choose the tint. The default comes from the theme
   (`--color-diff-added` / `--color-diff-removed` / `--color-diff-modified`) and
   the API overrides it per call.
-- **`openDiffTab()` — spawn a read-only diff tab**: the API resolves a
-  **diff provider** (`registerDiffProvider`; `'content'` ships built in and
-  works on an in-memory before/after pair), registers the "after" text and the
-  line hunks, and opens a tab. A diff tab is **not a new tab kind**: it is a
-  file tab with a synthetic `scrakk-diff://<id>/<file>` path, so it reuses the
-  editor, syntax highlighting and the tab strip as they are. The scheme keeps it
-  from matching any file handler, so the tab mounts the editor and not a viewer.
-  The provider registry is what lets a git source be added without touching
-  anything else. Opening a diff shows **no notification**: the API returns the
-  `+N / −M` summary for the caller to use, because a toast on a one-click action
-  is pure noise (only a missing provider warns, and that is a real error).
+- **`openDiffTab()` — spawn a read-only diff tab that shows BOTH sides**: the API
+  resolves a **diff provider** (`registerDiffProvider`; `'content'` ships built
+  in and works on an in-memory before/after pair) and opens a tab. A diff tab is
+  **not a new tab kind**: it is a file tab with a synthetic
+  `scrakk-diff://<id>/<file>` path, so it reuses the editor, syntax highlighting
+  and the tab strip as they are. The scheme keeps it from matching any file
+  handler, so the tab mounts the editor and not a viewer. The provider registry
+  is what lets a git source be added without touching anything else. Opening a
+  diff shows **no notification**: the API returns the `+N / −M` summary for the
+  caller to use, because a toast on a one-click action is pure noise (only a
+  missing provider warns, and that is a real error).
+- **The buffer IS a unified diff, not one side**: context lines, then the
+  removed ones (`-`, red tint) and the added ones (`+`, green) — removed **above**,
+  added **below**, the `git diff` order. A single-side buffer cannot show text
+  that is gone, and seeing both versions is the whole point. The prefixes live in
+  the text because this is a real editor — the only place a prefix can exist is
+  the line — and without them a removed and an added line look identical but for
+  a soft tint. The decoration ranges are computed over the **rendered** buffer
+  (not the original file), or the tint lands one line off.
+- **The diff is painted the FIRST time the tab opens**: the push lived in the
+  file-open paths but **not** in the session-activation one, so a fresh diff tab
+  opened with its `(diff)` name and no colors — and the colors appeared only when
+  another tab triggered the next push. It now goes where the underlines already
+  did (`startHighlightPipelines`), the single place every document switch passes
+  through.
 - **The read-only tab really is read-only**: `EditorWindow::SetReadOnly` existed
   and `InputManager` already guarded typing, backspace, delete, enter, tab and
   undo/redo — but **paste and cut came in through the clipboard actions**, not

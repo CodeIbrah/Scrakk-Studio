@@ -8,19 +8,20 @@
  * ─────────────────────────────────────────────────────────────────────────
  * QUÉ SE PRUEBA Y POR QUÉ
  *
- * Una tab de diff es una tab de archivo con path sintético, contenido provisto
- * y fondo de línea. Las cuatro cosas que se rompen en silencio son:
+ * La tab muestra un **diff unificado** (contexto + quitadas arriba + agregadas
+ * abajo) en un editor de sólo lectura, con cada línea teñida. Lo que se rompe
+ * en silencio es:
  *
  *   1. el contenido — si no queda registrado, `fileSession` lee el disco con un
  *      path que no existe y la tab sale VACÍA sin ningún error,
  *   2. el sólo lectura — una tab de diff que se puede editar miente,
- *   3. el fondo de línea — los hunks tienen que llegar al store del archivo
- *      sintético (no al real), y
+ *   3. las decoraciones — sus índices son los del BUFFER renderizado, no los
+ *      del archivo: correrse una línea pinta el renglón de al lado, y
  *   4. el color por llamada — el motor pinta lo que le llega, así que un
  *      override que no viaja es un color que ignora la API.
  *
  * Además: el proveedor es lo que decide quién da las órdenes del diff, así que
- * un id desconocido no puede abrir una tab vacía.
+ * un id desconocido no puede abrir una tab vacía ni romper en silencio.
  */
 
 import { describe, expect, it, vi } from 'vitest'
@@ -76,8 +77,8 @@ function lastTabPath(): string {
 // La limpieza al cerrar se engancha UNA vez (como en `main.tsx`).
 initDiffViews()
 
-describe('openDiffTab: abre una tab de archivo con el cambio', () => {
-  it('registra el contenido (sólo lectura), el fondo de línea y la tab', async () => {
+describe('openDiffTab: el buffer ES el diff unificado', () => {
+  it('muestra contexto, quitadas arriba y agregadas abajo', async () => {
     _resetDecorationsStoreForTests()
     _resetDiffForTests()
 
@@ -94,31 +95,39 @@ describe('openDiffTab: abre una tab de archivo con el cambio', () => {
     // El basename va al final para que el strip de tabs muestre el nombre real.
     expect(tabPath.endsWith('/a.ts')).toBe(true)
 
-    // 1. El contenido provisto: si no, la tab saldría vacía.
-    expect(getProvidedContent(tabPath)).toEqual({ text: 'a\nB\nc\n', readOnly: true })
+    // 1. El contenido provisto: el DIFF, con prefijos. Si no, la tab sale vacía.
+    expect(getProvidedContent(tabPath)).toEqual({
+      text: ' a\n-b\n+B\n c',
+      readOnly: true
+    })
 
-    // 2. El fondo de línea va al path SINTÉTICO, no al real.
+    // 2. Las decoraciones apuntan a las líneas del BUFFER (1 = `-b`, 2 = `+B`).
     const lines = getDiffDecorations(tabPath)
-    expect(lines).toHaveLength(1)
-    expect(lines[0]).toMatchObject({ startLine: 1, endLine: 1, kind: 'modified' })
+    expect(lines).toEqual([
+      expect.objectContaining({ startLine: 1, endLine: 1, kind: 'removed' }),
+      expect.objectContaining({ startLine: 2, endLine: 2, kind: 'added' })
+    ])
+    // Y no al path real.
     expect(getDiffDecorations('/w/a.ts')).toEqual([])
 
     closeFile(tabPath)
   })
 
-  it('el hunk agregado se pinta en su línea del DESPUÉS', async () => {
+  it('varias agregadas seguidas son UN rango (no una decoración por línea)', async () => {
     _resetDecorationsStoreForTests()
     _resetDiffForTests()
 
     await openDiffTab({ path: '/w/b.ts', before: 'a\nc\n', after: 'a\nX\nY\nc\n' })
-    const lines = getDiffDecorations(lastTabPath())
-    expect(lines).toHaveLength(1)
-    expect(lines[0]).toMatchObject({ startLine: 1, endLine: 2, kind: 'added' })
+    const tabPath = lastTabPath()
+    expect(getProvidedContent(tabPath)?.text).toBe(' a\n+X\n+Y\n c')
+    expect(getDiffDecorations(tabPath)).toEqual([
+      expect.objectContaining({ startLine: 1, endLine: 2, kind: 'added' })
+    ])
 
-    closeFile(lastTabPath())
+    closeFile(tabPath)
   })
 
-  it('sin par de contenidos igual abre la tab (el diff sale del texto vacío)', async () => {
+  it('sin par de contenidos la tab es un único renglón de contexto', async () => {
     _resetDecorationsStoreForTests()
     _resetDiffForTests()
 
@@ -130,19 +139,29 @@ describe('openDiffTab: abre una tab de archivo con el cambio', () => {
     closeFile(tabPath)
   })
 
+  it('un archivo nuevo muestra todo agregado (sin renglón fantasma)', async () => {
+    _resetDecorationsStoreForTests()
+    _resetDiffForTests()
+
+    await openDiffTab({ path: '/w/nuevo.ts', before: '', after: 'x\ny\n' })
+    const tabPath = lastTabPath()
+    expect(getProvidedContent(tabPath)?.text).toBe('+x\n+y')
+    expect(getDiffDecorations(tabPath)).toHaveLength(1)
+
+    closeFile(tabPath)
+  })
+
   it('una eliminación muestra lo que HABÍA, todo marcado como quitado', async () => {
     _resetDecorationsStoreForTests()
     _resetDiffForTests()
 
-    // `delete_file` manda el "después" vacío. El buffer sólo puede mostrar un
-    // lado, así que la tab muestra el contenido borrado, entero en rojo.
+    // `delete_file` manda el "después" vacío: no hay lado nuevo que mostrar.
     await openDiffTab({ path: '/w/borrado.ts', before: 'a\nb\nc\n', after: '' })
     const tabPath = lastTabPath()
-    expect(getProvidedContent(tabPath)?.text).toBe('a\nb\nc\n')
+    expect(getProvidedContent(tabPath)?.text).toBe('-a\n-b\n-c')
     expect(getDiffDecorations(tabPath)).toEqual([
       expect.objectContaining({ startLine: 0, endLine: 2, kind: 'removed' })
     ])
-    // Y sigue siendo de sólo lectura: un archivo borrado no se edita.
     expect(getProvidedContent(tabPath)?.readOnly).toBe(true)
 
     closeFile(tabPath)
@@ -184,18 +203,17 @@ describe('openDiffTab: quién da las órdenes', () => {
     expect(hasDiffProvider('no-existe')).toBe(false)
   })
 
-  it('un proveedor propio decide los hunks (no se usa el LCS local)', async () => {
+  it('un proveedor propio decide las filas (no se usa el LCS local)', async () => {
     _resetDecorationsStoreForTests()
     _resetDiffForTests()
     registerDiffProvider('git', () => ({
-      content: 'línea única\n',
-      hunks: [{ startLine: 0, endLine: 0, kind: 'added' }]
+      rows: [{ kind: 'added', text: 'línea única' }]
     }))
 
     await openDiffTab({ path: '/w/e.ts', provider: 'git' })
     const tabPath = lastTabPath()
-    expect(getProvidedContent(tabPath)?.text).toBe('línea única\n')
-    expect(getDiffDecorations(tabPath)[0]).toMatchObject({ kind: 'added' })
+    expect(getProvidedContent(tabPath)?.text).toBe('+línea única')
+    expect(getDiffDecorations(tabPath)[0]).toMatchObject({ kind: 'added', startLine: 0 })
     expect(getDiffSources(tabPath)).toEqual(['diff:git:d1'])
 
     closeFile(tabPath)
@@ -205,14 +223,14 @@ describe('openDiffTab: quién da las órdenes', () => {
   it('el registro se puede enumerar (diagnóstico de las fuentes disponibles)', () => {
     _resetDiffForTests()
     expect(listDiffProviders()).toEqual([CONTENT_DIFF_PROVIDER])
-    registerDiffProvider('zzz', () => ({ content: '', hunks: [] }))
+    registerDiffProvider('zzz', () => ({ rows: [] }))
     expect(listDiffProviders()).toEqual([CONTENT_DIFF_PROVIDER, 'zzz'])
     unregisterDiffProvider('zzz')
   })
 })
 
-describe('openDiffTab: el color lo elige quien pide el diff', () => {
-  it('un override por tipo de cambio viaja al store (el motor pinta lo que llega)', async () => {
+describe('openDiffTab: el color y el resumen', () => {
+  it('un override por tipo viaja al store (el motor pinta lo que llega)', async () => {
     _resetDecorationsStoreForTests()
     _resetDiffForTests()
 
@@ -222,25 +240,19 @@ describe('openDiffTab: el color lo elige quien pide el diff', () => {
       after: 'a\nZ\n',
       colors: { added: '#12345678' }
     })
-    const lines = getDiffDecorations(lastTabPath())
-    expect(lines[0].color).toBe(colorToRgba('#12345678'))
+    expect(getDiffDecorations(lastTabPath())[0].color).toBe(colorToRgba('#12345678'))
 
     closeFile(lastTabPath())
   })
-})
 
-describe('initDiffViews: la tab cerrada no deja basura', () => {
-  it('al cerrar la tab se baja su fondo de línea', async () => {
+  it('devuelve el resumen `+N / −M` para que el caller lo muestre donde quiera', async () => {
     _resetDecorationsStoreForTests()
     _resetDiffForTests()
 
-    await openDiffTab({ path: '/w/g.ts', before: 'a\n', after: 'a\nb\n' })
-    const tabPath = lastTabPath()
-    expect(getDiffSources(tabPath)).not.toEqual([])
+    const summary = await openDiffTab({ path: '/w/g.ts', before: 'a\nb\nc\n', after: 'a\nB\nZ\nc\n' })
+    expect(summary).toEqual({ added: 2, removed: 1 })
 
-    closeFile(tabPath)
-    // El bus emite al cerrar y el suscriptor limpia esa fuente.
-    expect(getDiffSources(tabPath)).toEqual([])
+    closeFile(lastTabPath())
   })
 })
 
@@ -285,5 +297,20 @@ describe('store: la capa de fondo de línea (hermana del subrayado)', () => {
 
   it('`diffLineColor` con override no consulta el tema', () => {
     expect(diffLineColor('added', 'rgba(1,2,3,0.5)')).toBe(colorToRgba('rgba(1,2,3,0.5)'))
+  })
+})
+
+describe('initDiffViews: la tab cerrada no deja basura', () => {
+  it('al cerrar la tab se baja su fondo de línea', async () => {
+    _resetDecorationsStoreForTests()
+    _resetDiffForTests()
+
+    await openDiffTab({ path: '/w/h.ts', before: 'a\n', after: 'a\nb\n' })
+    const tabPath = lastTabPath()
+    expect(getDiffSources(tabPath)).not.toEqual([])
+
+    closeFile(tabPath)
+    // El bus emite al cerrar y el suscriptor limpia esa fuente.
+    expect(getDiffSources(tabPath)).toEqual([])
   })
 })

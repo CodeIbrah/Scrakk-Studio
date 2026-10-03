@@ -8,9 +8,10 @@
  * ─────────────────────────────────────────────────────────────────────────
  * QUÉ ES
  *
- * `openDiffTab()` es la única puerta para "mostrame este cambio": calcula (o
- * pide) el diff, lo registra en el store de decoraciones como FONDO DE LÍNEA y
- * abre una tab de archivo en SÓLO LECTURA.
+ * `openDiffTab()` es la única puerta para "mostrame este cambio": pide el diff
+ * a un proveedor, arma con él un **diff unificado** (contexto + líneas quitadas
+ * arriba + agregadas abajo), lo registra en el store de decoraciones como FONDO
+ * DE LÍNEA y abre una tab de archivo en SÓLO LECTURA.
  *
  * Una tab de diff NO es un tipo de tab nuevo: es una tab de archivo con path
  * sintético (`scrakk-diff://<id>/<archivo>`), así que reusa el editor, el
@@ -18,16 +19,26 @@
  * disco —saldría vacío— sino del registro de contenido provisto.
  *
  * ─────────────────────────────────────────────────────────────────────────
+ * POR QUÉ EL BUFFER ES UN DIFF UNIFICADO Y NO EL ARCHIVO
+ *
+ * El editor pinta fondos de línea sobre UN buffer. Si la tab mostrara sólo el
+ * "después", el texto eliminado no existiría en ningún lado y no se podría
+ * mostrar — que es justo lo que el usuario quiere ver. Un buffer unificado con
+ * las quitadas (`-`) arriba y las agregadas (`+`) abajo muestra LAS DOS
+ * versiones y cada línea se tiñe según lo que es. Es la misma concesión que
+ * hace el diff inline de VS Code, con prefijos para que no haya que adivinar.
+ *
+ * ─────────────────────────────────────────────────────────────────────────
  * QUIÉN DA LAS ÓRDENES
  *
- * El diff no lo decide este módulo: lo decide un PROVEEDOR. `openDiffTab` recibe
- * un id de proveedor y le pasa el pedido. Hoy:
+ * El diff no lo decide este módulo: lo decide un PROVEEDOR, que devuelve las
+ * filas. Hoy:
  *
  *   'content'  pares de texto en memoria (los tools de edición de la IA, que ya
  *              traen `originalContent`/`modifiedContent` en su resultado)
  *
- * Un proveedor de git entra sin tocar nada más: se registra y se pide. Para eso
- * existe el registro — que sumar una fuente sea una línea.
+ * Un proveedor de git entra sin tocar nada más: `git diff` ya produce filas
+ * unificadas, así que se registra y se pide.
  *
  * ─────────────────────────────────────────────────────────────────────────
  * LOS COLORES
@@ -48,28 +59,33 @@ import {
   type EditorDiffLine
 } from '@services/decorations'
 import { notify } from '@services/notifications'
-import { diffLines, splitLines, summarizeDiff, type DiffHunk, type DiffSummary } from './lineDiff'
+import {
+  diffRows,
+  renderDiffRows,
+  splitLines,
+  summarizeRows,
+  type DiffRow,
+  type DiffSummary
+} from './lineDiff'
 
-export type { DiffHunk, DiffHunkKind, DiffSummary } from './lineDiff'
-export { diffLines, summarizeDiff } from './lineDiff'
+export type { DiffRow, DiffRowKind, DiffSummary } from './lineDiff'
+export { DIFF_ROW_PREFIX, diffRows, renderDiffRows, splitLines, summarizeRows } from './lineDiff'
 
 /** Esquema de las tabs de diff (nunca colisiona con un path real). */
 export const DIFF_SCHEME = 'scrakk-diff'
 
 /**
- * Colores por tipo de cambio, como cadena CSS (`#rrggbbaa`, `rgba(…)`).
+ * Colores por tipo de línea, como cadena CSS (`#rrggbbaa`, `rgba(…)`).
  *
  * Ganan sobre el tema. Son TINTES: conviene que lleven alfa, porque el texto se
  * dibuja encima y un color opaco lo tapa.
  */
 export type DiffColors = Partial<Record<Exclude<DiffLineKind, 'context'>, string>>
 
-/** Lo que un proveedor devuelve: el texto a mostrar + los cambios. */
+/** Lo que un proveedor devuelve: las filas del diff, en orden de lectura. */
 export interface DiffPayload {
-  /** Contenido "después" — el que muestra la tab. */
-  content: string
-  hunks: DiffHunk[]
-  /** Resumen del “+N / −M”. Si falta se calcula de `hunks`. */
+  rows: DiffRow[]
+  /** Resumen del “+N / −M”. Si falta se calcula de `rows`. */
   summary?: DiffSummary
 }
 
@@ -121,24 +137,23 @@ export const CONTENT_DIFF_PROVIDER = 'content'
  *
  * Es una función con nombre (y no un closure suelto) para que el registro
  * inicial y el reset de tests usen LA MISMA implementación: dos copias es cómo
- * una de las dos se queda sin el caso del borrado.
+ * una de las dos se queda sin los casos de archivo nuevo/borrado.
  */
 function contentDiffProvider(request: DiffRequest): DiffPayload {
   const before = request.before ?? ''
   const after = request.after ?? ''
-  // BORRADO TOTAL (una eliminación manda el "después" vacío): el buffer sólo
-  // puede mostrar un lado, así que la tab muestra lo que HABÍA, todo marcado
-  // como quitado. Sin este caso, una eliminación salía como "una línea
-  // modificada" — que no dice nada de lo que se borró.
-  if (after === '' && before !== '') {
-    const lines = splitLines(before)
-    return {
-      content: before,
-      hunks:
-        lines.length > 0 ? [{ startLine: 0, endLine: lines.length - 1, kind: 'removed' }] : []
-    }
+
+  // ARCHIVO NUEVO: no hay "antes" que mostrar, y `splitLines('')` devuelve UNA
+  // línea vacía — usarla de contexto agregaría un renglón fantasma al diff.
+  if (before === '' && after !== '') {
+    return { rows: splitLines(after).map((text) => ({ kind: 'added' as const, text })) }
   }
-  return { content: after, hunks: diffLines(before, after) }
+  // BORRADO TOTAL: el "después" vacío no tiene líneas; se muestra lo que HABÍA,
+  // entero marcado como quitado (una eliminación no tiene lado nuevo).
+  if (after === '' && before !== '') {
+    return { rows: splitLines(before).map((text) => ({ kind: 'removed' as const, text })) }
+  }
+  return { rows: diffRows(before, after) }
 }
 
 registerDiffProvider(CONTENT_DIFF_PROVIDER, contentDiffProvider)
@@ -163,15 +178,44 @@ export interface OpenDiffTabOptions {
 const sourceByPath = new Map<string, string>()
 let diffSeq = 0
 
-function toEditorLines(hunks: readonly DiffHunk[], colors?: DiffColors): EditorDiffLine[] {
-  return hunks
-    .filter((hunk) => hunk.endLine >= hunk.startLine)
-    .map((hunk) => ({
-      startLine: hunk.startLine,
-      endLine: hunk.endLine,
-      kind: hunk.kind,
-      color: diffLineColor(hunk.kind, colors?.[hunk.kind])
-    }))
+/**
+ * Filas → rangos de línea del BUFFER (no del archivo).
+ *
+ * Los índices son los del texto renderizado — es el buffer que el editor tiene
+ * delante, y es donde el motor pinta. Se agrupan las filas consecutivas del
+ * mismo tipo en un solo rango: pintar 200 líneas es una decoración, no 200.
+ */
+function rowsToLines(rows: readonly DiffRow[], colors?: DiffColors): EditorDiffLine[] {
+  const out: EditorDiffLine[] = []
+  let start = -1
+  let kind: Exclude<DiffLineKind, 'context'> | null = null
+
+  const flush = (endLine: number): void => {
+    if (start >= 0 && kind && endLine >= start) {
+      out.push({
+        startLine: start,
+        endLine,
+        kind,
+        color: diffLineColor(kind, colors?.[kind])
+      })
+    }
+    start = -1
+    kind = null
+  }
+
+  rows.forEach((row, index) => {
+    if (row.kind === 'context') {
+      flush(index - 1)
+      return
+    }
+    if (row.kind !== kind) {
+      flush(index - 1)
+      start = index
+      kind = row.kind
+    }
+  })
+  flush(rows.length - 1)
+  return out
 }
 
 /**
@@ -206,13 +250,16 @@ export function openDiffTab(options: OpenDiffTabOptions): Promise<DiffSummary | 
     // así la tab monta el editor y no un visor.
     const syntheticPath = `${DIFF_SCHEME}://${id}/${name}`
 
-    setProvidedContent(syntheticPath, { text: payload.content, readOnly: true })
+    // El buffer ES el diff unificado: contexto + quitadas + agregadas.
+    const rows = payload.rows
+    setProvidedContent(syntheticPath, { text: renderDiffRows(rows), readOnly: true })
+
     const sourceId = `diff:${providerId}:${id}`
     sourceByPath.set(syntheticPath, sourceId)
-    setDiffDecorations(sourceId, syntheticPath, toEditorLines(payload.hunks, options.colors))
+    setDiffDecorations(sourceId, syntheticPath, rowsToLines(rows, options.colors))
 
     openFileInEditor(syntheticPath, options.title ?? `${name} (diff)`)
-    return payload.summary ?? summarizeDiff(payload.hunks)
+    return payload.summary ?? summarizeRows(rows)
   })
 }
 

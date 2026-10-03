@@ -6,32 +6,48 @@
  * Diff de líneas — el cálculo, sin UI y sin motor.
  *
  * Es LCS clásico (programación dinámica + backtrack) sobre las líneas de dos
- * textos. Devuelve HUNKS referidos al texto "después" (el que muestra la tab),
- * porque es el único lado que el buffer del editor tiene: el motor pinta
- * fondos de línea sobre el contenido que ya está en pantalla.
+ * textos, y devuelve **filas de un diff unificado** en orden de lectura: el
+ * contexto tal cual, las líneas quitadas (arriba) y las agregadas (abajo). Ese
+ * orden es el de `git diff` y es el único que deja VER las dos versiones: un
+ * reemplazo sale como su bloque viejo y su bloque nuevo, uno debajo del otro.
  *
  * ─────────────────────────────────────────────────────────────────────────
- * POR QUÉ NO SE PINTA UN BORRADO COMO TAL
+ * POR QUÉ NO COLAPSA EL CONTEXTO
  *
- * Una línea borrada NO EXISTE en el texto "después", así que no hay línea que
- * teñir. El hunk `removed` se ancla a la línea que ocupa su lugar (el "seam").
- * Es la misma concesión que hace cualquier diff de un solo buffer: el texto
- * borrado se puede CONTAR, no mostrar. Está dicho acá y no disimulado.
+ * `git diff` recorta el contexto y pone un separador; acá no. Un separador
+ * "⋯" sería una fila que NO existe en el archivo, y el visor pinta líneas de
+ * un buffer real: mentiría sobre qué hay entre medio. El caso real —el diff de
+ * una edición— es un archivo que ya vive en el editor, así que mostrarlo
+ * entero no cuesta nada.
  */
 
-export type DiffHunkKind = 'added' | 'removed' | 'modified'
+export type DiffRowKind = 'context' | 'added' | 'removed'
 
-/** Un tramo de líneas sobre el texto "después". `endLine` es INCLUSIVO. */
-export interface DiffHunk {
-  startLine: number
-  endLine: number
-  kind: DiffHunkKind
+/** Una fila del diff unificado. */
+export interface DiffRow {
+  kind: DiffRowKind
+  /** Texto de la línea, SIN prefijo (el prefijo lo agrega `renderDiffRows`). */
+  text: string
 }
 
+/** Resumen de un diff (`+N / −M`). */
 export interface DiffSummary {
   added: number
   removed: number
-  modified: number
+}
+
+/**
+ * Prefijo de cada tipo: la convención de todo diff.
+ *
+ * Van en el TEXTO del buffer, no en un pseudo-elemento CSS: el visor es un
+ * editor de verdad, así que el único lugar donde el prefijo puede existir es la
+ * línea. Sin él, una línea quitada y una agregada se ven idénticas salvo por el
+ * color — que con un tinte suave no alcanza para saber cuál es cuál.
+ */
+export const DIFF_ROW_PREFIX: Record<DiffRowKind, string> = {
+  context: ' ',
+  added: '+',
+  removed: '-'
 }
 
 type Op = 'equal' | 'insert' | 'delete'
@@ -41,8 +57,8 @@ type Op = 'equal' | 'insert' | 'delete'
  *
  * La tabla es `(n+1) × (m+1)` ints. Con dos archivos sin nada en común el
  * "medio" es el archivo entero y la matriz se come la memoria: un diff no
- * puede colgar el IDE. Pasado el tope se cae a "todo el medio modificado", que
- * es peor de precisión pero no se cuelga.
+ * puede colgar el IDE. Pasado el tope se cae a "todo el viejo, después todo el
+ * nuevo", que es peor de precisión pero no se cuelga.
  */
 const LCS_CELL_BUDGET = 4_000_000
 
@@ -59,7 +75,7 @@ export function splitLines(text: string): string[] {
   return lines
 }
 
-/** Ops de LCS (DP + backtrack). Llamar sólo con `midA`/`midB` dentro del presupuesto. */
+/** Ops de LCS (DP + backtrack). Llamar sólo con `a`/`b` dentro del presupuesto. */
 function lcsOps(a: readonly string[], b: readonly string[]): Op[] {
   const n = a.length
   const m = b.length
@@ -83,6 +99,8 @@ function lcsOps(a: readonly string[], b: readonly string[]): Op[] {
       i += 1
       j += 1
     } else if (table[(i + 1) * width + j] >= table[i * width + (j + 1)]) {
+      // El desempate va al `delete`: así un reemplazo sale quitado-arriba y
+      // agregado-abajo, que es el orden que el ojo espera leer.
       ops.push('delete')
       i += 1
     } else {
@@ -102,60 +120,13 @@ function lcsOps(a: readonly string[], b: readonly string[]): Op[] {
 }
 
 /**
- * Ops → hunks sobre el texto "después".
- *
- * Un run de no-iguales consecutivos es UN cambio: si tiene inserciones se pinta
- * su tramo (`modified` si además borró algo, `added` si sólo insertó); si es un
- * borrado puro, se ancla en el seam.
- */
-function opsToHunks(ops: readonly Op[], prefix: number, afterCount: number): DiffHunk[] {
-  const hunks: DiffHunk[] = []
-  let afterIndex = prefix
-  let i = 0
-  while (i < ops.length) {
-    if (ops[i] === 'equal') {
-      afterIndex += 1
-      i += 1
-      continue
-    }
-
-    const startAfter = afterIndex
-    let inserts = 0
-    let deletes = 0
-    while (i < ops.length && ops[i] !== 'equal') {
-      if (ops[i] === 'insert') {
-        afterIndex += 1
-        inserts += 1
-      } else {
-        deletes += 1
-      }
-      i += 1
-    }
-
-    if (inserts > 0) {
-      hunks.push({
-        startLine: startAfter,
-        endLine: afterIndex - 1,
-        kind: deletes > 0 ? 'modified' : 'added'
-      })
-    } else if (deletes > 0 && afterCount > 0) {
-      // Borrado puro: se ancla en la línea que ocupa el lugar. Si el borrado
-      // fue al final del archivo, el "lugar" es la última línea.
-      const anchor = Math.max(0, Math.min(afterIndex, afterCount - 1))
-      hunks.push({ startLine: anchor, endLine: anchor, kind: 'removed' })
-    }
-  }
-  return hunks
-}
-
-/**
- * Diff de líneas entre dos textos.
+ * Diff unificado entre dos textos.
  *
  * Se recortan el prefijo y el sufijo comunes ANTES de la tabla: el caso normal
  * (unos pocos cambios en un archivo grande) deja un "medio" chico y el LCS es
  * trivial, en vez de armar una matriz del tamaño del archivo.
  */
-export function diffLines(before: string, after: string): DiffHunk[] {
+export function diffRows(before: string, after: string): DiffRow[] {
   const a = splitLines(before)
   const b = splitLines(after)
 
@@ -171,22 +142,55 @@ export function diffLines(before: string, after: string): DiffHunk[] {
     suffix += 1
   }
 
+  const rows: DiffRow[] = []
+  for (let i = 0; i < prefix; i += 1) rows.push({ kind: 'context', text: a[i] })
+
   const midA = a.slice(prefix, a.length - suffix)
   const midB = b.slice(prefix, b.length - suffix)
 
   if ((midA.length + 1) * (midB.length + 1) > LCS_CELL_BUDGET) {
-    if (midB.length === 0) return []
-    return [{ startLine: prefix, endLine: prefix + midB.length - 1, kind: 'modified' }]
+    for (const text of midA) rows.push({ kind: 'removed', text })
+    for (const text of midB) rows.push({ kind: 'added', text })
+  } else {
+    const ops = lcsOps(midA, midB)
+    let ai = 0
+    let bi = 0
+    for (const op of ops) {
+      if (op === 'equal') {
+        rows.push({ kind: 'context', text: midB[bi] })
+        ai += 1
+        bi += 1
+      } else if (op === 'delete') {
+        rows.push({ kind: 'removed', text: midA[ai] })
+        ai += 1
+      } else {
+        rows.push({ kind: 'added', text: midB[bi] })
+        bi += 1
+      }
+    }
   }
 
-  return opsToHunks(lcsOps(midA, midB), prefix, b.length)
+  for (let i = a.length - suffix; i < a.length; i += 1) rows.push({ kind: 'context', text: a[i] })
+  return rows
 }
 
-/** Cuenta por tipo (lo que un “+N / −M” muestra). */
-export function summarizeDiff(hunks: readonly DiffHunk[]): DiffSummary {
-  const out: DiffSummary = { added: 0, removed: 0, modified: 0 }
-  for (const hunk of hunks) {
-    out[hunk.kind] += hunk.endLine - hunk.startLine + 1
+/** Filas → texto del buffer (una fila por línea, con su prefijo). */
+export function renderDiffRows(rows: readonly DiffRow[]): string {
+  return rows.map((row) => DIFF_ROW_PREFIX[row.kind] + row.text).join('\n')
+}
+
+/**
+ * Cuenta por tipo (lo que un “+N / −M” muestra).
+ *
+ * No hay "modificadas": un diff unificado sólo tiene agregadas y quitadas — un
+ * reemplazo es una quitada y una agregada. Inventar un tercer número sería
+ * contar algo que el visor no marca.
+ */
+export function summarizeRows(rows: readonly DiffRow[]): DiffSummary {
+  const out: DiffSummary = { added: 0, removed: 0 }
+  for (const row of rows) {
+    if (row.kind === 'added') out.added += 1
+    else if (row.kind === 'removed') out.removed += 1
   }
   return out
 }

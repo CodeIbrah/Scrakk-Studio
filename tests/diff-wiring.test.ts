@@ -74,10 +74,25 @@ describe('el engine empuja el diff de SU archivo', () => {
     expect(engine).toMatch(/subscribeToDecorations\(\(\) => \{[\s\S]*this\.pushUnderlines\(\)[\s\S]*this\.pushDiffDecorations\(\)/)
   })
 
+  it('lo empujan donde se empujan los subrayados: al ACTIVAR la sesión', () => {
+    // El bug que esto fija: la tab de diff se abría con el nombre "(diff)" pero
+    // SIN pintar, porque el push no estaba en el camino de activación de la
+    // sesión (el diff aparecía recién cuando otra tab disparaba el siguiente).
+    const start = engine.indexOf('private startHighlightPipelines')
+    expect(start).toBeGreaterThan(-1)
+    const end = engine.indexOf('\n  private ', start + 10)
+    const body = engine.slice(start, end === -1 ? undefined : end)
+
+    expect(body).toContain('this.pushDiffDecorations()')
+    // Y va DESPUÉS de limpiar lo del archivo anterior: si no, el diff viejo
+    // quedaría pintado sobre el nuevo hasta el próximo push.
+    expect(body.indexOf('resetHostTokens')).toBeLessThan(body.indexOf('this.pushDiffDecorations()'))
+  })
+
   it('lo empuja al abrir el archivo (si no, queda con el diff del anterior)', () => {
     const pushes = engine.match(/this\.pushDiffDecorations\(\)/g) ?? []
-    // subscribe + apply + loadFile
-    expect(pushes.length).toBeGreaterThanOrEqual(3)
+    // subscribe + startHighlightPipelines
+    expect(pushes.length).toBeGreaterThanOrEqual(2)
   })
 })
 
@@ -148,6 +163,18 @@ describe('el tema puede pintar el diff (y no miente con los avisos)', () => {
     const schema = read('src/renderer/src/services/extensions/types/themes/schema.ts')
     expect(schema).toContain('THEME_COLOR_KEYS')
     expect(schema).toContain('if (!THEME_COLOR_KEYS.has(key)) continue')
+  })
+})
+
+describe('el visor arma un diff unificado (quitadas arriba, agregadas abajo)', () => {
+  it('el buffer se renderiza desde las filas y las decoraciones salen de ellas', () => {
+    const src = read('src/renderer/src/services/diff/index.ts')
+    expect(src).toContain('renderDiffRows(rows)')
+    expect(src).toContain('diffRows(before, after)')
+    expect(src).toContain('rowsToLines(rows, options.colors)')
+    // Los índices son del BUFFER renderizado, no del archivo: si se calcularan
+    // sobre el original, el tinte caería una línea corrido.
+    expect(src).toContain('Filas → rangos de línea del BUFFER')
   })
 })
 

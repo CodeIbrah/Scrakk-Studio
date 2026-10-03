@@ -615,9 +615,6 @@ export class InnertaEngine implements EditorEngine {
       // este push quedaban guardados en la store y sin pintar hasta que
       // pasara cualquier otra cosa (otro publish, un guardado, un undo).
       this.pushUnderlines()
-      // El diff de este archivo, por el mismo motivo: el push inicial corrió
-      // con `currentPath` nulo y mandó limpiar.
-      this.pushDiffDecorations()
       // Recién aquí existe el módulo: es LA llamada que hace que el primer
       // archivo abierto se pinte con la gramática de su extensión.
       this.startHighlightPipelines(req.path, req.content)
@@ -724,7 +721,6 @@ export class InnertaEngine implements EditorEngine {
       this.module.openFile(path, content)
       applyInnertaTheme(this.module)
       this.pushBookmarks()
-      this.pushDiffDecorations()
       requestAnimationFrame(() => this.bridge?.syncCursor())
     } else {
       this.pending.push({ path, content })
@@ -884,6 +880,11 @@ export class InnertaEngine implements EditorEngine {
     // Los subrayados del archivo anterior tampoco: el motor recibe los de ESTE
     // (que pueden ser cero). Es la misma trampa que el plegado.
     this.pushUnderlines()
+    // Y el fondo de línea (diff) por el MISMO motivo: al activar una sesión
+    // nueva (una tab de diff, un cambio de archivo) el motor seguía con el diff
+    // del anterior. Faltaba acá, así que la tab de diff se abría sin pintar
+    // nada hasta el siguiente push — que llegaba recién al abrir OTRA tab.
+    this.pushDiffDecorations()
     // Canal 1: semantic tokens del LSP (según editor.highlightSource).
     refreshSemanticTokens(module, path, true)
     // Canal 2: gramática de la extensión que cubre este lenguaje. Si no hay, no

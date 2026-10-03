@@ -3,75 +3,118 @@
 // Licencia completa en LICENSE (Apache License 2.0).
 
 /**
- * Diff de líneas — el cálculo.
+ * Diff unificado — el cálculo y el render.
  *
  * ─────────────────────────────────────────────────────────────────────────
  * QUÉ SE PRUEBA Y POR QUÉ
  *
- * Los hunks son lo que el motor pinta como fondo de línea, y las tres cosas que
- * se rompen en silencio son:
+ * Las filas son lo que el visor pinta como líneas del buffer, y lo que se rompe
+ * en silencio es:
  *
- *   1. las líneas del hunk — un `endLine` exclusivo cuando el motor lo quiere
- *      INCLUSIVO pinta una línea de más (o de menos),
- *   2. el salto final — `"a\nb\n"` NO son 3 líneas, y contar la fantasma corre
- *      todos los hunks una línea, y
- *   3. el recorte de prefijo/sufijo — si está mal, el diff "ve" cambios donde
- *      no los hay, o se come los que sí.
+ *   1. el ORDEN — un reemplazo tiene que salir quitado arriba y agregado abajo;
+ *      al revés el diff se lee como si el código nuevo fuera el viejo,
+ *   2. el salto final — `"a\nb\n"` NO son 3 líneas, y la fantasma corre todas
+ *      las filas una posición (y el prefijo va a la línea equivocada), y
+ *   3. los prefijos — son el único modo de distinguir una quitada de una
+ *      agregada cuando el tinte es suave; si faltan, el visor miente.
  */
 
 import { describe, expect, it } from 'vitest'
-import { diffLines, splitLines, summarizeDiff } from '../src/renderer/src/services/diff/lineDiff'
+import {
+  DIFF_ROW_PREFIX,
+  diffRows,
+  renderDiffRows,
+  splitLines,
+  summarizeRows,
+  type DiffRow
+} from '../src/renderer/src/services/diff/lineDiff'
 
-describe('diffLines: qué cambió', () => {
-  it('dos textos iguales no producen ningún hunk', () => {
-    expect(diffLines('a\nb\nc\n', 'a\nb\nc\n')).toEqual([])
+/** Atajo: el tipo de cada fila, en orden. */
+const kinds = (rows: DiffRow[]): string[] => rows.map((row) => row.kind)
+
+describe('diffRows: qué líneas van, y dónde', () => {
+  it('dos textos iguales son todo contexto', () => {
+    const rows = diffRows('a\nb\nc\n', 'a\nb\nc\n')
+    expect(kinds(rows)).toEqual(['context', 'context', 'context'])
+    expect(summarizeRows(rows)).toEqual({ added: 0, removed: 0 })
   })
 
-  it('una línea insertada en el medio es `added`, en su línea del DESPUÉS', () => {
-    expect(diffLines('a\nb\nc\n', 'a\nb\nX\nc\n')).toEqual([
-      { startLine: 2, endLine: 2, kind: 'added' }
+  it('una línea insertada sale como `added` en su lugar', () => {
+    const rows = diffRows('a\nb\nc\n', 'a\nb\nX\nc\n')
+    expect(rows).toEqual([
+      { kind: 'context', text: 'a' },
+      { kind: 'context', text: 'b' },
+      { kind: 'added', text: 'X' },
+      { kind: 'context', text: 'c' }
     ])
   })
 
-  it('varias líneas insertadas son UN hunk (el rango completo)', () => {
-    expect(diffLines('a\nc\n', 'a\nX\nY\nZ\nc\n')).toEqual([
-      { startLine: 1, endLine: 3, kind: 'added' }
+  it('un reemplazo sale QUITADO ARRIBA y AGREGADO ABAJO (el orden de git diff)', () => {
+    const rows = diffRows('a\nb\nc\n', 'a\nB\nc\n')
+    expect(rows).toEqual([
+      { kind: 'context', text: 'a' },
+      { kind: 'removed', text: 'b' },
+      { kind: 'added', text: 'B' },
+      { kind: 'context', text: 'c' }
     ])
   })
 
-  it('una línea reemplazada es `modified`', () => {
-    expect(diffLines('a\nb\nc\n', 'a\nB\nc\n')).toEqual([
-      { startLine: 1, endLine: 1, kind: 'modified' }
+  it('varias líneas insertadas van juntas', () => {
+    const rows = diffRows('a\nc\n', 'a\nX\nY\nZ\nc\n')
+    expect(rows).toEqual([
+      { kind: 'context', text: 'a' },
+      { kind: 'added', text: 'X' },
+      { kind: 'added', text: 'Y' },
+      { kind: 'added', text: 'Z' },
+      { kind: 'context', text: 'c' }
     ])
   })
 
-  it('un borrado puro se ancla en la línea que ocupa su lugar', () => {
-    // La línea borrada no existe en el "después": no hay línea que teñir, así
-    // que el hunk queda en el seam (documentado en `lineDiff.ts`).
-    expect(diffLines('a\nb\nc\n', 'a\nc\n')).toEqual([
-      { startLine: 1, endLine: 1, kind: 'removed' }
+  it('una línea borrada TIENE su fila (es lo que el visor muestra en rojo)', () => {
+    // Sin el buffer unificado, una línea borrada no existía en ningún lado y no
+    // se podía mostrar. Acá está, con su texto.
+    const rows = diffRows('a\nb\nc\n', 'a\nc\n')
+    expect(rows).toEqual([
+      { kind: 'context', text: 'a' },
+      { kind: 'removed', text: 'b' },
+      { kind: 'context', text: 'c' }
     ])
   })
 
-  it('un borrado al final del archivo se ancla en la última línea', () => {
-    expect(diffLines('a\nb\nc\n', 'a\nb\n')).toEqual([
-      { startLine: 1, endLine: 1, kind: 'removed' }
-    ])
-  })
-
-  it('el recorte de prefijo/sufijo deja el hunk SOLO donde cambió', () => {
+  it('el recorte de prefijo/sufijo deja las filas SOLO donde cambió', () => {
     const before = ['x0', 'x1', 'x2', 'A', 'x4', 'x5', 'x6'].join('\n')
     const after = ['x0', 'x1', 'x2', 'B', 'x4', 'x5', 'x6'].join('\n')
-    // No un rango gigante: una sola línea, la 3 (0-based).
-    expect(diffLines(before, after)).toEqual([{ startLine: 3, endLine: 3, kind: 'modified' }])
+    expect(kinds(diffRows(before, after))).toEqual([
+      'context',
+      'context',
+      'context',
+      'removed',
+      'added',
+      'context',
+      'context',
+      'context'
+    ])
   })
 
-  it('el tope de la tabla no cuelga: dos archivos sin nada en común caen a "todo modificado"', () => {
+  it('el tope de la tabla no cuelga: cae a "todo viejo, después todo nuevo"', () => {
     const before = Array.from({ length: 2100 }, (_, i) => `a${i}`).join('\n')
     const after = Array.from({ length: 2100 }, (_, i) => `b${i}`).join('\n')
-    expect(diffLines(before, after)).toEqual([
-      { startLine: 0, endLine: 2099, kind: 'modified' }
-    ])
+    const rows = diffRows(before, after)
+    expect(rows).toHaveLength(4200)
+    expect(kinds(rows).slice(0, 2100).every((kind) => kind === 'removed')).toBe(true)
+    expect(kinds(rows).slice(2100).every((kind) => kind === 'added')).toBe(true)
+  })
+})
+
+describe('renderDiffRows: el texto del buffer', () => {
+  it('cada fila lleva su prefijo (` `, `+`, `-`)', () => {
+    expect(DIFF_ROW_PREFIX).toEqual({ context: ' ', added: '+', removed: '-' })
+    expect(renderDiffRows(diffRows('a\nb\nc\n', 'a\nB\nc\n'))).toBe(' a\n-b\n+B\n c')
+  })
+
+  it('el prefijo es lo que distingue una quitada de una agregada', () => {
+    const text = renderDiffRows(diffRows('x\n', 'y\n'))
+    expect(text.split('\n')).toEqual(['-x', '+y'])
   })
 })
 
@@ -89,13 +132,14 @@ describe('splitLines: el salto final no inventa una línea', () => {
   })
 })
 
-describe('summarizeDiff: el "+N / −M"', () => {
-  it('cuenta líneas por tipo', () => {
-    const hunks = [
-      { startLine: 0, endLine: 2, kind: 'added' as const },
-      { startLine: 5, endLine: 5, kind: 'removed' as const },
-      { startLine: 9, endLine: 11, kind: 'modified' as const }
+describe('summarizeRows: el "+N / −M"', () => {
+  it('cuenta por tipo (y no inventa "modificadas")', () => {
+    const rows: DiffRow[] = [
+      { kind: 'context', text: 'a' },
+      { kind: 'added', text: 'b' },
+      { kind: 'added', text: 'c' },
+      { kind: 'removed', text: 'd' }
     ]
-    expect(summarizeDiff(hunks)).toEqual({ added: 3, removed: 1, modified: 3 })
+    expect(summarizeRows(rows)).toEqual({ added: 2, removed: 1 })
   })
 })
