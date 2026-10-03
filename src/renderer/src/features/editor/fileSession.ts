@@ -19,6 +19,7 @@
 
 import { getOrCreatePaneEngine, listPaneEngines, releasePaneEngineIfEmpty } from './engine'
 import type { InnertaEngine } from './engines/innerta/InnertaEngine'
+import { clearProvidedContent, getProvidedContent, type ProvidedContent } from './providedContent'
 import { readEncoded, setDetected } from '@services/encodings'
 import { lspNotifyFileChanged } from '@services/lsp'
 
@@ -97,15 +98,32 @@ class FileSessionImpl implements FileSession {
       }) ?? null
   }
 
-  /** Crea la sesión si no existe (carga de disco/snapshot) y la activa. */
+  /**
+   * Aplica el modo sólo lectura del motor según lo que declare el contenido
+   * provisto de la sesión ACTIVA.
+   *
+   * El modo vive en el MOTOR (un módulo por panel), no en la sesión: al cambiar
+   * de tab dentro del mismo panel hay que re-aplicarlo, o el read-only de la tab
+   * de diff se quedaría pegado en el archivo siguiente.
+   */
+  private applyReadOnly(engine: InnertaEngine, provided: ProvidedContent | undefined): void {
+    engine.setReadOnly(provided?.readOnly === true)
+  }
+
+  /** Crea la sesión si no existe (contenido provisto, disco o snapshot) y la activa. */
   private async ensureSession(): Promise<void> {
     const engine = this.engine
     if (!engine) return
     await engine.whenReady()
     if (!this.engine || this.engine !== engine) return
 
+    // Contenido provisto por la app (tab de diff): no se lee el disco con un
+    // path sintético — la lectura fallaría y la tab quedaría en blanco.
+    const provided = getProvidedContent(this.path)
+
     if (engine.hasFileSession(this.path)) {
       engine.activateFileSession(this.path)
+      this.applyReadOnly(engine, provided)
       this.recomputeDirty()
       return
     }
@@ -115,6 +133,9 @@ class FileSessionImpl implements FileSession {
     try {
       let text: string | null = this.carriedText
       this.carriedText = null
+      if (text === null && provided) {
+        text = provided.text
+      }
       if (text === null) {
         const res = await readEncoded(this.path)
         if (res.success && typeof res.text === 'string' && res.detected) {
@@ -125,6 +146,7 @@ class FileSessionImpl implements FileSession {
       }
       if (!this.engine || this.engine !== engine) return
       engine.createFileSession(this.path, text ?? '')
+      this.applyReadOnly(engine, provided)
       // Recién cargado = limpio.
       const revision = engine.fileSessionRevision(this.path) ?? 0
       engine.markFileSessionClean(this.path, revision)
@@ -274,6 +296,9 @@ export function getFileSession(path: string): FileSession {
 /** Destruye la sesión de un archivo (al cerrar su tab). */
 export function destroyFileSession(path: string): void {
   sessions.get(path)?.destroy()
+  // El contenido provisto vive mientras la tab viva (si no, se acumularía
+  // memoria por cada diff cerrado).
+  clearProvidedContent(path)
 }
 
 /** ¿Existe sesión viva para el path? */

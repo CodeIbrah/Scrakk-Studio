@@ -628,6 +628,24 @@ function wrap(raw: Record<string, unknown>): InnertaModule {
     getUnderlineCount() {
       if (typeof _raw._GetInnertaUnderlineCount !== 'function') return -1
       return (_raw._GetInnertaUnderlineCount as () => number)()
+    },
+    /** Ver `wrapIsolated()`: mismo canal de fondo de línea del diff. */
+    setDiffDecorations(data: number[]) {
+      pushDiffDecorations(_raw, data)
+    },
+    /** Ver `wrapIsolated()`: mismo diagnóstico del canal de diff. */
+    getDiffDecorationCount() {
+      if (typeof _raw._GetInnertaDiffDecorationCount !== 'function') return -1
+      return (_raw._GetInnertaDiffDecorationCount as () => number)()
+    },
+    /** Ver `wrapIsolated()`: mismo modo sólo lectura. */
+    setReadOnly(readOnly: boolean) {
+      applyReadOnly(_raw, readOnly)
+    },
+    /** Ver `wrapIsolated()`: mismo diagnóstico del modo sólo lectura. */
+    getReadOnly() {
+      if (typeof _raw._GetInnertaReadOnly !== 'function') return false
+      return (_raw._GetInnertaReadOnly as () => number)() === 1
     }
   }
 }
@@ -1140,6 +1158,35 @@ function wrapIsolated(raw: Record<string, unknown>, canvas: HTMLCanvasElement): 
     getUnderlineCount() {
       if (typeof _raw._GetInnertaUnderlineCount !== 'function') return -1
       return (_raw._GetInnertaUnderlineCount as () => number)()
+    },
+    /**
+     * Fondo de línea del diff, como CUARTETOS (ver `pushDiffDecorations`).
+     *
+     * `endLine` INCLUSIVE; `kind` 0 contexto / 1 agregada / 2 quitada /
+     * 3 modificada; `rgba` 0xRRGGBBAA. Un array VACÍO limpia: es lo que hay
+     * que mandar al cambiar de archivo, o el diff del anterior queda pintado.
+     */
+    setDiffDecorations(data: number[]) {
+      pushDiffDecorations(_raw, data)
+    },
+    /**
+     * Diagnóstico del canal de diff: cuántas líneas tiene el motor AHORA.
+     *
+     * `setDiffDecorations` es `void`, así que sin este getter el puente sólo
+     * puede afirmar "mandé el diff". `-1` = build sin el getter.
+     */
+    getDiffDecorationCount() {
+      if (typeof _raw._GetInnertaDiffDecorationCount !== 'function') return -1
+      return (_raw._GetInnertaDiffDecorationCount as () => number)()
+    },
+    /** Sólo lectura: la tab de diff se lee y se copia, no se escribe. */
+    setReadOnly(readOnly: boolean) {
+      applyReadOnly(_raw, readOnly)
+    },
+    /** Si el editor está en sólo lectura AHORA (`false` = build sin el getter). */
+    getReadOnly() {
+      if (typeof _raw._GetInnertaReadOnly !== 'function') return false
+      return (_raw._GetInnertaReadOnly as () => number)() === 1
     }
   }
   ;(mod as unknown as Record<string, unknown>)._rawModuleRef = raw
@@ -1169,4 +1216,39 @@ function pushUnderlines(raw: Record<string, unknown>, data: number[]): void {
   if (ptr !== 0) ((raw['HEAP32']) as Int32Array).set(arr, ptr >> 2)
   ;(fn as (p: number, c: number) => void)(ptr, arr.length)
   if (ptr !== 0 && free) free(ptr)
+}
+
+/**
+ * Empuja el fondo de línea del diff al motor (cuartetos de ints).
+ *
+ * El formato lo define el motor (ver `SetInnertaDiffDecorations`):
+ *
+ *   (startLine, endLine, kind, rgba)
+ *
+ * con `endLine` INCLUSIVE (un hunk es un rango), `kind` 0 contexto / 1
+ * agregada / 2 quitada / 3 modificada y `rgba` en el MISMO orden que el resto
+ * del puente (0xRRGGBBAA — el C++ lo lee con `ColorFromRGBA`). Un array vacío
+ * limpia.
+ *
+ * Se comparte entre la instancia compartida y las aisladas a propósito: dos
+ * copias de este marshalling es exactamente cómo una de las dos se queda con
+ * el bug (el mismo motivo por el que `pushUnderlines` es una sola función).
+ */
+function pushDiffDecorations(raw: Record<string, unknown>, data: number[]): void {
+  const fn = raw['_SetInnertaDiffDecorations']
+  if (typeof fn !== 'function') return
+  const arr = Int32Array.from(data)
+  const malloc = (raw['_malloc'] as (n: number) => number) ?? undefined
+  const free = (raw['_free'] as (p: number) => void) ?? undefined
+  const ptr = arr.length > 0 && malloc ? malloc(arr.byteLength) : 0
+  if (ptr !== 0) ((raw['HEAP32']) as Int32Array).set(arr, ptr >> 2)
+  ;(fn as (p: number, c: number) => void)(ptr, arr.length)
+  if (ptr !== 0 && free) free(ptr)
+}
+
+/** Aplica el modo sólo lectura del editor (1/0 en el export C). */
+function applyReadOnly(raw: Record<string, unknown>, readOnly: boolean): void {
+  const fn = raw['_SetInnertaReadOnly']
+  if (typeof fn !== 'function') return
+  ;(fn as (v: number) => void)(readOnly ? 1 : 0)
 }

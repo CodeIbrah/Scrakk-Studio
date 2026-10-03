@@ -8441,6 +8441,9 @@ var _ActivateInnertaSession = Module['_ActivateInnertaSession'] = makeInvalidEar
 var _DestroyInnertaSession = Module['_DestroyInnertaSession'] = makeInvalidEarlyAccess('_DestroyInnertaSession');
 var _SetInnertaDiffDecorations = Module['_SetInnertaDiffDecorations'] = makeInvalidEarlyAccess('_SetInnertaDiffDecorations');
 var _ClearInnertaDiffDecorations = Module['_ClearInnertaDiffDecorations'] = makeInvalidEarlyAccess('_ClearInnertaDiffDecorations');
+var _GetInnertaDiffDecorationCount = Module['_GetInnertaDiffDecorationCount'] = makeInvalidEarlyAccess('_GetInnertaDiffDecorationCount');
+var _SetInnertaReadOnly = Module['_SetInnertaReadOnly'] = makeInvalidEarlyAccess('_SetInnertaReadOnly');
+var _GetInnertaReadOnly = Module['_GetInnertaReadOnly'] = makeInvalidEarlyAccess('_GetInnertaReadOnly');
 var _SetInnertaUnderlines = Module['_SetInnertaUnderlines'] = makeInvalidEarlyAccess('_SetInnertaUnderlines');
 var _ClearInnertaUnderlines = Module['_ClearInnertaUnderlines'] = makeInvalidEarlyAccess('_ClearInnertaUnderlines');
 var _GetInnertaUnderlineCount = Module['_GetInnertaUnderlineCount'] = makeInvalidEarlyAccess('_GetInnertaUnderlineCount');
@@ -8558,6 +8561,9 @@ function assignWasmExports(wasmExports) {
   assert(typeof wasmExports['DestroyInnertaSession'] != 'undefined', 'missing Wasm export: DestroyInnertaSession');
   assert(typeof wasmExports['SetInnertaDiffDecorations'] != 'undefined', 'missing Wasm export: SetInnertaDiffDecorations');
   assert(typeof wasmExports['ClearInnertaDiffDecorations'] != 'undefined', 'missing Wasm export: ClearInnertaDiffDecorations');
+  assert(typeof wasmExports['GetInnertaDiffDecorationCount'] != 'undefined', 'missing Wasm export: GetInnertaDiffDecorationCount');
+  assert(typeof wasmExports['SetInnertaReadOnly'] != 'undefined', 'missing Wasm export: SetInnertaReadOnly');
+  assert(typeof wasmExports['GetInnertaReadOnly'] != 'undefined', 'missing Wasm export: GetInnertaReadOnly');
   assert(typeof wasmExports['SetInnertaUnderlines'] != 'undefined', 'missing Wasm export: SetInnertaUnderlines');
   assert(typeof wasmExports['ClearInnertaUnderlines'] != 'undefined', 'missing Wasm export: ClearInnertaUnderlines');
   assert(typeof wasmExports['GetInnertaUnderlineCount'] != 'undefined', 'missing Wasm export: GetInnertaUnderlineCount');
@@ -8669,8 +8675,11 @@ function assignWasmExports(wasmExports) {
   _CreateInnertaSession = Module['_CreateInnertaSession'] = createExportWrapper('CreateInnertaSession', wasmExports['CreateInnertaSession'], 1);
   _ActivateInnertaSession = Module['_ActivateInnertaSession'] = createExportWrapper('ActivateInnertaSession', wasmExports['ActivateInnertaSession'], 1);
   _DestroyInnertaSession = Module['_DestroyInnertaSession'] = createExportWrapper('DestroyInnertaSession', wasmExports['DestroyInnertaSession'], 1);
-  _SetInnertaDiffDecorations = Module['_SetInnertaDiffDecorations'] = createExportWrapper('SetInnertaDiffDecorations', wasmExports['SetInnertaDiffDecorations'], 1);
+  _SetInnertaDiffDecorations = Module['_SetInnertaDiffDecorations'] = createExportWrapper('SetInnertaDiffDecorations', wasmExports['SetInnertaDiffDecorations'], 2);
   _ClearInnertaDiffDecorations = Module['_ClearInnertaDiffDecorations'] = createExportWrapper('ClearInnertaDiffDecorations', wasmExports['ClearInnertaDiffDecorations'], 0);
+  _GetInnertaDiffDecorationCount = Module['_GetInnertaDiffDecorationCount'] = createExportWrapper('GetInnertaDiffDecorationCount', wasmExports['GetInnertaDiffDecorationCount'], 0);
+  _SetInnertaReadOnly = Module['_SetInnertaReadOnly'] = createExportWrapper('SetInnertaReadOnly', wasmExports['SetInnertaReadOnly'], 1);
+  _GetInnertaReadOnly = Module['_GetInnertaReadOnly'] = createExportWrapper('GetInnertaReadOnly', wasmExports['GetInnertaReadOnly'], 0);
   _SetInnertaUnderlines = Module['_SetInnertaUnderlines'] = createExportWrapper('SetInnertaUnderlines', wasmExports['SetInnertaUnderlines'], 2);
   _ClearInnertaUnderlines = Module['_ClearInnertaUnderlines'] = createExportWrapper('ClearInnertaUnderlines', wasmExports['ClearInnertaUnderlines'], 0);
   _GetInnertaUnderlineCount = Module['_GetInnertaUnderlineCount'] = createExportWrapper('GetInnertaUnderlineCount', wasmExports['GetInnertaUnderlineCount'], 0);

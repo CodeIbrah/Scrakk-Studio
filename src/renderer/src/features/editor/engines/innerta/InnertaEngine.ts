@@ -17,7 +17,7 @@ import { scheduleEmojiGlyphs } from './emojiGlyphs'
 import { detectLanguageFromPath } from '@features/editor/languages'
 import { resetHostTokens } from './hostTokens'
 import { getBookmarksForPath, subscribeToBookmarks } from '@services/bookmarks'
-import { getDecorations, packDecorations, subscribeToDecorations } from '@services/decorations'
+import { getDecorations, getDiffDecorations, packDecorations, packDiffDecorations, subscribeToDecorations } from '@services/decorations'
 import {
   closeCompletionPopup,
   handleCompletionKey,
@@ -114,6 +114,30 @@ export interface InnertaModule {
    * getter). Es la contraparte de lectura de `setUnderlines`, que es `void`.
    */
   getUnderlineCount?(): number
+  /**
+   * Fondo de línea del host (diff), como CUARTETOS `(startLine, endLine,
+   * kind, rgba)` — `endLine` INCLUSIVE, `kind` 0 contexto / 1 agregada /
+   * 2 quitada / 3 modificada y `rgba` 0xRRGGBBAA.
+   *
+   * Es hermano de `setUnderlines` pero es OTRA capa: el subrayado va debajo
+   * del texto, esto va DETRÁS y tiñe la línea completa (gutter incluido, así
+   * el número también se pinta). El alfa importa: es un tinte, no un relleno.
+   * Un array vacío limpia.
+   */
+  setDiffDecorations?(data: number[]): void
+  /**
+   * Cuántas líneas de diff tiene el motor AHORA (`-1` si el build no expone el
+   * getter). Es la contraparte de lectura de `setDiffDecorations`, que es `void`.
+   */
+  getDiffDecorationCount?(): number
+  /**
+   * Sólo lectura: una tab de diff se LEE, se selecciona y se copia, no se
+   * escribe. Bloquea tipeo, borrado, enter, tab, pegado, cortado y undo/redo;
+   * NO bloquea mover el caret ni seleccionar.
+   */
+  setReadOnly?(readOnly: boolean): void
+  /** Si el editor está en sólo lectura AHORA (`false` si el build no lo expone). */
+  getReadOnly?(): boolean
   /**
    * Selecciona un RANGO exacto (ancla + extremo activo, 0-based).
    *
@@ -277,6 +301,8 @@ export class InnertaEngine implements EditorEngine {
   private bookmarksUnsubscribe: (() => void) | null = null
   /** Unsubscribe de la store de decoraciones (empuja los subrayados). */
   private decorationsUnsubscribe: (() => void) | null = null
+  /** Sólo lectura de ESTE editor (la tab de diff lo activa; ver `setReadOnly`). */
+  private isReadOnly = false
   /** Path de ESTE engine (setPath del bridge lo espeja). */
   private currentPath: string | null = null
   private ready = false
@@ -509,12 +535,22 @@ export class InnertaEngine implements EditorEngine {
           this.bookmarksUnsubscribe?.()
           this.bookmarksUnsubscribe = subscribeToBookmarks(() => this.pushBookmarks())
 
-          // Subrayados (diagnósticos LSP, extensiones, búsqueda): push inicial
-          // —los diagnósticos suelen llegar ANTES que el módulo termine de
-          // cargar— y re-push en cada cambio de la store.
+          // Decoraciones (DOS capas: subrayado y fondo de línea): push inicial
+          // —los diagnósticos y el diff suelen llegar ANTES que el módulo
+          // termine de cargar— y re-push en cada cambio de la store. Un solo
+          // subscribe sirve para las dos capas porque `emit()` no distingue, y
+          // re-empujar de más es barato: la store ya descarta la lista igual
+          // antes de emitir (`sameDecorations` / `sameDiffLines`).
           this.pushUnderlines()
+          this.pushDiffDecorations()
+          // El modo sólo lectura pudo pedirse ANTES de que el módulo existiera
+          // (la tab de diff se monta y pide read-only en el mismo tick).
+          this.setReadOnly(this.isReadOnly)
           this.decorationsUnsubscribe?.()
-          this.decorationsUnsubscribe = subscribeToDecorations(() => this.pushUnderlines())
+          this.decorationsUnsubscribe = subscribeToDecorations(() => {
+            this.pushUnderlines()
+            this.pushDiffDecorations()
+          })
 
           // Puente al IDE de ESTA instancia: hover LSP + menú contextual
           // atados a este module/canvas/path (con N engines vivos no puede
@@ -579,6 +615,9 @@ export class InnertaEngine implements EditorEngine {
       // este push quedaban guardados en la store y sin pintar hasta que
       // pasara cualquier otra cosa (otro publish, un guardado, un undo).
       this.pushUnderlines()
+      // El diff de este archivo, por el mismo motivo: el push inicial corrió
+      // con `currentPath` nulo y mandó limpiar.
+      this.pushDiffDecorations()
       // Recién aquí existe el módulo: es LA llamada que hace que el primer
       // archivo abierto se pinte con la gramática de su extensión.
       this.startHighlightPipelines(req.path, req.content)
@@ -619,6 +658,40 @@ export class InnertaEngine implements EditorEngine {
     module.setUnderlines(packDecorations(getDecorations(this.currentPath)))
   }
 
+  /**
+   * Empuja el fondo de línea (diff) del archivo de ESTE engine.
+   *
+   * Hermano de `pushUnderlines`, y por el MISMO motivo: la store es por ARCHIVO
+   * (un diff de N archivos abiertos) pero cada módulo WASM es UNA vista, así
+   * que el diff de `a.ts` no puede pintarse sobre `b.ts`. Un array VACÍO es la
+   * orden de limpiar: es lo que se manda al abrir otro archivo, o el diff del
+   * anterior queda teñido.
+   */
+  private pushDiffDecorations(): void {
+    const module = this.module
+    if (!module || typeof module.setDiffDecorations !== 'function') return
+    if (!this.currentPath) {
+      module.setDiffDecorations([])
+      return
+    }
+    module.setDiffDecorations(packDiffDecorations(getDiffDecorations(this.currentPath)))
+  }
+
+  /**
+   * Modo sólo lectura del editor de ESTE engine.
+   *
+   * Lo usa la tab de diff: se lee, se selecciona y se copia, no se escribe. El
+   * motor lo aplica de verdad (bloquea tipeo, borrado, pegado, cortado y
+   * undo/redo); acá sólo se enruta. Se recuerda en el objeto porque el módulo
+   * WASM puede llegar después (mismo patrón que el resto de la config).
+   */
+  setReadOnly(readOnly: boolean): void {
+    this.isReadOnly = readOnly
+    if (this.module && typeof this.module.setReadOnly === 'function') {
+      this.module.setReadOnly(readOnly)
+    }
+  }
+
   setContent(text: string): void {
     if (this.ready && this.module) {
       this.module.setContent(text)
@@ -651,6 +724,7 @@ export class InnertaEngine implements EditorEngine {
       this.module.openFile(path, content)
       applyInnertaTheme(this.module)
       this.pushBookmarks()
+      this.pushDiffDecorations()
       requestAnimationFrame(() => this.bridge?.syncCursor())
     } else {
       this.pending.push({ path, content })

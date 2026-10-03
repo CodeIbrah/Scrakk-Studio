@@ -12,6 +12,7 @@ import { registerBuiltinFileHandlers } from '@features/fileHandlers'
 import { applyStartupTheme } from '@services/extensions/types/themes/bootstrap'
 import { bootExtensions } from '@services/extensions/boot'
 import { initDiagnosticsDecorations, initLspFileSync, initLspWorkspaceSync } from '@services/lsp'
+import { initDiffViews } from '@services/diff'
 
 // Módulos de estilo global (tokens) — se importan aquí, una sola vez.
 // Los colores NO viven en CSS: vienen de los theme.json del sistema
@@ -40,6 +41,9 @@ initLspFileSync()
 // Se arranca temprano: el canal escucha al store, que es el que ya recibe los
 // dos streams, así que no depende de que haya un editor montado.
 initDiagnosticsDecorations()
+// Las tabs de diff se limpian solas al cerrarlas: su fondo de línea vive en el
+// store de decoraciones y nadie más lo iba a bajar (memoria que se acumulaba).
+initDiffViews()
 
 const rootElement = document.getElementById('root')
 

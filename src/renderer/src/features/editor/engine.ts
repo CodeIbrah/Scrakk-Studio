@@ -25,6 +25,12 @@ export interface EditorEngine {
   setContent(text: string): void
   /** Abre un archivo: nombre para el chrome + contenido cargado por la app. */
   loadFile(path: string, content: string): void
+  /**
+   * Sólo lectura (opcional). Una tab de diff se lee, se selecciona y se copia,
+   * no se escribe: el motor lo aplica de verdad (bloquea tipeo, borrado,
+   * pegado, cortado y undo/redo). Un build sin el export lo ignora en silencio.
+   */
+  setReadOnly?(readOnly: boolean): void
   focus(): void
   /** Pausa el render (el buffer/módulo persisten). */
   dispose(): void

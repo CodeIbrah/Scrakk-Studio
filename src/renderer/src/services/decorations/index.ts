@@ -3,7 +3,8 @@
 // Licencia completa en LICENSE (Apache License 2.0).
 
 /**
- * Decoraciones del editor — subrayado por RANGO, de varias fuentes.
+ * Decoraciones del editor — dos capas (subrayado por rango y fondo de línea),
+ * de varias fuentes.
  *
  * ─────────────────────────────────────────────────────────────────────────
  * QUÉ ES
@@ -13,11 +14,16 @@
  * buscada— entra por el canal de decoraciones del motor
  * (`SetInnertaUnderlines`, sextupletes de ints: ver `docs/editor/decorations.md`).
  *
- * Este servicio es la ÚNICA puerta a ese canal. Nadie más habla con el motor:
+ * Este servicio es la ÚNICA puerta a esos canales. Nadie más habla con el motor:
  *
  *   LSP (diagnósticos)   ┐
  *   extensión del API    ├─→ este store ─→ cada engine Innerta vivo
- *   búsqueda, git, …     ┘    (por archivo, por fuente)
+ *   búsqueda, git, diff  ┘    (por archivo, por fuente)
+ *
+ * Son DOS capas porque el motor las tiene separadas: el subrayado va DEBAJO del
+ * texto (rango, con estilo de trazo) y el fondo de línea va DETRÁS y tiñe la
+ * línea entera, gutter incluido (rango de líneas, sin estilo: es un color). Un
+ * diff usa la segunda; un diagnóstico, la primera.
  *
  * ─────────────────────────────────────────────────────────────────────────
  * POR QUÉ MULTI-FUENTE (y no una lista sola)
@@ -311,6 +317,200 @@ export function packDecorations(decorations: readonly EditorDecoration[]): numbe
   return out
 }
 
+// ─────────────────────────────────────────────────────────────────────────
+// FONDO DE LÍNEA (diff) — la segunda capa
+// ─────────────────────────────────────────────────────────────────────────
+//
+// `EditorDecoration` es un RANGO subrayado: se dibuja DEBAJO del texto. Un
+// diff es otra cosa — tiñe la línea ENTERA (gutter incluido) por DETRÁS del
+// texto. El motor las tiene como dos capas distintas
+// (`SetInnertaUnderlines` vs `SetInnertaDiffDecorations`), así que acá se
+// guardan y se exponen por separado. Pero entran por la MISMA puerta y el
+// MISMO registro de fuentes: si el diff tuviera su propio store, volvería a
+// haber dos sistemas "decorations" — el bug que ya tuvo el Explorer, con dos
+// `subscribeToDecorations` homónimos.
+//
+// Por qué el color es OBLIGATORIO en una línea de diff (y opcional en una
+// decoración): el C++ no tiene paleta. Pinta exactamente el `rgba` que le
+// llega, y eso es lo que deja que quien pide el diff elija el color. El
+// default lo resuelve `diffLineColor` leyendo el tema.
+
+export type DiffLineKind = 'context' | 'added' | 'removed' | 'modified'
+
+/** Kind → código del motor. El orden lo define `SetInnertaDiffDecorations` (C++). */
+export const DIFF_KIND_CODES: Record<DiffLineKind, number> = {
+  context: 0,
+  added: 1,
+  removed: 2,
+  modified: 3
+}
+
+/** Código del motor → kind (la vuelta de `DIFF_KIND_CODES`). */
+export function diffKindFromCode(code: number | undefined): DiffLineKind {
+  switch (code) {
+    case 1:
+      return 'added'
+    case 2:
+      return 'removed'
+    case 3:
+      return 'modified'
+    default:
+      return 'context'
+  }
+}
+
+/** Un tramo de líneas teñidas. Las líneas son 0-based y `endLine` es INCLUSIVE. */
+export interface EditorDiffLine {
+  startLine: number
+  /** INCLUSIVO: un hunk es un rango de líneas, no una línea suelta. */
+  endLine: number
+  kind: DiffLineKind
+  /**
+   * Color 0xRRGGBBAA del TINTE. Lleva alfa a propósito: el texto se dibuja
+   * encima, así que un color opaco lo taparía.
+   */
+  color: number
+}
+
+/**
+ * Tinte por defecto de cada `kind`, leído del tema.
+ *
+ * Los fallbacks llevan alfa baja (0.18–0.22) porque son fondos de línea, no
+ * rellenos: el mismo color a alfa 1 tapa el código. `context` es transparente
+ * (no se pinta): existe para que un diff pueda mandar líneas sin cambio sin
+ * tener que omitirlas.
+ */
+export const DIFF_COLOR_VARS: Record<DiffLineKind, { cssVar: string; fallback: string }> = {
+  context: { cssVar: '--color-diff-context', fallback: 'rgba(0, 0, 0, 0)' },
+  added: { cssVar: '--color-diff-added', fallback: 'rgba(63, 185, 80, 0.20)' },
+  removed: { cssVar: '--color-diff-removed', fallback: 'rgba(248, 81, 73, 0.20)' },
+  modified: { cssVar: '--color-diff-modified', fallback: 'rgba(210, 153, 34, 0.20)' }
+}
+
+/**
+ * Color de un `kind`, con override opcional.
+ *
+ * El override es una cadena CSS (`#rrggbbaa`, `rgba(…)`) y gana sobre el tema:
+ * es el gancho por el que una fuente de diff dice "este rojo es mío" — la API
+ * de la tab de diff lo expone tal cual.
+ */
+export function diffLineColor(kind: DiffLineKind, override?: string): number {
+  if (override) return colorToRgba(override)
+  const spec = DIFF_COLOR_VARS[kind]
+  return themeColor(spec.cssVar, spec.fallback)
+}
+
+/** Igual que `bySource`, pero para la capa de fondo de línea. */
+const byDiffSource = new Map<string, Map<string, EditorDiffLine[]>>()
+
+/** Ver `sameDecorations`: dos listas iguales no emiten. */
+function sameDiffLines(a: readonly EditorDiffLine[], b: readonly EditorDiffLine[]): boolean {
+  if (a === b) return true
+  if (a.length !== b.length) return false
+  for (let index = 0; index < a.length; index += 1) {
+    const left = a[index]
+    const right = b[index]
+    if (
+      left.startLine !== right.startLine ||
+      left.endLine !== right.endLine ||
+      left.kind !== right.kind ||
+      left.color !== right.color
+    ) {
+      return false
+    }
+  }
+  return true
+}
+
+/**
+ * Reemplaza el fondo de línea de UNA fuente para UN archivo.
+ *
+ * Una lista vacía BORRA esa fuente. Un rango invertido o no finito se descarta
+ * acá y no en el motor: el que conoce las coordenadas es el que las valida
+ * (mismo criterio que `setDecorations`).
+ */
+export function setDiffDecorations(
+  sourceId: string,
+  path: string,
+  lines: readonly EditorDiffLine[]
+): void {
+  if (!sourceId || !path) return
+  const clean = lines
+    .filter(
+      (entry) =>
+        Number.isFinite(entry.startLine) &&
+        Number.isFinite(entry.endLine) &&
+        entry.startLine >= 0 &&
+        entry.endLine >= entry.startLine
+    )
+    .map((entry) => ({ ...entry, startLine: Math.floor(entry.startLine), endLine: Math.floor(entry.endLine) }))
+
+  const existing = byDiffSource.get(sourceId)
+  const previous = existing?.get(path)
+  if (previous && clean.length === 0) {
+    existing!.delete(path)
+    if (existing!.size === 0) byDiffSource.delete(sourceId)
+    emit()
+    return
+  }
+  if (previous && sameDiffLines(previous, clean)) return
+  if (clean.length === 0) return
+
+  const bucket = existing ?? new Map<string, EditorDiffLine[]>()
+  bucket.set(path, clean)
+  byDiffSource.set(sourceId, bucket)
+  emit()
+}
+
+/** Baja el fondo de línea de una fuente: de un archivo, o de todos. */
+export function clearDiffDecorations(sourceId: string, path?: string): void {
+  const bucket = byDiffSource.get(sourceId)
+  if (!bucket) return
+  if (path) {
+    if (!bucket.delete(path)) return
+    if (bucket.size === 0) byDiffSource.delete(sourceId)
+  } else {
+    byDiffSource.delete(sourceId)
+  }
+  emit()
+}
+
+/** Fondo de línea de un archivo, de todas las fuentes (sin agrupar). */
+export function getDiffDecorations(path: string): EditorDiffLine[] {
+  const out: EditorDiffLine[] = []
+  for (const bucket of byDiffSource.values()) {
+    const list = bucket.get(path)
+    if (list) out.push(...list)
+  }
+  return out
+}
+
+/** Fuentes con fondo de línea en un archivo (diagnóstico / "apagar una fuente"). */
+export function getDiffSources(path: string): string[] {
+  const out: string[] = []
+  for (const [sourceId, bucket] of byDiffSource.entries()) {
+    if (bucket.has(path)) out.push(sourceId)
+  }
+  return out.sort()
+}
+
+/**
+ * Líneas → cuartetos `(startLine, endLine, kind, rgba)`.
+ *
+ * Es el formato que espera `SetInnertaDiffDecorations` y se empaqueta acá (y no
+ * en cada llamador) por el mismo motivo que `packDecorations`: es lo que se
+ * rompe en silencio si alguien arma el array con otro orden.
+ */
+export function packDiffDecorations(lines: readonly EditorDiffLine[]): number[] {
+  const out: number[] = []
+  for (const entry of lines) {
+    const startLine = Math.max(0, Math.floor(entry.startLine))
+    const endLine = Math.max(startLine, Math.floor(entry.endLine))
+    out.push(startLine, endLine, DIFF_KIND_CODES[entry.kind] ?? 0, entry.color | 0)
+  }
+  return out
+}
+
 export function subscribeToDecorations(listener: () => void): () => void {
   listeners.add(listener)
   return () => {
@@ -331,5 +531,6 @@ export function themeColor(cssVar: string, fallback: string): number {
 /** Solo tests: resetea memoria + listeners. */
 export function _resetDecorationsStoreForTests(): void {
   bySource.clear()
+  byDiffSource.clear()
   listeners.clear()
 }
