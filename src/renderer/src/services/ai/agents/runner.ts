@@ -31,7 +31,22 @@ export interface RunAgentInput {
   /** Tool calls emitidas por el subagente. */
   onToolCalls?: (calls: ToolCall[]) => void
   /** Resultado de una tool call del subagente. */
-  onToolResult?: (toolCallId: string, result: { content: string; success: boolean; blocked?: boolean }) => void
+  onToolResult?: (
+    toolCallId: string,
+    result: {
+      content: string
+      success: boolean
+      blocked?: boolean
+      filePath?: string
+      /**
+       * Par antes/después que devuelven los tools de edición. Es lo que le
+       * permite a la card abrir el diff sin releer nada: sin reenviarlo, el
+       * `onOpen` de la tool recibe `undefined` y el click no hace nada.
+       */
+      originalContent?: string
+      modifiedContent?: string
+    }
+  ) => void
   sessionId?: string | null
 }
 
@@ -217,7 +232,13 @@ export async function runHeadlessAgent(input: RunAgentInput): Promise<RunAgentRe
         input.onToolResult?.(result.tool_call_id, {
           content: result.content,
           success: execution.success,
-          blocked: execution.blocked
+          blocked: execution.blocked,
+          filePath: execution.filePath,
+          // El par viejo/nuevo de los tools de edición. Se reenviaba sólo
+          // content/success/blocked, así que la card recibía `undefined` y su
+          // `onOpen` (el que abre el diff) cortaba sin hacer nada.
+          originalContent: execution.originalContent,
+          modifiedContent: execution.modifiedContent
         })
       }
     }

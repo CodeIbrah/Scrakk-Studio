@@ -187,10 +187,18 @@ published are not edited. The file goes per version:
   read-only flag. The mode is re-applied on activation because it lives in the
   **engine** (one WASM module per panel), and switching tabs inside a panel
   otherwise left the diff's read-only stuck on the next file.
-- **The AI edit tools open their diff on click**: `write_file`, `append_file`
-  and `replace_in_file` declare `onOpen` and share one handler — their result
-  already carries `originalContent`/`modifiedContent`, so the diff needs neither
-  git nor disk. `ToolOpenContext` now forwards that pair to the tool.
+- **The AI edit tools open their diff on click**: `write_file`, `append_file`,
+  `replace_in_file` and `delete_file` declare `onOpen` and share one handler, so
+  the diff needs neither git nor disk. `delete_file` reads the file **before**
+  deleting it, and a deletion renders what the file **had**, entirely marked as
+  removed — a single-side buffer cannot show text that is gone.
+- **…and the results actually carry the texts**: the tool results reached the
+  cards with only `content`/`success`/`blocked`. **Both** chat paths — the main
+  service and the subagent runner — dropped `originalContent`/`modifiedContent`,
+  so the card's `onOpen` received `undefined` and **the click did nothing**, with
+  no error anywhere. They are forwarded now; the wiring test asserts it in both
+  paths precisely because one runner fixing it is not enough.
+  `ToolOpenContext` now carries that pair to the tool.
 - **A synthetic path is not stolen by a format viewer**: the handler match ran
   the extension rules on ANY path, so the diff tab of a `readme.md` was claimed
   by the markdown viewer and the editor never appeared (same for any format

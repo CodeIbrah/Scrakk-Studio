@@ -48,7 +48,7 @@ import {
   type EditorDiffLine
 } from '@services/decorations'
 import { notify } from '@services/notifications'
-import { diffLines, summarizeDiff, type DiffHunk, type DiffSummary } from './lineDiff'
+import { diffLines, splitLines, summarizeDiff, type DiffHunk, type DiffSummary } from './lineDiff'
 
 export type { DiffHunk, DiffHunkKind, DiffSummary } from './lineDiff'
 export { diffLines, summarizeDiff } from './lineDiff'
@@ -112,14 +112,36 @@ export function listDiffProviders(): string[] {
 /** Proveedor por defecto: pares de texto en memoria. */
 export const CONTENT_DIFF_PROVIDER = 'content'
 
-// El proveedor `content` es el caso de los tools de edición de la IA: el
-// resultado de `write_file`/`replace_in_file` ya trae el texto de antes y el de
-// después, así que el diff no necesita git ni disco.
-registerDiffProvider(CONTENT_DIFF_PROVIDER, (request) => {
+/**
+ * Diff de un par de textos en memoria.
+ *
+ * Es el caso de los tools de edición de la IA: el resultado de
+ * `write_file`/`replace_in_file` ya trae el texto de antes y el de después, así
+ * que no hace falta git ni disco.
+ *
+ * Es una función con nombre (y no un closure suelto) para que el registro
+ * inicial y el reset de tests usen LA MISMA implementación: dos copias es cómo
+ * una de las dos se queda sin el caso del borrado.
+ */
+function contentDiffProvider(request: DiffRequest): DiffPayload {
   const before = request.before ?? ''
   const after = request.after ?? ''
+  // BORRADO TOTAL (una eliminación manda el "después" vacío): el buffer sólo
+  // puede mostrar un lado, así que la tab muestra lo que HABÍA, todo marcado
+  // como quitado. Sin este caso, una eliminación salía como "una línea
+  // modificada" — que no dice nada de lo que se borró.
+  if (after === '' && before !== '') {
+    const lines = splitLines(before)
+    return {
+      content: before,
+      hunks:
+        lines.length > 0 ? [{ startLine: 0, endLine: lines.length - 1, kind: 'removed' }] : []
+    }
+  }
   return { content: after, hunks: diffLines(before, after) }
-})
+}
+
+registerDiffProvider(CONTENT_DIFF_PROVIDER, contentDiffProvider)
 
 export interface OpenDiffTabOptions {
   /** Path real del archivo (el diff es "de este archivo"). */
@@ -224,9 +246,5 @@ export function _resetDiffForTests(): void {
   providers.clear()
   sourceByPath.clear()
   diffSeq = 0
-  registerDiffProvider(CONTENT_DIFF_PROVIDER, (request) => {
-    const before = request.before ?? ''
-    const after = request.after ?? ''
-    return { content: after, hunks: diffLines(before, after) }
-  })
+  registerDiffProvider(CONTENT_DIFF_PROVIDER, contentDiffProvider)
 }

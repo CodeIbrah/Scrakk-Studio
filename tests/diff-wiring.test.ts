@@ -97,18 +97,40 @@ describe('la tab de diff es de archivo: contenido provisto + sólo lectura', () 
 })
 
 describe('las tools de edición abren el diff al clickearse', () => {
-  it('las tres comparten el mismo handler (no triplicado)', () => {
-    for (const tool of ['write_file', 'append_file', 'replace_in_file']) {
+  it('las cuatro comparten el mismo handler (no triplicado)', () => {
+    for (const tool of ['write_file', 'append_file', 'replace_in_file', 'delete_file']) {
       const src = read(`src/renderer/src/services/ai/tools/${tool}/index.tsx`)
       expect(src).toContain('onOpen: openEditToolDiff')
       expect(src).toContain("from '@services/diff/toolOpen'")
     }
   })
 
+  it('delete_file captura el contenido ANTES de borrar (si no, no hay diff)', () => {
+    const src = read('src/renderer/src/services/ai/tools/delete_file/executor.ts')
+    expect(src).toMatch(/fs\.readFile\(fullPath\)/)
+    expect(src).toContain('originalContent')
+    expect(src).toContain('modifiedContent:')
+    // La lectura tiene que ir antes del borrado.
+    expect(src.indexOf('readFile')).toBeLessThan(src.indexOf('deleteFile'))
+  })
+
   it('el shell le pasa el par viejo/nuevo al `onOpen` de la tool', () => {
     const shell = read(SHELL)
     expect(shell).toContain('originalContent: execution.originalContent')
     expect(shell).toContain('modifiedContent: execution.modifiedContent')
+  })
+
+  it('los DOS caminos del chat reenvían el par viejo/nuevo (no sólo la card)', () => {
+    // El chat principal y el subagente tienen runners distintos. Si uno descarta
+    // los campos, el `onOpen` recibe `undefined` y el click NO hace nada — que
+    // es exactamente lo que pasaba antes de este arreglo.
+    const service = read('src/renderer/src/services/chat/chat.service.ts')
+    expect(service).toContain('originalContent: execution.originalContent')
+    expect(service).toContain('modifiedContent: execution.modifiedContent')
+
+    const runner = read('src/renderer/src/services/ai/agents/runner.ts')
+    expect(runner).toContain('originalContent: execution.originalContent')
+    expect(runner).toContain('modifiedContent: execution.modifiedContent')
   })
 })
 

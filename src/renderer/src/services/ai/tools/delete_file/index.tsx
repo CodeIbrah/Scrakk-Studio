@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { DeleteFileCard } from './visual'
 import displayCss from './visual/DeleteFileCard.css?inline'
+import { openEditToolDiff } from '@services/diff/toolOpen'
 
 export const deleteFileTool: Tool = {
   name: 'delete_file',
@@ -27,6 +28,8 @@ export const deleteFileTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <DeleteFileCard args={args} result={result} status={status} />,
+    // Click en la fila → tab de diff (el archivo borrado, todo en rojo).
+    onOpen: openEditToolDiff,
   },
   execute,
 }

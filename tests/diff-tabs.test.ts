@@ -128,6 +128,24 @@ describe('openDiffTab: abre una tab de archivo con el cambio', () => {
 
     closeFile(tabPath)
   })
+
+  it('una eliminación muestra lo que HABÍA, todo marcado como quitado', async () => {
+    _resetDecorationsStoreForTests()
+    _resetDiffForTests()
+
+    // `delete_file` manda el "después" vacío. El buffer sólo puede mostrar un
+    // lado, así que la tab muestra el contenido borrado, entero en rojo.
+    await openDiffTab({ path: '/w/borrado.ts', before: 'a\nb\nc\n', after: '' })
+    const tabPath = lastTabPath()
+    expect(getProvidedContent(tabPath)?.text).toBe('a\nb\nc\n')
+    expect(getDiffDecorations(tabPath)).toEqual([
+      expect.objectContaining({ startLine: 0, endLine: 2, kind: 'removed' })
+    ])
+    // Y sigue siendo de sólo lectura: un archivo borrado no se edita.
+    expect(getProvidedContent(tabPath)?.readOnly).toBe(true)
+
+    closeFile(tabPath)
+  })
 })
 
 describe('openDiffTab: quién da las órdenes', () => {

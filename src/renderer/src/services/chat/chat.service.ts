@@ -218,7 +218,21 @@ export function createLlmChatService(): ChatService {
               // Ejecuta secuencialmente (patrón scrakk: for, no paralelo).
               // El signal del UI llega a las tools: las pendientes se marcan
               // "[Aborted by user]" en vez de correr.
-              let executions: Array<{ result: { tool_call_id: string; content: string }; execution: { success: boolean; blocked?: boolean; runId?: string } }>
+              let executions: Array<{
+                result: { tool_call_id: string; content: string }
+                execution: {
+                  success: boolean
+                  blocked?: boolean
+                  runId?: string
+                  filePath?: string
+                  /**
+                   * Par antes/después de los tools de edición. Viaja hasta la
+                   * card del chat para que su `onOpen` pueda abrir el diff.
+                   */
+                  originalContent?: string
+                  modifiedContent?: string
+                }
+              }>
               try {
                 const result = await executeTools(deduped, input.sessionId, input.signal)
                 executions = result
@@ -243,7 +257,13 @@ export function createLlmChatService(): ChatService {
                   content: toolResult.content,
                   success: execution.success,
                   blocked: execution.blocked,
-                  runId: execution.runId
+                  runId: execution.runId,
+                  filePath: execution.filePath,
+                  // El par viejo/nuevo de los tools de edición. Reenviar sólo
+                  // content/success/blocked dejaba la card con `undefined` y su
+                  // `onOpen` (el que abre la tab de diff) cortaba sin hacer nada.
+                  originalContent: execution.originalContent,
+                  modifiedContent: execution.modifiedContent
                 })
               }
             }
