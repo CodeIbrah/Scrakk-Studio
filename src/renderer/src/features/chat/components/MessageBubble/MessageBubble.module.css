@@ -43,6 +43,13 @@
    la esquina inferior derecha de la burbuja del usuario (borde derecho del
    contenedor, menos el gutter del scrollbar), así la lectura llega más lejos. */
 .bubbleAssistant {
+  /* Ocupa TODO el ancho, no shrink-to-fit. Sin esto la burbuja mide lo que mide
+     su contenido, y una tabla al 100% adentro se resuelve contra ese ancho: si
+     las celdas son cortas, la tabla sale angosta y el resto del panel queda
+     VACÍO aunque sobre lugar de sobra (la queja real). `min-width: 0` deja que
+     el contenedor con scroll de la tabla se encoja en vez de desbordar. */
+  flex: 1 1 auto;
+  min-width: 0;
   max-width: 100%;
   background: transparent;
   border: none;

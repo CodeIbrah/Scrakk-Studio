@@ -164,9 +164,15 @@
 .tbl {
   border-collapse: separate;
   border-spacing: 0;
-  width: 100%;
+  /* La tabla usa su ancho NATURAL (el que pide el contenido) y crece hasta el
+     100% del contenedor. Con `width: 100%` a secas nunca puede EXCEDER el
+     contenedor, así que en vez de scrollear se APLASTA: las columnas se
+     reparten el ancho disponible y el texto se parte en pedazos. Con
+     `max-content` + `min-width: 100%` llena el panel cuando el natural entra, y
+     el wrapper scrollea cuando no. */
+  width: max-content;
+  min-width: 100%;
   font-size: 13px;
-  display: table;
   table-layout: auto;
 }
 

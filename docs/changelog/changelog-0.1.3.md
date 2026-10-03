@@ -65,6 +65,15 @@ published are not edited. The file goes per version:
   assistant bubble's padding (4px) and the 8px gap between messages. The
   between-messages gap is now `--space-1` (4px) and a message's inner gap is 0
   (the bubble already carries its own padding).
+- **Markdown tables fill the panel instead of shrinking**: two geometry bugs
+  stacked, and neither threw. The assistant bubble was shrink-to-fit
+  (`flex-basis: auto`), so a table inside was measured against the **content**
+  width — with short cells the table came out narrow and the rest of the panel
+  stayed **empty**. And `.tbl { width: 100% }` stops a table from ever exceeding
+  its container, so instead of scrolling it **squashed** the columns. The bubble
+  now fills the row (`flex: 1 1 auto; min-width: 0`) and the table uses its
+  natural width up to 100% (`width: max-content; min-width: 100%`): it fills the
+  panel when it fits and the wrapper scrolls when it does not.
 - **Tool rows highlight on hover and open their result on click**, with the
   decision living in **each tool's folder**, not in the chat block:  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
     button with hover and, on click, opens the tool's **result in a modal** (the
