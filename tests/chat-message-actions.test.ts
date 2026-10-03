@@ -104,6 +104,8 @@ describe('editar es funcional, no decorativo', () => {
     // ver el chat a través de la burbuja.
     expect(block).toContain('linear-gradient(var(--color-active), var(--color-active))')
     expect(block).toContain('var(--color-bg)')
+    // Y una sombra hacia abajo (offset y positivo), como el resto de la app.
+    expect(block).toMatch(/box-shadow:\s*0 2px 6px rgba\(0, 0, 0,/)
   })
 
   it('editar un mensaje del USUARIO reenvía (lo de después ya no responde a ese texto)', () => {

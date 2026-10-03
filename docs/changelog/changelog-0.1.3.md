@@ -129,7 +129,8 @@ published are not edited. The file goes per version:
   `background: var(--color-active)` let the chat show through the bubble. It is
   composited over the background now (`linear-gradient(tint, tint), --color-bg`),
   which also makes the anchored question opaque enough to cover what scrolls
-  behind it.
+  behind it — helped by a shadow towards the bottom (`0 2px 6px rgba(0,0,0,·)`),
+  so the pinned bubble reads as floating over the reply.
 - **The last question can be edited while the model is answering**: it is the one
   you are looking at, and its edit button used to disappear for the whole
   stream. Editing it ABORTS the stream and waits for it to close before

@@ -78,6 +78,10 @@
   color: var(--color-text);
   border: 1px solid transparent;
   white-space: pre-wrap;
+  /* Sombra hacia ABAJO: despega la burbuja del chat y, cuando la pregunta queda
+     anclada arriba, la separa del contenido que pasa por detrás. Mismo lenguaje
+     que el resto de la app (`rgba(0,0,0,·)` con offset). */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
 }
 
 /* Mensajes de la IA: texto plano, sin fondo ni borde. El ancho llega hasta
