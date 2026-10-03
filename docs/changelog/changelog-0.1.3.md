@@ -191,6 +191,11 @@ published are not edited. The file goes per version:
   and `replace_in_file` declare `onOpen` and share one handler — their result
   already carries `originalContent`/`modifiedContent`, so the diff needs neither
   git nor disk. `ToolOpenContext` now forwards that pair to the tool.
+- **A synthetic path is not stolen by a format viewer**: the handler match ran
+  the extension rules on ANY path, so the diff tab of a `readme.md` was claimed
+  by the markdown viewer and the editor never appeared (same for any format
+  sharing the diffed file's extension). A path with a scheme other than `file`
+  is now only claimed by a handler that declares that scheme.
 
 ### Fixes (themes)
 - **The theme validator no longer reports non-color keys as invalid colors**:

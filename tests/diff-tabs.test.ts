@@ -51,6 +51,10 @@ import {
   unregisterDiffProvider
 } from '../src/renderer/src/services/diff'
 import { closeFile, getEditorFiles } from '../src/renderer/src/features/editor/editorBus'
+import {
+  fileHandlerRegistry,
+  registerBuiltinFileHandlers
+} from '../src/renderer/src/features/fileHandlers'
 import { getProvidedContent } from '../src/renderer/src/features/editor/providedContent'
 import {
   _resetDecorationsStoreForTests,
@@ -195,6 +199,17 @@ describe('initDiffViews: la tab cerrada no deja basura', () => {
     closeFile(tabPath)
     // El bus emite al cerrar y el suscriptor limpia esa fuente.
     expect(getDiffSources(tabPath)).toEqual([])
+  })
+})
+
+describe('el path sintético no lo roba un visor de formato', () => {
+  it('un diff de markdown NO abre el visor de markdown (va al editor)', () => {
+    registerBuiltinFileHandlers()
+    // Sin el fix de `matches`, el handler de markdown ganaba por EXTENSIÓN y la
+    // tab de diff salía como visor en vez de editor.
+    expect(fileHandlerRegistry.resolve(`${DIFF_SCHEME}://d1/readme.md`)).toBeNull()
+    // El archivo real sigue resolviéndose: no se rompió el matcheo normal.
+    expect(fileHandlerRegistry.resolve('/w/readme.md')?.id).toBe('markdown')
   })
 })
 

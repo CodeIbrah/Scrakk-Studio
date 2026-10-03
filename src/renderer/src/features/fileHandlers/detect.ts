@@ -64,7 +64,18 @@ export function matchesGlob(basename: string, glob: string): boolean {
 /** ¿El handler agarra este archivo? */
 export function matches(handler: FileHandler, path: string): boolean {
   const m: FileHandlerMatch = handler.match
-  if (m.scheme && m.scheme !== schemeOf(path)) return false
+  const scheme = schemeOf(path)
+  if (m.scheme) {
+    if (m.scheme !== scheme) return false
+  } else if (scheme !== 'file') {
+    // Un handler que matchea por EXTENSIÓN no reclama un path sintético. Sin
+    // esto, la tab de diff de un `readme.md` (`scrakk-diff://…/readme.md`) la
+    // ganaba el visor de markdown y el editor nunca aparecía; lo mismo con
+    // cualquier formato que comparta la extensión del archivo diffeado. Un path
+    // con esquema propio pertenece a quien lo inventó, o a un handler que lo
+    // declare explícitamente.
+    return false
+  }
   if (m.extensions?.length && !m.extensions.includes(extensionOf(path))) return false
   if (m.globs?.length && !m.globs.some((g) => matchesGlob(baseNameOf(path), g))) return false
   if (m.languageIds?.length) {
