@@ -102,10 +102,13 @@ describe('editar es funcional, no decorativo', () => {
     // En scrakk-night (el tema por defecto) `--color-active` es
     // `rgba(255, 255, 255, 0.12)`: un `background: var(--color-active)` dejaba
     // ver el chat a través de la burbuja.
-    expect(block).toContain('linear-gradient(var(--color-active), var(--color-active))')
-    expect(block).toContain('var(--color-bg)')
-    // Y una sombra hacia abajo (offset y positivo), como el resto de la app.
-    expect(block).toMatch(/box-shadow:\s*0 2px 6px rgba\(0, 0, 0,/)
+    // Mismo fondo que el input: opaco y siguiendo al tema (el tinte
+    // `--color-active` de scrakk-night es rgba(255,255,255,0.12) y dejaba ver
+    // el chat a través).
+    expect(block).toContain('background: var(--activitybar-bg, var(--color-surface))')
+    // Y una sombra hacia abajo con el peso de la del popover del input, con
+    // spread negativo para que el recorte lateral de la lista no la corte.
+    expect(block).toMatch(/box-shadow:\s*0 8px 24px -8px rgba\(0, 0, 0,/)
   })
 
   it('editar un mensaje del USUARIO reenvía (lo de después ya no responde a ese texto)', () => {
