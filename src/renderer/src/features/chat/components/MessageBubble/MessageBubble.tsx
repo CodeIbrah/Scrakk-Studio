@@ -88,58 +88,63 @@ export const MessageBubble = memo(function MessageBubble({
 
   return (
     <div className={`${styles.row} ${rowClass}`}>
-      <div className={`${styles.bubble} ${bubbleClass}`}>
-        {editing ? (
-          <div className={styles.editBox}>
-            <textarea
-              className={styles.editArea}
-              value={draft}
-              onChange={(event) => setDraft(event.target.value)}
-              onKeyDown={onEditKeyDown}
-              // Alto según las líneas reales (acotado): editar un párrafo largo
-              // no arranca en un input de una línea.
-              rows={Math.min(12, Math.max(2, draft.split('\n').length))}
-              autoFocus
-              aria-label={t('chat.editar.mensaje')}
-            />
-            <div className={styles.editActions}>
-              <button
-                type="button"
-                className={styles.editCancel}
-                onClick={() => setEditing(false)}
-              >
-                {t('chat.cancelar.edicion')}
-              </button>
-              <button
-                type="button"
-                className={styles.editSave}
-                onClick={saveEdit}
-                disabled={!draft.trim()}
-              >
-                {t('chat.guardar.cambios')}
-              </button>
+      {/* La PILA (burbuja + sus acciones) es el ítem de la fila: así las
+          acciones quedan DEBAJO de la burbuja y no encima de su fondo (en el
+          mensaje del usuario se veían sobre el color). */}
+      <div className={`${styles.stack} ${isUser ? styles.stackUser : styles.stackAssistant}`}>
+        <div className={`${styles.bubble} ${bubbleClass}`}>
+          {editing ? (
+            <div className={styles.editBox}>
+              <textarea
+                className={styles.editArea}
+                value={draft}
+                onChange={(event) => setDraft(event.target.value)}
+                onKeyDown={onEditKeyDown}
+                // Alto según las líneas reales (acotado): editar un párrafo largo
+                // no arranca en un input de una línea.
+                rows={Math.min(12, Math.max(2, draft.split('\n').length))}
+                autoFocus
+                aria-label={t('chat.editar.mensaje')}
+              />
+              <div className={styles.editActions}>
+                <button
+                  type="button"
+                  className={styles.editCancel}
+                  onClick={() => setEditing(false)}
+                >
+                  {t('chat.cancelar.edicion')}
+                </button>
+                <button
+                  type="button"
+                  className={styles.editSave}
+                  onClick={saveEdit}
+                  disabled={!draft.trim()}
+                >
+                  {t('chat.guardar.cambios')}
+                </button>
+              </div>
             </div>
-          </div>
-        ) : isUser ? (
-          message.content
-        ) : pending ? (
-          // Mientras streamea NO se parsea markdown (react-markdown + Prism es
-          // lo más caro): texto plano que respeta saltos. Al terminar la ronda
-          // se pinta markdown una sola vez.
-          <div className={styles.streamText}>{message.content}</div>
-        ) : (
-          <Markdown content={message.content} />
-        )}
+          ) : isUser ? (
+            message.content
+          ) : pending ? (
+            // Mientras streamea NO se parsea markdown (react-markdown + Prism es
+            // lo más caro): texto plano que respeta saltos. Al terminar la ronda
+            // se pinta markdown una sola vez.
+            <div className={styles.streamText}>{message.content}</div>
+          ) : (
+            <Markdown content={message.content} />
+          )}
 
-        {/* Tool calls DESPUÉS del texto: una tool que el modelo llama tras
-            escribir aparece debajo de lo que escribió, no encima. */}
-        {hasToolCalls ? (
-          <ToolCallsBlock
-            toolCalls={message.tool_calls!}
-            toolResults={message.tool_results}
-            status={pending ? 'running' : 'success'}
-          />
-        ) : null}
+          {/* Tool calls DESPUÉS del texto: una tool que el modelo llama tras
+              escribir aparece debajo de lo que escribió, no encima. */}
+          {hasToolCalls ? (
+            <ToolCallsBlock
+              toolCalls={message.tool_calls!}
+              toolResults={message.tool_results}
+              status={pending ? 'running' : 'success'}
+            />
+          ) : null}
+        </div>
 
         {showActions ? (
           <MessageActions

@@ -86,7 +86,12 @@ published are not edited. The file goes per version:
 - **Every message now has copy AND edit**: the action bar existed only for the
   assistant's final text and only to copy. It is now on **both** roles and
   gained an **edit** button that turns the bubble into an inline editor (save
-  with the button or Cmd/Ctrl+Enter, cancel with Escape). Saving is functional,
+  with the button or Cmd/Ctrl+Enter, cancel with Escape). The bar sits **below**
+  the bubble: it used to be inside it, so on the user's message the icons landed
+  on the bubble's colored background. The row is now a stack (bubble + actions)
+  — which also moved the user's 60% width cap to the stack and the assistant's
+  "fill the row" to it, so both the cap and the table fix keep holding.
+  Saving is functional,
   not decorative: editing a **user** message updates it and **re-sends** — what
   followed answered a text that no longer exists, so it is dropped and the
   answer is re-requested, the same criterion as Regenerate — while editing an

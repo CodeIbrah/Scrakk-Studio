@@ -17,6 +17,30 @@
   justify-content: flex-start;
 }
 
+/* Pila burbuja + acciones del mensaje. Es el ítem de la fila (no la burbuja):
+   así las acciones quedan DEBAJO de la burbuja en vez de dentro de su fondo. */
+.stack {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* IA: la pila ocupa el ancho de la fila. Es lo que le da a la burbuja (y a una
+   tabla adentro) un ancho real del que agarrarse, en vez de shrink-to-fit. */
+.stackAssistant {
+  flex: 1 1 auto;
+  align-items: flex-start;
+}
+
+/* Usuario: la burbuja se ajusta a su texto y el 60% es el tope — el límite va
+   en la PILA para que las acciones entren en la misma caja. Alineadas al borde
+   derecho, como la burbuja. */
+.stackUser {
+  align-items: flex-end;
+  max-width: 60%;
+}
+
 .bubble {
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
@@ -32,7 +56,8 @@
    pre-wrap solo aquí: el texto plano del usuario conserva sus saltos de
    línea. El markdown de la IA NO (los \n se duplicarían con remark-breaks). */
 .bubbleUser {
-  max-width: 60%;
+  /* El tope del 60% vive en `.stackUser` (la pila incluye las acciones). */
+  max-width: 100%;
   background: var(--color-active);
   color: var(--color-text);
   border: 1px solid transparent;
@@ -43,12 +68,11 @@
    la esquina inferior derecha de la burbuja del usuario (borde derecho del
    contenedor, menos el gutter del scrollbar), así la lectura llega más lejos. */
 .bubbleAssistant {
-  /* Ocupa TODO el ancho, no shrink-to-fit. Sin esto la burbuja mide lo que mide
-     su contenido, y una tabla al 100% adentro se resuelve contra ese ancho: si
-     las celdas son cortas, la tabla sale angosta y el resto del panel queda
-     VACÍO aunque sobre lugar de sobra (la queja real). `min-width: 0` deja que
-     el contenedor con scroll de la tabla se encoja en vez de desbordar. */
-  flex: 1 1 auto;
+  /* `stretch` y NO `flex: 1`: la burbuja ahora vive en una columna flex, donde
+     `flex-grow` crecería en ALTO. Lo que se estira es el ancho — que es lo que
+     hace que una tabla adentro llene el panel en vez de salir angosta.
+     `min-width: 0` deja que el wrapper con scroll de la tabla se encoja. */
+  align-self: stretch;
   min-width: 0;
   max-width: 100%;
   background: transparent;

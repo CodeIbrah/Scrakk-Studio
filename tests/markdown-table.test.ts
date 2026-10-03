@@ -49,15 +49,29 @@ describe('tablas de markdown', () => {
 
   it('la burbuja de la IA ocupa todo el ancho (no shrink-to-fit)', () => {
     const css = read(BUBBLE_CSS)
+    // El ancho lo aporta la PILA (burbuja + acciones), que es el ítem de la fila.
+    const stack = css.slice(
+      css.indexOf('.stackAssistant {'),
+      css.indexOf('}', css.indexOf('.stackAssistant {'))
+    )
+    expect(stack).toContain('flex: 1 1 auto')
+    // Y la burbuja se estira a lo ancho de esa pila.
     const block = css.slice(
       css.indexOf('.bubbleAssistant {'),
       css.indexOf('}', css.indexOf('.bubbleAssistant {'))
     )
-    // Sin el grow/flex, la burbuja mide lo que mide su contenido y la tabla no
-    // tiene contra qué llenar el panel.
-    expect(block).toContain('flex: 1 1 auto')
+    expect(block).toContain('align-self: stretch')
     // Deja que el wrapper con scroll se encoja en vez de desbordar la fila.
     expect(block).toContain('min-width: 0')
+  })
+
+  it('las acciones van DEBAJO de la burbuja, no dentro de su fondo', () => {
+    const bubble = read('src/renderer/src/features/chat/components/MessageBubble/MessageBubble.tsx')
+    // El `MessageActions` tiene que ser hermano de la burbuja dentro de la pila:
+    // si vuelve adentro, en el mensaje del usuario cae sobre el color.
+    const stack = bubble.slice(bubble.indexOf('styles.stack'))
+    expect(stack.indexOf('styles.bubble')).toBeLessThan(stack.indexOf('<MessageActions'))
+    expect(stack).toContain('styles.stackUser')
   })
 
   it('la tabla es un <table> real dentro del contenedor con scroll', () => {
