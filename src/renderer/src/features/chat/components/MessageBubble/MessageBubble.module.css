@@ -73,6 +73,10 @@
   --msg-actions-justify: flex-end;
   /* Sin aire arriba: van en la MISMA fila, no debajo. */
   --msg-actions-margin-top: 0;
+  /* El padding vertical al mínimo: el alto ya lo fija la línea (los botones
+     miden lo que una línea), así que cada píxel de padding es alto de burbuja
+     de más. El horizontal se queda: el texto no tiene que pegarse al borde. */
+  padding: var(--space-1) var(--space-3);
   /* Mismo fondo que el composer (`--activitybar-bg`, con el surface de
      fallback): sigue al tema y es OPACO. */
   background: var(--activitybar-bg, var(--color-surface));

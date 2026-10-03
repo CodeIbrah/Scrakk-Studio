@@ -136,6 +136,13 @@ published are not edited. The file goes per version:
   stream. Editing it ABORTS the stream and waits for it to close before
   re-sending — without waiting, the aborted run's `finally` would clear the new
   stream's busy flag and both would write the same session.
+- **The user's actions sit on the message's row, so the bubble is one line**:
+  inside the bubble they used to have their OWN row, which added a full row of
+  height to every message. They are flex items of the bubble now — centred
+  vertically and pushed to the right edge — and the bubble's vertical padding is
+  at its minimum, so a one-line message gives a one-line bubble. The buttons are
+  also the composer's `IconButton` (`shape="rounded"`, `size="sm"`), nudged 5px
+  right to line up with the bubble's edge.
 - **"Back to the message" on the anchored question**: an `arrow-up` action that
   scrolls to the question's real place, which is where its answer begins. It is
   the way back when you are deep in a long reply with the question pinned at the
