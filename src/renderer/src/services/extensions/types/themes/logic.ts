@@ -211,6 +211,16 @@ function buildCssVars(def: ThemeDefinition): string {
   // que elige su ámbar tiene que verse en los tres lados.
   push(c.warning, '--color-warning')
   push(c.info, '--color-info')
+  // `success` estaba en el schema y NO se emitía: 11 lugares del CSS caían a
+  // `var(--color-success, #3fb950)`, o sea un verde hardcodeado que ignora el
+  // tema. Es el mismo caso que `warning`/`info`, que ya se arreglaron así.
+  push(c.success, '--color-success')
+  // Tintes del DIFF (fondo de línea del editor). El motor pinta exactamente el
+  // color que le llega, sin paleta: estos tokens son el default que el store de
+  // decoraciones lee, y llevan alfa porque el texto va encima.
+  push(c.diffAdded, '--color-diff-added')
+  push(c.diffRemoved, '--color-diff-removed')
+  push(c.diffModified, '--color-diff-modified')
   push(c.hover, '--color-hover')
   push(c.active, '--color-active')
   // Fondo del buffer del editor ≠ bg del chrome (dos vars por compat).

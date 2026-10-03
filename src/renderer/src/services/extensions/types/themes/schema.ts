@@ -75,6 +75,14 @@ export interface ThemeColors {
   warning?: string
   success?: string
   info?: string
+  /**
+   * Tintes del DIFF (fondo de línea del editor). Deben llevar alfa: son fondos
+   * y el texto se dibuja encima, así que un color opaco lo taparía. Si el tema
+   * no los define, el store de decoraciones usa sus fallbacks.
+   */
+  diffAdded?: string
+  diffRemoved?: string
+  diffModified?: string
   hover?: string
   active?: string
   scrollbarThumb?: string
@@ -141,14 +149,62 @@ export interface ThemeBackground {
   imageBlur?: string
 }
 
-/** #hex | rgb()/rgba() | transparent — los estados usan alpha. */
+/** #hex | rgb()/rgba() | var(…) | transparent — los estados usan alpha. */
 function isCssColor(value: unknown): value is string {
   if (typeof value !== 'string') return false
   const s = value.trim()
   if (s.toLowerCase() === 'transparent') return true
   if (/^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(s)) return true
+  // `var(--token)` (con fallback opcional): un tema puede referenciar un token
+  // del propio tema en vez de repetir el color. Es un color válido aunque su
+  // valor no se pueda resolver acá.
+  if (/^var\(\s*--[a-z0-9-]+\s*(?:,\s*.+)?\)$/i.test(s)) return true
   return /^rgba?\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*(?:,\s*[\d.]+\s*)?\)$/i.test(s)
 }
+
+/**
+ * Claves de `colors` que SON colores (y por lo tanto se validan).
+ *
+ * Antes el validador iteraba TODAS las claves y trataba como color cualquier
+ * cosa que no fuese número, así que un `iconFilter: grayscale(1)` o un
+ * `glassBlur: "12px"` —que un tema puede declarar legítimamente y que este
+ * parser no consume— salían como "color inválido" en la consola del usuario.
+ * Una clave que no está acá no es asunto de este validador: se ignora sin
+ * ruido, en vez de mentir con un error.
+ */
+const THEME_COLOR_KEYS: ReadonlySet<string> = new Set([
+  'bg',
+  'surface',
+  'surfaceRaised',
+  'border',
+  'borderStrong',
+  'accent',
+  'accentHover',
+  'accentActive',
+  'onAccent',
+  'text',
+  'textSecondary',
+  'textMuted',
+  'error',
+  'errorHover',
+  'onError',
+  'warning',
+  'success',
+  'info',
+  'hover',
+  'active',
+  'scrollbarThumb',
+  'scrollbarThumbHover',
+  'indentGuide',
+  'panelBorder',
+  'editorBg',
+  'titleBarBg',
+  'activityBarBg',
+  'statusBarBg',
+  'diffAdded',
+  'diffRemoved',
+  'diffModified'
+])
 
 const BG_POSITIONS = new Set([
   'center',
@@ -293,14 +349,19 @@ export function normalizeThemeDefinition(raw: unknown): ThemeDefinition | null {
       const bg = normalizeThemeBackground(rc.background)
       if (bg) colors.background = bg
     }
-    for (const key of Object.keys(rc) as Array<keyof ThemeColors>) {
+    for (const key of Object.keys(rc)) {
       if (key === 'background') continue
       const value = rc[key]
       if (value === undefined || value === null) continue
       // panelBorderOpacity y futuros parámetros numéricos.
       if (typeof value === 'number' && Number.isFinite(value)) {
         ;(colors as Record<string, unknown>)[key] = value
-      } else if (isCssColor(value)) {
+        continue
+      }
+      // Una clave que no es un color (iconFilter, glassBlur, …) no la valida
+      // este parser: se ignora sin warning en vez de reportarla como inválida.
+      if (!THEME_COLOR_KEYS.has(key)) continue
+      if (isCssColor(value)) {
         ;(colors as Record<string, unknown>)[key] = value.trim()
       } else {
         console.warn(`[extensions/themes] color inválido para "${key}":`, value)
