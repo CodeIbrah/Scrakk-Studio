@@ -127,6 +127,14 @@ export const MessageList = memo(function MessageList({
     turns[turns.length - 1].items.push(message)
   }
   const lastId = messages[messages.length - 1]?.id
+  // El ancla es SOLO la última pregunta. `sticky` la pega recién cuando llega al
+  // tope: si está más abajo (recién mandada), se queda donde está — no salta a
+  // anclarse. Y la anterior NUNCA se ancla: se va scrolleando como cualquier
+  // mensaje.
+  let lastUserId = ''
+  for (const message of messages) {
+    if (message.role === 'user') lastUserId = message.id
+  }
 
   return (
     <div
@@ -150,13 +158,12 @@ export const MessageList = memo(function MessageList({
               message.role === 'assistant' && message.tool_calls?.length
             )
             const showThinking = isPending && !message.content && !hasToolCalls
-            const isUserMessage = message.role === 'user'
             return (
               <div
                 key={message.id}
                 className={
-                  isUserMessage
-                    ? `${styles.messageWrap} ${styles.userWrap}`
+                  message.id === lastUserId
+                    ? `${styles.messageWrap} ${styles.anchor}`
                     : styles.messageWrap
                 }
                 // El Thought cancela el gap de arriba: las rondas de un mismo turno

@@ -48,14 +48,13 @@
   gap: var(--space-1);
 }
 
-/* Tu mensaje se queda pegado arriba mientras leés su respuesta. El `sticky` va
-   acá DENTRO del turno: al terminar el turno, el que sigue lo empuja afuera (el
-   comportamiento de un encabezado sticky), y al subir vuelve solo a su lugar.
-   Puro CSS: no hay nada que recalcular en el scroll (con JS y una clase el
-   ancla parpadeaba y sumaba trabajo por evento).
+/* El ancla: SOLO tu última pregunta. Se queda pegada arriba mientras leés su
+   respuesta — `sticky` la pega recién cuando llega al tope, así una pregunta
+   recién mandada (abajo) no salta a anclarse. Las anteriores NO llevan esta
+   clase: se van scrolleando como cualquier mensaje.
    `z-index` porque es un hermano ANTERIOR: sin él, la respuesta se pintaría
    encima de él cuando pasa por detrás. */
-.userWrap {
+.anchor {
   position: sticky;
   top: 0;
   z-index: 1;

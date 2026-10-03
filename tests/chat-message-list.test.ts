@@ -67,19 +67,21 @@ describe('lista de mensajes', () => {
     expect(src).toContain('el.scrollTop = el.scrollHeight')
   })
 
-  it('tu mensaje se ancla arriba mientras leés su respuesta', () => {
+  it('se ancla SOLO la última pregunta (nunca la anterior)', () => {
     const src = read(LIST_TSX)
     // Los mensajes se agrupan en TURNOS: el tuyo + lo que vino después.
     expect(src).toContain('const turns:')
     expect(src).toContain("message.role === 'user' || turns.length === 0")
-    expect(src).toContain('styles.userWrap')
+    // El ancla sale de la ÚLTIMA pregunta, no de todas.
+    expect(src).toContain('let lastUserId')
+    expect(src).toContain('message.id === lastUserId')
     const css = read(LIST_CSS)
-    const block = css.slice(css.indexOf('.userWrap {'), css.indexOf('}', css.indexOf('.userWrap {')))
+    const block = css.slice(css.indexOf('.anchor {'), css.indexOf('}', css.indexOf('.anchor {')))
     expect(block).toContain('position: sticky')
     expect(block).toContain('top: 0')
     // Es un hermano ANTERIOR: sin z-index, la respuesta se pinta encima.
     expect(block).toContain('z-index: 1')
-    // El turno es lo que le pone el límite al sticky (el que sigue lo empuja).
+    // El turno le pone el límite al sticky.
     expect(css).toMatch(/\.turn \{[\s\S]*?display: flex/)
   })
 
