@@ -55,9 +55,13 @@ describe('editar es funcional, no decorativo', () => {
     expect(src).toMatch(/if \(!next\) return/)
   })
 
+  it('editar es SÓLO del mensaje del usuario', () => {
+    const src = read(BUBBLE)
+    // La respuesta de la IA se lee y se copia; no se reescribe.
+    expect(src).toContain('onEdit={isUser && canEdit && onEditSave ? startEdit : undefined}')
+  })
+
   it('editar sólo se ofrece cuando el panel puede (no en medio del stream)', () => {
-    const bubble = read(BUBBLE)
-    expect(bubble).toContain('onEdit={canEdit && onEditSave ? startEdit : undefined}')
     expect(read(LIST)).toContain('canEdit={!isStreaming}')
   })
 

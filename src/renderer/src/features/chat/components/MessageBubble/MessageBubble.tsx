@@ -56,9 +56,10 @@ export const MessageBubble = memo(function MessageBubble({
 
   const hasToolCalls = !isUser && message.tool_calls && message.tool_calls.length > 0
   const hasText = message.content.trim().length > 0
+  // La barra es la MISMA para los dos roles (copiar / regenerar), pero EDITAR
+  // es sólo del mensaje del usuario: la respuesta de la IA no se reescribe.
   // Sin acciones en mensajes con herramientas: la respuesta final (la que no
-  // trae tool calls) es la única con texto propio. La barra es la MISMA para
-  // los dos roles: copiar y editar valen igual para el usuario y para la IA.
+  // trae tool calls) es la única con texto propio.
   const showActions = !editing && !pending && !hasToolCalls && hasText
 
   const startEdit = (): void => {
@@ -155,7 +156,9 @@ export const MessageBubble = memo(function MessageBubble({
           <MessageActions
             content={message.content}
             onRegenerate={onRegenerate}
-            onEdit={canEdit && onEditSave ? startEdit : undefined}
+            // Sólo el mensaje del USUARIO se edita (y reenvía). La respuesta de
+            // la IA se lee y se copia: reescribirla no es una acción del chat.
+            onEdit={isUser && canEdit && onEditSave ? startEdit : undefined}
           />
         ) : null}
       </div>

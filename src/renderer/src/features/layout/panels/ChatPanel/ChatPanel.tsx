@@ -458,10 +458,12 @@ export function ChatPanel(): JSX.Element {
   const busyRef = useRef(isBusy)
   busyRef.current = isBusy
 
-  // Editar un mensaje. Si es del USUARIO, además se REENVÍA: lo que venía
-  // después respondía a un texto que ya no existe, así que se descarta y se
-  // vuelve a pedir la respuesta con el nuevo (mismo criterio que Regenerar).
-  // Un mensaje de la IA sólo se actualiza: es su respuesta, no una pregunta.
+  // Editar un mensaje. El panel no sabe de botones: recibe un mensaje y su
+  // texto. Si es del USUARIO, además se REENVÍA: lo que venía después respondía
+  // a un texto que ya no existe, así que se descarta y se vuelve a pedir la
+  // respuesta con el nuevo (mismo criterio que Regenerar). Cualquier otro rol
+  // sólo actualiza su contenido — el guard queda para que la operación sea
+  // completa aunque hoy el botón sea exclusivo del usuario.
   const handleEditMessage = useCallback(
     (messageId: string, content: string): void => {
       if (!sessionId || busyRef.current) return

@@ -83,10 +83,12 @@ published are not edited. The file goes per version:
   read as a hard-edged block covering the header. It is now a 20px chip that
   keeps the code block's own radius (`--radius-sm`), so the hover matches the
   block's corner instead of covering it.
-- **Every message now has copy AND edit**: the action bar existed only for the
-  assistant's final text and only to copy. It is now on **both** roles and
-  gained an **edit** button that turns the bubble into an inline editor (save
-  with the button or Cmd/Ctrl+Enter, cancel with Escape). The bar sits **below**
+- **Every message has copy; the user's has edit too**: the action bar existed
+  only for the assistant's final text and only to copy. It is now on **both**
+  roles, and the **user's** message gained an **edit** button that turns the
+  bubble into an inline editor (save with the button or Cmd/Ctrl+Enter, cancel
+  with Escape). The assistant's reply is read and copied, not rewritten. The bar
+  sits **below**
   the bubble: it used to be inside it, so on the user's message the icons landed
   on the bubble's colored background. The row is now a stack (bubble + actions)
   — which also moved the user's 60% width cap to the stack and the assistant's
@@ -94,14 +96,12 @@ published are not edited. The file goes per version:
   inline editor follows the composer's rule: the textarea itself has **no**
   border, background or resize handle — the frame lives on a container and only
   shows on focus (the native resize grip drew a corner the box did not need).
-  Saving is functional,
-  not decorative: editing a **user** message updates it and **re-sends** — what
-  followed answered a text that no longer exists, so it is dropped and the
-  answer is re-requested, the same criterion as Regenerate — while editing an
-  assistant message only updates its text. The handler is passed to every
-  bubble, so it reads the live messages through a ref: depending on `messages`
-  would change its identity on every streamed token and defeat the bubble memo,
-  re-parsing the whole history per token.
+  Saving is functional, not decorative: editing a **user** message updates it
+  and **re-sends** — what followed answered a text that no longer exists, so it
+  is dropped and the answer is re-requested, the same criterion as Regenerate.
+  The handler is passed to every bubble, so it reads the live messages through a
+  ref: depending on `messages` would change its identity on every streamed token
+  and defeat the bubble memo, re-parsing the whole history per token.
 - **Tool rows highlight on hover and open their result on click**, with the
   decision living in **each tool's folder**, not in the chat block:  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
     button with hover and, on click, opens the tool's **result in a modal** (the
