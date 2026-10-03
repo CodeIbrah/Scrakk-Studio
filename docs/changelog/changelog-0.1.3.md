@@ -172,7 +172,9 @@ published are not edited. The file goes per version:
   editor, syntax highlighting and the tab strip as they are. The scheme keeps it
   from matching any file handler, so the tab mounts the editor and not a viewer.
   The provider registry is what lets a git source be added without touching
-  anything else.
+  anything else. Opening a diff shows **no notification**: the API returns the
+  `+N / −M` summary for the caller to use, because a toast on a one-click action
+  is pure noise (only a missing provider warns, and that is a real error).
 - **The read-only tab really is read-only**: `EditorWindow::SetReadOnly` existed
   and `InputManager` already guarded typing, backspace, delete, enter, tab and
   undo/redo — but **paste and cut came in through the clipboard actions**, not

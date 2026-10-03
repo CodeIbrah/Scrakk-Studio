@@ -179,8 +179,13 @@ function toEditorLines(hunks: readonly DiffHunk[], colors?: DiffColors): EditorD
  *
  * Es asíncrona porque un proveedor puede tener que ir a buscar el diff (git),
  * pero el cálculo local (`content`) resuelve en el mismo tick.
+ *
+ * Devuelve el resumen (el `+N / −M`) para que quien la llamó lo pueda mostrar
+ * donde quiera, y NO notifica: abrir un diff está a un click de distancia, y un
+ * toast por cada uno es ruido puro. `null` = no había proveedor con ese id (ahí
+ * sí se notifica, porque es un error que nadie pidió).
  */
-export function openDiffTab(options: OpenDiffTabOptions): Promise<void> {
+export function openDiffTab(options: OpenDiffTabOptions): Promise<DiffSummary | null> {
   const providerId = options.provider ?? CONTENT_DIFF_PROVIDER
   const provider = providers.get(providerId)
   if (!provider) {
@@ -188,7 +193,7 @@ export function openDiffTab(options: OpenDiffTabOptions): Promise<void> {
       title: 'No hay proveedor de diff',
       message: `No existe el proveedor "${providerId}" (registrados: ${listDiffProviders().join(', ') || 'ninguno'}).`
     })
-    return Promise.resolve()
+    return Promise.resolve(null)
   }
 
   return Promise.resolve(
@@ -206,13 +211,8 @@ export function openDiffTab(options: OpenDiffTabOptions): Promise<void> {
     sourceByPath.set(syntheticPath, sourceId)
     setDiffDecorations(sourceId, syntheticPath, toEditorLines(payload.hunks, options.colors))
 
-    const summary = payload.summary ?? summarizeDiff(payload.hunks)
-    const title = options.title ?? `${name} (diff)`
-    openFileInEditor(syntheticPath, title)
-    notify({
-      title: title,
-      message: `+${summary.added} / −${summary.removed} · ${summary.modified} modificadas`
-    })
+    openFileInEditor(syntheticPath, options.title ?? `${name} (diff)`)
+    return payload.summary ?? summarizeDiff(payload.hunks)
   })
 }
 

@@ -56,6 +56,7 @@ import {
   registerBuiltinFileHandlers
 } from '../src/renderer/src/features/fileHandlers'
 import { getProvidedContent } from '../src/renderer/src/features/editor/providedContent'
+import { dismissNotification, listNotifications } from '../src/renderer/src/services/notifications'
 import {
   _resetDecorationsStoreForTests,
   diffLineColor,
@@ -145,6 +146,29 @@ describe('openDiffTab: abre una tab de archivo con el cambio', () => {
     expect(getProvidedContent(tabPath)?.readOnly).toBe(true)
 
     closeFile(tabPath)
+  })
+})
+
+describe('openDiffTab: sin notificaciones al abrir', () => {
+  it('abrir un diff NO muestra un toast (era ruido en cada click)', async () => {
+    for (const notice of listNotifications()) dismissNotification(notice.id)
+    _resetDecorationsStoreForTests()
+    _resetDiffForTests()
+
+    await openDiffTab({ path: '/w/n1.ts', before: 'a\n', after: 'a\nb\n' })
+
+    expect(listNotifications()).toHaveLength(0)
+    closeFile(lastTabPath())
+  })
+
+  it('un proveedor desconocido SÍ avisa (eso es un error, no un diff)', async () => {
+    for (const notice of listNotifications()) dismissNotification(notice.id)
+    _resetDiffForTests()
+
+    await openDiffTab({ path: '/w/n2.ts', provider: 'nope' })
+
+    expect(listNotifications().length).toBeGreaterThan(0)
+    for (const notice of listNotifications()) dismissNotification(notice.id)
   })
 })
 
