@@ -68,7 +68,13 @@
   --msg-action-hover-bg: color-mix(in srgb, var(--color-text) 12%, transparent);
   /* Y alineadas al borde DERECHO de la burbuja (el mensaje es tuyo). */
   --msg-actions-justify: flex-end;
-  background: var(--color-active);
+  /* `--color-active` es un TINTE, no un color: en `scrakk-night` (el default)
+     es `rgba(255, 255, 255, 0.12)`, así que la burbuja dejaba ver el chat a
+     través. Se compone sobre el fondo para que quede OPACA (y para que el
+     mensaje anclado tape lo que pasa por detrás). */
+  background:
+    linear-gradient(var(--color-active), var(--color-active)),
+    var(--color-bg);
   color: var(--color-text);
   border: 1px solid transparent;
   white-space: pre-wrap;

@@ -3,7 +3,7 @@
 // Licencia completa en LICENSE (Apache License 2.0).
 
 import type { ChatMessage } from '@services/chat'
-import { memo, useEffect, useRef, type JSX } from 'react'
+import { memo, useCallback, useEffect, useRef, type JSX } from 'react'
 import { MessageBubble } from '../MessageBubble/MessageBubble'
 import { ThinkingState } from '../ThinkingState/ThinkingState'
 import { ThoughtBlock } from '../ThoughtBlock/ThoughtBlock'
@@ -136,6 +136,23 @@ export const MessageList = memo(function MessageList({
     if (message.role === 'user') lastUserId = message.id
   }
 
+  /**
+   * Sube el scroll al lugar REAL del mensaje anclado.
+   *
+   * `position: sticky` lo pega al tope, así que su rect ya no es su sitio: se
+   * mide un instante sin el sticky y se restaura. Dos lecturas de layout en un
+   * click (no en el scroll), que es lo que mantiene el scroll sin trabajo.
+   */
+  const jumpToAnchor = useCallback((): void => {
+    const el = listRef.current
+    const target = el?.querySelector<HTMLElement>('[data-anchor-message]')
+    if (!el || !target) return
+    target.style.position = 'static'
+    const delta = target.getBoundingClientRect().top - el.getBoundingClientRect().top
+    target.style.position = ''
+    el.scrollTo({ top: el.scrollTop + delta, behavior: 'smooth' })
+  }, [])
+
   return (
     <div
       ref={listRef}
@@ -166,6 +183,8 @@ export const MessageList = memo(function MessageList({
                     ? `${styles.messageWrap} ${styles.anchor}`
                     : styles.messageWrap
                 }
+                // El ancla: lo busca `jumpToAnchor` para medir su lugar real.
+                data-anchor-message={message.id === lastUserId ? '' : undefined}
                 // El Thought cancela el gap de arriba: las rondas de un mismo turno
                 // son UN bloque, no mensajes independientes (el aire que se veía
                 // era el `gap` de la lista entre la ronda de tools y la siguiente).
@@ -196,8 +215,13 @@ export const MessageList = memo(function MessageList({
                     }
                     onEditSave={onEditMessage}
                     // Editar mientras el modelo genera dejaría dos verdades a la
-                    // vez: el texto nuevo y el stream en curso.
-                    canEdit={!isStreaming}
+                    // vez (el texto nuevo y el stream en curso) — MENOS en la
+                    // última pregunta, que es la que estás mirando: ahí el
+                    // panel corta el stream antes de reenviar.
+                    canEdit={!isStreaming || message.id === lastUserId}
+                    // "Volver al mensaje" sólo en el ancla: es la que puede
+                    // quedar pegada arriba, lejos de su lugar real.
+                    onJumpTo={message.id === lastUserId ? jumpToAnchor : undefined}
                   />
                 )}
               </div>

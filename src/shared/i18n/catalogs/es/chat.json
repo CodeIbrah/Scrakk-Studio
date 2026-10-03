@@ -58,5 +58,6 @@
   "chat.tool.ver.resultado": "Ver el resultado",
   "chat.trabajando": "Trabajando…",
   "chat.usechats.debe.usarse.dentro.de": "useChats debe usarse dentro de <ChatsProvider>",
-  "chat.variante.a.aplicar.o.auto": "Variante a aplicar (o \"auto\" para limpiar)"
+  "chat.variante.a.aplicar.o.auto": "Variante a aplicar (o \"auto\" para limpiar)",
+  "chat.volver.al.mensaje": "Volver al mensaje"
 }

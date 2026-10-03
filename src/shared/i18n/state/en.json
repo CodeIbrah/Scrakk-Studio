@@ -11035,6 +11035,14 @@
       "needsReview": false,
       "at": "2026-10-03T22:12:35.987Z",
       "approvedAt": "2026-10-03T22:12:36.576Z"
+    },
+    "chat.volver.al.mensaje": {
+      "src": "4ec94197126ecb45",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-03T23:25:58.365Z",
+      "approvedAt": "2026-10-03T23:26:02.924Z"
     }
   },
   "version": 1

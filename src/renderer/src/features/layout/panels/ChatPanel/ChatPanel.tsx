@@ -60,6 +60,12 @@ export function ChatPanel(): JSX.Element {
   // Controller del stream en curso: el botón "Detener" lo aborta. Mientras
   // genera, el input queda escribible (no se deshabilita).
   const abortRef = useRef<AbortController | null>(null)
+  /**
+   * El stream EN CURSO. Se guarda para poder ESPERARLO: editar la última
+   * pregunta mientras el modelo responde lo aborta y hay que dejarlo cerrar
+   * antes de reenviar, si no los dos escriben la misma sesión.
+   */
+  const activeStreamRef = useRef<Promise<void> | null>(null)
 
   // Mientras hay un subagente spawneado abierto, el input principal se bloquea
   // (estás "dentro" del subagente).
@@ -421,7 +427,9 @@ export function ChatPanel(): JSX.Element {
         timestamp: Date.now()
       })
 
-      await streamReply(targetId, trimmed, messages)
+      const run = streamReply(targetId, trimmed, messages)
+      activeStreamRef.current = run
+      await run
     },
     [isBusy, sessionId, createSession, appendMessage, updateMessage, streamReply, messages]
   )
@@ -444,7 +452,9 @@ export function ChatPanel(): JSX.Element {
     const history = messages.slice(0, lastUserIndex)
 
     removeMessagesAfter(sessionId, lastUserIndex + 1)
-    await streamReply(sessionId, content, history)
+    const run = streamReply(sessionId, content, history)
+    activeStreamRef.current = run
+    await run
   }, [sessionId, isBusy, messages, removeMessagesAfter, streamReply])
 
   // `handleEditMessage` se pasa a TODAS las burbujas: si dependiera de
@@ -455,31 +465,42 @@ export function ChatPanel(): JSX.Element {
   // filas del panel de Git).
   const messagesRef = useRef(messages)
   messagesRef.current = messages
-  const busyRef = useRef(isBusy)
-  busyRef.current = isBusy
 
   // Editar un mensaje. El panel no sabe de botones: recibe un mensaje y su
   // texto. Si es del USUARIO, además se REENVÍA: lo que venía después respondía
   // a un texto que ya no existe, así que se descarta y se vuelve a pedir la
   // respuesta con el nuevo (mismo criterio que Regenerar). Cualquier otro rol
-  // sólo actualiza su contenido — el guard queda para que la operación sea
-  // completa aunque hoy el botón sea exclusivo del usuario.
+  // sólo actualiza su contenido.
   const handleEditMessage = useCallback(
     (messageId: string, content: string): void => {
-      if (!sessionId || busyRef.current) return
+      const sid = sessionId
+      if (!sid) return
       const current = messagesRef.current
       const index = current.findIndex((message) => message.id === messageId)
       if (index < 0) return
       const edited = current[index]
       if (edited.content === content) return
 
-      updateMessage(sessionId, messageId, (message) => ({ ...message, content }))
-      if (edited.role !== 'user') return
+      const apply = (): void => {
+        updateMessage(sid, messageId, (message) => ({ ...message, content }))
+        if (edited.role !== 'user') return
+        removeMessagesAfter(sid, index + 1)
+        // El historial es lo ANTERIOR al mensaje editado: el texto nuevo viaja
+        // como el turno del usuario (igual que en el envío inicial).
+        activeStreamRef.current = streamReply(sid, content, current.slice(0, index))
+      }
 
-      removeMessagesAfter(sessionId, index + 1)
-      // El historial es lo ANTERIOR al mensaje editado: el texto nuevo viaja
-      // como el turno del usuario (igual que en el envío inicial).
-      void streamReply(sessionId, content, current.slice(0, index))
+      // Se puede editar la ÚLTIMA pregunta mientras el modelo responde: hay que
+      // CORTAR el stream y ESPERARLO antes de reenviar. Si no, su `finally`
+      // apagaría el `isBusy` del stream nuevo y los dos escribirían la sesión.
+      const inFlight = activeStreamRef.current
+      if (!inFlight) {
+        apply()
+        return
+      }
+      abortRef.current?.abort()
+      activeStreamRef.current = null
+      void inFlight.catch(() => undefined).then(apply)
     },
     [sessionId, updateMessage, removeMessagesAfter, streamReply]
   )

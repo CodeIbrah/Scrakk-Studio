@@ -124,6 +124,22 @@ published are not edited. The file goes per version:
   all. It is **pure CSS**: the first attempt picked the anchor with JS and
   toggled a class on scroll, which not only made the new anchor teleport into
   view from off-screen (a flicker) but also added work to every scroll event.
+- **The user bubble is opaque again**: `--color-active` is a TINT — `scrakk-night`,
+  the default theme, has `rgba(255, 255, 255, 0.12)` — so a plain
+  `background: var(--color-active)` let the chat show through the bubble. It is
+  composited over the background now (`linear-gradient(tint, tint), --color-bg`),
+  which also makes the anchored question opaque enough to cover what scrolls
+  behind it.
+- **The last question can be edited while the model is answering**: it is the one
+  you are looking at, and its edit button used to disappear for the whole
+  stream. Editing it ABORTS the stream and waits for it to close before
+  re-sending — without waiting, the aborted run's `finally` would clear the new
+  stream's busy flag and both would write the same session.
+- **"Back to the message" on the anchored question**: an `arrow-up` action that
+  scrolls to the question's real place, which is where its answer begins. It is
+  the way back when you are deep in a long reply with the question pinned at the
+  top. The position is measured with the sticky temporarily off, because while
+  pinned its rect is no longer its place.
 - **Tool rows highlight on hover and open their result on click**, with the
   decision living in **each tool's folder**, not in the chat block:  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
     button with hover and, on click, opens the tool's **result in a modal** (the

@@ -61,8 +61,21 @@ describe('editar es funcional, no decorativo', () => {
     expect(src).toContain('onEdit={isUser && canEdit && onEditSave ? startEdit : undefined}')
   })
 
-  it('editar sólo se ofrece cuando el panel puede (no en medio del stream)', () => {
-    expect(read(LIST)).toContain('canEdit={!isStreaming}')
+  it('la ÚLTIMA pregunta se puede editar aunque el modelo esté respondiendo', () => {
+    // Es la que estás mirando: el panel corta el stream antes de reenviar.
+    expect(read(LIST)).toContain('canEdit={!isStreaming || message.id === lastUserId}')
+    // Y hay que ESPERAR al stream abortado antes de reenviar: si no, su finally
+    // apaga el isBusy del stream nuevo y los dos escriben la misma sesión.
+    const panel = read(PANEL)
+    expect(panel).toContain('activeStreamRef')
+    expect(panel).toMatch(/abortRef\.current\?\.abort\(\)[\s\S]*?await|inFlight\.catch/)
+  })
+
+  it('"volver al mensaje" sólo en el ancla', () => {
+    expect(read(BUBBLE)).toContain('onJumpTo={onJumpTo}')
+    expect(read(LIST)).toContain('onJumpTo={message.id === lastUserId ? jumpToAnchor : undefined}')
+    // Se mide SIN el sticky (su rect ya no es su lugar real) y se restaura.
+    expect(read(LIST)).toContain("target.style.position = 'static'")
   })
 
   it('el textarea no tiene borde propio ni resize; el marco lo lleva el contenedor', () => {
@@ -78,6 +91,21 @@ describe('editar es funcional, no decorativo', () => {
     expect(css).toMatch(/\.editField:focus-within[^}]*border-color: var\(--color-border-strong\)/)
   })
 
+  it('la burbuja del usuario es OPACA (--color-active es un tinte, no un fondo)', () => {
+    const css = read(
+      'src/renderer/src/features/chat/components/MessageBubble/MessageBubble.module.css'
+    )
+    const block = css.slice(
+      css.indexOf('.bubbleUser {'),
+      css.indexOf('}', css.indexOf('.bubbleUser {'))
+    )
+    // En scrakk-night (el tema por defecto) `--color-active` es
+    // `rgba(255, 255, 255, 0.12)`: un `background: var(--color-active)` dejaba
+    // ver el chat a través de la burbuja.
+    expect(block).toContain('linear-gradient(var(--color-active), var(--color-active))')
+    expect(block).toContain('var(--color-bg)')
+  })
+
   it('editar un mensaje del USUARIO reenvía (lo de después ya no responde a ese texto)', () => {
     const src = read(PANEL)
     const start = src.indexOf('const handleEditMessage')
@@ -85,11 +113,11 @@ describe('editar es funcional, no decorativo', () => {
     const end = src.indexOf('\n  )', start)
     const body = src.slice(start, end === -1 ? undefined : end)
 
-    expect(body).toContain('updateMessage(sessionId, messageId')
+    expect(body).toContain('updateMessage(sid, messageId')
     // Sólo el usuario reenvía; la respuesta de la IA únicamente se actualiza.
     expect(body).toContain("if (edited.role !== 'user') return")
-    expect(body).toContain('removeMessagesAfter(sessionId, index + 1)')
-    expect(body).toContain('streamReply(sessionId, content, current.slice(0, index))')
+    expect(body).toContain('removeMessagesAfter(sid, index + 1)')
+    expect(body).toContain('streamReply(sid, content, current.slice(0, index))')
   })
 
   it('el callback no depende de `messages`: rompería el memo de TODAS las burbujas', () => {

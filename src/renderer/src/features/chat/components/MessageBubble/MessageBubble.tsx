@@ -25,6 +25,8 @@ interface MessageBubbleProps {
   onEditSave?: (messageId: string, content: string) => void
   /** Si es false no se ofrece editar (p. ej. mientras el modelo genera). */
   canEdit?: boolean
+  /** Si viene, la barra muestra "volver al mensaje" (sube el scroll a su lugar). */
+  onJumpTo?: () => void
 }
 
 /**
@@ -44,7 +46,8 @@ export const MessageBubble = memo(function MessageBubble({
   pending = false,
   onRegenerate,
   onEditSave,
-  canEdit = false
+  canEdit = false,
+  onJumpTo
 }: MessageBubbleProps): JSX.Element {
   const isUser = message.role === 'user'
   const rowClass = isUser ? styles.rowUser : styles.rowAssistant
@@ -96,6 +99,7 @@ export const MessageBubble = memo(function MessageBubble({
       // Sólo el mensaje del USUARIO se edita (y reenvía). La respuesta de la
       // IA se lee y se copia: reescribirla no es una acción del chat.
       onEdit={isUser && canEdit && onEditSave ? startEdit : undefined}
+      onJumpTo={onJumpTo}
     />
   ) : null
 

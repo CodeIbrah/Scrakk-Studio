@@ -18,13 +18,24 @@ interface MessageActionsProps {
    * depende de `onRegenerate` — que sólo tiene la última respuesta.
    */
   onEdit?: () => void
+  /**
+   * Si viene, se muestra "Volver al mensaje": sube el scroll a SU lugar. Sirve
+   * cuando el mensaje está anclado arriba y querés volver al punto donde
+   * arranca su respuesta.
+   */
+  onJumpTo?: () => void
 }
 
 /**
- * Barra de acciones debajo de un mensaje: copiar, editar y regenerar.
+ * Barra de acciones debajo de un mensaje: copiar, editar, volver y regenerar.
  * Botones planos, chicos, sin fondo hasta el hover, alineados a la izquierda.
  */
-export function MessageActions({ content, onRegenerate, onEdit }: MessageActionsProps): JSX.Element {
+export function MessageActions({
+  content,
+  onRegenerate,
+  onEdit,
+  onJumpTo
+}: MessageActionsProps): JSX.Element {
   const [copied, setCopied] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -67,6 +78,18 @@ export function MessageActions({ content, onRegenerate, onEdit }: MessageActions
           title={t('chat.editar')}
         >
           <ProductIcon id="pencil" size={14} className={styles.icon} aria-hidden="true" />
+        </button>
+      ) : null}
+
+      {onJumpTo ? (
+        <button
+          type="button"
+          className={styles.button}
+          onClick={onJumpTo}
+          aria-label={t('chat.volver.al.mensaje')}
+          title={t('chat.volver.al.mensaje')}
+        >
+          <ProductIcon id="arrow-up" size={14} className={styles.icon} aria-hidden="true" />
         </button>
       ) : null}
 
