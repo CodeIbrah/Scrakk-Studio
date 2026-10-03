@@ -63,6 +63,12 @@
   /* Las acciones de ESTA burbuja van al borde DERECHO: los botones son el
      `IconButton` del input y traen su propio color y tamaño. */
   --msg-actions-justify: flex-end;
+  /* Y con el aire MÍNIMO arriba: son parte del alto de la burbuja, así que un
+     mensaje corto no tiene por qué crecer. Abajo se compensa con el padding,
+     para que queden centrados entre el texto y el borde (y el texto no las
+     toque). */
+  --msg-actions-margin-top: var(--space-1);
+  padding-bottom: var(--space-1);
   /* Mismo fondo que el composer (`--activitybar-bg`, con el surface de
      fallback): sigue al tema y es OPACO. */
   background: var(--activitybar-bg, var(--color-surface));

@@ -11,6 +11,10 @@
   align-items: center;
   /* Misma separación que los chats del panel derecho (lista con gap 2px). */
   gap: 2px;
+  /* El aire de arriba es por variable: debajo de la respuesta va el default,
+     pero dentro de la burbuja del usuario se achica — ahí cada píxel es alto
+     de burbuja, y en un mensaje corto se nota. */
+  margin-top: var(--msg-actions-margin-top, var(--space-2));
   /* Alineación por variable: debajo de la respuesta va a la izquierda, DENTRO
      de la burbuja del usuario va al borde derecho. */
   justify-content: var(--msg-actions-justify, flex-start);
