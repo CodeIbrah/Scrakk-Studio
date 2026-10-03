@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { AppendFileCard } from './visual'
 import displayCss from './visual/AppendFileCard.css?inline'
+import { openEditToolDiff } from '@services/diff/toolOpen'
 
 export const appendFileTool: Tool = {
   name: 'append_file',
@@ -27,6 +28,8 @@ export const appendFileTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <AppendFileCard args={args} result={result} status={status} />,
+    // Click en la fila → tab de diff del cambio (sólo lectura).
+    onOpen: openEditToolDiff,
   },
   execute,
 }

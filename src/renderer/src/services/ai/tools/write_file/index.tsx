@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { WriteFileCard } from './visual'
 import displayCss from './visual/WriteFileCard.css?inline'
+import { openEditToolDiff } from '@services/diff/toolOpen'
 
 export const writeFileTool: Tool = {
   name: 'write_file',
@@ -27,6 +28,8 @@ export const writeFileTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <WriteFileCard args={args} result={result} status={status} />,
+    // Click en la fila → tab de diff del cambio (sólo lectura).
+    onOpen: openEditToolDiff,
   },
   execute,
 }

@@ -114,7 +114,11 @@ export function ToolCallShell({ execution, meta, children }: ToolCallShellProps)
         result,
         status,
         runId: execution.runId,
-        toolCallId: execution.toolCallId
+        toolCallId: execution.toolCallId,
+        // El par viejo/nuevo lo usa el `onOpen` de los tools de edición para
+        // abrir la tab de diff sin releer el archivo.
+        originalContent: execution.originalContent,
+        modifiedContent: execution.modifiedContent
       })
       return
     }

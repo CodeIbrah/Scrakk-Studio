@@ -145,6 +145,13 @@ export interface ToolOpenContext {
   status?: string
   runId?: string
   toolCallId?: string
+  /**
+   * Texto del archivo ANTES del cambio y DESPUÉS (los tools de edición los
+   * traen en su resultado). Es lo que le permite a una tool abrir la tab de
+   * diff sin volver a leer nada: el par viejo/nuevo ya está calculado.
+   */
+  originalContent?: string
+  modifiedContent?: string
 }
 
 export type ToolMutationBehavior = 'always' | 'never' | 'shell'

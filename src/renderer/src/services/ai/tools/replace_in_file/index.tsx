@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { ReplaceInFileCard } from './visual'
 import displayCss from './visual/ReplaceInFileCard.css?inline'
+import { openEditToolDiff } from '@services/diff/toolOpen'
 
 export const replaceInFileTool: Tool = {
   name: 'replace_in_file',
@@ -27,6 +28,8 @@ export const replaceInFileTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <ReplaceInFileCard args={args} result={result} status={status} />,
+    // Click en la fila → tab de diff del cambio (sólo lectura).
+    onOpen: openEditToolDiff,
   },
   execute,
 }
