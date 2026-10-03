@@ -88,11 +88,11 @@ published are not edited. The file goes per version:
   roles, and the **user's** message gained an **edit** button that turns the
   bubble into an inline editor (save with the button or Cmd/Ctrl+Enter, cancel
   with Escape). The assistant's reply is read and copied, not rewritten. The bar
-  sits **below**
-  the bubble: it used to be inside it, so on the user's message the icons landed
-  on the bubble's colored background. The row is now a stack (bubble + actions)
-  — which also moved the user's 60% width cap to the stack and the assistant's
-  "fill the row" to it, so both the cap and the table fix keep holding. The
+  sits **below** the reply and **inside** the user's bubble — and when it is
+  inside, the bubble repaints the icons (`--msg-action-color`) because the muted
+  default is nearly invisible on the accent background. The row is a stack
+  (bubble + actions) rather than a bare bubble, which is what carries the widths
+  for both roles. The
   inline editor follows the composer's rule: the textarea itself has **no**
   border, background or resize handle — the frame lives on a container and only
   shows on focus (the native resize grip drew a corner the box did not need).
@@ -105,8 +105,7 @@ published are not edited. The file goes per version:
 - **The user's message spans the full width**, like the assistant's: it used to
   be a shrink-to-fit box capped at 60% and pushed against the right edge, so it
   read as a small card next to a wide reply. Both stacks fill the row now, so
-  the message sits centered in the chat and its actions line up with the ones
-  under the reply.
+  the message sits centered in the chat instead of hugging the right side.
 - **Tool rows highlight on hover and open their result on click**, with the
   decision living in **each tool's folder**, not in the chat block:  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
     button with hover and, on click, opens the tool's **result in a modal** (the

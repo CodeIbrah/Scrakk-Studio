@@ -13,7 +13,10 @@
   margin-top: var(--space-2);
 }
 
-/* Botones solo-ícono, cuadrados y chicos. */
+/* Botones solo-ícono, cuadrados y chicos.
+   El color sale de variables para que el contenedor lo ajuste: la respuesta de
+   la IA los quiere apagados (`muted`), pero la burbuja del usuario los pone
+   sobre el color de acento, donde el muted queda casi invisible. */
 .button {
   display: inline-flex;
   align-items: center;
@@ -24,7 +27,7 @@
   border: 0;
   border-radius: var(--radius-sm);
   background: transparent;
-  color: var(--color-text-muted);
+  color: var(--msg-action-color, var(--color-text-muted));
   font-family: inherit;
   cursor: pointer;
   /* Hover inmediato, sin animación (igual que los chats del panel derecho). */
@@ -32,8 +35,8 @@
 }
 
 .button:hover {
-  color: var(--color-text-secondary);
-  background: var(--color-hover);
+  color: var(--msg-action-color-hover, var(--color-text-secondary));
+  background: var(--msg-action-hover-bg, var(--color-hover));
 }
 
 .icon {

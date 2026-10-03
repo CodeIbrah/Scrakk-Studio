@@ -87,6 +87,18 @@ export const MessageBubble = memo(function MessageBubble({
     }
   }
 
+  // La barra se arma una sola vez y cada rol la coloca: en el mensaje del
+  // usuario va DENTRO de la burbuja; en la respuesta de la IA, debajo.
+  const actions = showActions ? (
+    <MessageActions
+      content={message.content}
+      onRegenerate={onRegenerate}
+      // Sólo el mensaje del USUARIO se edita (y reenvía). La respuesta de la
+      // IA se lee y se copia: reescribirla no es una acción del chat.
+      onEdit={isUser && canEdit && onEditSave ? startEdit : undefined}
+    />
+  ) : null
+
   return (
     <div className={`${styles.row} ${rowClass}`}>
       {/* La PILA (burbuja + sus acciones) es el ítem de la fila: así las
@@ -150,17 +162,12 @@ export const MessageBubble = memo(function MessageBubble({
               status={pending ? 'running' : 'success'}
             />
           ) : null}
+          {/* Usuario: copiar/editar DENTRO de su burbuja. */}
+          {isUser ? actions : null}
         </div>
 
-        {showActions ? (
-          <MessageActions
-            content={message.content}
-            onRegenerate={onRegenerate}
-            // Sólo el mensaje del USUARIO se edita (y reenvía). La respuesta de
-            // la IA se lee y se copia: reescribirla no es una acción del chat.
-            onEdit={isUser && canEdit && onEditSave ? startEdit : undefined}
-          />
-        ) : null}
+        {/* IA: debajo de la burbuja. */}
+        {isUser ? null : actions}
       </div>
     </div>
   )

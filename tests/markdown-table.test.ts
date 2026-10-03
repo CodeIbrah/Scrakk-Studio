@@ -81,13 +81,27 @@ describe('tablas de markdown', () => {
     expect(bubble).not.toContain('60%')
   })
 
-  it('las acciones van DEBAJO de la burbuja, no dentro de su fondo', () => {
+  it('el usuario tiene las acciones DENTRO de la burbuja; la IA debajo', () => {
     const bubble = read('src/renderer/src/features/chat/components/MessageBubble/MessageBubble.tsx')
-    // El `MessageActions` tiene que ser hermano de la burbuja dentro de la pila:
-    // si vuelve adentro, en el mensaje del usuario cae sobre el color.
-    const stack = bubble.slice(bubble.indexOf('styles.stack'))
-    expect(stack.indexOf('styles.bubble')).toBeLessThan(stack.indexOf('<MessageActions'))
-    expect(stack).toContain('styles.stackUser')
+    // El usuario las coloca antes del cierre de su burbuja; la IA, después.
+    expect(bubble).toMatch(
+      /\{isUser \? actions : null\}\s*<\/div>\s*\{\/\* IA[\s\S]*?\{isUser \? null : actions\}/
+    )
+  })
+
+  it('las acciones dentro de la burbuja del usuario se pintan legibles', () => {
+    const css = read(BUBBLE_CSS)
+    const block = css.slice(
+      css.indexOf('.bubbleUser {'),
+      css.indexOf('}', css.indexOf('.bubbleUser {'))
+    )
+    // Sin esto el muted por defecto queda casi invisible sobre el acento.
+    expect(block).toContain('--msg-action-color:')
+    // Y la barra los consume con fallback, así la IA no cambia.
+    const actionsCss = read(
+      'src/renderer/src/features/chat/components/MessageActions/MessageActions.module.css'
+    )
+    expect(actionsCss).toContain('var(--msg-action-color, var(--color-text-muted))')
   })
 
   it('la tabla es un <table> real dentro del contenedor con scroll', () => {

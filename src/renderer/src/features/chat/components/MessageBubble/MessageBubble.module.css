@@ -60,6 +60,12 @@
   /* El ancho lo decide la PILA (`.stackUser`), que ocupa la fila: la burbuja no
      tiene tope propio. */
   max-width: 100%;
+  /* Las acciones van DENTRO de esta burbuja, sobre el color de acento: el
+     `--color-text-muted` con el que se ven debajo de la respuesta acá queda
+     casi invisible (contraste ~1.8:1). Se pintan con el color del texto. */
+  --msg-action-color: var(--color-text);
+  --msg-action-color-hover: var(--color-text);
+  --msg-action-hover-bg: color-mix(in srgb, var(--color-text) 12%, transparent);
   background: var(--color-active);
   color: var(--color-text);
   border: 1px solid transparent;
