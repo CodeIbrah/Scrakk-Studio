@@ -146,3 +146,61 @@ published are not edited. The file goes per version:
   the app rejects a send that has neither text nor attachments. The reply
   previews and the incoming-message notice show "Attached image" instead of a
   blank line when the quoted/arriving message has no text.
+
+### Editor — diff (engine + API)
+- **The engine can now paint a DIFF, not just an underline**: the
+  `SetInnertaDiffDecorations` export existed but was an **empty stub** in C++
+  (`{}` with a `g_diff_states` that was written and never read), so the host
+  could send a diff forever without a single pixel changing. It now takes
+  **quads** `(startLine, endLine, kind, rgba)` — the same `malloc` + `HEAP32`
+  pattern as the underlines — and paints a **line background behind the text**,
+  spanning from the left edge so the **gutter number gets tinted too** (the
+  VS Code look). It is a different layer from the underline: the stroke goes
+  *under* the text, this goes *behind* it. `GetInnertaDiffDecorationCount`
+  exists for the same reason as the underline's: a `void` setter with no
+  read-back can only claim "I sent the ranges", never "the engine has them".
+- **The color is not baked into the engine**: it paints exactly the `rgba` it
+  receives and does not interpret `kind` for coloring — which is what lets the
+  caller choose the tint. The default comes from the theme
+  (`--color-diff-added` / `--color-diff-removed` / `--color-diff-modified`) and
+  the API overrides it per call.
+- **`openDiffTab()` — spawn a read-only diff tab**: the API resolves a
+  **diff provider** (`registerDiffProvider`; `'content'` ships built in and
+  works on an in-memory before/after pair), registers the "after" text and the
+  line hunks, and opens a tab. A diff tab is **not a new tab kind**: it is a
+  file tab with a synthetic `scrakk-diff://<id>/<file>` path, so it reuses the
+  editor, syntax highlighting and the tab strip as they are. The scheme keeps it
+  from matching any file handler, so the tab mounts the editor and not a viewer.
+  The provider registry is what lets a git source be added without touching
+  anything else.
+- **The read-only tab really is read-only**: `EditorWindow::SetReadOnly` existed
+  and `InputManager` already guarded typing, backspace, delete, enter, tab and
+  undo/redo — but **paste and cut came in through the clipboard actions**, not
+  the input manager, so both slipped past it. They are now guarded, and
+  `SetInnertaReadOnly` exposes the mode to the host. The caret still moves and
+  the selection still copies: a diff is read and copied, not written.
+- **The editor can hold content that is not on disk**: `fileSession` used to
+  read every path from disk, so a synthetic path meant for a diff came back
+  empty — a blank tab with no error. There is now a small **provided-content**
+  seam (`@features/editor/providedContent`); anything that opens a tab with
+  in-memory text registers it there and the session honors it, including the
+  read-only flag. The mode is re-applied on activation because it lives in the
+  **engine** (one WASM module per panel), and switching tabs inside a panel
+  otherwise left the diff's read-only stuck on the next file.
+- **The AI edit tools open their diff on click**: `write_file`, `append_file`
+  and `replace_in_file` declare `onOpen` and share one handler — their result
+  already carries `originalContent`/`modifiedContent`, so the diff needs neither
+  git nor disk. `ToolOpenContext` now forwards that pair to the tool.
+
+### Fixes (themes)
+- **The theme validator no longer reports non-color keys as invalid colors**:
+  it iterated **every** key under `colors` and treated anything that was not a
+  number as a color, so a theme declaring `iconFilter: grayscale(1)`,
+  `glassBlur: "12px"` or `iconColor: var(--text-color)` — legitimate keys this
+  parser does not consume — produced three `color inválido` warnings per load.
+  Only the keys that **are** colors (a single known list) are validated now;
+  anything else is ignored silently, and `var(--token)` is accepted as a color.
+- **`--color-success` is emitted**: the token was in the theme schema but
+  `buildCssVars` never published it, so 11 CSS call sites fell back to a
+  hardcoded green (`var(--color-success, #3fb950)`) and ignored the theme —
+  the same bug `warning`/`info` had before.
