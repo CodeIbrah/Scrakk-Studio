@@ -111,10 +111,11 @@ describe('tablas de markdown', () => {
       bubble.indexOf('}', bubble.indexOf('.bubbleUser {'))
     )
     expect(block).toContain('--msg-actions-justify: flex-end')
-    // El aire de arriba y el padding de abajo, mínimos: los botones son parte
-    // del alto de la burbuja y un mensaje corto no tiene por qué crecer.
-    expect(block).toContain('--msg-actions-margin-top: var(--space-1)')
-    expect(block).toContain('padding-bottom: var(--space-1)')
+    // Los botones van en la MISMA fila que el texto: un mensaje de una línea da
+    // una burbuja de una línea (en su propia fila le sumaban alto entero).
+    expect(block).toContain('align-items: flex-end')
+    expect(block).toContain('--msg-actions-margin-top: 0')
+    expect(css).toContain('.userText {')
   })
 
   it('la tabla es un <table> real dentro del contenedor con scroll', () => {

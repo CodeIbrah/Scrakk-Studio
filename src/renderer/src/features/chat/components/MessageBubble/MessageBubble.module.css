@@ -60,21 +60,23 @@
   /* El ancho lo decide la PILA (`.stackUser`), que ocupa la fila: la burbuja no
      tiene tope propio. */
   max-width: 100%;
+  /* Una SOLA fila de contenido: el texto y las acciones, alineadas abajo. Los
+     botones ocupan el mismo alto que la línea de texto, así un mensaje de una
+     línea da una burbuja de una línea (antes iban en su propia fila y le
+     sumaban alto). */
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
   /* Las acciones de ESTA burbuja van al borde DERECHO: los botones son el
      `IconButton` del input y traen su propio color y tamaño. */
   --msg-actions-justify: flex-end;
-  /* Y con el aire MÍNIMO arriba: son parte del alto de la burbuja, así que un
-     mensaje corto no tiene por qué crecer. Abajo se compensa con el padding,
-     para que queden centrados entre el texto y el borde (y el texto no las
-     toque). */
-  --msg-actions-margin-top: var(--space-1);
-  padding-bottom: var(--space-1);
+  /* Sin aire arriba: van en la MISMA fila, no debajo. */
+  --msg-actions-margin-top: 0;
   /* Mismo fondo que el composer (`--activitybar-bg`, con el surface de
      fallback): sigue al tema y es OPACO. */
   background: var(--activitybar-bg, var(--color-surface));
   color: var(--color-text);
   border: 1px solid transparent;
-  white-space: pre-wrap;
   /* Sombra hacia ABAJO, con el peso de la del popover del input
      (`0 8px 24px rgba(0,0,0,.28)`): el borde de la burbuja se DESVANECE en el
      chat en vez de cortarse, y cuando la pregunta queda anclada arriba la
@@ -84,6 +86,15 @@
      vería cortada en los costados. Encogida, la sombra entra en ese margen y
      sólo se ve abajo. */
   box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.35);
+}
+
+/* El texto del usuario: ocupa el lugar que dejan los botones en la fila y es el
+   único que conserva los saltos de línea (el markdown de la IA no: los \n se
+   duplicarían con remark-breaks). */
+.userText {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-wrap;
 }
 
 /* Mensajes de la IA: texto plano, sin fondo ni borde. El ancho llega hasta

@@ -147,7 +147,7 @@ export const MessageBubble = memo(function MessageBubble({
               </div>
             </div>
           ) : isUser ? (
-            message.content
+            <span className={styles.userText}>{message.content}</span>
           ) : pending ? (
             // Mientras streamea NO se parsea markdown (react-markdown + Prism es
             // lo más caro): texto plano que respeta saltos. Al terminar la ronda
