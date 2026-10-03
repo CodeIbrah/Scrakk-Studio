@@ -16,8 +16,19 @@
   height: 100%;
   min-height: 0;
   overflow-y: auto;
-  /* Padding izquierdo/inferior chico; el derecho lo aporta el scrollbar. */
-  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1);
+  /* Alto del degradado del borde inferior. La conversación se ancla ARRIBA
+     (flex-start, sin `flex-end` en la cadena): una charla corta arranca desde
+     el borde superior y crece hacia abajo. */
+  --chat-edge-fade: 32px;
+  /* El padding de abajo mide lo MISMO que el degradado: al llegar al fondo el
+     último mensaje termina justo donde el degradado empieza a opacar, así se ve
+     ENTERO. Si los dos números se separan, el degradado se come el final. */
+  padding: var(--space-1) var(--space-2) var(--chat-edge-fade) var(--space-1);
+  /* Lo que sale por abajo se DESVANECE en vez de cortarse de golpe. Se hace con
+     máscara y no con un overlay de color: el panel es transparente y el tema
+     puede tener imagen de fondo, así que no hay un color que tapar. */
+  mask-image: linear-gradient(to top, transparent 0, #000 var(--chat-edge-fade));
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 var(--chat-edge-fade));
 }
 
 /* Apila razonamiento + contenido de un mismo mensaje. */

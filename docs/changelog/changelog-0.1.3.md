@@ -106,6 +106,16 @@ published are not edited. The file goes per version:
   be a shrink-to-fit box capped at 60% and pushed against the right edge, so it
   read as a small card next to a wide reply. Both stacks fill the row now, so
   the message sits centered in the chat instead of hugging the right side.
+- **The message list fades at its bottom edge and keeps its last message
+  whole**: content leaving the bottom now dissolves instead of being cut off,
+  via a `mask-image` gradient rather than a colour overlay — the panel is
+  transparent and the theme can carry a background image, so there is no colour
+  to cover with. The list's bottom padding is the SAME size as the fade, so at
+  the bottom the last message ends exactly where the fade begins and stays
+  fully visible. Sending your own message always scrolls down as well: if you
+  were reading history, sending and not seeing what you sent is worse than
+  losing the spot (while the model replies it keeps the old "only if you are
+  near the bottom" rule, so reading is never interrupted).
 - **Tool rows highlight on hover and open their result on click**, with the
   decision living in **each tool's folder**, not in the chat block:  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
     button with hover and, on click, opens the tool's **result in a modal** (the

@@ -90,8 +90,13 @@ export const MessageList = memo(function MessageList({
       return
     }
 
+    const last = messages[messages.length - 1]
+    // Un mensaje TUYO es una acción tuya: se baja siempre. Si estabas leyendo
+    // historial, mandar y no ver lo que mandaste es peor que perder el lugar
+    // (mientras el modelo responde se mantiene el criterio de abajo, así leer
+    // el historial no se interrumpe solo).
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
-    if (distanceFromBottom < 100) {
+    if (last?.role === 'user' || distanceFromBottom < 100) {
       el.scrollTop = el.scrollHeight
     }
   }, [messages])
