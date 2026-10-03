@@ -15,6 +15,11 @@ interface MessageListProps {
   isStreaming: boolean
   /** Regenera la última respuesta (el botón solo se muestra en el último mensaje). */
   onRegenerate?: () => void
+  /**
+   * Guarda la edición de un mensaje. El panel decide qué implica (el usuario
+   * reenvía con el texto nuevo; la IA sólo actualiza su contenido).
+   */
+  onEditMessage?: (messageId: string, content: string) => void
   /** Clase extra sobre el root (p. ej. para acotar el ancho de la columna). */
   className?: string
 }
@@ -33,6 +38,7 @@ export const MessageList = memo(function MessageList({
   messages,
   isStreaming,
   onRegenerate,
+  onEditMessage,
   className
 }: MessageListProps): JSX.Element {
   const listRef = useRef<HTMLDivElement>(null)
@@ -138,6 +144,10 @@ export const MessageList = memo(function MessageList({
                 onRegenerate={
                   message.role === 'assistant' && isLast && !isPending ? onRegenerate : undefined
                 }
+                onEditSave={onEditMessage}
+                // Editar mientras el modelo genera dejaría dos verdades a la
+                // vez: el texto nuevo y el stream en curso.
+                canEdit={!isStreaming}
               />
             )}
           </div>

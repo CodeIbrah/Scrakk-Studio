@@ -3,11 +3,13 @@
 // Licencia completa en LICENSE (Apache License 2.0).
 
 import type { ChatMessage } from '@services/chat'
-import { memo, type JSX } from 'react'
+import { memo, useState, type JSX, type KeyboardEvent } from 'react'
 import { Markdown } from '../Markdown/Markdown'
 import { MessageActions } from '../MessageActions/MessageActions'
 import { ToolCallsBlock } from '../ToolCallsBlock'
 import styles from './MessageBubble.module.css'
+
+import { t } from '@core/i18n'
 
 interface MessageBubbleProps {
   message: ChatMessage
@@ -15,6 +17,14 @@ interface MessageBubbleProps {
   pending?: boolean
   /** Si viene, la última respuesta de la IA muestra el botón "Regenerar". */
   onRegenerate?: () => void
+  /**
+   * Guarda la edición del mensaje. El llamador decide qué implica: un mensaje
+   * del USUARIO editado se reenvía (lo de después ya no responde a ese texto),
+   * uno de la IA sólo se actualiza.
+   */
+  onEditSave?: (messageId: string, content: string) => void
+  /** Si es false no se ofrece editar (p. ej. mientras el modelo genera). */
+  canEdit?: boolean
 }
 
 /**
@@ -23,7 +33,7 @@ interface MessageBubbleProps {
  * Assistant → texto a la izquierda sin fondo ni borde, renderizado en
  * markdown (código, tablas, listas, links). Las tool calls van DESPUÉS del
  * texto (el orden real del stream: el modelo escribe y después llama la
- * tool) y las acciones de copiar/regenerar cierran el mensaje al final.
+ * tool) y las acciones (copiar/editar/regenerar) cierran el mensaje al final.
  *
  * memo: el store preserva la identidad de los mensajes intactos por token,
  * así en un chat largo solo re-renderiza la burbuja que está streameando
@@ -32,21 +42,85 @@ interface MessageBubbleProps {
 export const MessageBubble = memo(function MessageBubble({
   message,
   pending = false,
-  onRegenerate
+  onRegenerate,
+  onEditSave,
+  canEdit = false
 }: MessageBubbleProps): JSX.Element {
   const isUser = message.role === 'user'
   const rowClass = isUser ? styles.rowUser : styles.rowAssistant
   const bubbleClass = isUser ? styles.bubbleUser : styles.bubbleAssistant
 
+  // Edición inline del mensaje (textarea en el lugar del contenido).
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState('')
+
   const hasToolCalls = !isUser && message.tool_calls && message.tool_calls.length > 0
+  const hasText = message.content.trim().length > 0
   // Sin acciones en mensajes con herramientas: la respuesta final (la que no
-  // trae tool calls) es la única con texto propio para copiar.
-  const canCopy = !isUser && !hasToolCalls && !pending && message.content.trim().length > 0
+  // trae tool calls) es la única con texto propio. La barra es la MISMA para
+  // los dos roles: copiar y editar valen igual para el usuario y para la IA.
+  const showActions = !editing && !pending && !hasToolCalls && hasText
+
+  const startEdit = (): void => {
+    setDraft(message.content)
+    setEditing(true)
+  }
+
+  const saveEdit = (): void => {
+    const next = draft.trim()
+    // Un mensaje vacío no se guarda: el editor queda abierto para corregirlo.
+    if (!next) return
+    setEditing(false)
+    if (next === message.content) return
+    onEditSave?.(message.id, next)
+  }
+
+  const onEditKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>): void => {
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      setEditing(false)
+    } else if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+      // Enter solo inserta salto (es un textarea): guardar es Cmd/Ctrl+Enter.
+      event.preventDefault()
+      saveEdit()
+    }
+  }
 
   return (
     <div className={`${styles.row} ${rowClass}`}>
       <div className={`${styles.bubble} ${bubbleClass}`}>
-        {isUser ? (
+        {editing ? (
+          <div className={styles.editBox}>
+            <textarea
+              className={styles.editArea}
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              onKeyDown={onEditKeyDown}
+              // Alto según las líneas reales (acotado): editar un párrafo largo
+              // no arranca en un input de una línea.
+              rows={Math.min(12, Math.max(2, draft.split('\n').length))}
+              autoFocus
+              aria-label={t('chat.editar.mensaje')}
+            />
+            <div className={styles.editActions}>
+              <button
+                type="button"
+                className={styles.editCancel}
+                onClick={() => setEditing(false)}
+              >
+                {t('chat.cancelar.edicion')}
+              </button>
+              <button
+                type="button"
+                className={styles.editSave}
+                onClick={saveEdit}
+                disabled={!draft.trim()}
+              >
+                {t('chat.guardar.cambios')}
+              </button>
+            </div>
+          </div>
+        ) : isUser ? (
           message.content
         ) : pending ? (
           // Mientras streamea NO se parsea markdown (react-markdown + Prism es
@@ -67,8 +141,12 @@ export const MessageBubble = memo(function MessageBubble({
           />
         ) : null}
 
-        {canCopy ? (
-          <MessageActions content={message.content} onRegenerate={onRegenerate} />
+        {showActions ? (
+          <MessageActions
+            content={message.content}
+            onRegenerate={onRegenerate}
+            onEdit={canEdit && onEditSave ? startEdit : undefined}
+          />
         ) : null}
       </div>
     </div>

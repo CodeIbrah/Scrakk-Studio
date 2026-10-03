@@ -11003,6 +11003,38 @@
       "needsReview": false,
       "at": "2026-10-02T21:52:11.348Z",
       "approvedAt": "2026-10-02T21:52:11.515Z"
+    },
+    "chat.cancelar.edicion": {
+      "src": "bb9dbb406dcbd524",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-03T22:12:35.986Z",
+      "approvedAt": "2026-10-03T22:12:36.575Z"
+    },
+    "chat.editar": {
+      "src": "2eba946b2e1ee4b6",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-03T22:12:35.987Z",
+      "approvedAt": "2026-10-03T22:12:36.576Z"
+    },
+    "chat.editar.mensaje": {
+      "src": "3ea4fe6872e8a9f4",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-03T22:12:35.987Z",
+      "approvedAt": "2026-10-03T22:12:36.576Z"
+    },
+    "chat.guardar.cambios": {
+      "src": "14bdfaf2face3a07",
+      "area": "chat",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-03T22:12:35.987Z",
+      "approvedAt": "2026-10-03T22:12:36.576Z"
     }
   },
   "version": 1

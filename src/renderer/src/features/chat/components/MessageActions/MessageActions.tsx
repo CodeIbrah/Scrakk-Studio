@@ -12,13 +12,19 @@ interface MessageActionsProps {
   content: string
   /** Si viene, se muestra el botón "Regenerar" (última respuesta de la IA). */
   onRegenerate?: () => void
+  /**
+   * Si viene, se muestra el botón "Editar": el llamador abre el editor inline
+   * del mensaje. Es del MENSAJE (cualquiera de los dos roles), por eso no
+   * depende de `onRegenerate` — que sólo tiene la última respuesta.
+   */
+  onEdit?: () => void
 }
 
 /**
- * Barra de acciones debajo de los mensajes de la IA: copiar y regenerar.
+ * Barra de acciones debajo de un mensaje: copiar, editar y regenerar.
  * Botones planos, chicos, sin fondo hasta el hover, alineados a la izquierda.
  */
-export function MessageActions({ content, onRegenerate }: MessageActionsProps): JSX.Element {
+export function MessageActions({ content, onRegenerate, onEdit }: MessageActionsProps): JSX.Element {
   const [copied, setCopied] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -51,6 +57,18 @@ export function MessageActions({ content, onRegenerate }: MessageActionsProps): 
           <ProductIcon id="copy" size={14} className={styles.icon} aria-hidden="true" />
         )}
       </button>
+
+      {onEdit ? (
+        <button
+          type="button"
+          className={styles.button}
+          onClick={onEdit}
+          aria-label={t('chat.editar.mensaje')}
+          title={t('chat.editar')}
+        >
+          <ProductIcon id="pencil" size={14} className={styles.icon} aria-hidden="true" />
+        </button>
+      ) : null}
 
       {onRegenerate ? (
         <button

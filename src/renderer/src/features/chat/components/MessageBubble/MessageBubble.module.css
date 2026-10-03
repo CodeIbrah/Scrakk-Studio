@@ -63,3 +63,71 @@
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+/* ── Edición inline del mensaje ────────────────────────────────────────── */
+.editBox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  /* min-width 0: la burbuja es flex y sin esto el textarea la estira. */
+  min-width: 0;
+}
+
+.editArea {
+  width: 100%;
+  box-sizing: border-box;
+  /* Se puede arrastrar el alto, y arranca con 2 filas. */
+  resize: vertical;
+  min-height: 52px;
+  max-height: 340px;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--text-md);
+  line-height: 1.5;
+}
+
+.editArea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.editActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-1);
+}
+
+.editSave,
+.editCancel {
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.editSave {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.editSave:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.editCancel {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.editCancel:hover {
+  background: var(--color-hover);
+  color: var(--color-text);
+}

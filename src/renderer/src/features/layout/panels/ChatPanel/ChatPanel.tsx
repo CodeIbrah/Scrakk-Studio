@@ -447,6 +447,41 @@ export function ChatPanel(): JSX.Element {
     await streamReply(sessionId, content, history)
   }, [sessionId, isBusy, messages, removeMessagesAfter, streamReply])
 
+  // `handleEditMessage` se pasa a TODAS las burbujas: si dependiera de
+  // `messages` (cambia en cada token del stream) o de `isBusy`, su identidad
+  // cambiaría y rompería el `memo` de cada burbuja — o sea, volvería a
+  // re-parsear el markdown de TODO el historial por token. Los valores mutables
+  // se leen por ref, así el callback no cambia nunca (mismo criterio que las
+  // filas del panel de Git).
+  const messagesRef = useRef(messages)
+  messagesRef.current = messages
+  const busyRef = useRef(isBusy)
+  busyRef.current = isBusy
+
+  // Editar un mensaje. Si es del USUARIO, además se REENVÍA: lo que venía
+  // después respondía a un texto que ya no existe, así que se descarta y se
+  // vuelve a pedir la respuesta con el nuevo (mismo criterio que Regenerar).
+  // Un mensaje de la IA sólo se actualiza: es su respuesta, no una pregunta.
+  const handleEditMessage = useCallback(
+    (messageId: string, content: string): void => {
+      if (!sessionId || busyRef.current) return
+      const current = messagesRef.current
+      const index = current.findIndex((message) => message.id === messageId)
+      if (index < 0) return
+      const edited = current[index]
+      if (edited.content === content) return
+
+      updateMessage(sessionId, messageId, (message) => ({ ...message, content }))
+      if (edited.role !== 'user') return
+
+      removeMessagesAfter(sessionId, index + 1)
+      // El historial es lo ANTERIOR al mensaje editado: el texto nuevo viaja
+      // como el turno del usuario (igual que en el envío inicial).
+      void streamReply(sessionId, content, current.slice(0, index))
+    },
+    [sessionId, updateMessage, removeMessagesAfter, streamReply]
+  )
+
   // Contenido del chat: estado vacío (input centrado) o conversación.
   const chatBody =
     messages.length === 0 ? (
@@ -479,6 +514,7 @@ export function ChatPanel(): JSX.Element {
               messages={messages}
               isStreaming={isBusy}
               onRegenerate={handleRegenerate}
+              onEditMessage={handleEditMessage}
             />
           </div>
         </div>
