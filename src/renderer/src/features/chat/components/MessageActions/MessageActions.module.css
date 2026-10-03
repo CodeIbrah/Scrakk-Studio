@@ -16,8 +16,8 @@
   justify-content: var(--msg-actions-justify, flex-start);
 }
 
-/* Nudge óptico: el del botón de enviar del input (3px abajo) más 2px extra a la
+/* Nudge óptico: el del botón de enviar del input (3px abajo) más 5px extra a la
    derecha. */
 .nudge {
-  transform: translate(4px, 3px);
+  transform: translate(5px, 3px);
 }

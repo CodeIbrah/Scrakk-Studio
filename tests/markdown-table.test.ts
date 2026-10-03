@@ -103,7 +103,7 @@ describe('tablas de markdown', () => {
     const actionsCss = read(
       'src/renderer/src/features/chat/components/MessageActions/MessageActions.module.css'
     )
-    expect(actionsCss).toMatch(/\.nudge\s*\{[^}]*transform: translate\(4px, 3px\)/)
+    expect(actionsCss).toMatch(/\.nudge\s*\{[^}]*transform: translate\(5px, 3px\)/)
     // La barra sigue alineándose por variable (el usuario, a la derecha).
     const bubble = read(BUBBLE_CSS)
     const block = bubble.slice(
