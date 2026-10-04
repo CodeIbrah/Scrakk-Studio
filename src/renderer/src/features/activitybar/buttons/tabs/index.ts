@@ -16,7 +16,7 @@ const tabs: ActivityBarButton = {
   get label() {
     return t('layout.panel.tabs')
   },
-  icon: productIcon('file-multiple'),
+  icon: productIcon('layers'),
   side: 'left',
   target: 'left',
   panelId: 'tabs',
