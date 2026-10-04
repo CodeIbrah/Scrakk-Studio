@@ -1,0 +1,19 @@
+/*
+ * Copyright 2026 Scrakk Studio
+ * SPDX-License-Identifier: Apache-2.0
+ * Licencia completa en LICENSE (Apache License 2.0).
+ */
+
+/* Host de la sesión de Innerta (su canvas llena el contenedor). */
+.embed {
+  width: 100%;
+  flex: 1;
+  min-height: 240px;
+  overflow: hidden;
+  border-radius: var(--radius-sm, 4px);
+  background: var(--color-bg);
+}
+
+.embed :global(canvas) {
+  display: block;
+}

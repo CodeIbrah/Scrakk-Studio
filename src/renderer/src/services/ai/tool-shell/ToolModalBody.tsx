@@ -17,13 +17,16 @@ import styles from './ToolModalBody.module.css'
 /** Sección con caption opcional (p. ej. "Salida"). */
 export function ToolModalSection({
   title,
-  children
+  children,
+  grow = false
 }: {
   title?: ReactNode
   children: ReactNode
+  /** Ocupa el alto restante del cuerpo (p. ej. un editor embebido). */
+  grow?: boolean
 }): JSX.Element {
   return (
-    <section className={styles.section}>
+    <section className={grow ? `${styles.section} ${styles.sectionGrow}` : styles.section}>
       {title !== undefined ? <h4 className={styles.caption}>{title}</h4> : null}
       {children}
     </section>

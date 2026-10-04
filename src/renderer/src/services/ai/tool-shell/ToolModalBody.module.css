@@ -11,6 +11,12 @@
   min-width: 0;
 }
 
+/* Sección que ocupa el alto restante (editor embebido, etc.). */
+.sectionGrow {
+  flex: 1;
+  min-height: 0;
+}
+
 .caption {
   margin: 0;
   font-size: var(--text-xs);
