@@ -396,3 +396,24 @@ published are not edited. The file goes per version:
   bitmaps with a single 128 px strike that FreeType cannot resize, the engine
   downscales the bitmap to the cell. Cell width uses the same table, so `✓` and
   `❤` take one cell again and nothing shifts after them.
+- **Variation selectors, and wide cells that drifted**: `⚠️` (VS16) asks for
+  emoji and now gets it; `⚠︎` (VS15) asks for text and stays monochrome. Neither
+  the selector nor wide cells were handled before. libvterm merges the selector
+  into the cell and the parser threw it away, and a wide character left a
+  `(uint32_t)-1` continuation cell that the renderer read as a real code point —
+  so every CJK character and every astral emoji advanced **three** columns
+  instead of two and the rest of the line drifted. The selector now travels with
+  the cell, libvterm widens a `base + VS16` grapheme to two columns, the
+  continuation cell is skipped, and the atlas caches glyphs per (presentation,
+  code point) so `⚠` and `⚠️` can coexist. The native surface's width table —
+  which counted East Asian *ambiguous* characters (`→ ─ ●`) as wide, unlike any
+  default terminal — now uses the same table as the WASM build.
+- **The terminal uses your terminal's font *and size* now**: the family came from
+  `fc-match monospace` and the size from the editor's font minus one pixel, so a
+  GNOME Terminal running JetBrains Mono NL at 10 pt (13 px) was drawn here in
+  Cousine at 14 px — same relative advance but a cell 17 % shorter, and TUIs that
+  mix `─` with `│` came out warped. The main process reads the machine's terminal
+  font (Linux: `gsettings`, the GNOME Terminal profile or the system monospace
+  font; Windows: the console registry) and its size (pt → px at 96 dpi, times the
+  text-scaling factor), and the view is built with those metrics. The "one pixel
+  less than the editor" fudge is gone.

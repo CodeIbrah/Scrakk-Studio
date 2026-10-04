@@ -54,6 +54,8 @@ interface TerminalApi {
     file: string
     data: Uint8Array
   } | null>
+  /** Fuente y TAMAÑO de la terminal por defecto del sistema. */
+  getSystemFont?: () => Promise<{ family: string; px: number } | null>
 }
 
 /**
@@ -168,6 +170,11 @@ class TerminalSessionImpl implements LiveSession {
   private emojiPath: string | null = null
   /** Ya se pidió la fuente de emoji (no se reintenta). */
   private emojiRequested = false
+  /**
+   * Fuente y tamaño de la TERMINAL DEL SISTEMA (los suyos, no los del editor).
+   * Sin esto la celda quedaba más grande y los TUIs no cuadraban.
+   */
+  private systemFontFamily = ''
   /** Escala con la que ya se re-aplicó `fontPaths` (evita recargar de más). */
   private fontScaleApplied = 1
   private resizeRo: ResizeObserver | null = null
@@ -242,6 +249,11 @@ class TerminalSessionImpl implements LiveSession {
     } catch {
       // Vista sin RO interno.
     }
+
+    // Fuente y TAMAÑO de la terminal DEL SISTEMA, ANTES de la cadena: el atlas
+    // se construye con las mismas métricas de celda que su terminal.
+    await this.applySystemFont(view)
+    if (this.disposed) return
 
     this.wireInput(canvas)
     void this.applyFont(view)
@@ -562,7 +574,7 @@ class TerminalSessionImpl implements LiveSession {
       const raw = view.module as unknown as Record<string, unknown>
       const fsApi = (raw as { FS?: { writeFile: (p: string, d: Uint8Array) => void } }).FS
 
-      const family = getTerminalFontFamily()
+      const family = this.effectiveFamily()
       const stack =
         api?.getFontStack && fsApi
           ? await api.getFontStack(family ? { family } : undefined)
@@ -599,6 +611,39 @@ class TerminalSessionImpl implements LiveSession {
     // La fuente cambió las métricas (charWidth/lineHeight): recalcular las
     // dims reales del grid/PTY, que al crear el PTY usaban el fallback.
     this.applyDims()
+  }
+
+  /** Familia efectiva: la elegida en Ajustes o la de la terminal del sistema. */
+  private effectiveFamily(): string {
+    return getTerminalFontFamily() || this.systemFontFamily
+  }
+
+  /**
+   * Fuente y TAMAÑO de la terminal del sistema.
+   *
+   * El tamaño importa tanto como la familia: el ancho y el ALTO de celda salen
+   * de la fuente a ese tamaño, y si no coincide, los TUIs (que mezclan `─` con
+   * `│`) no cuadran.
+   */
+  private async applySystemFont(view: InnertaViewHandle): Promise<void> {
+    const api = getTerminalApi()
+    if (!api?.getSystemFont) return
+    try {
+      const info = await api.getSystemFont()
+      if (this.disposed) return
+      if (info && info.px > 0) {
+        this.systemFontFamily = info.family
+        // `setFontSize` (zoom) fija `theme.fontSize`; la cadena de la terminal
+        // se aplica después y toma ese tamaño.
+        view.module.setFontSize?.(info.px)
+      } else {
+        // Sin datos del sistema: el viejo "1px menos que el editor".
+        const base = view.module.getFontSize?.() ?? 0
+        if (base > 1) view.module.setFontSize?.(base - 1)
+      }
+    } catch {
+      // Sin datos: queda el default del motor.
+    }
   }
 
   /** La cadena vigente + la CJK ya cargada (si la hay), sin repetir. */
@@ -666,7 +711,7 @@ class TerminalSessionImpl implements LiveSession {
     )?.FS
     if (!view || !api?.getCjkFont || !fsApi) return
     try {
-      const family = getTerminalFontFamily()
+      const family = this.effectiveFamily()
       const font = await api.getCjkFont(family ? { family } : undefined)
       if (this.disposed || !font?.data?.length) return
       const path = '/fonts/terminal/cjk-0.ttf'

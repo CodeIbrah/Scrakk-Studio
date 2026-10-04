@@ -13,7 +13,8 @@ import {
   readFontStack,
   resolveCjkFont,
   resolveEmojiFont,
-  resolveFontCandidates
+  resolveFontCandidates,
+  resolveSystemTerminalFont
 } from '../fonts/systemFonts'
 
 import { t } from '@shared/i18n'
@@ -154,6 +155,16 @@ export function registerTerminalIpc(): void {
   ipcMain.handle(TERMINAL_IPC.getEmojiFont, async () => {
     try {
       return resolveEmojiFont()
+    } catch {
+      return null
+    }
+  })
+
+  // Fuente Y TAMAÑO de la terminal del sistema: sin el tamaño correcto, las
+  // métricas de celda no coinciden y los TUIs no cuadran.
+  ipcMain.handle(TERMINAL_IPC.getSystemFont, async () => {
+    try {
+      return resolveSystemTerminalFont()
     } catch {
       return null
     }

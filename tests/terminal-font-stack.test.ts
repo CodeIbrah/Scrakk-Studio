@@ -33,6 +33,7 @@ import {
   resolveCjkFont,
   resolveEmojiFont,
   resolveFontCandidates,
+  resolveSystemTerminalFont,
   systemFontForCodepoint,
   systemPrimaryFont
 } from '../src/main/fonts/systemFonts'
@@ -99,6 +100,17 @@ describe.skipIf(!hasFontconfig())('cadena de fuentes de la terminal', () => {
 
   it('sin candidatas no hay cadena (no se inventa una)', () => {
     expect(readFontStack([])).toBeNull()
+  })
+
+  it('la fuente/tamaño de la terminal del sistema es razonable', () => {
+    // De acá salen las métricas de celda; si esto no resuelve, el grid no puede
+    // coincidir con la terminal del usuario. En un entorno sin gsettings/registro
+    // devuelve null y se saltea.
+    const font = resolveSystemTerminalFont()
+    if (!font) return
+    expect(font.px).toBeGreaterThanOrEqual(6)
+    expect(font.px).toBeLessThanOrEqual(72)
+    expect(font.family.length).toBeGreaterThan(0)
   })
 
   it('la fuente de emoji NO es la que fontconfig elige por charset', () => {

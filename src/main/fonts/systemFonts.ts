@@ -62,6 +62,103 @@ export const TERMINAL_SAMPLE_CODEPOINTS: readonly number[] = [
   // una fuente enorme en la cadena para glifos que ahora resuelve el emoji.
 ]
 
+/**
+ * Fuente y tamaño REALES de la terminal por defecto del sistema.
+ *
+ * Es lo que hace que el grid tenga las MISMAS métricas que la terminal del
+ * usuario: no alcanza con la misma familia, el TAMAÑO (y por lo tanto el ancho
+ * de celda y, sobre todo, el alto) tiene que coincidir. Con `theme.fontSize` del
+ * editor, la terminal salía "más grande" y los TUIs no cuadraban.
+ */
+export type SystemTerminalFont = {
+  /** Familia de fontconfig (sin el estilo: "JetBrains Mono NL", no "… Italic"). */
+  family: string
+  /** Tamaño en píxeles (pt → px a 96 dpi, escalado por el text-scaling). */
+  px: number
+}
+
+/** Corre `gsettings get …` y devuelve el valor sin las comillas. */
+function gsettingsGet(schema: string, key?: string): string {
+  try {
+    const arg = key ? `${schema} ${key}` : schema
+    return execSync(`gsettings get ${arg}`, { encoding: 'utf-8', timeout: 3000 })
+      .trim()
+      .replace(/^'(.*)'$/s, '$1')
+  } catch {
+    return ''
+  }
+}
+
+/** saque los adjetivos de estilo que GTK mete en el nombre ("… Italic 10"). */
+function familyOfGtkName(name: string): string {
+  return name
+    .replace(
+      /\b(ultra|extra|semi)?-?\s*(light|thin|bold|black|italic|oblique|medium|regular|book|demibold)\b/gi,
+      ' '
+    )
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/**
+ * Resuelve la fuente de la terminal del sistema (o null si no se puede saber).
+ *
+ * Linux: GNOME/GTK (`monospace-font-name`) o el perfil de GNOME Terminal si NO
+ * usa la del sistema. Windows: la consola (registro `HKCU\Console`).
+ */
+export function resolveSystemTerminalFont(): SystemTerminalFont | null {
+  if (process.platform === 'win32') {
+    try {
+      let face = ''
+      let px = 16
+      const out = execSync('reg query "HKCU\\\\Console" /v FaceName', {
+        encoding: 'utf-8',
+        timeout: 3000
+      })
+      const faceMatch = /FaceName\s+REG_SZ\s+(.+)/.exec(out)
+      if (faceMatch) face = faceMatch[1].trim()
+      const sizeOut = execSync('reg query "HKCU\\\\Console" /v FontSize', {
+        encoding: 'utf-8',
+        timeout: 3000
+      })
+      // DWORD 0x00HH00WW: el alto en píxeles va en la palabra alta.
+      const hex = /FontSize\s+REG_DWORD\s+0x([0-9a-fA-F]+)/.exec(sizeOut)
+      if (hex) {
+        const h = (parseInt(hex[1], 16) >> 16) & 0xffff
+        if (h >= 6 && h <= 72) px = h
+      }
+      return { family: face || 'Consolas', px }
+    } catch {
+      return { family: 'Consolas', px: 16 } // default de conhost
+    }
+  }
+
+  try {
+    // Perfil de GNOME Terminal: si NO usa la del sistema, manda su `font`.
+    let name = ''
+    const profile = gsettingsGet('org.gnome.Terminal.ProfilesList', 'default')
+    if (profile) {
+      const base = `org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:${profile}/`
+      if (gsettingsGet(base, 'use-system-font') === 'false') name = gsettingsGet(base, 'font')
+    }
+    if (!name) name = gsettingsGet('org.gnome.desktop.interface', 'monospace-font-name')
+    if (!name) return null
+
+    // "Familia Estilo… N" — el TAMAÑO va al final (en puntos).
+    const match = /^(.*?)\s+(\d+(?:[.,]\d+)?)$/.exec(name.trim())
+    if (!match) return null
+    const family = familyOfGtkName(match[1]) || 'monospace'
+    const pt = parseFloat(match[2].replace(',', '.'))
+    const scaling = parseFloat(gsettingsGet('org.gnome.desktop.interface', 'text-scaling-factor'))
+    // GTK mide en puntos y asume 96 dpi: 10pt = 13.33px.
+    const px = Math.round(pt * (96 / 72) * (Number.isFinite(scaling) ? scaling : 1))
+    if (!Number.isFinite(px) || px < 6 || px > 72) return null
+    return { family, px }
+  } catch {
+    return null
+  }
+}
+
 /** Ejecuta `fc-match` (vacío si no hay fontconfig o falla). */
 function fcMatch(args: string): string {
   try {

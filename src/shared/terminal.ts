@@ -20,7 +20,9 @@ export const TERMINAL_IPC = {
   /** Fuente CJK del sistema, pedida SÓLO cuando el buffer tiene CJK. */
   getCjkFont: 'terminal:get-cjk-font',
   /** Fuente de EMOJI a color del sistema (sólo para code points emoji). */
-  getEmojiFont: 'terminal:get-emoji-font'
+  getEmojiFont: 'terminal:get-emoji-font',
+  /** Fuente y TAMAÑO de la terminal por defecto del sistema. */
+  getSystemFont: 'terminal:get-system-font'
 } as const
 
 export type TerminalCreateRequest = {
@@ -88,4 +90,12 @@ export interface TerminalApi {
    * (`✓ ❤ ☀ ⚠`) siguen monocromos, como los ve el CLI en su terminal.
    */
   getEmojiFont: () => Promise<TerminalFontFile | null>
+  /**
+   * Fuente y TAMAÑO de la terminal por defecto del sistema.
+   *
+   * No alcanza con la misma familia: si el tamaño no coincide, el ancho y el
+   * alto de celda tampoco, y los TUIs (que mezclan `─` con `│`) no cuadran.
+   * `null` si no se pudo resolver.
+   */
+  getSystemFont: () => Promise<{ family: string; px: number } | null>
 }
