@@ -53,9 +53,10 @@
   flex-shrink: 0;
 }
 
-/* Logo sobre los mensajes de bienvenida del estado vacío: el SVG es un
-   PNG incrustado (raster, sin fills vectoriales), así que se pinta como
-   silueta con máscara sobre el surface del tema activo. */
+/* Logo del estado vacío: se pinta como SILUETA con `mask-image` sobre el surface
+   del tema activo (así sirve para cualquier tema, claro u oscuro). La máscara
+   usa el ALFA del SVG, así que el símbolo central tiene que ser un AGUJERO — lo
+   arma el `mask` interno de `public/logo/scrakk-studio.svg`. */
 .emptyLogo {
   width: 64px;
   height: 64px;
