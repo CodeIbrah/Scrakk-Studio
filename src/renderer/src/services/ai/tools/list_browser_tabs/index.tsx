@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { BrowserTabsCard } from './visual'
 import displayCss from './visual/BrowserTabsCard.css?inline'
+import { BrowserTabsModal } from './modal'
 
 export const listBrowserTabsTool: Tool = {
   name: 'list_browser_tabs',
@@ -26,6 +27,7 @@ export const listBrowserTabsTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <BrowserTabsCard args={args} result={result} status={status} />,
+    modal: BrowserTabsModal,
   },
   execute,
 }

@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { ViewWebCard } from './visual'
 import displayCss from './visual/ViewWebCard.css?inline'
+import { ViewWebModal } from './modal'
 
 export const viewWebTool: Tool = {
   name: 'view_web',
@@ -27,6 +28,7 @@ export const viewWebTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <ViewWebCard args={args} result={result} status={status} />,
+    modal: ViewWebModal,
   },
   execute,
 }

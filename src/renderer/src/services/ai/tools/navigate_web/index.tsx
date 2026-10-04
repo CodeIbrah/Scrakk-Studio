@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { NavigateWebCard } from './visual'
 import displayCss from './visual/NavigateWebCard.css?inline'
+import { NavigateWebModal } from './modal'
 
 export const navigateWebTool: Tool = {
   name: 'navigate_web',
@@ -27,6 +28,7 @@ export const navigateWebTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <NavigateWebCard args={args} result={result} status={status} />,
+    modal: NavigateWebModal,
   },
   execute,
 }

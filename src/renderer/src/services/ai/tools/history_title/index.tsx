@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { HistoryTitleCard } from './visual'
 import displayCss from './visual/HistoryTitleCard.css?inline'
+import { TitleModal } from './modal'
 
 export const historyTitleTool: Tool = {
   name: 'history_title',
@@ -27,6 +28,7 @@ export const historyTitleTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <HistoryTitleCard args={args} result={result} status={status} />,
+    modal: TitleModal,
   },
   execute,
 }

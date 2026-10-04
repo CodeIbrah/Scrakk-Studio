@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { LspCard } from './visual'
 import displayCss from './visual/LspCard.css?inline'
+import { LspModal } from './modal'
 
 export const lspTool: Tool = {
   name: 'lsp',
@@ -27,6 +28,7 @@ export const lspTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <LspCard args={args} result={result} status={status} />,
+    modal: LspModal,
   },
   execute
 }

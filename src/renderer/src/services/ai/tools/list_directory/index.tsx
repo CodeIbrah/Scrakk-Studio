@@ -8,6 +8,7 @@ import { execute } from './executor'
 import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { ListDirectoryCard } from './visual'
+import { ListDirectoryModal } from './modal'
 import displayCss from './visual/ListDirectoryCard.css?inline'
 
 export const listDirectoryTool: Tool = {
@@ -27,6 +28,7 @@ export const listDirectoryTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <ListDirectoryCard args={args} result={result} status={status} />,
+    modal: ListDirectoryModal,
   },
   execute,
 }

@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { ReadFileCard } from './visual'
 import displayCss from './visual/ReadFileCard.css?inline'
+import { ReadFileModal } from './modal'
 
 export const readFileTool: Tool = {
   name: 'read_file',
@@ -27,6 +28,7 @@ export const readFileTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <ReadFileCard args={args} result={result} status={status} />,
+    modal: ReadFileModal,
   },
   execute,
 }

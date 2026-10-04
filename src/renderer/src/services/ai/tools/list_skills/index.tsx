@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { ListSkillsCard } from './visual'
 import displayCss from './visual/ListSkillsCard.css?inline'
+import { ListSkillsModal } from './modal'
 
 export const listSkillsTool: Tool = {
   name: 'list_skills',
@@ -25,7 +26,8 @@ export const listSkillsTool: Tool = {
     icon: 'layers',
     expandable: false,
     displayCss,
-    renderBody: (args, result, status) => <ListSkillsCard args={args} result={result} status={status} />
+    renderBody: (args, result, status) => <ListSkillsCard args={args} result={result} status={status} />,
+    modal: ListSkillsModal,
   },
   execute
 }

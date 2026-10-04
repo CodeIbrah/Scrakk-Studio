@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { MoveFileCard } from './visual'
 import displayCss from './visual/MoveFileCard.css?inline'
+import { MoveFileModal } from './modal'
 
 export const moveFileTool: Tool = {
   name: 'move_file',
@@ -27,6 +28,7 @@ export const moveFileTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <MoveFileCard args={args} result={result} status={status} />,
+    modal: MoveFileModal,
   },
   execute,
 }

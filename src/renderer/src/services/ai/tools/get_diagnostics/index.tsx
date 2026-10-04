@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { DiagnosticsCard } from './visual'
 import displayCss from './visual/DiagnosticsCard.css?inline'
+import { DiagnosticsModal } from './modal'
 
 export const getDiagnosticsTool: Tool = {
   name: 'get_diagnostics',
@@ -27,6 +28,7 @@ export const getDiagnosticsTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <DiagnosticsCard args={args} result={result} status={status} />,
+    modal: DiagnosticsModal,
   },
   execute,
 }

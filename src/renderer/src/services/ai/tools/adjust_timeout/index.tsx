@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { TimeoutCard } from './visual'
 import displayCss from './visual/TimeoutCard.css?inline'
+import { TimeoutModal } from './modal'
 
 export const adjustTimeoutTool: Tool = {
   name: 'adjust_timeout',
@@ -27,6 +28,7 @@ export const adjustTimeoutTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <TimeoutCard args={args} result={result} status={status} />,
+    modal: TimeoutModal,
   },
   execute,
 }

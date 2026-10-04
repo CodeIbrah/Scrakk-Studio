@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { MultipleToolsCard } from './visual'
 import displayCss from './visual/MultipleToolsCard.css?inline'
+import { MultipleToolsModal } from './modal'
 
 export const multipleToolsTool: Tool = {
   name: 'multiple_tools',
@@ -27,6 +28,7 @@ export const multipleToolsTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <MultipleToolsCard args={args} result={result} status={status} />,
+    modal: MultipleToolsModal,
   },
   execute,
 }

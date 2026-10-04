@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { OpenBrowserCard } from './visual'
 import displayCss from './visual/OpenBrowserCard.css?inline'
+import { OpenBrowserModal } from './modal'
 
 export const openBrowserTool: Tool = {
   name: 'open_browser',
@@ -27,6 +28,7 @@ export const openBrowserTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <OpenBrowserCard args={args} result={result} status={status} />,
+    modal: OpenBrowserModal,
   },
   execute,
 }

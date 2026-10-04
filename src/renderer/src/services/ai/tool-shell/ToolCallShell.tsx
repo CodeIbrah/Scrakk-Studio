@@ -127,7 +127,13 @@ export function ToolCallShell({ execution, meta, children }: ToolCallShellProps)
       toolName: toolCall.function.name,
       args,
       result,
-      status
+      status,
+      runId: execution.runId,
+      toolCallId: execution.toolCallId,
+      originalContent: execution.originalContent,
+      modifiedContent: execution.modifiedContent,
+      // El cuerpo custom de la tool (carpeta modal/). Sin esto, args + salida.
+      modal: meta?.modal
     })
   }
 

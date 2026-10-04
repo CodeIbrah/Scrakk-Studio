@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { WebFetchCard } from './visual'
 import displayCss from './visual/WebFetchCard.css?inline'
+import { WebFetchModal } from './modal'
 
 export const webFetchTool: Tool = {
   name: 'web_fetch',
@@ -26,7 +27,8 @@ export const webFetchTool: Tool = {
     headerArgKey: 'url',
     expandable: false,
     displayCss,
-    renderBody: (args, result, status) => <WebFetchCard args={args} result={result} status={status} />
+    renderBody: (args, result, status) => <WebFetchCard args={args} result={result} status={status} />,
+    modal: WebFetchModal,
   },
   execute
 }

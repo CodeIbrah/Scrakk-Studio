@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { ReadMultipleFilesCard } from './visual'
 import displayCss from './visual/ReadMultipleFilesCard.css?inline'
+import { ReadMultipleFilesModal } from './modal'
 
 export const readMultipleFilesTool: Tool = {
   name: 'read_multiple_files',
@@ -27,6 +28,7 @@ export const readMultipleFilesTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <ReadMultipleFilesCard args={args} result={result} status={status} />,
+    modal: ReadMultipleFilesModal,
   },
   execute,
 }

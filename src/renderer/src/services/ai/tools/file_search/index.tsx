@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { FileSearchCard } from './visual'
 import displayCss from './visual/FileSearchCard.css?inline'
+import { FileSearchModal } from './modal'
 
 export const fileSearchTool: Tool = {
   name: 'file_search',
@@ -27,6 +28,7 @@ export const fileSearchTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <FileSearchCard args={args} result={result} status={status} />,
+    modal: FileSearchModal,
   },
   execute,
 }

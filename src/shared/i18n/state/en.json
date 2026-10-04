@@ -688,6 +688,22 @@
       "at": "2026-09-25T17:29:38.769Z",
       "approvedAt": "2026-09-25T17:32:07.886Z"
     },
+    "chat.tool.archivo": {
+      "src": "75d6b4579e1d29eb",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.archivos": {
+      "src": "f7b3eac1cf97193d",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
     "chat.tool.argumentos": {
       "src": "085f844c9b33afa1",
       "area": "chat",
@@ -695,6 +711,46 @@
       "needsReview": false,
       "at": "2026-10-02T21:34:33.452Z",
       "approvedAt": "2026-10-02T21:34:33.712Z"
+    },
+    "chat.tool.carpetas": {
+      "src": "52cdbfb592c8dddd",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.comando": {
+      "src": "143e52685e82bc8c",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.completado": {
+      "src": "856641d2b3eef439",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.consulta": {
+      "src": "b10d9bd946d4eb42",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.contenido": {
+      "src": "197c7a8551b91c79",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
     },
     "chat.tool.corriendo": {
       "src": "7f2c23d1fc5a7b81",
@@ -704,6 +760,38 @@
       "at": "2026-10-02T21:52:11.346Z",
       "approvedAt": "2026-10-02T21:52:11.515Z"
     },
+    "chat.tool.descripcion": {
+      "src": "ee00b96fff266fe2",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.destino": {
+      "src": "8e7290e445465b86",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.detalles": {
+      "src": "c8a74ca68d39907d",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.estado": {
+      "src": "98e5acddb6c46a24",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
     "chat.tool.fallo": {
       "src": "184f9f08775f924d",
       "area": "chat",
@@ -711,6 +799,30 @@
       "needsReview": false,
       "at": "2026-10-02T21:34:33.453Z",
       "approvedAt": "2026-10-02T21:34:33.713Z"
+    },
+    "chat.tool.habilidades": {
+      "src": "ccc4a465c3ef071d",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.herramientas": {
+      "src": "a558a4d8c3e61bcd",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.lineas": {
+      "src": "42f6bf37d32cb62d",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
     },
     "chat.tool.listo": {
       "src": "b5fa51d564a9d880",
@@ -720,6 +832,46 @@
       "at": "2026-10-02T21:52:11.348Z",
       "approvedAt": "2026-10-02T21:52:11.515Z"
     },
+    "chat.tool.mensaje": {
+      "src": "d2af31712ead0414",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.operacion": {
+      "src": "1bf216d1df2388b7",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.origen": {
+      "src": "167a940c62788a7a",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.resultados": {
+      "src": "31056106ce607411",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.ruta": {
+      "src": "9ff9bd1106683bb9",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
     "chat.tool.salida": {
       "src": "4df541da95d46474",
       "area": "chat",
@@ -727,6 +879,14 @@
       "needsReview": false,
       "at": "2026-10-02T21:34:33.453Z",
       "approvedAt": "2026-10-02T21:34:33.713Z"
+    },
+    "chat.tool.sin.resultados": {
+      "src": "bf9fc1983ffa7841",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
     },
     "chat.tool.sin.salida": {
       "src": "058438112e798722",
@@ -736,6 +896,22 @@
       "at": "2026-10-02T21:34:33.453Z",
       "approvedAt": "2026-10-02T21:34:33.713Z"
     },
+    "chat.tool.tiempo.agotado": {
+      "src": "81f5a9545f35ed14",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "chat.tool.titulo": {
+      "src": "4c08a5d5feb22ce2",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
     "chat.tool.todavia.corriendo": {
       "src": "18b51f21b41f8111",
       "area": "chat",
@@ -743,6 +919,14 @@
       "needsReview": false,
       "at": "2026-10-02T21:34:33.453Z",
       "approvedAt": "2026-10-02T21:34:33.713Z"
+    },
+    "chat.tool.url": {
+      "src": "e7a241debad56609",
+      "area": "chat",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
     },
     "chat.tool.ver.resultado": {
       "src": "d809b0302c7264e8",

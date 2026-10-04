@@ -125,6 +125,14 @@ export interface ToolMeta {
   ) => React.ReactNode
 
   /**
+   * Componente del CUERPO del modal de resultado (la carpeta `modal/` de la
+   * tool). El modal genérico pone el header (ícono + label + estado + cerrar)
+   * y el scroll; esto es lo de adentro. Si no se declara, el modal muestra
+   * argumentos + salida cruda (fallback).
+   */
+  modal?: ToolModalBody
+
+  /**
    * ¿Qué hace el click en la fila de esta tool?
    *
    * - **sin declarar** (default): el shell abre el **resultado** de la tool en un
@@ -153,6 +161,26 @@ export interface ToolOpenContext {
   originalContent?: string
   modifiedContent?: string
 }
+
+/**
+ * API que recibe el CUERPO del modal de una tool. Es el contexto de apertura
+ * más `close` (cerrar el modal). Cada tool vive en su carpeta `modal/` y usa
+ * esto —nada más— para pintar su contenido.
+ */
+export interface ToolModalContext {
+  args: Record<string, unknown>
+  result?: string
+  status: string
+  runId?: string
+  toolCallId?: string
+  originalContent?: string
+  modifiedContent?: string
+  /** Cierra el modal. */
+  close: () => void
+}
+
+/** Componente del cuerpo del modal de una tool (carpeta `modal/`). */
+export type ToolModalBody = React.ComponentType<ToolModalContext>
 
 export type ToolMutationBehavior = 'always' | 'never' | 'shell'
 

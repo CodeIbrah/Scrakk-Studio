@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { BlueprintCard } from './visual'
 import displayCss from './visual/BlueprintCard.css?inline'
+import { BlueprintModal } from './modal'
 
 export const createAppBlueprintTool: Tool = {
   name: 'create_app_blueprint',
@@ -27,6 +28,7 @@ export const createAppBlueprintTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <BlueprintCard args={args} result={result} status={status} />,
+    modal: BlueprintModal,
   },
   execute,
 }

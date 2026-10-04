@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { SkillCard } from './visual'
 import displayCss from './visual/SkillCard.css?inline'
+import { SkillModal } from './modal'
 
 export const skillTool: Tool = {
   name: 'skill',
@@ -26,7 +27,8 @@ export const skillTool: Tool = {
     headerArgKey: 'name',
     expandable: false,
     displayCss,
-    renderBody: (args, result, status) => <SkillCard args={args} result={result} status={status} />
+    renderBody: (args, result, status) => <SkillCard args={args} result={result} status={status} />,
+    modal: SkillModal,
   },
   execute
 }

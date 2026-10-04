@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { TerminalCard } from './visual'
 import displayCss from './visual/TerminalCard.css?inline'
+import { ExecuteCommandModal } from './modal'
 
 export const executeCommandTool: Tool = {
   name: 'execute_command',
@@ -28,6 +29,7 @@ export const executeCommandTool: Tool = {
     expandable: true,
     displayCss,
     renderBody: (args, result, status) => <TerminalCard args={args} result={result} status={status} />,
+    modal: ExecuteCommandModal,
   },
   execute,
 }

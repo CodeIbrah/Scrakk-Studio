@@ -9,6 +9,7 @@ import { permissions } from './permissions'
 import { prompt } from './prompt'
 import { WebSearchCard } from './visual'
 import displayCss from './visual/WebSearchCard.css?inline'
+import { WebSearchModal } from './modal'
 
 export const webSearchTool: Tool = {
   name: 'web_search',
@@ -26,7 +27,8 @@ export const webSearchTool: Tool = {
     headerArgKey: 'query',
     expandable: false,
     displayCss,
-    renderBody: (args, result, status) => <WebSearchCard args={args} result={result} status={status} />
+    renderBody: (args, result, status) => <WebSearchCard args={args} result={result} status={status} />,
+    modal: WebSearchModal,
   },
   execute
 }
