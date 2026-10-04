@@ -197,6 +197,18 @@ published are not edited. The file goes per version:
   and since **27 tools ship their own visual**, the `!renderBody` condition left
   every one of them out and nothing was clickable. That coupling is what the
   declarative `onOpen` removes.
+- **Each tool now paints its own result modal**: the generic modal showed the
+  args as raw JSON plus the tool's raw output, which for `list_directory` meant a
+  wall of `📁`/`📄` emojis. Every tool that opens that modal now ships a `modal/`
+  folder next to its `visual/`, with a component fed by a small predefined API
+  (args, result, status, context and `close`) that paints the inside with shared
+  primitives (`ToolModalSection`, `ToolModalRow`, `ToolModalMeta`,
+  `ToolModalCode`, `ToolModalBadge`…). The generic modal keeps the header, the
+  status and the scroll — only the inside changes — so every tool looks the same
+  without copying layout or CSS. `ToolMeta.modal` is the switch, and a test fails
+  if a tool that opens the modal does not declare one. The tools that open a diff
+  (`onOpen` function) or their own chat (`task`) are untouched: they never used
+  this modal.
 
 ### Explorer (UI)
 - **The filtered tree (Git → Changes) no longer costs a render per folder**: the
