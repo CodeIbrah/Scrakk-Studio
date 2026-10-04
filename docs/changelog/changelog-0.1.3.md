@@ -148,6 +148,13 @@ published are not edited. The file goes per version:
   the way back when you are deep in a long reply with the question pinned at the
   top. The position is measured with the sticky temporarily off, because while
   pinned its rect is no longer its place.
+- **A sharper logo in the empty state**: `public/logo/scrakk-studio.svg` was
+  replaced with a vector version (the old one was a raster PNG wrapped in an
+  SVG). The empty state paints it as a silhouette through `mask-image`, and that
+  mask reads the SVG's **alpha**, so the inner symbol has to be a **hole**: the
+  new file drew it with an opaque `#0F0F0F` fill, which turned the mask into a
+  solid disc and made the symbol vanish. It is cut out now with an SVG-internal
+  mask on the circle.
 - **Tool rows highlight on hover and open their result on click**, with the
   decision living in **each tool's folder**, not in the chat block:  - The **shell** (`ToolCallShell`) provides the behavior: it renders the row as a
     button with hover and, on click, opens the tool's **result in a modal** (the
