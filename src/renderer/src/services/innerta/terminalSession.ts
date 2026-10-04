@@ -627,23 +627,26 @@ class TerminalSessionImpl implements LiveSession {
    */
   private async applySystemFont(view: InnertaViewHandle): Promise<void> {
     const api = getTerminalApi()
-    if (!api?.getSystemFont) return
-    try {
-      const info = await api.getSystemFont()
-      if (this.disposed) return
-      if (info && info.px > 0) {
-        this.systemFontFamily = info.family
-        // `setFontSize` (zoom) fija `theme.fontSize`; la cadena de la terminal
-        // se aplica después y toma ese tamaño.
-        view.module.setFontSize?.(info.px)
-      } else {
-        // Sin datos del sistema: el viejo "1px menos que el editor".
-        const base = view.module.getFontSize?.() ?? 0
-        if (base > 1) view.module.setFontSize?.(base - 1)
+    let info: { family: string; px: number } | null = null
+    if (api?.getSystemFont) {
+      try {
+        info = await api.getSystemFont()
+      } catch {
+        info = null
       }
-    } catch {
-      // Sin datos: queda el default del motor.
     }
+    if (this.disposed) return
+    if (info && info.px > 0) {
+      this.systemFontFamily = info.family
+      // `setFontSize` (zoom) fija `theme.fontSize`; la cadena de la terminal se
+      // aplica después y toma ese tamaño.
+      view.module.setFontSize?.(info.px)
+      return
+    }
+    // Sin datos del sistema (o un `main` que todavía no expone el canal): el
+    // viejo "1px menos que el editor", así no queda más grande que antes.
+    const base = view.module.getFontSize?.() ?? 0
+    if (base > 1) view.module.setFontSize?.(base - 1)
   }
 
   /** La cadena vigente + la CJK ya cargada (si la hay), sin repetir. */
