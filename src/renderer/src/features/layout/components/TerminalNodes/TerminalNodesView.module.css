@@ -253,6 +253,8 @@
   stroke-width: 2;
   fill: none;
   vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   pointer-events: none;
   opacity: 0.85;
 }
@@ -262,6 +264,8 @@
   stroke-width: 2;
   fill: none;
   vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   stroke-dasharray: 6 4;
   pointer-events: none;
   opacity: 0.9;

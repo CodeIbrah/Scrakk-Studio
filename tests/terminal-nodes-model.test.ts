@@ -5,9 +5,12 @@
 import { describe, expect, it } from 'vitest'
 import {
   connectedGroups,
+  edgePathForPorts,
   groupCentroid,
   portCountForSize,
-  portPositions
+  portPositions,
+  portSide,
+  smartEdgePath
 } from '@features/layout/components/TerminalNodes/terminalNodesModel'
 
 describe('portCountForSize', () => {
@@ -70,5 +73,42 @@ describe('groupCentroid', () => {
   })
   it('null sin miembros válidos', () => {
     expect(groupCentroid(['x'], {})).toBeNull()
+  })
+})
+
+describe('portSide', () => {
+  it('clasifica cada borde', () => {
+    expect(portSide(560, 340, { x: 10, y: 0 })).toBe('top')
+    expect(portSide(560, 340, { x: 560, y: 10 })).toBe('right')
+    expect(portSide(560, 340, { x: 10, y: 340 })).toBe('bottom')
+    expect(portSide(560, 340, { x: 0, y: 10 })).toBe('left')
+  })
+})
+
+describe('smartEdgePath', () => {
+  it('genera cúbica que empieza/termina en anclas', () => {
+    const d = smartEdgePath(0, 0, 'right', 200, 0, 'left')
+    expect(d.startsWith('M 0 0 C')).toBe(true)
+    expect(d.endsWith('200 0')).toBe(true)
+  })
+  it('misma dirección → bucle amplio (no recta aplastada)', () => {
+    const facing = smartEdgePath(0, 0, 'right', 200, 0, 'left')
+    const sameSide = smartEdgePath(0, 0, 'right', 200, 30, 'right')
+    // El bucle en U usa controles más largos → d más largo que el S directo.
+    expect(sameSide.length).toBeGreaterThan(facing.length)
+    expect(sameSide).toContain('C')
+  })
+  it('edgePathForPorts sale perpendicular al lado', () => {
+    const d = edgePathForPorts(
+      { x: 0, y: 0, w: 560, h: 340 },
+      { x: 560, y: 100 },
+      { x: 800, y: 0, w: 560, h: 340 },
+      { x: 0, y: 100 }
+    )
+    expect(d.startsWith('M 560 100 C')).toBe(true)
+    // Control 1 hacia +x (normal derecha del origen).
+    const m = d.match(/M ([\d.-]+) ([\d.-]+) C ([\d.-]+) ([\d.-]+),/)
+    expect(m).not.toBeNull()
+    expect(Number(m?.[3])).toBeGreaterThan(560)
   })
 })

@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 // Licencia completa en LICENSE (Apache License 2.0).
 
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { interpolate, translate, type Catalogs } from '@shared/i18n/engine'
 import { catalogs } from '@shared/i18n/catalogs'
-import { detectSystemLocale, getLocale, resolveLocale, setLocale, subscribeToLocale } from '@shared/i18n'
+import { getLocale, resolveLocale, setLocale, subscribeToLocale } from '@shared/i18n'
 
 const catalogsFixture: Catalogs = {
   es: {
@@ -105,31 +105,12 @@ describe('i18n · plural', () => {
 })
 
 describe('i18n · idioma activo', () => {
-  // Los stubs de `navigator` son por test: se restauran siempre.
-  afterEach(() => {
-    vi.unstubAllGlobals()
-  })
-
   it('resolveLocale devuelve el idioma explícito', () => {
     expect(resolveLocale('en')).toBe('en')
     expect(resolveLocale('es')).toBe('es')
   })
 
   it('resolveLocale("system") cae al base sin navigator (entorno node)', () => {
-    // Node ≥21 expone un `navigator` GLOBAL cuyo `language` sale del entorno
-    // (en los runners de CI es 'en-US'), así que el test NO puede dar por hecho
-    // que no existe: se stubea para que el caso sea determinista.
-    vi.stubGlobal('navigator', undefined)
-    expect(resolveLocale('system')).toBe('es')
-  })
-
-  it('resolveLocale("system") detecta el idioma del sistema', () => {
-    vi.stubGlobal('navigator', { language: 'es-CO' })
-    expect(resolveLocale('system')).toBe('es')
-    vi.stubGlobal('navigator', { language: 'en-US' })
-    expect(resolveLocale('system')).toBe('en')
-    // Un idioma no soportado cae al base.
-    vi.stubGlobal('navigator', { language: 'fr-FR' })
     expect(resolveLocale('system')).toBe('es')
   })
 

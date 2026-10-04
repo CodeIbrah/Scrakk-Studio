@@ -14,8 +14,11 @@ import { useCallback, useEffect, useState, type JSX } from 'react'
 import { ToggleSwitch } from '@ui'
 import {
   isLowEndMode,
+  isNodeJellyEnabled,
   setLowEndMode,
-  subscribeLowEndMode
+  setNodeJellyEnabled,
+  subscribeLowEndMode,
+  subscribeNodeJelly
 } from '@services/perf'
 import {
   applyBackgroundCapNow,
@@ -33,11 +36,13 @@ function formatMB(bytes: number): string {
 
 export function PerformanceSection(): JSX.Element {
   const [lowEnd, setLowEnd] = useState<boolean>(() => isLowEndMode())
+  const [jelly, setJelly] = useState<boolean>(() => isNodeJellyEnabled())
   const [heap, setHeap] = useState<number>(0)
   const [background, setBackground] = useState<number>(0)
 
   const refresh = useCallback((): void => {
     setLowEnd(isLowEndMode())
+    setJelly(isNodeJellyEnabled())
     setHeap(totalEditorHeapBytes())
     setBackground(backgroundModuleCount())
   }, [])
@@ -45,9 +50,11 @@ export function PerformanceSection(): JSX.Element {
   useEffect(() => {
     refresh()
     const offPerf = subscribeLowEndMode(refresh)
+    const offJelly = subscribeNodeJelly(refresh)
     const timer = setInterval(refresh, 2000)
     return () => {
       offPerf()
+      offJelly()
       clearInterval(timer)
     }
   }, [refresh])
@@ -83,6 +90,23 @@ export function PerformanceSection(): JSX.Element {
           checked={lowEnd}
           label={lowEnd ? t('settings.desactivar.modo.pc.mala') : t('settings.activar.modo.pc.mala')}
           onChange={(next) => handleToggle(next)}
+        />
+      </div>
+
+      <div className={styles.row}>
+        <div className={styles.rowInfo}>
+          <span className={styles.rowName}>{t('settings.animacion.gelatinosa.nodos')}</span>
+          <span className={styles.rowMeta}>
+            {t('settings.mueve.el.grupo.al.instante.sin.muelle')}
+          </span>
+        </div>
+        <ToggleSwitch
+          checked={jelly}
+          label={jelly ? t('settings.desactivar.animacion.gelatinosa') : t('settings.activar.animacion.gelatinosa')}
+          onChange={(next) => {
+            setNodeJellyEnabled(next)
+            refresh()
+          }}
         />
       </div>
 
