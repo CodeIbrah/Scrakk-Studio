@@ -86,6 +86,13 @@
   transform: translate(2px, 3px);
 }
 
+/* Al apretarlo NO se encoge. El `:active` del `IconButton` pisa el nudge con un
+   `scale(0.94)`, así que el botón saltaba al lugar sin nudge y encogía. El
+   selector de atributo sube la especificidad para ganarle a `.accent:active`. */
+.sendNudge[type]:active {
+  transform: translate(2px, 3px);
+}
+
 /* Autocompletado de comandos (`/`): panel flotante ARRIBA del input, más
    ancho que el propio input para que entren nombre + descripción. */
 .suggestions {
