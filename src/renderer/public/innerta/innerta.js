@@ -8473,6 +8473,8 @@ var _SetInnertaBgColor = Module['_SetInnertaBgColor'] = makeInvalidEarlyAccess('
 var _SetInnertaFontSize = Module['_SetInnertaFontSize'] = makeInvalidEarlyAccess('_SetInnertaFontSize');
 var _GetInnertaFontSize = Module['_GetInnertaFontSize'] = makeInvalidEarlyAccess('_GetInnertaFontSize');
 var _SetInnertaTerminalFont = Module['_SetInnertaTerminalFont'] = makeInvalidEarlyAccess('_SetInnertaTerminalFont');
+var _SetInnertaTerminalFonts = Module['_SetInnertaTerminalFonts'] = makeInvalidEarlyAccess('_SetInnertaTerminalFonts');
+var _GetInnertaTerminalFontCount = Module['_GetInnertaTerminalFontCount'] = makeInvalidEarlyAccess('_GetInnertaTerminalFontCount');
 var _SetInnertaAccentColor = Module['_SetInnertaAccentColor'] = makeInvalidEarlyAccess('_SetInnertaAccentColor');
 var _SetInnertaTextColor = Module['_SetInnertaTextColor'] = makeInvalidEarlyAccess('_SetInnertaTextColor');
 var _SetInnertaBorderColor = Module['_SetInnertaBorderColor'] = makeInvalidEarlyAccess('_SetInnertaBorderColor');
@@ -8595,6 +8597,8 @@ function assignWasmExports(wasmExports) {
   assert(typeof wasmExports['SetInnertaFontSize'] != 'undefined', 'missing Wasm export: SetInnertaFontSize');
   assert(typeof wasmExports['GetInnertaFontSize'] != 'undefined', 'missing Wasm export: GetInnertaFontSize');
   assert(typeof wasmExports['SetInnertaTerminalFont'] != 'undefined', 'missing Wasm export: SetInnertaTerminalFont');
+  assert(typeof wasmExports['SetInnertaTerminalFonts'] != 'undefined', 'missing Wasm export: SetInnertaTerminalFonts');
+  assert(typeof wasmExports['GetInnertaTerminalFontCount'] != 'undefined', 'missing Wasm export: GetInnertaTerminalFontCount');
   assert(typeof wasmExports['SetInnertaAccentColor'] != 'undefined', 'missing Wasm export: SetInnertaAccentColor');
   assert(typeof wasmExports['SetInnertaTextColor'] != 'undefined', 'missing Wasm export: SetInnertaTextColor');
   assert(typeof wasmExports['SetInnertaBorderColor'] != 'undefined', 'missing Wasm export: SetInnertaBorderColor');
@@ -8713,6 +8717,8 @@ function assignWasmExports(wasmExports) {
   _SetInnertaFontSize = Module['_SetInnertaFontSize'] = createExportWrapper('SetInnertaFontSize', wasmExports['SetInnertaFontSize'], 1);
   _GetInnertaFontSize = Module['_GetInnertaFontSize'] = createExportWrapper('GetInnertaFontSize', wasmExports['GetInnertaFontSize'], 0);
   _SetInnertaTerminalFont = Module['_SetInnertaTerminalFont'] = createExportWrapper('SetInnertaTerminalFont', wasmExports['SetInnertaTerminalFont'], 1);
+  _SetInnertaTerminalFonts = Module['_SetInnertaTerminalFonts'] = createExportWrapper('SetInnertaTerminalFonts', wasmExports['SetInnertaTerminalFonts'], 1);
+  _GetInnertaTerminalFontCount = Module['_GetInnertaTerminalFontCount'] = createExportWrapper('GetInnertaTerminalFontCount', wasmExports['GetInnertaTerminalFontCount'], 0);
   _SetInnertaAccentColor = Module['_SetInnertaAccentColor'] = createExportWrapper('SetInnertaAccentColor', wasmExports['SetInnertaAccentColor'], 1);
   _SetInnertaTextColor = Module['_SetInnertaTextColor'] = createExportWrapper('SetInnertaTextColor', wasmExports['SetInnertaTextColor'], 1);
   _SetInnertaBorderColor = Module['_SetInnertaBorderColor'] = createExportWrapper('SetInnertaBorderColor', wasmExports['SetInnertaBorderColor'], 1);

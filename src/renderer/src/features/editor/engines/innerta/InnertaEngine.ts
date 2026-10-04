@@ -198,6 +198,16 @@ export interface InnertaModule {
   /** Theme de Scrakk → colores base del editor. */
   setBgColor(color: number): void
   setTerminalFont(fontPath: string): void
+  /**
+   * Cadena de FUENTES de la terminal: rutas DENTRO del FS del WASM separadas
+   * por `'\n'`, la primaria primero (ver `SetInnertaTerminalFonts`).
+   *
+   * Existe para que los glifos que la primaria no tiene se resuelvan con la
+   * misma cadena que la terminal del sistema, en vez de con las empaquetadas.
+   */
+  setTerminalFonts?(paths: string): void
+  /** Cuántas fuentes tiene la cadena AHORA (`-1` si el build no lo expone). */
+  getTerminalFontCount?(): number
   getCharWidth(): number
   getLineHeight(): number
   resize(cols: number, rows: number): void

@@ -21,8 +21,10 @@ import type { InnertaModule } from './InnertaEngine'
 
 /** Candidatas de fuente de emoji, en orden (Linux/macOS/Windows). */
 function emojiFont(px: number): string {
-  // La empaquetada gana: el rasterizado no depende de qué tenga el SO.
-  return `${px}px "ScrakkEmoji","Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji","Twemoji Mozilla","EmojiOne Color",sans-serif`
+  // La del SISTEMA primero: es la que el usuario ve en SU terminal, así que los
+  // emojis quedan iguales a los de su PC. La empaquetada (`ScrakkEmoji` =
+  // Twemoji) va al FINAL, como garantía de que siempre haya algo que dibuje.
+  return `${px}px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji","ScrakkEmoji","Twemoji Mozilla","EmojiOne Color",sans-serif`
 }
 
 // ── Fuente de emoji empaquetada (Twemoji Mozilla, COLR) ────────────────────

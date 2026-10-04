@@ -72,7 +72,7 @@ import {
   type ReadEncodedRequest,
   type WriteEncodedRequest
 } from '@shared/encodings'
-import { TERMINAL_IPC, type TerminalCreateRequest, type TerminalWriteRequest, type TerminalResizeRequest, type TerminalDestroyRequest } from '@shared/terminal'
+import { TERMINAL_IPC, type TerminalCreateRequest, type TerminalWriteRequest, type TerminalResizeRequest, type TerminalDestroyRequest, type TerminalFontFile } from '@shared/terminal'
 import { GIT_IPC, type GitApi } from '@shared/git'
 import {
   EXTENSIONS_IPC,
@@ -425,7 +425,9 @@ const api: WindowApi = {
       ipcRenderer.on(TERMINAL_IPC.onExit, listener)
       return () => ipcRenderer.removeListener(TERMINAL_IPC.onExit, listener)
     },
-    getMonoFont: () => ipcRenderer.invoke(TERMINAL_IPC.getMonoFont) as Promise<{ data: number[] } | null>
+    getMonoFont: () => ipcRenderer.invoke(TERMINAL_IPC.getMonoFont) as Promise<{ data: number[] } | null>,
+    getFontStack: () =>
+      ipcRenderer.invoke(TERMINAL_IPC.getFontStack) as Promise<TerminalFontFile[] | null>
   },
   git: {
     version: () => ipcRenderer.invoke(GIT_IPC.version),

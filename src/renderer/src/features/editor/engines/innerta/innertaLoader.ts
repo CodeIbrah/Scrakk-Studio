@@ -453,6 +453,21 @@ function wrap(raw: Record<string, unknown>): InnertaModule {
       _raw._SetInnertaTerminalFont(ptr)
       _raw._free(ptr)
     },
+    /**
+     * Cadena de fuentes de la terminal: rutas dentro del FS del WASM separadas
+     * por `'\n'`, la primaria primero (ver `SetInnertaTerminalFonts`).
+     */
+    setTerminalFonts(paths) {
+      if (typeof _raw._SetInnertaTerminalFonts !== 'function') return
+      const ptr = toUtf8Ptr(_raw, paths)
+      _raw._SetInnertaTerminalFonts(ptr)
+      _raw._free(ptr)
+    },
+    /** Cuántas fuentes tiene la cadena AHORA (`-1` si el build no lo expone). */
+    getTerminalFontCount() {
+      if (typeof _raw._GetInnertaTerminalFontCount !== 'function') return -1
+      return _raw._GetInnertaTerminalFontCount() as number
+    },
     getCharWidth() {
       if (typeof _raw._GetInnertaCharWidth !== 'function') return 0
       return _raw._GetInnertaCharWidth() as number
@@ -966,6 +981,21 @@ function wrapIsolated(raw: Record<string, unknown>, canvas: HTMLCanvasElement): 
       const ptr = toUtf8Ptr(_raw, fontPath)
       _raw._SetInnertaTerminalFont(ptr)
       _raw._free(ptr)
+    },
+    /**
+     * Cadena de fuentes de la terminal: rutas dentro del FS del WASM separadas
+     * por `'\n'`, la primaria primero (ver `SetInnertaTerminalFonts`).
+     */
+    setTerminalFonts(paths) {
+      if (typeof _raw._SetInnertaTerminalFonts !== 'function') return
+      const ptr = toUtf8Ptr(_raw, paths)
+      _raw._SetInnertaTerminalFonts(ptr)
+      _raw._free(ptr)
+    },
+    /** Cuántas fuentes tiene la cadena AHORA (`-1` si el build no lo expone). */
+    getTerminalFontCount() {
+      if (typeof _raw._GetInnertaTerminalFontCount !== 'function') return -1
+      return _raw._GetInnertaTerminalFontCount() as number
     },
     getCharWidth() {
       if (typeof _raw._GetInnertaCharWidth !== 'function') return 0

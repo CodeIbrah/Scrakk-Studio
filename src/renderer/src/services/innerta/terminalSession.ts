@@ -31,6 +31,15 @@ interface TerminalApi {
   destroy: (req: { id: string }) => Promise<void>
   onData: (cb: (payload: { id: string; data: string }) => void) => () => void
   onExit: (cb: (payload: { id: string; exitCode: number }) => void) => () => void
+  /**
+   * Cadena de fuentes de la terminal (primaria + reemplazos), resuelta por el
+   * main desde el SISTEMA. `null` si no se pudo resolver ninguna.
+   */
+  getFontStack?: () => Promise<
+    Array<{ family: string; file: string; data: Uint8Array }> | null
+  >
+  /** Legado: una sola monospace del sistema. */
+  getMonoFont?: () => Promise<{ data: number[] } | null>
 }
 
 function getTerminalApi(): TerminalApi | null {
@@ -66,9 +75,14 @@ class TerminalSessionImpl implements LiveSession {
   private renderScale = 1
   /** Tamaño de fuente del motor a escala 1 (el que NO depende del zoom). */
   private baseFontSize = 0
-  /** Fuente monoespaciada de la terminal (ruta en el FS del WASM). */
-  private fontPath = ''
-  /** Escala con la que ya se re-aplicó `fontPath` (evita recargar de más). */
+  /**
+   * Cadena COMPLETA de la terminal: primaria + reemplazos, EN ORDEN.
+   *
+   * Es la que resuelve el main desde el sistema (fontconfig en Linux). Los
+   * archivos viven en el FS del WASM (en memoria): no se guardan en disco.
+   */
+  private fontPaths: string[] = []
+  /** Escala con la que ya se re-aplicó `fontPaths` (evita recargar de más). */
   private fontScaleApplied = 1
   private resizeRo: ResizeObserver | null = null
   private inputDispose: (() => void) | null = null
@@ -270,9 +284,9 @@ class TerminalSessionImpl implements LiveSession {
         // separadas. Por eso, cambiado el tamaño, se vuelve a aplicar la fuente
         // de la TERMINAL: eso recarga el atlas a `fontSize - 1` y recalcula las
         // métricas, así el par celda/glifo queda como a escala 1.
-        if (this.baseFontSize > 0 && this.fontPath && this.renderScale !== this.fontScaleApplied) {
+        if (this.baseFontSize > 0 && this.fontPaths.length > 0 && this.renderScale !== this.fontScaleApplied) {
           this.view.module.setFontSize?.(this.baseFontSize * this.renderScale)
-          this.view.module.setTerminalFont?.(this.fontPath)
+          this.applyFontPaths()
           this.fontScaleApplied = this.renderScale
         }
       } catch {
@@ -443,36 +457,73 @@ class TerminalSessionImpl implements LiveSession {
     }
   }
 
+  /**
+   * Carga la CADENA de fuentes de la terminal.
+   *
+   * El main la resuelve desde el sistema (fontconfig en Linux) y acá se escriben
+   * los archivos en el FS del motor y se le pasa la lista: primaria + reemplazos,
+   * EN ORDEN. Es lo que hace que un `─`, un `⠋` o una flecha salgan de la MISMA
+   * fuente que en la terminal del usuario, en vez de las empaquetadas.
+   *
+   * Los archivos viven en el FS del WASM (memoria): no se escriben en disco, así
+   * que al cerrar desaparecen y al abrir se vuelven a resolver.
+   */
   private async applyFont(view: InnertaViewHandle): Promise<void> {
     try {
-      const fontApi = (
-        window as unknown as { api?: { terminal?: { getMonoFont?: () => Promise<{ data: number[] } | null> } } }
-      ).api?.terminal?.getMonoFont
+      const api = (window as unknown as { api?: { terminal?: TerminalApi } }).api?.terminal
       const raw = view.module as unknown as Record<string, unknown>
       const fsApi = (raw as { FS?: { writeFile: (p: string, d: Uint8Array) => void } }).FS
-      if (fontApi && fsApi) {
-        const result = await fontApi()
-        if (this.disposed) return
-        // Ruta de la fuente de la TERMINAL. Se recuerda porque el zoom cambia
-        // `theme.fontSize`, y `SetTheme` recarga la fuente del EDITOR — que en un
-        // view de terminal PISA la monoespaciada (y sus métricas) → las letras
-        // quedaban con celdas anchas. Ver `applyDims`.
-        const path = result?.data?.length
-          ? '/fonts/terminal/system-mono.ttf'
-          : '/fonts/terminal/JetBrainsMono-Regular.ttf'
-        if (result?.data?.length) fsApi.writeFile(path, new Uint8Array(result.data))
-        this.fontPath = path
-        view.module.setTerminalFont(path)
-      } else {
-        this.fontPath = '/fonts/terminal/JetBrainsMono-Regular.ttf'
-        view.module.setTerminalFont(this.fontPath)
+
+      const stack = api?.getFontStack && fsApi ? await api.getFontStack() : null
+      if (this.disposed) return
+
+      if (stack?.length && view.module.setTerminalFonts) {
+        const paths: string[] = []
+        stack.forEach((font, index) => {
+          const path = `/fonts/terminal/stack-${index}.ttf`
+          fsApi!.writeFile(path, font.data)
+          paths.push(path)
+        })
+        this.fontPaths = paths
+        this.applyFontPaths()
+        this.applyDims()
+        return
       }
+
+      // Sin cadena (o motor sin el export): la mono de siempre, o la embebida.
+      const single = api?.getMonoFont && fsApi ? await api.getMonoFont() : null
+      if (this.disposed) return
+      if (single?.data?.length && fsApi) {
+        const path = '/fonts/terminal/system-mono.ttf'
+        fsApi.writeFile(path, new Uint8Array(single.data))
+        this.fontPaths = [path]
+      } else {
+        this.fontPaths = ['/fonts/terminal/JetBrainsMono-Regular.ttf']
+      }
+      this.applyFontPaths()
     } catch {
       // Font por defecto del engine.
     }
     // La fuente cambió las métricas (charWidth/lineHeight): recalcular las
     // dims reales del grid/PTY, que al crear el PTY usaban el fallback.
     this.applyDims()
+  }
+
+  /**
+   * Aplica la cadena vigente al motor.
+   *
+   * Se usa al cargar la fuente y también al cambiar el ZOOM (ver `applyDims`): el
+   * tamaño de fuente pasa por `SetTheme`, que recarga la del EDITOR y PISA la
+   * monoespaciada — por eso hay que volver a aplicar la cadena.
+   */
+  private applyFontPaths(): void {
+    const mod = this.view?.module
+    if (!mod || this.fontPaths.length === 0) return
+    if (typeof mod.setTerminalFonts === 'function') {
+      mod.setTerminalFonts(this.fontPaths.join('\n'))
+      return
+    }
+    mod.setTerminalFont(this.fontPaths[0])
   }
 
   private applyTheme(view: InnertaViewHandle): void {

@@ -353,3 +353,18 @@ published are not edited. The file goes per version:
   can no longer come out shorter than the glyphs. Other terminals get away with
   "≈1.1 em" because there the cell and the rasterisation come from the same
   number; here they came from two.
+- **The terminal's missing glyphs come from YOUR system now**: the engine's
+  fallback chain was hardcoded, and in WASM only three **embedded** fonts existed
+  (`Twemoji`, `Symbols`, `EmojiUpper`). So every glyph the primary lacks — box
+  drawing `─`, blocks, braille `⠋`, powerline, arrows — was drawn by *our* fonts
+  instead of the ones your terminal resolves, which is why they looked different
+  from your machine. The main process now resolves the real chain — **fontconfig**
+  on Linux (`fc-match -s monospace`, the same source alacritty/wezterm use) and
+  the console font list on Windows — and the engine takes it
+  (`SetInnertaTerminalFonts`), replacing the fixed list. Fonts are read at
+  runtime and live only in the WASM filesystem: **nothing is written to disk**, so
+  they are re-resolved on every open and gone on close. Colour emoji now prefer
+  the system's emoji font too, with the bundled Twemoji only as a last resort.
+  Trade-off, said out loud: the chain is capped (≤6 MB per font, ≤24 MB total)
+  because each terminal module loads its own copy — the giant CJK fonts are
+  skipped for now, so CJK still falls back.
