@@ -110,8 +110,31 @@ describe('i18n · idioma activo', () => {
     expect(resolveLocale('es')).toBe('es')
   })
 
-  it('resolveLocale("system") cae al base sin navigator (entorno node)', () => {
-    expect(resolveLocale('system')).toBe('es')
+  // OJO: el `navigator` global NO es "de browser" nomás — Node 24+ lo trae y su
+  // `language` sale del locale del sistema (`en-US` en un runner de CI). Si el
+  // test no lo fija, depende de la máquina y falla en el CI. Se stubea.
+  it('resolveLocale("system") cae al base sin navigator', () => {
+    vi.stubGlobal('navigator', undefined)
+    try {
+      expect(resolveLocale('system')).toBe('es')
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
+  it('resolveLocale("system") detecta el idioma del sistema', () => {
+    for (const [tag, expected] of [
+      ['es-AR', 'es'],
+      ['es', 'es'],
+      ['en-US', 'en']
+    ] as const) {
+      vi.stubGlobal('navigator', { language: tag, languages: [tag] })
+      try {
+        expect(resolveLocale('system'), tag).toBe(expected)
+      } finally {
+        vi.unstubAllGlobals()
+      }
+    }
   })
 
   it('setLocale notifica a los suscriptores una sola vez por cambio', () => {
