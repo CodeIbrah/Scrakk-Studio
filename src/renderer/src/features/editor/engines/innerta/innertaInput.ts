@@ -80,10 +80,21 @@ function modsOf(e: { shiftKey: boolean; ctrlKey: boolean; altKey: boolean; metaK
 }
 
 // DOM button → GLFW (DOM: 0=izq, 1=medio, 2=der; GLFW: 0=izq, 1=der, 2=medio)
+/**
+ * DOM PointerEvent.button → índice GLFW.
+ *
+ * DOM: 0=izq, 1=medio, 2=der, 3=atrás, 4=adelante.
+ * GLFW: 0=izq, 1=der, 2=medio, 3..=botones EXTRA.
+ *
+ * OJO: antes CUALQUIER cosa que no fuera 1/2 caía en 0 (izquierdo), así que los
+ * botones extra llegaban como click izquierdo y una app que los bindea (nvim
+ * `<X1Mouse>`) nunca los veía.
+ */
 function buttonToGlfw(button: number): number {
-  if (button === 1) return 2
-  if (button === 2) return 1
-  return 0
+  if (button === 1) return 2 // medio
+  if (button === 2) return 1 // derecho
+  if (button >= 3) return 3 + (button - 3) // atrás/adelante/… → 3,4,5…
+  return 0 // izquierdo
 }
 
 function offsetX(e: PointerEvent, canvas: HTMLCanvasElement): number {
@@ -132,9 +143,11 @@ export function wireInnertaInput(
   const releaseAllButtons = (): void => {
     const m = module()
     if (m) {
-      m.mouseButton(0, 0, 0)
-      m.mouseButton(1, 0, 0)
-      m.mouseButton(2, 0, 0)
+      m.mouseButton(0, 0, 0) // izquierdo
+      m.mouseButton(1, 0, 0) // derecho
+      m.mouseButton(2, 0, 0) // medio
+      m.mouseButton(3, 0, 0) // extra (X1)
+      m.mouseButton(4, 0, 0) // extra (X2)
     }
     if (capturedPointerId !== null) {
       try {

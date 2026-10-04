@@ -460,3 +460,16 @@ published are not edited. The file goes per version:
   thickness, and the arms reach the outer stroke of the perpendicular double so
   corners close. That covers the whole box-drawing block except the dashes and
   the diagonals.
+- **The wheel now reaches the program inside the terminal**: clicks and hover
+  already went to the app, but the wheel only did so in the *alternate screen*,
+  so full-screen TUI chat clients — which ask for the mouse without using it —
+  never saw it, and the wheel scrolled our own scrollback instead. The decision
+  is now made on **mouse tracking** (the right question): the program gets the
+  wheel first, and our scrollback takes it only when the program does not want
+  it. `VtParser::mouseButton` also answered "did it emit?" with a fixed-size
+  guess that was almost always true, so there was no way to tell; it now
+  compares the output buffer before and after, like `mouseMove` already did.
+- **Extra mouse buttons work**: `X1`/`X2` and friends went out as wheel events
+  (GLFW 3+ was passed through as 4/5), so a program binding them never saw them.
+  They now go out as the xterm extended buttons (8..11), and libvterm — which
+  dropped anything past button 7 — learned to encode them.
