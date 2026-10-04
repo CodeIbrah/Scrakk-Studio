@@ -619,11 +619,16 @@ class TerminalSessionImpl implements LiveSession {
   }
 
   /**
-   * Fuente y TAMAÑO de la terminal del sistema.
+   * ⚠ NO TOCAR SIN LEER: fuente y TAMAÑO de la terminal del sistema.
    *
-   * El tamaño importa tanto como la familia: el ancho y el ALTO de celda salen
-   * de la fuente a ese tamaño, y si no coincide, los TUIs (que mezclan `─` con
-   * `│`) no cuadran.
+   * El tamaño importa TANTO como la familia: el ancho y el alto de celda salen
+   * de la fuente a ese tamaño. Si no coinciden con la terminal del usuario, los
+   * TUIs que mezclan `─` con `│` se deforman y los bloques `█` de los logos
+   * dejan hueco. Por eso se pide ANTES de `applyFont` (el atlas se construye con
+   * estas métricas) y por eso el motor ya no resta 1px.
+   *
+   * El fallback a `base - 1` es solo para un `main` que no expone el canal: si
+   * el arreglo "no hace nada" y el tamaño vuelve a 15, revisá eso primero.
    */
   private async applySystemFont(view: InnertaViewHandle): Promise<void> {
     const api = getTerminalApi()
