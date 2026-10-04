@@ -358,13 +358,18 @@ published are not edited. The file goes per version:
   (`Twemoji`, `Symbols`, `EmojiUpper`). So every glyph the primary lacks — box
   drawing `─`, blocks, braille `⠋`, powerline, arrows — was drawn by *our* fonts
   instead of the ones your terminal resolves, which is why they looked different
-  from your machine. The main process now resolves the real chain — **fontconfig**
-  on Linux (`fc-match -s monospace`, the same source alacritty/wezterm use) and
-  the console font list on Windows — and the engine takes it
+  from your machine. The main process now resolves the real chain, asking
+  **fontconfig** — per code point — which font the system would use for each block
+  a terminal needs (box drawing, blocks, braille, arrows, dingbats, powerline,
+  emoji) and ordering the chain by how many of those each font wins, so the engine
+  — which resolves in order — matches fontconfig. Windows has no fontconfig, so it
+  uses the console font list. The engine takes the chain
   (`SetInnertaTerminalFonts`), replacing the fixed list. Fonts are read at
   runtime and live only in the WASM filesystem: **nothing is written to disk**, so
   they are re-resolved on every open and gone on close. Colour emoji now prefer
   the system's emoji font too, with the bundled Twemoji only as a last resort.
   Trade-off, said out loud: the chain is capped (≤6 MB per font, ≤24 MB total)
   because each terminal module loads its own copy — the giant CJK fonts are
-  skipped for now, so CJK still falls back.
+  skipped for now, so CJK still falls back. The invariant is covered by a test
+  that asks fontconfig which font wins for each sample code point and fails if
+  the chain would pick another one.

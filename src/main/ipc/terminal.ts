@@ -7,7 +7,8 @@ import * as pty from 'node-pty'
 import * as fs from 'fs'
 import * as path from 'path'
 import { execSync } from 'child_process'
-import { TERMINAL_IPC, type TerminalCreateRequest, type TerminalWriteRequest, type TerminalResizeRequest, type TerminalDestroyRequest, type TerminalFontFile } from '@shared/terminal'
+import { TERMINAL_IPC, type TerminalCreateRequest, type TerminalWriteRequest, type TerminalResizeRequest, type TerminalDestroyRequest } from '@shared/terminal'
+import { readFontStack, resolveFontCandidates } from '../fonts/systemFonts'
 
 import { t } from '@shared/i18n'
 interface PtyProc {
@@ -123,87 +124,8 @@ export function registerTerminalIpc(): void {
   })
 }
 
-/**
- * Presupuesto de la cadena: las fuentes del sistema son GRANDES y cada módulo
- * WASM (una terminal) carga su propia copia, así que sin tope un Noto CJK de
- * ~20 MB por terminal se come la memoria. Con esto entran las de símbolos,
- * box-drawing, braille y powerline (que son las que se veían distintas) y se
- * saltean las gigantes.
- */
-const FONT_STACK_MAX_FONTS = 10
-const FONT_STACK_MAX_FONT_BYTES = 6 * 1024 * 1024
-const FONT_STACK_MAX_TOTAL_BYTES = 24 * 1024 * 1024
-
-/**
- * Rutas de las fuentes de la terminal, EN ORDEN (primaria primero).
- *
- * Linux: **fontconfig**. `fc-match -s monospace` devuelve la lista ORDENADA tal
- * como la resolvería una terminal de verdad (es la misma fuente que usan
- * alacritty/wezterm), así un `─` o un `⠋` salen de la MISMA fuente que en la
- * terminal del usuario. Windows: no hay fontconfig; se usa la lista de fuentes
- * que Windows usa para consolas (Consolas + símbolos + emoji + CJK).
- *
- * No se cachea en disco: se resuelve al abrir y se descarta al cerrar.
- */
-function resolveFontCandidates(): string[] {
-  if (process.platform === 'win32') {
-    const dir = path.join(process.env.WINDIR || 'C:\\Windows', 'Fonts')
-    return [
-      'consola.ttf', // Consolas: la mono por defecto de las consolas de Windows
-      'lucon.ttf', // Lucida Console
-      'seguisym.ttf', // Segoe UI Symbol: box-drawing, flechas, dingbats
-      'seguiemj.ttf', // Segoe UI Emoji
-      'arial.ttf',
-      'msgothic.ttc', // CJK (japonés)
-      'malgun.ttf', // CJK (coreano)
-      'msyh.ttc', // CJK (chino simplificado)
-      'simsun.ttc'
-    ]
-      .map((name) => path.join(dir, name))
-      .filter((file) => fs.existsSync(file))
-  }
-
-  const out: string[] = []
-  const push = (file: string): void => {
-    if (file && fs.existsSync(file) && !out.includes(file)) out.push(file)
-  }
-  try {
-    const list = execSync('fc-match -s --format=%{file}\\n monospace', {
-      encoding: 'utf-8',
-      timeout: 4000
-    })
-    for (const line of list.split('\n')) push(line.trim())
-  } catch {
-    // Sin fontconfig: al menos la mono detectada de siempre.
-    const only = detectSystemMonoFont()
-    if (only) push(only)
-  }
-  return out
-}
-
-/** Lee los archivos de la cadena (con sus topes) y les pone un nombre legible. */
-function readFontStack(candidates: string[]): TerminalFontFile[] | null {
-  const out: TerminalFontFile[] = []
-  let total = 0
-  for (const file of candidates) {
-    if (out.length >= FONT_STACK_MAX_FONTS) break
-    try {
-      const stat = fs.statSync(file)
-      if (stat.size > FONT_STACK_MAX_FONT_BYTES) continue
-      if (total + stat.size > FONT_STACK_MAX_TOTAL_BYTES) continue
-      const data = fs.readFileSync(file)
-      total += data.byteLength
-      out.push({
-        family: path.basename(file).replace(/\.[^.]+$/, ''),
-        file,
-        data: new Uint8Array(data)
-      })
-    } catch {
-      // Archivo ilegible: se saltea en vez de tirar abajo la cadena.
-    }
-  }
-  return out.length > 0 ? out : null
-}
+// La resolución de la cadena vive en `../fonts/systemFonts` (sin Electron, para
+// poder testearla): acá sólo se la llama.
 
 /**
  * Detect the system's default monospace font.
