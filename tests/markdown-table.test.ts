@@ -115,7 +115,7 @@ describe('tablas de markdown', () => {
     // una burbuja de una línea (en su propia fila le sumaban alto entero).
     expect(block).toContain('align-items: center')
     expect(block).toContain('--msg-actions-margin-top: 0')
-    expect(css).toContain('.userText {')
+    expect(bubble).toContain('.userText {')
   })
 
   it('la tabla es un <table> real dentro del contenedor con scroll', () => {
