@@ -56,8 +56,10 @@ export const TERMINAL_SAMPLE_CODEPOINTS: readonly number[] = [
   0x25cf, // formas geométricas: ●
   0x2713, // dingbats: ✓
   0x2261, // matemática: ≡
-  0xe0b0, // powerline (área privada): 
-  0x1f600 // emoji astral: 😀
+  0xe0b0 // powerline (área privada): 
+  // Emoji NO se muestrea acá: tiene su propia fuente (ver `resolveEmojiFont`).
+  // Si se muestreaba, fontconfig contestaba `Unifont` (monocromo) y nos metía
+  // una fuente enorme en la cadena para glifos que ahora resuelve el emoji.
 ]
 
 /** Ejecuta `fc-match` (vacío si no hay fontconfig o falla). */
@@ -91,7 +93,9 @@ export function listMonoFamilies(): string[] {
     return ['Consolas', 'Cascadia Mono', 'Courier New', 'Lucida Console']
   }
   try {
-    const out = execSync('fc-list :spacing=mono --format=%{family[0]}\\n', {
+    // El formato va entre comillas: sin ellas el shell se come el `\n` y todo
+    // sale en UNA línea pegoteada.
+    const out = execSync("fc-list :spacing=mono --format='%{family[0]}\\n'", {
       encoding: 'utf-8',
       timeout: 4000
     })
@@ -128,7 +132,7 @@ export function systemPrimaryFont(family = 'monospace'): string | null {
 /** Las candidatas ORDENADAS de fontconfig (`fc-match -s`), sin repetir. */
 export function systemFallbackList(family = 'monospace'): string[] {
   if (process.platform === 'win32') return []
-  const out = fcMatch(`-s --format=%{file}\\n '${safeFamily(family)}'`)
+  const out = fcMatch(`-s --format='%{file}\\n' '${safeFamily(family)}'`)
   const list: string[] = []
   for (const line of out.split('\n')) {
     const file = line.trim()
@@ -146,8 +150,10 @@ export function windowsFontCandidates(): string[] {
   return [
     'consola.ttf', // Consolas: la mono por defecto de las consolas
     'lucon.ttf', // Lucida Console
-    'seguisym.ttf', // Segoe UI Symbol: box-drawing, flechas, dingbats
-    'seguiemj.ttf', // Segoe UI Emoji
+    'seguisym.ttf', // Segoe UI Symbol: box-drawing, flechas, dingbats (monocromo)
+    // Segoe UI Emoji (seguiemj.ttf) NO va acá: es la fuente de EMOJI a color,
+    // con su propia ranura (ver `resolveEmojiFont`), y sólo se usa para los code
+    // points de presentación emoji.
     'arial.ttf',
     'msgothic.ttc', // CJK (japonés)
     'malgun.ttf', // CJK (coreano)
@@ -174,7 +180,13 @@ export function resolveFontCandidates(family = 'monospace'): string[] {
   const primary = systemPrimaryFont(family)
   const assigned: string[] = []
   const counts = new Map<string, number>()
-  for (const codepoint of TERMINAL_SAMPLE_CODEPOINTS) {
+  // Sin fuente de emoji a COLOR, el plano astral sólo tiene respaldo monocromo
+  // (Unifont): se muestrea para que esos emoji no queden en blanco. Con la de
+  // color, el motor los resuelve por su ranura y no ensuciamos la cadena.
+  const samples = findColorEmojiFontFile()
+    ? TERMINAL_SAMPLE_CODEPOINTS
+    : [...TERMINAL_SAMPLE_CODEPOINTS, 0x1f600]
+  for (const codepoint of samples) {
     const file = systemFontForCodepoint(codepoint, family)
     if (!file) continue
     counts.set(file, (counts.get(file) ?? 0) + 1)
@@ -250,6 +262,84 @@ export function resolveCjkFont(family = 'monospace'): TerminalFontFile | null {
     }
   }
   return null
+}
+
+/**
+ * Tope de la fuente de emoji. Va aparte porque las de color pesan bastante
+ * (Noto Color Emoji ≈ 10 MB) y no entran en el tope de la cadena.
+ */
+export const FONT_EMOJI_MAX_BYTES = 32 * 1024 * 1024
+
+/**
+ * Familias de emoji a COLOR, en orden — la que trae cada SO por defecto.
+ *
+ * Se busca por FAMILIA y no por `:charset=`: fontconfig contesta con la primera
+ * que CUBRA el code point, y eso devuelve `Unifont` (monocromo) antes que la de
+ * color. Es el problema clásico de fontconfig con los emoji; kitty/wezterm lo
+ * esquivan buscando la familia del emoji directamente.
+ */
+const COLOR_EMOJI_FAMILIES = [
+  'Noto Color Emoji', // Linux
+  'Apple Color Emoji', // macOS
+  'Segoe UI Emoji', // Windows
+  'Twemoji Mozilla',
+  'EmojiOne Color',
+  'JoyPixels'
+]
+
+/**
+ * Ruta de la fuente de EMOJI a COLOR del sistema (o null), sin leer el archivo.
+ *
+ * Se usa para dos cosas: cargarla bajo demanda y —en `resolveFontCandidates`—
+ * saber si hace falta un respaldo monocromo para el plano astral.
+ */
+export function findColorEmojiFontFile(): string | null {
+  if (process.platform === 'win32') {
+    const dir = path.join(process.env.WINDIR || 'C:\\Windows', 'Fonts')
+    const file = path.join(dir, 'seguiemj.ttf') // Segoe UI Emoji
+    return fs.existsSync(file) ? file : null
+  }
+
+  for (const family of COLOR_EMOJI_FAMILIES) {
+    // `fc-match` SIEMPRE devuelve algo (cae a la default si no existe), así que
+    // se pide también el nombre y se verifica que sea ESA familia. El formato va
+    // entre comillas: si no, el `|` lo toma el shell como caño.
+    const out = fcMatch(`--format='%{file}|%{family[0]}' '${safeFamily(family)}'`)
+    const sep = out.lastIndexOf('|')
+    if (sep < 0) continue
+    const file = out.slice(0, sep).trim()
+    const matched = out.slice(sep + 1).trim()
+    if (!file || matched.toLowerCase() !== family.toLowerCase()) continue
+    try {
+      if (!fs.existsSync(file)) continue
+      if (fs.statSync(file).size > FONT_EMOJI_MAX_BYTES) continue
+      return file
+    } catch {
+      // Ilegible: se prueba la siguiente familia.
+    }
+  }
+  return null
+}
+
+/**
+ * Fuente de EMOJI a COLOR del sistema (o null).
+ *
+ * NO entra en la cadena: el motor la usa como cara propia y sólo para los code
+ * points con presentación emoji (`⚡ ✅ ✨ 😀`). Los de presentación texto
+ * (`✓ ❤ ☀ ⚠`), que es lo que sueltan los CLIs, siguen monocromos por la cadena.
+ */
+export function resolveEmojiFont(): TerminalFontFile | null {
+  const file = findColorEmojiFontFile()
+  if (!file) return null
+  try {
+    return {
+      family: path.basename(file).replace(/\.[^.]+$/, ''),
+      file,
+      data: new Uint8Array(fs.readFileSync(file))
+    }
+  } catch {
+    return null
+  }
 }
 
 /** Lee los archivos de la cadena (con sus topes) y les pone un nombre legible. */

@@ -463,6 +463,16 @@ function wrap(raw: Record<string, unknown>): InnertaModule {
       _raw._SetInnertaTerminalFonts(ptr)
       _raw._free(ptr)
     },
+    /**
+     * Fuente de EMOJI a color del sistema, APARTE de la cadena: el motor la usa
+     * sólo para los code points con presentación emoji (`SetInnertaTerminalEmojiFont`).
+     */
+    setTerminalEmojiFont(fontPath) {
+      if (typeof _raw._SetInnertaTerminalEmojiFont !== 'function') return
+      const ptr = toUtf8Ptr(_raw, fontPath)
+      _raw._SetInnertaTerminalEmojiFont(ptr)
+      _raw._free(ptr)
+    },
     /** Cuántas fuentes tiene la cadena AHORA (`-1` si el build no lo expone). */
     getTerminalFontCount() {
       if (typeof _raw._GetInnertaTerminalFontCount !== 'function') return -1
@@ -990,6 +1000,16 @@ function wrapIsolated(raw: Record<string, unknown>, canvas: HTMLCanvasElement): 
       if (typeof _raw._SetInnertaTerminalFonts !== 'function') return
       const ptr = toUtf8Ptr(_raw, paths)
       _raw._SetInnertaTerminalFonts(ptr)
+      _raw._free(ptr)
+    },
+    /**
+     * Fuente de EMOJI a color del sistema, APARTE de la cadena: el motor la usa
+     * sólo para los code points con presentación emoji (`SetInnertaTerminalEmojiFont`).
+     */
+    setTerminalEmojiFont(fontPath) {
+      if (typeof _raw._SetInnertaTerminalEmojiFont !== 'function') return
+      const ptr = toUtf8Ptr(_raw, fontPath)
+      _raw._SetInnertaTerminalEmojiFont(ptr)
       _raw._free(ptr)
     },
     /** Cuántas fuentes tiene la cadena AHORA (`-1` si el build no lo expone). */

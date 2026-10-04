@@ -31,6 +31,7 @@ import {
   TERMINAL_SAMPLE_CODEPOINTS,
   readFontStack,
   resolveCjkFont,
+  resolveEmojiFont,
   resolveFontCandidates,
   systemFontForCodepoint,
   systemPrimaryFont
@@ -98,6 +99,16 @@ describe.skipIf(!hasFontconfig())('cadena de fuentes de la terminal', () => {
 
   it('sin candidatas no hay cadena (no se inventa una)', () => {
     expect(readFontStack([])).toBeNull()
+  })
+
+  it('la fuente de emoji NO es la que fontconfig elige por charset', () => {
+    // El bug que arregla: `fc-match ':charset=1F680'` contesta una fuente
+    // MONOCROMA (Unifont), porque fontconfig no reporta los bitmaps de color en
+    // el charset. Por eso la de emoji se busca por FAMILIA y tiene que ser otra.
+    const font = resolveEmojiFont()
+    if (!font) return
+    expect(font.family.length).toBeGreaterThan(0)
+    expect(font.file).not.toBe(systemFontForCodepoint(0x1f680))
   })
 
   it('la fuente CJK (bajo demanda) cubre los tres scripts', () => {

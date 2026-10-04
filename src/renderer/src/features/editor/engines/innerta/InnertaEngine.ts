@@ -206,6 +206,13 @@ export interface InnertaModule {
    * misma cadena que la terminal del sistema, en vez de con las empaquetadas.
    */
   setTerminalFonts?(paths: string): void
+  /**
+   * Fuente de EMOJI a COLOR del sistema, APARTE de la cadena (ruta dentro del FS
+   * del WASM). El motor la usa SÓLO para los code points con presentación emoji;
+   * los símbolos de presentación texto (`✓ ❤ ☀ ⚠`) siguen monocromos por la
+   * cadena, como en la terminal del sistema (ver `SetInnertaTerminalEmojiFont`).
+   */
+  setTerminalEmojiFont?(fontPath: string): void
   /** Cuántas fuentes tiene la cadena AHORA (`-1` si el build no lo expone). */
   getTerminalFontCount?(): number
   getCharWidth(): number

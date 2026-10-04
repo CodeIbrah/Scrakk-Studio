@@ -48,7 +48,22 @@ interface TerminalApi {
     file: string
     data: Uint8Array
   } | null>
+  /** Fuente de EMOJI a color del sistema (sólo para code points emoji). */
+  getEmojiFont?: () => Promise<{
+    family: string
+    file: string
+    data: Uint8Array
+  } | null>
 }
+
+/**
+ * Emoji de presentación EMOJI (los que van a COLOR).
+ *
+ * Es la misma propiedad Unicode que usa el motor: `✓ ❤ ☀ ⚠` NO están (van
+ * monocromos, como los pidió el CLI) y `⚡ ✅ ✨ 😀` sí. Sin el flag `g`, así
+ * `.test` no queda con estado.
+ */
+const EMOJI_PRESENTATION_RE = /\p{Emoji_Presentation}/u
 
 /**
  * Caracteres que disparan la carga de la fuente CJK.
@@ -149,6 +164,10 @@ class TerminalSessionImpl implements LiveSession {
   private cjkPath: string | null = null
   /** Ya se pidió la CJK (no se reintenta, aunque no haya). */
   private cjkRequested = false
+  /** Fuente de EMOJI a color cargada (o null). Aparte de la cadena. */
+  private emojiPath: string | null = null
+  /** Ya se pidió la fuente de emoji (no se reintenta). */
+  private emojiRequested = false
   /** Escala con la que ya se re-aplicó `fontPaths` (evita recargar de más). */
   private fontScaleApplied = 1
   private resizeRo: ResizeObserver | null = null
@@ -257,6 +276,7 @@ class TerminalSessionImpl implements LiveSession {
       if (payload.id !== this.ptyId) return
       this.view?.append(payload.data)
       this.maybeLoadCjk(payload.data)
+      this.maybeLoadEmoji(payload.data)
     })
     this.unsubExit = api.onExit((payload) => {
       if (payload.id !== this.ptyId) return
@@ -599,6 +619,43 @@ class TerminalSessionImpl implements LiveSession {
     if (!CJK_RE.test(data)) return
     this.cjkRequested = true
     void this.loadCjk()
+  }
+
+  /**
+   * EMOJI bajo demanda: cuando en el PTY aparece un emoji de presentación emoji,
+   * se trae la fuente de COLOR del sistema y se la da al motor en su ranura
+   * propia. Así `⚡ ✅ ✨ 😀` salen a color y `✓ ❤ ☀ ⚠` siguen MONOCROMOS por la
+   * cadena, como los ve el CLI en su terminal.
+   *
+   * El motor tira los glifos emoji ya cacheados al recibirla, así que el primer
+   * frame se corrige solo (ver `SetEmojiFontPath`).
+   */
+  private maybeLoadEmoji(data: string): void {
+    if (this.emojiPath || this.emojiRequested || this.disposed) return
+    if (!EMOJI_PRESENTATION_RE.test(data)) return
+    this.emojiRequested = true
+    void this.loadEmoji()
+  }
+
+  private async loadEmoji(): Promise<void> {
+    const view = this.view
+    const api = getTerminalApi()
+    const fsApi = (
+      view?.module as unknown as { FS?: { writeFile: (p: string, d: Uint8Array) => void } }
+    )?.FS
+    if (!view || !api?.getEmojiFont || !fsApi) return
+    try {
+      const font = await api.getEmojiFont()
+      if (this.disposed || !font?.data?.length) return
+      const path = '/fonts/terminal/emoji.ttf'
+      fsApi.writeFile(path, font.data)
+      this.emojiPath = path
+      // No toca la cadena: es una cara aparte, sólo para presentación emoji.
+      view.module.setTerminalEmojiFont?.(path)
+    } catch {
+      // Sin emoji a color: se queda con la cadena (monocromo), como una terminal
+      // sin fuente de emoji instalada.
+    }
   }
 
   private async loadCjk(): Promise<void> {

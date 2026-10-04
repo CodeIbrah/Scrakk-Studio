@@ -8399,8 +8399,8 @@ function checkIncomingModuleAPI() {
   ignoredModuleProp('wasmBinary');
 }
 var ASM_CONSTS = {
-  3525636: ($0) => { var txt = UTF8ToString($0); if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(txt).catch(function(){}); } },  
- 3525786: ($0, $1, $2, $3) => { if (Module._innertaOnEvent) { try { Module._innertaOnEvent($0, $1, $2, $3); } catch (e) {} } }
+  3527988: ($0) => { var txt = UTF8ToString($0); if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(txt).catch(function(){}); } },  
+ 3528138: ($0, $1, $2, $3) => { if (Module._innertaOnEvent) { try { Module._innertaOnEvent($0, $1, $2, $3); } catch (e) {} } }
 };
 
 // Imports from the Wasm binary.
@@ -8475,6 +8475,7 @@ var _GetInnertaFontSize = Module['_GetInnertaFontSize'] = makeInvalidEarlyAccess
 var _SetInnertaTerminalFont = Module['_SetInnertaTerminalFont'] = makeInvalidEarlyAccess('_SetInnertaTerminalFont');
 var _SetInnertaTerminalFonts = Module['_SetInnertaTerminalFonts'] = makeInvalidEarlyAccess('_SetInnertaTerminalFonts');
 var _GetInnertaTerminalFontCount = Module['_GetInnertaTerminalFontCount'] = makeInvalidEarlyAccess('_GetInnertaTerminalFontCount');
+var _SetInnertaTerminalEmojiFont = Module['_SetInnertaTerminalEmojiFont'] = makeInvalidEarlyAccess('_SetInnertaTerminalEmojiFont');
 var _SetInnertaAccentColor = Module['_SetInnertaAccentColor'] = makeInvalidEarlyAccess('_SetInnertaAccentColor');
 var _SetInnertaTextColor = Module['_SetInnertaTextColor'] = makeInvalidEarlyAccess('_SetInnertaTextColor');
 var _SetInnertaBorderColor = Module['_SetInnertaBorderColor'] = makeInvalidEarlyAccess('_SetInnertaBorderColor');
@@ -8599,6 +8600,7 @@ function assignWasmExports(wasmExports) {
   assert(typeof wasmExports['SetInnertaTerminalFont'] != 'undefined', 'missing Wasm export: SetInnertaTerminalFont');
   assert(typeof wasmExports['SetInnertaTerminalFonts'] != 'undefined', 'missing Wasm export: SetInnertaTerminalFonts');
   assert(typeof wasmExports['GetInnertaTerminalFontCount'] != 'undefined', 'missing Wasm export: GetInnertaTerminalFontCount');
+  assert(typeof wasmExports['SetInnertaTerminalEmojiFont'] != 'undefined', 'missing Wasm export: SetInnertaTerminalEmojiFont');
   assert(typeof wasmExports['SetInnertaAccentColor'] != 'undefined', 'missing Wasm export: SetInnertaAccentColor');
   assert(typeof wasmExports['SetInnertaTextColor'] != 'undefined', 'missing Wasm export: SetInnertaTextColor');
   assert(typeof wasmExports['SetInnertaBorderColor'] != 'undefined', 'missing Wasm export: SetInnertaBorderColor');
@@ -8719,6 +8721,7 @@ function assignWasmExports(wasmExports) {
   _SetInnertaTerminalFont = Module['_SetInnertaTerminalFont'] = createExportWrapper('SetInnertaTerminalFont', wasmExports['SetInnertaTerminalFont'], 1);
   _SetInnertaTerminalFonts = Module['_SetInnertaTerminalFonts'] = createExportWrapper('SetInnertaTerminalFonts', wasmExports['SetInnertaTerminalFonts'], 1);
   _GetInnertaTerminalFontCount = Module['_GetInnertaTerminalFontCount'] = createExportWrapper('GetInnertaTerminalFontCount', wasmExports['GetInnertaTerminalFontCount'], 0);
+  _SetInnertaTerminalEmojiFont = Module['_SetInnertaTerminalEmojiFont'] = createExportWrapper('SetInnertaTerminalEmojiFont', wasmExports['SetInnertaTerminalEmojiFont'], 1);
   _SetInnertaAccentColor = Module['_SetInnertaAccentColor'] = createExportWrapper('SetInnertaAccentColor', wasmExports['SetInnertaAccentColor'], 1);
   _SetInnertaTextColor = Module['_SetInnertaTextColor'] = createExportWrapper('SetInnertaTextColor', wasmExports['SetInnertaTextColor'], 1);
   _SetInnertaBorderColor = Module['_SetInnertaBorderColor'] = createExportWrapper('SetInnertaBorderColor', wasmExports['SetInnertaBorderColor'], 1);

@@ -12,6 +12,7 @@ import {
   listMonoFamilies,
   readFontStack,
   resolveCjkFont,
+  resolveEmojiFont,
   resolveFontCandidates
 } from '../fonts/systemFonts'
 
@@ -143,6 +144,16 @@ export function registerTerminalIpc(): void {
   ipcMain.handle(TERMINAL_IPC.getCjkFont, async (_event, req?: { family?: string }) => {
     try {
       return resolveCjkFont(req?.family)
+    } catch {
+      return null
+    }
+  })
+
+  // Fuente de EMOJI a color del sistema. No va en la cadena: se usa sólo para
+  // los code points con presentación emoji (ver `FontAtlas::EnsureGlyph`).
+  ipcMain.handle(TERMINAL_IPC.getEmojiFont, async () => {
+    try {
+      return resolveEmojiFont()
     } catch {
       return null
     }

@@ -18,7 +18,9 @@ export const TERMINAL_IPC = {
   /** Familias monoespaciadas instaladas (para elegir la de la terminal). */
   listMonoFonts: 'terminal:list-mono-fonts',
   /** Fuente CJK del sistema, pedida SÓLO cuando el buffer tiene CJK. */
-  getCjkFont: 'terminal:get-cjk-font'
+  getCjkFont: 'terminal:get-cjk-font',
+  /** Fuente de EMOJI a color del sistema (sólo para code points emoji). */
+  getEmojiFont: 'terminal:get-emoji-font'
 } as const
 
 export type TerminalCreateRequest = {
@@ -78,4 +80,12 @@ export interface TerminalApi {
    * `null` si no hay ninguna (o es más grande que el tope).
    */
   getCjkFont: (req?: { family?: string }) => Promise<TerminalFontFile | null>
+  /**
+   * Fuente de EMOJI a COLOR del sistema (Noto Color Emoji / Segoe UI Emoji).
+   *
+   * Va aparte de la cadena porque la decisión es por code point: sólo los de
+   * presentación emoji se dibujan con ésta; los símbolos de presentación texto
+   * (`✓ ❤ ☀ ⚠`) siguen monocromos, como los ve el CLI en su terminal.
+   */
+  getEmojiFont: () => Promise<TerminalFontFile | null>
 }

@@ -380,3 +380,19 @@ published are not edited. The file goes per version:
   it on the system default), listing the monospaced families the machine actually
   has. The choice is persisted and re-applied to every open terminal right away —
   the chain is re-resolved from the system, so nothing is re-opened or cached.
+- **Emoji is emoji, symbols are symbols**: the terminal decided "is this an
+  emoji?" by **range** (`U+2600..U+27BF` and friends), so plain Unicode symbols
+  that CLIs print — `✓ ❤ ☀ ⚠ ℹ`, which have *text* presentation — were hijacked
+  and drawn from the colour emoji font (or, when it did not have the glyph, from
+  a proportional fallback), mixed in the same line with engine-drawn monochrome
+  box-drawing and braille, each with different metrics. Now the decision is
+  Unicode's: **`Emoji_Presentation`** decides, and the terminal draws emoji from
+  the system's **colour** emoji font (Noto Color Emoji on Linux, Segoe UI Emoji
+  on Windows) while everything else stays **monochrome** from the same chain as
+  the rest of the text — the way kitty, wezterm, VTE and Windows Terminal do it.
+  The emoji face is a slot of its own (`SetInnertaTerminalEmojiFont`), resolved
+  by **family** (fontconfig's `:charset=` returns Unifont, a monochrome font,
+  before the colour one), loaded **on demand**, and since colour emoji are
+  bitmaps with a single 128 px strike that FreeType cannot resize, the engine
+  downscales the bitmap to the cell. Cell width uses the same table, so `✓` and
+  `❤` take one cell again and nothing shifts after them.

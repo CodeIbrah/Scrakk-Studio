@@ -430,7 +430,9 @@ const api: WindowApi = {
       ipcRenderer.invoke(TERMINAL_IPC.getFontStack, req) as Promise<TerminalFontFile[] | null>,
     listMonoFonts: () => ipcRenderer.invoke(TERMINAL_IPC.listMonoFonts) as Promise<string[]>,
     getCjkFont: (req?: { family?: string }) =>
-      ipcRenderer.invoke(TERMINAL_IPC.getCjkFont, req) as Promise<TerminalFontFile | null>
+      ipcRenderer.invoke(TERMINAL_IPC.getCjkFont, req) as Promise<TerminalFontFile | null>,
+    getEmojiFont: () =>
+      ipcRenderer.invoke(TERMINAL_IPC.getEmojiFont) as Promise<TerminalFontFile | null>
   },
   git: {
     version: () => ipcRenderer.invoke(GIT_IPC.version),
