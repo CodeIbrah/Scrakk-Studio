@@ -101,19 +101,6 @@ function familyOfGtkName(name: string): string {
 }
 
 /**
- * ⚠ NO TOCAR SIN LEER. De acá salen las MÉTRICAS DE CELDA de la terminal, que
- * es lo que costó muchísimo dejar iguales a la terminal del usuario:
- *
- *  - La FAMILIA define el aspecto alto/ancho de la celda (JetBrains Mono NL:
- *    1.320em; Cousine: 1.133em). Distinta familia ⇒ los TUI con `─` y `│` se
- *    deforman.
- *  - El TAMAÑO define el ancho y el alto reales. El editor usa otra cosa; la
- *    terminal tiene que usar el suyo.
- *
- * Ojo con el nombre que da GTK ("Familia Estilo N"): el estilo hay que sacarlo
- * (`JetBrains Mono NL Italic` → `JetBrains Mono NL`) o fontconfig no lo
- * encuentra y devuelve Noto Sans. Ver changelog 0.1.3.
- *
  * Resuelve la fuente de la terminal del sistema (o null si no se puede saber).
  *
  * Linux: GNOME/GTK (`monospace-font-name`) o el perfil de GNOME Terminal si NO
