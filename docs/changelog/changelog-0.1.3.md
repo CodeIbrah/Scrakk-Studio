@@ -341,13 +341,15 @@ published are not edited. The file goes per version:
   (the cells end up wider than the glyphs, i.e. letters that look spaced out), so
   after resizing, the terminal's own font is applied again, which also
   recalculates the metrics at that size.
-- **The terminal stops clipping the bottom of its glyphs**: `SetTerminalFont`
-  overrode the line height with `fontSize * 1.1` — a guess that ignores the
-  font's vertical metrics — while the glyph **bitmaps** are rasterised for the
-  **atlas's** line height (`ascender + descender + 2`) and centred in that cell.
-  Any font whose ascent + descent is wider than 1.1 em (Cousine: 1.132 em,
-  DejaVu: 1.164 em) ended up with a cell ~2.5 px shorter than its glyphs, so
-  descenders and the bottom border of a TUI's boxes were cut. The override is
-  gone and the cell is the one the glyphs were made for. Other terminals get away
-  with "≈1.1 em" because there the cell and the rasterisation come from the SAME
+- **The terminal stops clipping the bottom of its glyphs — and stays tight**:
+  `SetTerminalFont` overrode the line height with `fontSize * 1.1` — a guess that
+  ignores the font's vertical metrics — while the glyph **bitmaps** are rasterised
+  for the **atlas's** line height and centred in that cell. Any font whose ascent
+  + descent is wider than 1.1 em (Cousine: 1.132 em, DejaVu: 1.164 em) ended up
+  with a cell ~2.5 px shorter than its glyphs, so descenders and the bottom
+  border of a TUI's boxes were cut. The cell's extra padding is a parameter of
+  the atlas now (2 px for the editor, **0 for the terminal**), so it is tighter
+  than the editor *and* the rasterisation uses that very same number — the cell
+  can no longer come out shorter than the glyphs. Other terminals get away with
+  "≈1.1 em" because there the cell and the rasterisation come from the same
   number; here they came from two.
