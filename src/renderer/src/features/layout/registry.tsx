@@ -98,6 +98,11 @@ export const PANEL_REGISTRY: Record<PanelId, PanelEntry> = {
   ),
   social: panel('social', 'layout.panel.social', () =>
     import('./panels/SocialPanel/SocialPanel').then((module) => module.SocialPanel)
+  ),
+  // Lista vertical de tabs: vive en el modo "tabs acopladas". El botón de la
+  // activity bar solo aparece cuando ese modo está activo (`when`).
+  tabs: panel('tabs', 'layout.panel.tabs', () =>
+    import('./panels/TabsPanel/TabsPanel').then((module) => module.TabsPanel)
   )
 }
 

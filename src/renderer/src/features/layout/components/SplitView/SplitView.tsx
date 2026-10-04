@@ -6,6 +6,13 @@ import { useEffect, useRef, useState, type JSX } from 'react'
 import { splitTreeStore, type SplitTreeNode } from '../../splitTree'
 import type { SlotId } from '../../types'
 import type { StripAction } from '@features/tabs'
+import {
+  isTabsDocked,
+  setTabsDocked,
+  subscribeToTabsDocked
+} from '@features/tabs'
+import { ProductIcon } from '@services/productIcons/components'
+import { openPanelTab } from '../../actions'
 import { SlotBody } from '../PanelLayout/SlotBody'
 import { ResizeHandle } from '../ResizeHandle/ResizeHandle'
 import { flushLayoutPersist } from '../../state/LayoutContext'
@@ -31,11 +38,47 @@ export function isSlotOpen(slot: SlotId): boolean {
 export function SplitView({ slot, onAddTab, actions }: { slot: SlotId; onAddTab?: () => void; actions?: StripAction[] }): JSX.Element | null {
   const [version, setVersion] = useState(0)
   useEffect(() => splitTreeStore.subscribe(() => setVersion((v) => v + 1)), [])
+  // El modo "tabs acopladas" cambia qué se renderiza (strip vs solo contenido).
+  useEffect(() => subscribeToTabsDocked(() => setVersion((v) => v + 1)), [])
   void version
 
   const root = splitTreeStore.getRoot(slot)
   if (!root) return null
-  return <SplitNode node={root} slot={slot} nested={false} onAddTab={onAddTab} actions={actions} />
+
+  // El CENTRO suma su propia acción de header: el botón que acopla/desacopla
+  // las tabs (misma API `StripAction` que usa el slot inferior). Los demás
+  // slots reciben las acciones que les pasa el layout.
+  const docked = isTabsDocked()
+  const slotActions: StripAction[] | undefined =
+    slot === 'center'
+      ? [
+          {
+            id: 'tabs.dock',
+            label: docked ? t('layout.tabs.arriba') : t('layout.tabs.al.panel'),
+            icon: <ProductIcon id="file-multiple" size={15} aria-hidden="true" />,
+            onClick: () => {
+              // Acoplar oculta la barra y abre el panel (donde viven las tabs).
+              // Desacoplar revierte el modo; el panel lo cierra su propia acción.
+              if (isTabsDocked()) setTabsDocked(false)
+              else {
+                setTabsDocked(true)
+                openPanelTab('left', 'tabs')
+              }
+            }
+          }
+        ]
+      : actions
+
+  return (
+    <SplitNode
+      node={root}
+      slot={slot}
+      nested={false}
+      onAddTab={onAddTab}
+      actions={slotActions}
+      hideStrip={slot === 'center' && docked}
+    />
+  )
 }
 
 function SplitNode({
@@ -43,13 +86,16 @@ function SplitNode({
   slot,
   nested,
   onAddTab,
-  actions
+  actions,
+  hideStrip = false
 }: {
   node: SplitTreeNode
   slot: SlotId
   nested: boolean
   onAddTab?: () => void
   actions?: StripAction[]
+  /** Oculta la barra de tabs (modo acoplado): solo queda el contenido. */
+  hideStrip?: boolean
 }): JSX.Element {
   // Refs SIEMPRE arriba (el nodo puede mutar leaf<->split entre renders).
   // Nodos laterales para escritura DOM directa durante el drag en vivo
@@ -70,7 +116,7 @@ function SplitNode({
             también (sus tabs SON terminales y llevan su propio "+").
             Solo la raíz leaf de los slots laterales usa el frame único
             clásico con 1 tab. */}
-        <SlotBody stripId={node.stripId} alwaysStrip={nested || slot === 'center' || slot === 'bottom'} onAddTab={slot === 'bottom' ? onAddTab : undefined} actions={slot === 'bottom' ? actions : undefined} />
+        <SlotBody stripId={node.stripId} alwaysStrip={nested || slot === 'center' || slot === 'bottom'} onAddTab={slot === 'bottom' ? onAddTab : undefined} actions={slot === 'center' || slot === 'bottom' ? actions : undefined} hideStrip={hideStrip} />
       </div>
     )
   }
@@ -84,7 +130,7 @@ function SplitNode({
   return (
     <div className={styles.split} data-dir={node.dir}>
       <div ref={firstRef} className={styles.side} style={{ flex: `${node.ratio} 1 0%` }}>
-        <SplitNode node={node.children[0]} slot={slot} nested onAddTab={onAddTab} actions={actions} />
+        <SplitNode node={node.children[0]} slot={slot} nested onAddTab={onAddTab} actions={actions} hideStrip={hideStrip} />
       </div>
       <ResizeHandle
         label={t('layout.redimensionar.split')}
@@ -104,7 +150,7 @@ function SplitNode({
         }}
       />
       <div ref={secondRef} className={styles.side} style={{ flex: `${1 - node.ratio} 1 0%` }}>
-        <SplitNode node={node.children[1]} slot={slot} nested onAddTab={onAddTab} actions={actions} />
+        <SplitNode node={node.children[1]} slot={slot} nested onAddTab={onAddTab} actions={actions} hideStrip={hideStrip} />
       </div>
     </div>
   )

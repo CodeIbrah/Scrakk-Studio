@@ -4640,6 +4640,14 @@
       "at": "2026-09-25T17:31:23.927Z",
       "approvedAt": "2026-09-25T17:32:07.888Z"
     },
+    "layout.panel.tabs": {
+      "src": "8e5ea509893e6dfd",
+      "area": "layout",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
     "layout.panel.welcome": {
       "src": "f5f273d88e2e1d2c",
       "area": "layout",
@@ -4871,6 +4879,30 @@
       "needsReview": false,
       "at": "2026-09-25T17:45:33.048Z",
       "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "layout.tabs.al.panel": {
+      "src": "e8b12c65e63688c3",
+      "area": "layout",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "layout.tabs.arriba": {
+      "src": "3ec50abcd0814f49",
+      "area": "layout",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
+    },
+    "layout.tabs.ninguna": {
+      "src": "36d4502c061b7d0c",
+      "area": "layout",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:00:00.000Z",
+      "approvedAt": "2026-10-04T00:00:00.000Z"
     },
     "layout.terminal": {
       "src": "e0926fdac700b094",

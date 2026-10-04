@@ -13,6 +13,14 @@ export {
   tabPersistsByDefault
 } from './store'
 export { TabStrip, MAX_STRIP_ACTIONS, type StripAction } from './TabStrip'
+export {
+  isTabsDocked,
+  setTabsDocked,
+  toggleTabsDocked,
+  subscribeToTabsDocked,
+  bindTabsDockedContext,
+  TABS_DOCKED_CONTEXT_KEY
+} from './dock'
 export type { TabKind, TabSpec, StripId, StripState } from './types'
 export {
   tabHeaderKey,

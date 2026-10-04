@@ -20,9 +20,11 @@ import { preloadPanel, useLayout } from '@features/layout'
 import { ExtensionRegistry } from '@services/extensions'
 import {
   getExtensionContextKey,
+  setExtensionContextKey,
   subscribeToExtensionContextKeys
 } from '@services/extensions/hostBridge'
 import { evaluateWhen } from '@services/extensions/when'
+import { bindTabsDockedContext } from '@features/tabs'
 import type { ActivityBarButton, ActivityBarSide } from './types'
 import {
   getOrderedButtons,
@@ -65,6 +67,16 @@ export function ActivityBar({ side }: { side: ActivityBarSide }): JSX.Element {
   // Y cuando una extensión cambia una clave de contexto: los botones con
   // `when` (vistas que se esconden según el estado) aparecen o se van.
   useEffect(() => subscribeToExtensionContextKeys(() => setVersion((v) => v + 1)), [])
+
+  // El estado "tabs acopladas" publica su clave de contexto con el hostBridge.
+  // Se conecta ACÁ (la barra ya depende del hostBridge) y no en el store, para
+  // que `@features/tabs` no arrastre servicios: `persistence` lo importa y sería
+  // un ciclo. El botón `tabs` (when: 'tabsDocked') queda visible solo en modo
+  // acoplado. Va en un efecto (no en el módulo) porque el hostBridge puede
+  // estar a mitad de inicializar durante un ciclo de imports.
+  useEffect(() => {
+    bindTabsDockedContext((key, value) => setExtensionContextKey(key, value))
+  }, [])
 
   const buttons = useMemo<ActivityBarButton[]>(
     () =>

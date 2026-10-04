@@ -36,6 +36,11 @@ interface SlotBodyProps {
   onAddTab?: () => void
   /** Acciones custom del contenedor derecho del strip (máx 4). */
   actions?: StripAction[]
+  /**
+   * Oculta la barra de tabs (modo "tabs acopladas"): el contenido queda solo
+   * y las tabs se ven en el panel vertical de la activity bar.
+   */
+  hideStrip?: boolean
 }
 
 /**
@@ -52,7 +57,7 @@ interface SlotBodyProps {
  *   entra a la MISMA strip (barra compartida) y el contenido pasa a mostrarse
  *   dividido en paneles (una vista por tab).
  */
-export function SlotBody({ stripId, alwaysStrip = false, onAddTab, actions }: SlotBodyProps): JSX.Element | null {
+export function SlotBody({ stripId, alwaysStrip = false, onAddTab, actions, hideStrip = false }: SlotBodyProps): JSX.Element | null {
   const strip = tabsStore.getStrip(stripId)
   // Strip OCULTO (removeStrip): no se renderiza.
   if (!strip) return null
@@ -127,14 +132,16 @@ export function SlotBody({ stripId, alwaysStrip = false, onAddTab, actions }: Sl
         </PanelFrame>
       ) : (
         <>
-          <TabStrip
-            stripId={stripId}
-            iconFor={tabIconFor}
-            onActivate={(tab, strip) => activateTabSmart(strip, tab)}
-            onClose={(tab, strip) => closeTabSmart(strip, tab)}
-            onAddTab={onAddTab}
-            actions={actions}
-          />
+          {hideStrip ? null : (
+            <TabStrip
+              stripId={stripId}
+              iconFor={tabIconFor}
+              onActivate={(tab, strip) => activateTabSmart(strip, tab)}
+              onClose={(tab, strip) => closeTabSmart(strip, tab)}
+              onAddTab={onAddTab}
+              actions={actions}
+            />
+          )}
           {splitActive && strip.splitDir ? (
             <SplitPanes stripId={stripId} tabs={strip.tabs} dir={strip.splitDir} zoneRef={contentZone.ref} />
           ) : (

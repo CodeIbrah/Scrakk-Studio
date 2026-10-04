@@ -158,6 +158,23 @@ export function getExtensionContextKey(key: string): unknown {
   return contextKeys.get(key)
 }
 
+/**
+ * Publica una clave de contexto desde el PROPIO IDE (no desde una extensión).
+ * Mismo namespace global que `setContext`: la UI con `when` (activity bar,
+ * vistas) reacciona igual. Se usa para estado del host, p. ej. el modo
+ * "tabs acopladas al panel".
+ */
+export function setExtensionContextKey(key: string, value: unknown): void {
+  contextKeys.set(key, value)
+  for (const listener of [...contextKeyListeners]) {
+    try {
+      listener()
+    } catch {
+      // Un suscriptor roto no tumba a los demás.
+    }
+  }
+}
+
 /** Avisa cuando cambia CUALQUIER clave de contexto. Devuelve la baja. */
 export function subscribeToExtensionContextKeys(listener: () => void): () => void {
   contextKeyListeners.add(listener)

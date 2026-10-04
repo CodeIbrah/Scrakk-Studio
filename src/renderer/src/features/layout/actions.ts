@@ -29,7 +29,17 @@ import { requestCloseFile } from '@features/editor/closeGuard'
 import { destroyTerminalSession } from '@services/innerta/terminalSession'
 import { getFileIconUrl } from '@services/fileIcons'
 import { fileIconImageComponent } from '@services/fileIcons/components'
-import { tabsStore, panelTab, terminalTab, welcomeTab, explorerTab, type StripId, type TabSpec } from '@features/tabs'
+import {
+  tabsStore,
+  panelTab,
+  terminalTab,
+  welcomeTab,
+  explorerTab,
+  getTabTitle,
+  tabHeaderKey,
+  type StripId,
+  type TabSpec
+} from '@features/tabs'
 import type { ResourceDragItem } from '@features/dnd/resource'
 import { ExtensionRegistry } from '@services/extensions'
 import { getPanel } from './registry'
@@ -595,4 +605,18 @@ export function tabIconFor(tab: TabSpec): ComponentType<{ size?: number }> | und
     case 'explorer':
       return FOLDER_ICON
   }
+}
+
+/**
+ * Etiqueta visible de una tab: label propio, o el título dinámico que publicó
+ * su panel, o el default del kind (igual que el TabStrip). La comparten el
+ * panel de tabs y cualquier lista que deba mostrar el mismo texto.
+ */
+export function tabLabelFor(stripId: StripId, tab: TabSpec): string {
+  if (tab.label) return tab.label
+  const dynamic = getTabTitle(tabHeaderKey(stripId, tab.id))
+  if (dynamic) return dynamic
+  if (tab.kind === 'panel' && tab.panelId) return getPanel(tab.panelId)?.title ?? tab.panelId
+  if (tab.kind === 'file') return tab.filePath?.split(/[/\\]/).pop() ?? t('layout.archivo')
+  return tab.id
 }
