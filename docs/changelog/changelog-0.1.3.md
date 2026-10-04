@@ -208,7 +208,10 @@ published are not edited. The file goes per version:
   without copying layout or CSS. `ToolMeta.modal` is the switch, and a test fails
   if a tool that opens the modal does not declare one. The tools that open a diff
   (`onOpen` function) or their own chat (`task`) are untouched: they never used
-  this modal.
+  this modal. The `read_file` body goes one step further: instead of dumping the
+  text it mounts an **isolated Innerta Engine session in read-only mode** (the
+  same embed the Social panel uses when a shared file is expanded), so the file
+  is read, selected and copied like in the editor — but not edited.
 
 ### Explorer (UI)
 - **The filtered tree (Git → Changes) no longer costs a render per folder**: the
