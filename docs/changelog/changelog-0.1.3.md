@@ -425,3 +425,13 @@ published are not edited. The file goes per version:
   do. It also explains why the node viewer looked right around 147–159 %: that
   is where the zoom lands the font on 20 px, the size where the block happens to
   match the cell. Now it holds at every size.
+- **TUI frames no longer have a "penumbra" at the joints**: same root cause as
+  the blocks — the font's box-drawing glyphs are bigger than the cell (`─` is
+  10 px wide in an 8 px cell, `│` is 20 px tall in an 18 px one), so every cell
+  overlapped its neighbour and each joint kept an anti-aliased edge, which is
+  why each segment looked like its own thing. The engine now draws the single
+  line set itself (`─ │ ┌ ┐ └ ┘ ├ ┤ ┬ ┴ ┼`, the heavy variants, the light/heavy
+  mixtures and the rounded corners `╭ ╮ ╯ ╰`) as rectangles that go from the
+  cell edge to the centre, which is what VTE and kitty do; the thickness is one
+  device pixel and scales with the zoom. The double-line set, the dashes and the
+  diagonals still come from the font.
