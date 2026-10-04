@@ -444,3 +444,19 @@ published are not edited. The file goes per version:
   only one deciding, per code point, from `Emoji_Presentation` and VS16, and the
   renderer now just hands it the system's colour font (on demand, per view). One
   pipeline, and what the text says is what you see.
+- **A colour font can no longer promote a text symbol to emoji**: the editor does
+  not build a font chain, so it falls back to the engine's bundled faces — and
+  the first of those is Twemoji Mozilla (COLR), which happens to have `⚙`, `✓`,
+  `❤`… as *colour* glyphs. The glyph chooser accepted a colour bitmap from any
+  face without looking at the code point's presentation, so a CLI's `⚙` U+2699
+  (text presentation, no VS16) came out as a colour emoji in the editor. A
+  colour face is now skipped unless the text asked for emoji
+  (`Emoji_Presentation` or VS16), so those symbols come out monochrome while
+  `⚡ ✅ ✨ 😀` keep their colour.
+- **The double-line box characters are drawn by the engine too**: they were the
+  last group left to the font, and the anti-aliasing of its two strokes bled
+  into the one-pixel gap between them, so `║`, `═`, `╔`, `╠`, `╬`… looked smudged
+  inside. They are now painted as two clean strokes with a gap of the same
+  thickness, and the arms reach the outer stroke of the perpendicular double so
+  corners close. That covers the whole box-drawing block except the dashes and
+  the diagonals.
