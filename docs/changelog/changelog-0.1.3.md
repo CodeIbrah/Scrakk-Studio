@@ -417,3 +417,11 @@ published are not edited. The file goes per version:
   font; Windows: the console registry) and its size (pt → px at 96 dpi, times the
   text-scaling factor), and the view is built with those metrics. The "one pixel
   less than the editor" fudge is gone.
+- **Block characters no longer leave a hairline between rows**: TUI logos are
+  built from block elements (`█ ▀ ▄ ▌ ▐` and the quadrants), and the font draws
+  them a pixel short of the cell — JetBrains Mono NL at 13 px gives a 17 px
+  block in an 18 px cell — so the background showed through between rows. The
+  engine now draws them itself, filling the exact cell, the way VTE and kitty
+  do. It also explains why the node viewer looked right around 147–159 %: that
+  is where the zoom lands the font on 20 px, the size where the block happens to
+  match the cell. Now it holds at every size.
