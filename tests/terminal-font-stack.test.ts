@@ -50,7 +50,7 @@ function hasFontconfig(): boolean {
 /** Los archivos que CUBREN ese code point (una consulta por code point). */
 function coveringFiles(codepoint: number): Set<string> {
   try {
-    const out = execSync(`fc-list --format=%{file}\\n ':charset=${codepoint.toString(16)}'`, {
+    const out = execSync(`fc-list --format='%{file}\\n' ':charset=${codepoint.toString(16)}'`, {
       encoding: 'utf-8',
       timeout: 4000
     })
@@ -77,16 +77,18 @@ describe.skipIf(!hasFontconfig())('cadena de fuentes de la terminal', () => {
     expect(new Set(chain).size).toBe(chain.length)
   })
 
-  it('para cada code point gana LA MISMA fuente que fontconfig', () => {
-    // El corazón: la primera que cubre, en el orden de nuestra cadena.
+  it('resuelve cada code point como la terminal del sistema', () => {
+    // La regla real de una terminal: si la PRIMARIA tiene el glifo, gana ella;
+    // si no, cae en lo que elige fontconfig para ese code point. Es lo que hace
+    // tambien VTE, y por eso `─` sale de la mono aunque fontconfig prefiera otra.
     for (const codepoint of TERMINAL_SAMPLE_CODEPOINTS) {
-      const expected = systemFontForCodepoint(codepoint)
-      if (!expected) continue
       const covering = coveringFiles(codepoint)
       const ours = chain.find((file) => covering.has(file))
+      const expected = covering.has(chain[0]) ? chain[0] : systemFontForCodepoint(codepoint)
+      if (!expected) continue
       expect(
         ours,
-        `U+${codepoint.toString(16).toUpperCase()}: fontconfig usa ${expected}`
+        `U+${codepoint.toString(16).toUpperCase()}: esperaba ${expected}`
       ).toBe(expected)
     }
   })

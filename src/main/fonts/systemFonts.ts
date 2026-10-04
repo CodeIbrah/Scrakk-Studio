@@ -28,16 +28,18 @@ import { execSync } from 'child_process'
 import type { TerminalFontFile } from '@shared/terminal'
 
 /**
- * Presupuesto de la cadena.
+ * Topes de la cadena (red de seguridad, no presupuesto real).
  *
- * Las fuentes del sistema son GRANDES y cada módulo WASM (una terminal) carga su
- * propia copia: sin tope, un Noto CJK de ~20 MB por terminal se come la memoria.
- * Con esto entran las de símbolos, box-drawing, braille y powerline (las que se
- * veían distintas) y se saltean las gigantes.
+ * El peso no importa: se leen al abrir y se sueltan al cerrar.
  */
+// El peso NO es la restricción: las fuentes se leen del sistema al abrir y se
+// sueltan al cerrar (no se guardan en disco ni en la app). Los topes quedan
+// solo como red de seguridad contra una fuente absurda, altos a propósito para
+// poder usar LAS MISMAS que la terminal del usuario (p. ej. Noto Sans CJK, 19 MB,
+// que es lo que fontconfig elige para `ⓘ` U+24D8).
 export const FONT_STACK_MAX_FONTS = 10
-export const FONT_STACK_MAX_FONT_BYTES = 6 * 1024 * 1024
-export const FONT_STACK_MAX_TOTAL_BYTES = 24 * 1024 * 1024
+export const FONT_STACK_MAX_FONT_BYTES = 32 * 1024 * 1024
+export const FONT_STACK_MAX_TOTAL_BYTES = 64 * 1024 * 1024
 
 /**
  * Code points que una TERMINAL necesita y que la monoespaciada casi nunca trae.
@@ -56,7 +58,21 @@ export const TERMINAL_SAMPLE_CODEPOINTS: readonly number[] = [
   0x25cf, // formas geométricas: ●
   0x2713, // dingbats: ✓
   0x2261, // matemática: ≡
-  0xe0b0 // powerline (área privada): 
+  0xe0b0, // powerline (área privada): 
+  // Símbolos que SUELTAN los CLIs (docks, spinners, botones, flechas): si no se
+  // muestrean, su fuente no entra en la cadena y el carácter queda INVISIBLE
+  // (caso `ⓘ` U+24D8 del dock de botones de un CLI: fontconfig lo resuelve a
+  // Noto Sans CJK de 19 MB y sin el muestreo no entraba NADA que lo cubriera).
+  0x24d8, // ⓘ
+  0x25c7, // ◇
+  0x25be, // ▾
+  0x276f, // ❯
+  0x2190, // ←
+  0x2193, // ↓
+  0x21d2, // ⇒
+  0x2197, // ↗
+  0x2717, // ✗
+  0x254c, // ╌
   // Emoji NO se muestrea acá: tiene su propia fuente (ver `resolveEmojiFont`).
   // Si se muestreaba, fontconfig contestaba `Unifont` (monocromo) y nos metía
   // una fuente enorme en la cadena para glifos que ahora resuelve el emoji.
@@ -213,10 +229,39 @@ export function listMonoFamilies(): string[] {
  * Es la misma pregunta que responde una terminal de verdad cuando se topa con
  * un carácter que su fuente primaria no tiene.
  */
-export function systemFontForCodepoint(codepoint: number, family = 'monospace'): string | null {
+export function systemFontForCodepoint(
+  codepoint: number,
+  family = 'monospace',
+  // Presupuesto: el de la CADENA por defecto, pero el CJK tiene el suyo (32 MB)
+  // y si no se pasa acá se filtraría a 6 MB y elegiría una CJK peor.
+  maxBytes = FONT_STACK_MAX_FONT_BYTES
+): string | null {
   if (process.platform === 'win32') return null
-  const out = fcMatch(`--format=%{file} ':charset=${codepoint.toString(16)}' '${safeFamily(family)}'`)
-  return out && fs.existsSync(out) ? out : null
+  const charset = codepoint.toString(16)
+  // Entra en el presupuesto de la cadena y es una fuente de VERDAD: fontconfig
+  // también lista stubs de 43 bytes (`fonts-japanese-gothic.ttf`) que no sirven.
+  const fits = (file: string): boolean => {
+    try {
+      if (!/\.(ttf|otf|ttc)$/i.test(file)) return false
+      const size = fs.statSync(file).size
+      return size > 64 * 1024 && size <= maxBytes
+    } catch {
+      return false
+    }
+  }
+  const first = fcMatch(`--format=%{file} ':charset=${charset}' '${safeFamily(family)}'`)
+  if (first && fs.existsSync(first) && fits(first)) return first
+  // La primera no entra: probar la lista ORDENADA de fontconfig y quedarse con la
+  // primera que entre. Sin esto un `ⓘ` (U+24D8) quedaba SIN glifo, porque
+  // fontconfig lo resuelve a Noto Sans CJK (19 MB > tope) y la fuente se
+  // descartaba; con esto cae a `Noto Sans Symbols` (0.25 MB), que es lo que
+  // termina usando la terminal del usuario.
+  const list = fcMatch(`-s --format='%{file}\\n' ':charset=${charset}'`)
+  for (const line of list.split('\n')) {
+    const file = line.trim()
+    if (file && fs.existsSync(file) && fits(file)) return file
+  }
+  return null
 }
 
 /** La monoespaciada primaria del sistema. */
@@ -339,7 +384,8 @@ export function resolveCjkFont(family = 'monospace'): TerminalFontFile | null {
     }
   } else {
     for (const codepoint of CJK_SAMPLE_CODEPOINTS) {
-      const file = systemFontForCodepoint(codepoint, family)
+      // Con el tope del CJK (32 MB), no el de la cadena: el Noto CJK pesa 19 MB.
+      const file = systemFontForCodepoint(codepoint, family, FONT_CJK_MAX_BYTES)
       if (file && !candidates.includes(file)) candidates.push(file)
     }
   }
