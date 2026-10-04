@@ -37,6 +37,88 @@ export function portPositions(w: number, h: number): PortPos[] {
 }
 
 /**
+ * Lado del perímetro donde vive un puerto + su normal saliente.
+ * Robusto a redondeos: elige el borde más cercano.
+ */
+export type PortSide = 'top' | 'right' | 'bottom' | 'left'
+
+export interface NodeRect { x: number; y: number; w: number; h: number }
+
+export function portSide(w: number, h: number, p: PortPos): PortSide {
+  const dTop = Math.abs(p.y)
+  const dBottom = Math.abs(p.y - h)
+  const dLeft = Math.abs(p.x)
+  const dRight = Math.abs(p.x - w)
+  const m = Math.min(dTop, dBottom, dLeft, dRight)
+  if (m === dTop) return 'top'
+  if (m === dBottom) return 'bottom'
+  if (m === dLeft) return 'left'
+  return 'right'
+}
+
+export function portNormal(side: PortSide): PortPos {
+  if (side === 'top') return { x: 0, y: -1 }
+  if (side === 'bottom') return { x: 0, y: 1 }
+  if (side === 'left') return { x: -1, y: 0 }
+  return { x: 1, y: 0 }
+}
+
+function clamp(v: number, lo: number, hi: number): number {
+  return Math.min(hi, Math.max(lo, v))
+}
+
+function round1(v: number): number {
+  return Math.round(v * 10) / 10
+}
+
+/**
+ * Curva cúbica inteligente entre anclas de mundo.
+ * - Controles sobre las normales salientes → sale/entra perpendicular.
+ * - `k` adaptativo a distancia y orientación: lo más corto sin pinzarse.
+ * - Mismo lado / espalda con espalda → bucle en U amplio, no recta cruzando nodos.
+ */
+export function smartEdgePath(
+  ax: number, ay: number, aSide: PortSide,
+  bx: number, by: number, bSide: PortSide
+): string {
+  const dx = bx - ax
+  const dy = by - ay
+  const dist = Math.hypot(dx, dy) || 1
+  const na = portNormal(aSide)
+  const nb = portNormal(bSide)
+  const base = clamp(dist * 0.35, 32, 160)
+  // ¿El otro extremo está en la dirección de mi normal? Si apunta
+  // al lado contrario, alargar ese control para no plegar la curva.
+  const towardsA = (dx * na.x + dy * na.y) / dist
+  const towardsB = (-dx * nb.x + -dy * nb.y) / dist
+  let kA = base * (1 + 0.8 * Math.max(0, -towardsA))
+  let kB = base * (1 + 0.8 * Math.max(0, -towardsB))
+  // Misma dirección (ej. der→der): U amplia en vez de S aplastada.
+  if (na.x === nb.x && na.y === nb.y) {
+    const wide = dist * 0.5 + 48
+    if (kA < wide) kA = wide
+    if (kB < wide) kB = wide
+  }
+  const c1x = round1(ax + na.x * kA)
+  const c1y = round1(ay + na.y * kA)
+  const c2x = round1(bx + nb.x * kB)
+  const c2y = round1(by + nb.y * kB)
+  return `M ${round1(ax)} ${round1(ay)} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${round1(bx)} ${round1(by)}`
+}
+
+/**
+ * Conveniencia: anclas + lados a partir de rects de mundo y puertos
+ * relativos. Es lo que usa la vista y el loop físico (rAF).
+ */
+export function edgePathForPorts(rectA: NodeRect, portA: PortPos, rectB: NodeRect, portB: PortPos): string {
+  const ax = rectA.x + portA.x
+  const ay = rectA.y + portA.y
+  const bx = rectB.x + portB.x
+  const by = rectB.y + portB.y
+  return smartEdgePath(ax, ay, portSide(rectA.w, rectA.h, portA), bx, by, portSide(rectB.w, rectB.h, portB))
+}
+
+/**
  * Componentes conexas (union-find) sobre los ids dados y los enlaces.
  * Solo considera enlaces con AMBOS extremos presentes.
  */

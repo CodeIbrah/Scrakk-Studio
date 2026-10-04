@@ -8,10 +8,14 @@ import { LiveSessionHost } from '@features/sessions'
 import { getTerminalSession } from '@services/innerta/terminalSession'
 import { ProductIcon } from '@services/productIcons/components'
 import { closeTabSmart, openNewTerminalTab } from '../../actions'
+import { isNodeJellyEnabled } from '@services/perf'
 import {
   connectedGroups,
+  edgePathForPorts,
   groupCentroid,
   portPositions,
+  portSide,
+  smartEdgePath,
   type Link
 } from './terminalNodesModel'
 import styles from './TerminalNodesView.module.css'
@@ -191,7 +195,7 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
     last: number | null
   }
   const groupAnim = useRef<GroupAnim | null>(null)
-  const edgeLines = useRef(new Map<string, { hit: SVGLineElement | null; line: SVGLineElement | null }>())
+  const edgeLines = useRef(new Map<string, { hit: SVGPathElement | null; line: SVGPathElement | null }>())
   const grabberEls = useRef(new Map<string, HTMLDivElement>())
 
   const setGrabberEl = (key: string) => (el: HTMLDivElement | null): void => {
@@ -199,7 +203,7 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
     else grabberEls.current.delete(key)
   }
 
-  const setEdgeLineEl = (id: string, which: 0 | 1) => (el: SVGLineElement | null): void => {
+  const setEdgeLineEl = (id: string, which: 0 | 1) => (el: SVGPathElement | null): void => {
     const entry = edgeLines.current.get(id) ?? { hit: null, line: null }
     if (which === 0) entry.hit = el
     else entry.line = el
@@ -210,6 +214,26 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
   const groupTick = useCallback((): void => {
     const anim = groupAnim.current
     if (!anim) return
+    // Gelatina desactivada en caliente: clavar a target y commitear, sin muelle.
+    if (!isNodeJellyEnabled()) {
+      const final: Record<string, NodePos> = {}
+      for (const id of anim.members) {
+        const t = anim.target[id]
+        if (!t) continue
+        final[id] = { x: Math.round(t.x), y: Math.round(t.y) }
+        const el = nodeEls.current.get(id)
+        if (el) {
+          el.style.left = `${t.x}px`
+          el.style.top = `${t.y}px`
+        }
+      }
+      const next = { ...positionsRef.current, ...final }
+      positionsRef.current = next
+      setPositions(next)
+      try { localStorage.setItem(POS_KEY, JSON.stringify(next)) } catch { /* noop */ }
+      groupAnim.current = null
+      return
+    }
     const now = performance.now()
     const dt = Math.min(0.033, Math.max(0.001, (now - (anim.last ?? now)) / 1000))
     anim.last = now
@@ -219,12 +243,16 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
       if (c) return c
       return positionsRef.current[id] ?? { x: 40, y: 40 }
     }
-    const anchorLive = (node: string, port: number): { x: number; y: number } => {
-      const p = posOf(node)
-      const s = sizesRef.current[node] ?? FALLBACK_SIZE
-      const pts = portPositions(s.w, s.h)
-      const pt = pts[Math.min(Math.max(0, port), pts.length - 1)] ?? { x: s.w / 2, y: 0 }
-      return { x: p.x + pt.x, y: p.y + pt.y }
+    const edgeLive = (nodeA: string, portA: number, nodeB: string, portB: number): string => {
+      const pa = posOf(nodeA)
+      const pb = posOf(nodeB)
+      const sa = sizesRef.current[nodeA] ?? FALLBACK_SIZE
+      const sb = sizesRef.current[nodeB] ?? FALLBACK_SIZE
+      const ptsA = portPositions(sa.w, sa.h)
+      const ptsB = portPositions(sb.w, sb.h)
+      const a = ptsA[Math.min(Math.max(0, portA), ptsA.length - 1)] ?? { x: sa.w / 2, y: 0 }
+      const b = ptsB[Math.min(Math.max(0, portB), ptsB.length - 1)] ?? { x: sb.w / 2, y: 0 }
+      return edgePathForPorts({ x: pa.x, y: pa.y, w: sa.w, h: sa.h }, a, { x: pb.x, y: pb.y, w: sb.w, h: sb.h }, b)
     }
 
     let settled = true
@@ -253,14 +281,10 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
     for (const [linkId, entry] of edgeLines.current) {
       const link = linksRef.current.get(linkId)
       if (!link) continue
-      const a = anchorLive(link.a, link.ap)
-      const b = anchorLive(link.b, link.bp)
+      const d = edgeLive(link.a, link.ap, link.b, link.bp)
       for (const line of [entry.hit, entry.line]) {
         if (!line) continue
-        line.setAttribute('x1', `${a.x}`)
-        line.setAttribute('y1', `${a.y}`)
-        line.setAttribute('x2', `${b.x}`)
-        line.setAttribute('y2', `${b.y}`)
+        line.setAttribute('d', d)
       }
     }
     const gel = grabberEls.current.get(groupKey(anim.members))
@@ -314,12 +338,28 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
     return out
   }, [tabIds, positions, sizes])
 
-  const anchorOf = (node: string, port: number): { x: number; y: number } => {
+  const edgeDOf = (nodeA: string, portA: number, nodeB: string, portB: number): string => {
+    const ra = rects[nodeA]
+    const rb = rects[nodeB]
+    if (!ra || !rb) return ''
+    const ptsA = portPositions(ra.w, ra.h)
+    const ptsB = portPositions(rb.w, rb.h)
+    const a = ptsA[Math.min(Math.max(0, portA), ptsA.length - 1)] ?? { x: ra.w / 2, y: 0 }
+    const b = ptsB[Math.min(Math.max(0, portB), ptsB.length - 1)] ?? { x: rb.w / 2, y: 0 }
+    return edgePathForPorts(ra, a, rb, b)
+  }
+
+  const draftDOf = (node: string, port: number, x: number, y: number): string => {
     const r = rects[node]
-    if (!r) return { x: 0, y: 0 }
+    if (!r) return ''
     const pts = portPositions(r.w, r.h)
-    const p = pts[Math.min(Math.max(0, port), pts.length - 1)] ?? { x: r.w / 2, y: 0 }
-    return { x: r.x + p.x, y: r.y + p.y }
+    const rel = pts[Math.min(Math.max(0, port), pts.length - 1)] ?? { x: r.w / 2, y: 0 }
+    const a = { x: r.x + rel.x, y: r.y + rel.y }
+    const aSide = portSide(r.w, r.h, rel)
+    const dx = x - a.x
+    const dy = y - a.y
+    const bSide = Math.abs(dx) >= Math.abs(dy) ? (dx >= 0 ? 'left' : 'right') : (dy >= 0 ? 'top' : 'bottom')
+    return smartEdgePath(a.x, a.y, aSide, x, y, bSide)
   }
 
   const addLink = (a: string, ap: number, b: string, bp: number): void => {
@@ -468,11 +508,70 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
   // repinta al momento (setState) y persiste.
   const onGrabWindowMove = useCallback((e: PointerEvent): void => {
     const grab = grabRef.current
-    const anim = groupAnim.current
-    if (!grab || !anim) return
-    // Solo se mueven los TARGETS: el rAF acerca cada nodo con su muelle.
+    if (!grab) return
     const dx = (e.clientX - grab.startX) / grab.k
     const dy = (e.clientY - grab.startY) / grab.k
+    // Sin gelatina: directo al instante, sin muelle ni rAF.
+    if (!isNodeJellyEnabled()) {
+      const next: Record<string, NodePos> = {}
+      for (const id of grab.members) {
+        const o = grab.orig[id] ?? { x: 40, y: 40 }
+        next[id] = { x: Math.round(o.x + dx), y: Math.round(o.y + dy) }
+      }
+      const merged = { ...positionsRef.current, ...next }
+      positionsRef.current = merged
+      setPositions(merged)
+      try { localStorage.setItem(POS_KEY, JSON.stringify(merged)) } catch { /* noop */ }
+      for (const id of grab.members) {
+        const el = nodeEls.current.get(id)
+        const p = next[id]
+        if (el && p) {
+          el.style.left = `${p.x}px`
+          el.style.top = `${p.y}px`
+        }
+      }
+      // Aristas con posiciones finales (sin animación).
+      for (const [linkId, entry] of edgeLines.current) {
+        const link = linksRef.current.get(linkId)
+        if (!link) continue
+        const pa = merged[link.a]
+        const pb = merged[link.b]
+        if (!pa || !pb) continue
+        const sa = sizesRef.current[link.a] ?? FALLBACK_SIZE
+        const sb = sizesRef.current[link.b] ?? FALLBACK_SIZE
+        const ptsA = portPositions(sa.w, sa.h)
+        const ptsB = portPositions(sb.w, sb.h)
+        const a = ptsA[Math.min(Math.max(0, link.ap), ptsA.length - 1)] ?? { x: sa.w / 2, y: 0 }
+        const b = ptsB[Math.min(Math.max(0, link.bp), ptsB.length - 1)] ?? { x: sb.w / 2, y: 0 }
+        const d = edgePathForPorts({ x: pa.x, y: pa.y, w: sa.w, h: sa.h }, a, { x: pb.x, y: pb.y, w: sb.w, h: sb.h }, b)
+        for (const line of [entry.hit, entry.line]) {
+          if (!line) continue
+          line.setAttribute('d', d)
+        }
+      }
+      const gel = grabberEls.current.get(groupKey(grab.members))
+      if (gel) {
+        let sx = 0
+        let sy = 0
+        let n = 0
+        for (const id of grab.members) {
+          const p = next[id] ?? merged[id]
+          const s = sizesRef.current[id] ?? FALLBACK_SIZE
+          if (!p) continue
+          sx += p.x + s.w / 2
+          sy += p.y + s.h / 2
+          n++
+        }
+        if (n > 0) {
+          gel.style.left = `${sx / n}px`
+          gel.style.top = `${sy / n}px`
+        }
+      }
+      return
+    }
+    const anim = groupAnim.current
+    if (!anim) return
+    // Solo se mueven los TARGETS: el rAF acerca cada nodo con su muelle.
     for (const id of grab.members) {
       const o = grab.orig[id] ?? { x: 40, y: 40 }
       anim.target[id] = { x: Math.round(o.x + dx), y: Math.round(o.y + dy) }
@@ -511,6 +610,22 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
     const orig: Record<string, NodePos> = {}
     for (const id of members) orig[id] = positionsRef.current[id] ?? { x: 40, y: 40 }
     grabRef.current = { members, startX: e.clientX, startY: e.clientY, k: cam.k, orig }
+    // Sin gelatina: sin física ni rAF; el move pinta directo.
+    if (!isNodeJellyEnabled()) {
+      const prev = groupAnim.current
+      if (prev?.raf !== null && prev?.raf !== undefined) cancelAnimationFrame(prev.raf)
+      groupAnim.current = null
+      try {
+        e.currentTarget.setPointerCapture(e.pointerId)
+      } catch {
+        // Sin captura: los listeners de ventana cubren el gesto igual.
+      }
+      document.body.style.cursor = 'grabbing'
+      window.addEventListener('pointermove', onGrabWindowMove)
+      window.addEventListener('pointerup', endGrab, { once: true })
+      window.addEventListener('pointercancel', endGrab, { once: true })
+      return
+    }
     // Semilla física desde lo VISIBLE (puede haber un settle en curso de un
     // arrastre anterior: se hereda posición/velocidad, sin saltos).
     const prev = groupAnim.current
@@ -575,28 +690,25 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
       >
         <svg className={styles.edges} data-nopan="1" aria-hidden="true">
           {links.map((link) => {
-            const a = anchorOf(link.a, link.ap)
-            const b = anchorOf(link.b, link.bp)
+            const d = edgeDOf(link.a, link.ap, link.b, link.bp)
+            if (!d) return null
             return (
               <g key={link.id}>
-                <line
+                <path
                   ref={setEdgeLineEl(link.id, 0)}
-                  x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+                  d={d}
                   className={styles.edgeHit}
                   onClick={(e) => { e.stopPropagation(); removeLink(link.id) }}
                 >
                   <title>{t('layout.clic.para.desenlazar')}</title>
-                </line>
-                <line ref={setEdgeLineEl(link.id, 1)} x1={a.x} y1={a.y} x2={b.x} y2={b.y} className={styles.edgeLine} />
+                </path>
+                <path ref={setEdgeLineEl(link.id, 1)} d={d} className={styles.edgeLine} />
               </g>
             )
           })}
           {linkDrag ? (
-            <line
-              x1={anchorOf(linkDrag.from.node, linkDrag.from.port).x}
-              y1={anchorOf(linkDrag.from.node, linkDrag.from.port).y}
-              x2={linkDrag.x}
-              y2={linkDrag.y}
+            <path
+              d={draftDOf(linkDrag.from.node, linkDrag.from.port, linkDrag.x, linkDrag.y)}
               className={styles.edgeDraft}
             />
           ) : null}

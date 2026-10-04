@@ -10887,6 +10887,34 @@
       "needsReview": false,
       "at": "2026-10-02T04:25:35.047Z",
       "approvedAt": "2026-10-02T04:25:35.218Z"
+    },
+    "settings.activar.animacion.gelatinosa": {
+      "src": "660d8df3a8f25728",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:11:10.514Z"
+    },
+    "settings.animacion.gelatinosa.nodos": {
+      "src": "fe1c9890141dc8c3",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:11:10.514Z"
+    },
+    "settings.desactivar.animacion.gelatinosa": {
+      "src": "1dc04c2f6e56ac20",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:11:10.514Z"
+    },
+    "settings.mueve.el.grupo.al.instante.sin.muelle": {
+      "src": "6ef7b0472017a1d2",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-04T00:11:10.514Z"
     }
   },
   "version": 1

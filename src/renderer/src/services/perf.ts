@@ -69,3 +69,52 @@ export function resetLowEndModeForTests(): void {
     // no-op
   }
 }
+
+// ── Animación gelatinosa de nodos de terminal ──────────────────────────
+// `true` = muelle con overshoot al mover grupos; `false` = directo, sin rAF.
+// Persistente (`scrakk:term-nodes-jelly`), por defecto activada.
+export const NODE_JELLY_STORAGE_KEY = 'scrakk:term-nodes-jelly'
+
+const jellyListeners = new Set<Listener>()
+
+function emitJelly(): void {
+  for (const listener of jellyListeners) {
+    try {
+      listener()
+    } catch {
+      // no-op
+    }
+  }
+}
+
+function loadJelly(): boolean {
+  try {
+    return localStorage.getItem(NODE_JELLY_STORAGE_KEY) !== '0'
+  } catch {
+    return true
+  }
+}
+
+let jellyEnabled = loadJelly()
+
+export function subscribeNodeJelly(listener: Listener): () => void {
+  jellyListeners.add(listener)
+  return () => {
+    jellyListeners.delete(listener)
+  }
+}
+
+export function isNodeJellyEnabled(): boolean {
+  return jellyEnabled
+}
+
+export function setNodeJellyEnabled(value: boolean): void {
+  if (jellyEnabled === value) return
+  jellyEnabled = value
+  try {
+    localStorage.setItem(NODE_JELLY_STORAGE_KEY, value ? '1' : '0')
+  } catch {
+    // Sin almacenamiento: queda solo en memoria esta sesión.
+  }
+  emitJelly()
+}
