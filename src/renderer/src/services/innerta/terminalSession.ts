@@ -136,6 +136,85 @@ function readWorkspaceRoot(): string | undefined {
   }
 }
 
+/**
+ * Tecla → bytes de terminal, como cualquier emulador.
+ *
+ * ⚠ NO VOLVER A UNA LISTA BLANCA. Antes esto era: "letras sueltas, Enter, Tab,
+ * Escape, flechas y Ctrl+C/D/L" y el resto se DESCARTABA. Resultado: Ctrl+B
+ * (tmux), Ctrl+K, Ctrl+U, Alt+cualquier cosa, F1-F12, Shift+Tab, PageUp/Down…
+ * no llegaban NUNCA al programa. Ese era el bug de "los shortcuts del CLI no
+ * funcionan".
+ *
+ * `null` = no mandar nada (teclas del sistema, Super, composición IME).
+ */
+function encodeKey(e: KeyboardEvent): string | null {
+  const shift = e.shiftKey
+  const alt = e.altKey
+  const ctrl = e.ctrlKey
+  // Super/Cmd no es una tecla de terminal: deja pasar los atajos del host.
+  if (e.metaKey || e.isComposing) return null
+  // xterm: modificador = 1 + shift + 2*alt + 4*ctrl.
+  const mod = 1 + (shift ? 1 : 0) + (alt ? 2 : 0) + (ctrl ? 4 : 0)
+
+  const arrows: Record<string, string> = {
+    ArrowUp: 'A',
+    ArrowDown: 'B',
+    ArrowRight: 'C',
+    ArrowLeft: 'D'
+  }
+  if (arrows[e.key]) {
+    return mod === 1 ? `\x1b[${arrows[e.key]}` : `\x1b[1;${mod}${arrows[e.key]}`
+  }
+  if (e.key === 'Home' || e.key === 'End') {
+    const f = e.key === 'Home' ? 'H' : 'F'
+    return mod === 1 ? `\x1b[${f}` : `\x1b[1;${mod}${f}`
+  }
+  const tilde: Record<string, number> = {
+    Insert: 2,
+    Delete: 3,
+    PageUp: 5,
+    PageDown: 6,
+    F5: 15,
+    F6: 17,
+    F7: 18,
+    F8: 19,
+    F9: 20,
+    F10: 21,
+    F11: 23,
+    F12: 24
+  }
+  if (tilde[e.key] !== undefined) {
+    return mod === 1 ? `\x1b[${tilde[e.key]}~` : `\x1b[${tilde[e.key]};${mod}~`
+  }
+  const ss3: Record<string, string> = { F1: 'P', F2: 'Q', F3: 'R', F4: 'S' }
+  if (ss3[e.key]) {
+    return mod === 1 ? `\x1bO${ss3[e.key]}` : `\x1b[1;${mod}${ss3[e.key]}`
+  }
+  if (e.key === 'Enter') return alt ? '\x1b\r' : '\r'
+  // Shift+Tab es su PROPIA secuencia: los TUIs la usan muchísimo para navegar.
+  if (e.key === 'Tab') return shift ? '\x1b[Z' : alt ? '\x1b\t' : '\t'
+  if (e.key === 'Backspace') return alt ? '\x1b\x7f' : '\x7f'
+  if (e.key === 'Escape') return alt ? '\x1b\x1b' : '\x1b'
+  if (e.key.length !== 1) return null
+
+  // Ctrl+tecla → código de control (Ctrl+A = 0x01 … Ctrl+Z = 0x1A).
+  let data = e.key
+  if (ctrl) {
+    const up = e.key.toUpperCase()
+    if (up >= 'A' && up <= 'Z') data = String.fromCharCode(up.charCodeAt(0) - 64)
+    else if (e.key === '[') data = '\x1b'
+    else if (e.key === '\\') data = '\x1c'
+    else if (e.key === ']') data = '\x1d'
+    else if (e.key === '^') data = '\x1e'
+    else if (e.key === '_' || e.key === '/') data = '\x1f'
+    else if (e.key === ' ' || e.key === '@') data = '\x00'
+    else if (e.key === '?') data = '\x7f'
+    else return null
+  }
+  // Alt = prefijo ESC (el "meta" de toda la vida).
+  return alt ? `\x1b${data}` : data
+}
+
 class TerminalSessionImpl implements LiveSession {
   readonly id: string
   private canvas: HTMLCanvasElement | null = null
@@ -510,44 +589,37 @@ class TerminalSessionImpl implements LiveSession {
       canvas.removeEventListener('contextmenu', onContextMenu)
     }
 
-    // Teclado → PTY (el canvas de terminal no edita: todo va al shell).
+    // Teclado → PTY. Todo va al shell: lo resuelve `encodeKey`.
     const onKeyDownPty = (e: KeyboardEvent): void => {
       const api = getTerminalApi()
       if (!api) return
-      let data: string | null = null
-      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) data = e.key
-      else if (e.key === 'Enter') data = '\r'
-      else if (e.key === 'Backspace') data = '\x7f'
-      else if (e.key === 'Tab') data = '\t'
-      else if (e.key === 'Escape') data = '\x1b'
-      else if (e.key === 'ArrowUp') data = '\x1b[A'
-      else if (e.key === 'ArrowDown') data = '\x1b[B'
-      else if (e.key === 'ArrowRight') data = '\x1b[C'
-      else if (e.key === 'ArrowLeft') data = '\x1b[D'
-      else if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'c') {
+      // Reservados del host: copiar/pegar con Ctrl+Shift+C/V, como cualquier
+      // terminal. TODO lo demás (Ctrl+<letra>, Alt, F-keys…) es del CLI.
+      if (e.ctrlKey && e.shiftKey && (e.key === 'c' || e.key === 'C')) {
         e.preventDefault()
         e.stopPropagation()
         try {
           const text = this.view?.module.terminalGetSelectionText?.() ?? ''
           if (text) void navigator.clipboard?.writeText(text)
           this.view?.module.terminalClearSelection?.()
-        } catch {}
+        } catch {
+          // Sin selección o sin clipboard.
+        }
         return
-      } else if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'v') {
+      }
+      if (e.ctrlKey && e.shiftKey && (e.key === 'v' || e.key === 'V')) {
         e.preventDefault()
         e.stopPropagation()
         void navigator.clipboard?.readText().then((text) => {
           if (text) void api.write({ id: this.ptyId, data: text })
         })
         return
-      } else if (e.ctrlKey && e.key.toLowerCase() === 'c') data = '\x03'
-      else if (e.ctrlKey && e.key.toLowerCase() === 'd') data = '\x04'
-      else if (e.ctrlKey && e.key.toLowerCase() === 'l') data = '\x0c'
-      if (data !== null) {
-        e.preventDefault()
-        e.stopPropagation()
-        void api.write({ id: this.ptyId, data })
       }
+      const data = encodeKey(e)
+      if (data === null) return
+      e.preventDefault()
+      e.stopPropagation()
+      void api.write({ id: this.ptyId, data })
     }
     canvas.addEventListener('keydown', onKeyDownPty, true)
     const prevInputDispose = this.inputDispose

@@ -487,3 +487,15 @@ published are not edited. The file goes per version:
   (GLFW 3+ was passed through as 4/5), so a program binding them never saw them.
   They now go out as the xterm extended buttons (8..11), and libvterm — which
   dropped anything past button 7 — learned to encode them.
+- **CLI keyboard shortcuts work now**: the terminal forwarded keys through a
+  whitelist — bare characters, Enter, Tab, Escape, the arrows and Ctrl+C/D/L —
+  and **silently dropped everything else**. So Ctrl+B (tmux), Ctrl+K, Ctrl+U,
+  Alt+anything, F1–F12, Shift+Tab and PageUp/Down never reached the program;
+  that is why a CLI's own shortcuts did nothing. Keys are now encoded like any
+  emulator: Ctrl+letter as its control code, Alt as an ESC prefix, Shift+Tab as
+  its own sequence, and the modifiers of the special keys (Ctrl+Up, Shift+F5…)
+  in the xterm form. Only Ctrl+Shift+C/V stay reserved for copy/paste.
+- **The wheel scrolls at normal speed**: each wheel notch sent up to three
+  events (`yoffset * 3`), so scrolling inside a TUI went about three times too
+  fast. The engine now accumulates the wheel deltas and emits one per notch, and
+  the host normalises a notch to 1 unit (it was 0.83).

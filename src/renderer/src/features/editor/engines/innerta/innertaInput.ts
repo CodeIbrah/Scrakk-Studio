@@ -217,7 +217,11 @@ export function wireInnertaInput(
     const pxX = e.deltaMode === 1 ? e.deltaX * 16 : e.deltaX
     // GLFW: yoffset > 0 = scroll up; el navegador entrega deltaY > 0 con el
     // wheel hacia abajo → se niega para que coincida con OnScroll.
-    module()?.scroll(-pxX / 120, -px / 120)
+    //
+    // 100 px = UNA muesca de rueda (lo que manda Chromium): así el motor recibe
+    // exactamente 1.0 por muesca y puede emitir UN evento por muesca (ver
+    // `m_termWheelAccum`). Con 120 la muesca valía 0.83 y todo quedaba a medias.
+    module()?.scroll(-pxX / 100, -px / 100)
     e.preventDefault()
   }
 
