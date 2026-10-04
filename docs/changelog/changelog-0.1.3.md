@@ -17,6 +17,20 @@ published are not edited. The file goes per version:
 
 ## 0.1.3 — TBD
 
+### Tabs (UI)
+- **The tab bar can move into a side panel**: the center's horizontal strip now
+  carries a dock button on its right (the same `StripAction` API the bottom slot
+  already used for its node-view button). Clicking it hides the strip — the
+  content keeps the full height — and the same tabs appear as a **vertical list**
+  in a panel of the activity bar. The button that opens that panel only exists in
+  this mode: it is a normal activity-bar button declaring `when: 'tabsDocked'`, so
+  it appears and disappears with the state instead of being a special case in the
+  bar. The panel lists every open tab (kind icon + label + close), clicking one
+  activates it through the usual `activateTabSmart` (so files keep syncing with
+  the editor) and its header has the way back (`arrow-up` → undock, which also
+  closes the panel). The mode persists, and the tab state is untouched: they are
+  the same tabs, only shown vertically.
+
 ### Welcome (UI)
 - **The 3 buttons on the welcome screen actually work**: they called props that
   **nobody passed** (`PanelHost` mounts the panel with no props, so the
