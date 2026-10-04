@@ -16,7 +16,9 @@ export const TERMINAL_IPC = {
    */
   getFontStack: 'terminal:get-font-stack',
   /** Familias monoespaciadas instaladas (para elegir la de la terminal). */
-  listMonoFonts: 'terminal:list-mono-fonts'
+  listMonoFonts: 'terminal:list-mono-fonts',
+  /** Fuente CJK del sistema, pedida SÓLO cuando el buffer tiene CJK. */
+  getCjkFont: 'terminal:get-cjk-font'
 } as const
 
 export type TerminalCreateRequest = {
@@ -69,4 +71,11 @@ export interface TerminalApi {
   getFontStack: (req?: { family?: string }) => Promise<TerminalFontFile[] | null>
   /** Familias monoespaciadas instaladas (para el selector de Ajustes). */
   listMonoFonts: () => Promise<string[]>
+  /**
+   * Fuente CJK del sistema (japonés / chino / coreano), pedida **bajo demanda**:
+   * pesa decenas de MB y cada terminal carga su copia, así que no entra en la
+   * cadena por defecto — sólo cuando en el buffer aparece un carácter CJK.
+   * `null` si no hay ninguna (o es más grande que el tope).
+   */
+  getCjkFont: (req?: { family?: string }) => Promise<TerminalFontFile | null>
 }

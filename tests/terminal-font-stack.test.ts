@@ -26,9 +26,11 @@
 import { describe, expect, it } from 'vitest'
 import { execSync } from 'node:child_process'
 import {
+  CJK_SAMPLE_CODEPOINTS,
   FONT_STACK_MAX_FONTS,
   TERMINAL_SAMPLE_CODEPOINTS,
   readFontStack,
+  resolveCjkFont,
   resolveFontCandidates,
   systemFontForCodepoint,
   systemPrimaryFont
@@ -96,5 +98,18 @@ describe.skipIf(!hasFontconfig())('cadena de fuentes de la terminal', () => {
 
   it('sin candidatas no hay cadena (no se inventa una)', () => {
     expect(readFontStack([])).toBeNull()
+  })
+
+  it('la fuente CJK (bajo demanda) cubre los tres scripts', () => {
+    // Es la que sólo se carga si el buffer tiene CJK: si el sistema tiene una,
+    // tiene que cubrir kana, han y hangul.
+    const font = resolveCjkFont()
+    if (!font) return
+    for (const codepoint of CJK_SAMPLE_CODEPOINTS) {
+      expect(
+        coveringFiles(codepoint).has(font.file),
+        `U+${codepoint.toString(16).toUpperCase()}: ${font.file} debería cubrirlo`
+      ).toBe(true)
+    }
   })
 })

@@ -8,7 +8,12 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { execSync } from 'child_process'
 import { TERMINAL_IPC, type TerminalCreateRequest, type TerminalWriteRequest, type TerminalResizeRequest, type TerminalDestroyRequest } from '@shared/terminal'
-import { listMonoFamilies, readFontStack, resolveFontCandidates } from '../fonts/systemFonts'
+import {
+  listMonoFamilies,
+  readFontStack,
+  resolveCjkFont,
+  resolveFontCandidates
+} from '../fonts/systemFonts'
 
 import { t } from '@shared/i18n'
 interface PtyProc {
@@ -131,6 +136,15 @@ export function registerTerminalIpc(): void {
       return listMonoFamilies()
     } catch {
       return []
+    }
+  })
+
+  // Fuente CJK, SÓLO bajo demanda (cuando el buffer tiene CJK): es grande.
+  ipcMain.handle(TERMINAL_IPC.getCjkFont, async (_event, req?: { family?: string }) => {
+    try {
+      return resolveCjkFont(req?.family)
+    } catch {
+      return null
     }
   })
 }

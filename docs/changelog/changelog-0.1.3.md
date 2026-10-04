@@ -369,10 +369,13 @@ published are not edited. The file goes per version:
   they are re-resolved on every open and gone on close. Colour emoji now prefer
   the system's emoji font too, with the bundled Twemoji only as a last resort.
   Trade-off, said out loud: the chain is capped (≤6 MB per font, ≤24 MB total)
-  because each terminal module loads its own copy — the giant CJK fonts are
-  skipped for now, so CJK still falls back. The invariant is covered by a test
-  that asks fontconfig which font wins for each sample code point and fails if
-  the chain would pick another one.
+  because each terminal module loads its own copy, so CJK does not ride along.
+  It is loaded **on demand** instead: the moment a CJK character (kana, han,
+  hangul) reaches the PTY, the session asks the system for its CJK font, writes
+  it into the engine's filesystem and appends it to the chain — once per session,
+  so only the terminals that actually show CJK pay the tens of MB. The invariant
+  is covered by a test that asks fontconfig which font wins for each sample code
+  point and fails if the chain would pick another one (plus one for CJK).
 - **Settings → Terminal**: a section to pick the terminal's font family (or leave
   it on the system default), listing the monospaced families the machine actually
   has. The choice is persisted and re-applied to every open terminal right away —

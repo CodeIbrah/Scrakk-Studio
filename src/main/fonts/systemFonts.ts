@@ -197,6 +197,61 @@ export function resolveFontCandidates(family = 'monospace'): string[] {
   return out
 }
 
+/**
+ * Tope de la fuente CJK.
+ *
+ * Se carga SOLA, aparte de la cadena: no compite con `FONT_STACK_MAX_*` porque
+ * sólo entra si el buffer tiene CJK. Es más alto porque las CJK reales pesan
+ * bastante (Noto Sans CJK ≈ 19 MB) y sin margen no entraría ninguna.
+ */
+export const FONT_CJK_MAX_BYTES = 32 * 1024 * 1024
+
+/** Un code point por script CJK: japonés, chino y coreano. */
+export const CJK_SAMPLE_CODEPOINTS: readonly number[] = [
+  0x3042, // hiragana: あ
+  0x4e2d, // han: 中
+  0xac00 // hangul: 가
+]
+
+/**
+ * Fuente CJK del sistema (japonés / chino / coreano).
+ *
+ * Se pide aparte de la cadena porque pesa decenas de MB y cada terminal carga su
+ * propia copia: traerla siempre sería regalar RAM. Sólo se llama cuando en el
+ * buffer apareció un carácter CJK, y una vez por sesión.
+ */
+export function resolveCjkFont(family = 'monospace'): TerminalFontFile | null {
+  const candidates: string[] = []
+  if (process.platform === 'win32') {
+    const dir = path.join(process.env.WINDIR || 'C:\\Windows', 'Fonts')
+    for (const name of ['msgothic.ttc', 'malgun.ttf', 'msyh.ttc', 'simsun.ttc', 'yugothic.ttf']) {
+      const file = path.join(dir, name)
+      if (fs.existsSync(file)) candidates.push(file)
+    }
+  } else {
+    for (const codepoint of CJK_SAMPLE_CODEPOINTS) {
+      const file = systemFontForCodepoint(codepoint, family)
+      if (file && !candidates.includes(file)) candidates.push(file)
+    }
+  }
+
+  for (const file of candidates) {
+    try {
+      const stat = fs.statSync(file)
+      if (stat.size > FONT_CJK_MAX_BYTES) continue
+      const data = fs.readFileSync(file)
+      return {
+        family: path.basename(file).replace(/\.[^.]+$/, ''),
+        file,
+        data: new Uint8Array(data)
+      }
+    } catch {
+      // Ilegible: se prueba la siguiente.
+    }
+  }
+  return null
+}
+
 /** Lee los archivos de la cadena (con sus topes) y les pone un nombre legible. */
 export function readFontStack(candidates: readonly string[]): TerminalFontFile[] | null {
   const out: TerminalFontFile[] = []

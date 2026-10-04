@@ -42,7 +42,22 @@ interface TerminalApi {
   getMonoFont?: () => Promise<{ data: number[] } | null>
   /** Familias monoespaciadas instaladas (selector de Ajustes). */
   listMonoFonts?: () => Promise<string[]>
+  /** Fuente CJK del sistema, pedida sólo cuando el buffer tiene CJK. */
+  getCjkFont?: (req?: { family?: string }) => Promise<{
+    family: string
+    file: string
+    data: Uint8Array
+  } | null>
 }
+
+/**
+ * Caracteres que disparan la carga de la fuente CJK.
+ *
+ * Cubre los bloques que una terminal usa de verdad: kana, CJK unificado (y su
+ * extensión A), ideogramas de compatibilidad, hangul y las formas de ancho
+ * completo. Sin el flag `g`, así `.test` no queda con estado.
+ */
+const CJK_RE = /[\u2e80-\u9fff\uac00-\ud7af\uf900-\ufaff\uff00-\uffef\u3000-\u303f]/
 
 /**
  * Familia elegida en Ajustes para la terminal.
@@ -127,6 +142,13 @@ class TerminalSessionImpl implements LiveSession {
    * archivos viven en el FS del WASM (en memoria): no se guardan en disco.
    */
   private fontPaths: string[] = []
+  /**
+   * Fuente CJK cargada BAJO DEMANDA (o null). Pesa decenas de MB, así que sólo
+   * entra si en el buffer apareció CJK; ver `maybeLoadCjk`.
+   */
+  private cjkPath: string | null = null
+  /** Ya se pidió la CJK (no se reintenta, aunque no haya). */
+  private cjkRequested = false
   /** Escala con la que ya se re-aplicó `fontPaths` (evita recargar de más). */
   private fontScaleApplied = 1
   private resizeRo: ResizeObserver | null = null
@@ -234,6 +256,7 @@ class TerminalSessionImpl implements LiveSession {
     this.unsubData = api.onData((payload) => {
       if (payload.id !== this.ptyId) return
       this.view?.append(payload.data)
+      this.maybeLoadCjk(payload.data)
     })
     this.unsubExit = api.onExit((payload) => {
       if (payload.id !== this.ptyId) return
@@ -533,7 +556,7 @@ class TerminalSessionImpl implements LiveSession {
           fsApi!.writeFile(path, font.data)
           paths.push(path)
         })
-        this.fontPaths = paths
+        this.fontPaths = this.withCjk(paths)
         this.applyFontPaths()
         this.applyDims()
         return
@@ -545,9 +568,9 @@ class TerminalSessionImpl implements LiveSession {
       if (single?.data?.length && fsApi) {
         const path = '/fonts/terminal/system-mono.ttf'
         fsApi.writeFile(path, new Uint8Array(single.data))
-        this.fontPaths = [path]
+        this.fontPaths = this.withCjk([path])
       } else {
-        this.fontPaths = ['/fonts/terminal/JetBrainsMono-Regular.ttf']
+        this.fontPaths = this.withCjk(['/fonts/terminal/JetBrainsMono-Regular.ttf'])
       }
       this.applyFontPaths()
     } catch {
@@ -556,6 +579,49 @@ class TerminalSessionImpl implements LiveSession {
     // La fuente cambió las métricas (charWidth/lineHeight): recalcular las
     // dims reales del grid/PTY, que al crear el PTY usaban el fallback.
     this.applyDims()
+  }
+
+  /** La cadena vigente + la CJK ya cargada (si la hay), sin repetir. */
+  private withCjk(paths: readonly string[]): string[] {
+    if (this.cjkPath && !paths.includes(this.cjkPath)) return [...paths, this.cjkPath]
+    return [...paths]
+  }
+
+  /**
+   * CJK BAJO DEMANDA: si en lo que llega del PTY aparece un carácter CJK, se trae
+   * la fuente CJK del sistema y se agrega al final de la cadena.
+   *
+   * No entra por defecto porque pesa decenas de MB y cada terminal carga su copia;
+   * así sólo se paga en las sesiones que de verdad muestran CJK.
+   */
+  private maybeLoadCjk(data: string): void {
+    if (this.cjkPath || this.cjkRequested || this.disposed) return
+    if (!CJK_RE.test(data)) return
+    this.cjkRequested = true
+    void this.loadCjk()
+  }
+
+  private async loadCjk(): Promise<void> {
+    const view = this.view
+    const api = getTerminalApi()
+    const fsApi = (
+      view?.module as unknown as { FS?: { writeFile: (p: string, d: Uint8Array) => void } }
+    )?.FS
+    if (!view || !api?.getCjkFont || !fsApi) return
+    try {
+      const family = getTerminalFontFamily()
+      const font = await api.getCjkFont(family ? { family } : undefined)
+      if (this.disposed || !font?.data?.length) return
+      const path = '/fonts/terminal/cjk-0.ttf'
+      fsApi.writeFile(path, font.data)
+      this.cjkPath = path
+      this.fontPaths = this.withCjk(this.fontPaths)
+      this.applyFontPaths()
+      // La fuente nueva cambia las métricas del fallback: recalcular el grid/PTY.
+      this.applyDims()
+    } catch {
+      // Sin CJK: se queda con lo que haya (y no se reintenta).
+    }
   }
 
   /**
