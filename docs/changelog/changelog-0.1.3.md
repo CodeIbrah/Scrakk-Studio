@@ -498,4 +498,7 @@ published are not edited. The file goes per version:
 - **The wheel scrolls at normal speed**: each wheel notch sent up to three
   events (`yoffset * 3`), so scrolling inside a TUI went about three times too
   fast. The engine now accumulates the wheel deltas and emits one per notch, and
-  the host normalises a notch to 1 unit (it was 0.83).
+  the host normalises a notch to 1 unit (it was 0.83). And the wheel sends only
+  the press: a wheel has no release, and sending one produced the legacy
+  protocol's button-3 release marker, which programs read as a **click** on
+  every scroll.
