@@ -66,6 +66,10 @@ class TerminalSessionImpl implements LiveSession {
   private renderScale = 1
   /** Tamaño de fuente del motor a escala 1 (el que NO depende del zoom). */
   private baseFontSize = 0
+  /** Fuente monoespaciada de la terminal (ruta en el FS del WASM). */
+  private fontPath = ''
+  /** Escala con la que ya se re-aplicó `fontPath` (evita recargar de más). */
+  private fontScaleApplied = 1
   private resizeRo: ResizeObserver | null = null
   private inputDispose: (() => void) | null = null
   private unsubTheme: (() => void) | null = null
@@ -260,8 +264,16 @@ class TerminalSessionImpl implements LiveSession {
       }
       try {
         this.view.module.setBounds(0, 0, px, py)
-        if (this.baseFontSize > 0) {
+        // El zoom cambia el tamaño de fuente… pero `SetTheme` recarga la fuente
+        // del EDITOR (`ReloadFont`), que en un view de terminal PISA la
+        // monoespaciada y deja las celdas más anchas que los glifos → letras
+        // separadas. Por eso, cambiado el tamaño, se vuelve a aplicar la fuente
+        // de la TERMINAL: eso recarga el atlas a `fontSize - 1` y recalcula las
+        // métricas, así el par celda/glifo queda como a escala 1.
+        if (this.baseFontSize > 0 && this.fontPath && this.renderScale !== this.fontScaleApplied) {
           this.view.module.setFontSize?.(this.baseFontSize * this.renderScale)
+          this.view.module.setTerminalFont?.(this.fontPath)
+          this.fontScaleApplied = this.renderScale
         }
       } catch {
         // Vista cerrada.
@@ -441,14 +453,19 @@ class TerminalSessionImpl implements LiveSession {
       if (fontApi && fsApi) {
         const result = await fontApi()
         if (this.disposed) return
-        if (result?.data?.length) {
-          fsApi.writeFile('/fonts/terminal/system-mono.ttf', new Uint8Array(result.data))
-          view.module.setTerminalFont('/fonts/terminal/system-mono.ttf')
-        } else {
-          view.module.setTerminalFont('/fonts/terminal/JetBrainsMono-Regular.ttf')
-        }
+        // Ruta de la fuente de la TERMINAL. Se recuerda porque el zoom cambia
+        // `theme.fontSize`, y `SetTheme` recarga la fuente del EDITOR — que en un
+        // view de terminal PISA la monoespaciada (y sus métricas) → las letras
+        // quedaban con celdas anchas. Ver `applyDims`.
+        const path = result?.data?.length
+          ? '/fonts/terminal/system-mono.ttf'
+          : '/fonts/terminal/JetBrainsMono-Regular.ttf'
+        if (result?.data?.length) fsApi.writeFile(path, new Uint8Array(result.data))
+        this.fontPath = path
+        view.module.setTerminalFont(path)
       } else {
-        view.module.setTerminalFont('/fonts/terminal/JetBrainsMono-Regular.ttf')
+        this.fontPath = '/fonts/terminal/JetBrainsMono-Regular.ttf'
+        view.module.setTerminalFont(this.fontPath)
       }
     } catch {
       // Font por defecto del engine.

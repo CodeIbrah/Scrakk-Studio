@@ -336,3 +336,8 @@ published are not edited. The file goes per version:
   `cols = width / charWidth` does not move and **the PTY never reflows**. The CSS
   transform keeps doing the layout, so the gesture stays fluid and the engine
   re-render happens once, on settle.
+  Careful bit: changing the font size goes through `SetTheme`, which reloads the
+  **editor's** font — and in a terminal view that **clobbers the monospaced one**
+  (the cells end up wider than the glyphs, i.e. letters that look spaced out), so
+  after resizing, the terminal's own font is applied again, which also
+  recalculates the metrics at that size.
