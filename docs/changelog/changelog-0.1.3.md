@@ -435,3 +435,12 @@ published are not edited. The file goes per version:
   cell edge to the centre, which is what VTE and kitty do; the thickness is one
   device pixel and scales with the zoom. The double-line set, the dashes and the
   diagonals still come from the font.
+- **The emoji decision belongs to the text, not to us**: the last place that
+  converted a character to a colour emoji "because it is in a range" lived in the
+  renderer, which rasterised `U+2600..U+27BF` (and friends) with the browser and
+  pushed the bitmap to the engine — with Noto Color Emoji first. That is how a
+  CLI's settings button (`⚙` U+2699, text presentation, no VS16) came out as a
+  colour emoji and looked wrong. The browser raster is gone: the engine is the
+  only one deciding, per code point, from `Emoji_Presentation` and VS16, and the
+  renderer now just hands it the system's colour font (on demand, per view). One
+  pipeline, and what the text says is what you see.

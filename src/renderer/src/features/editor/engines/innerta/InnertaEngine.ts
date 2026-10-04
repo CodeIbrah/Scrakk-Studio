@@ -13,7 +13,7 @@ import { clearDynamicHighlight, refreshDynamicHighlight } from './treeSitterHigh
 import { applyInnertaFolds } from './hostBridge'
 import { GRAMMAR_ENGINE_EVENT } from './grammarSelection'
 import { autoPairsForPath, indentUnitFor } from './languageConfig'
-import { scheduleEmojiGlyphs } from './emojiGlyphs'
+import { scheduleEmojiFace } from './emojiFace'
 import { detectLanguageFromPath } from '@features/editor/languages'
 import { resetHostTokens } from './hostTokens'
 import { getBookmarksForPath, subscribeToBookmarks } from '@services/bookmarks'
@@ -737,8 +737,10 @@ export class InnertaEngine implements EditorEngine {
     if (!module || !currentPath || text === undefined) return
     refreshLanguageHighlight(module, currentPath, text, { immediate })
     refreshDynamicHighlight(module, currentPath, text, { immediate })
-    // Emoji en color: los rasteriza el host (debounced) y los pinta el motor.
-    scheduleEmojiGlyphs(module, text)
+    // Emoji a color: sólo se le da al motor la fuente del sistema (debounced).
+    // El motor decide, por code point, si el carácter es emoji (presentación
+    // emoji o VS16) o texto — ver `emojiFace.ts`.
+    scheduleEmojiFace(module, text)
   }
 
   loadFile(path: string, content: string): void {
