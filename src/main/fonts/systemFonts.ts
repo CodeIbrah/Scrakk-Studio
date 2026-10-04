@@ -256,10 +256,29 @@ export function systemFontForCodepoint(
   // fontconfig lo resuelve a Noto Sans CJK (19 MB > tope) y la fuente se
   // descartaba; con esto cae a `Noto Sans Symbols` (0.25 MB), que es lo que
   // termina usando la terminal del usuario.
-  const list = fcMatch(`-s --format='%{file}\\n' ':charset=${charset}'`)
-  for (const line of list.split('\n')) {
+  //
+  // OJO: `fc-match -s` devuelve TODAS las fuentes ordenadas por qué tan bien
+  // matchean — las que NO cubren el code point vienen al final. Por eso hay que
+  // cruzarla con `fc-list ':charset=CP'` (las que lo cubren DE VERDAD); si no,
+  // el walk podía elegir una que no lo tiene y el glifo quedaba vacío.
+  let covering = new Set<string>()
+  try {
+    const out = execSync(`fc-list --format='%{file}\\n' ':charset=${charset}'`, {
+      encoding: 'utf-8',
+      timeout: 4000
+    })
+    covering = new Set(
+      out
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean)
+    )
+  } catch {
+    // Sin fc-list: se sigue con la lista ordenada (mejor que nada).
+  }
+  for (const line of fcMatch(`-s --format='%{file}\\n' ':charset=${charset}'`).split('\n')) {
     const file = line.trim()
-    if (file && fs.existsSync(file) && fits(file)) return file
+    if (file && covering.has(file) && fs.existsSync(file) && fits(file)) return file
   }
   return null
 }
