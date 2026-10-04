@@ -139,6 +139,16 @@ export interface InnertaModule {
   /** Si el editor está en sólo lectura AHORA (`false` si el build no lo expone). */
   getReadOnly?(): boolean
   /**
+   * Tamaño de fuente del motor — es el ZOOM (ver `SetInnertaFontSize`).
+   *
+   * Mismo valor que mueven Ctrl +/- y Ctrl+wheel del motor. Existe para que el
+   * host pueda zoomear SIN estirar un bitmap: cambiar la fuente re-rasteriza
+   * los glifos, así que queda nítido.
+   */
+  setFontSize?(px: number): void
+  /** Tamaño de fuente actual (`-1` si el build no trae el getter). */
+  getFontSize?(): number
+  /**
    * Selecciona un RANGO exacto (ancla + extremo activo, 0-based).
    *
    * Es el canal del host para “expandir selección”: el árbol sabe que el objeto

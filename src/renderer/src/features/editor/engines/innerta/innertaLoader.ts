@@ -533,6 +533,24 @@ function wrap(raw: Record<string, unknown>): InnertaModule {
       _raw._SetInnertaTokenColor(tokenTypeId, color)
     },
     /**
+     * Zoom: tamaño de fuente del motor (ver `SetInnertaFontSize`).
+     *
+     * Cambiar la fuente re-rasteriza los glifos, así que zoomear por acá queda
+     * nítido; un `transform: scale()` de CSS agranda el raster ya dibujado.
+     */
+    setFontSize(px: number) {
+      applyFontSize(_raw, px)
+    },
+    /**
+     * Tamaño de fuente ACTUAL (`-1` si el build no trae el getter).
+     *
+     * Sin esto `setFontSize` sería un verde falso: es `void`, así que el host
+     * sólo podría afirmar "mandé el tamaño", no "el motor lo tiene".
+     */
+    getFontSize() {
+      return readFontSize(_raw)
+    },
+    /**
      * Tokens de color del host (delta LSP) + fuente de resaltado.
      *
      * El array NO se puede pasar directo: el export C espera un PUNTERO del
@@ -1029,6 +1047,24 @@ function wrapIsolated(raw: Record<string, unknown>, canvas: HTMLCanvasElement): 
       _raw._SetInnertaTokenColor(tokenTypeId, color)
     },
     /**
+     * Zoom: tamaño de fuente del motor (ver `SetInnertaFontSize`).
+     *
+     * Cambiar la fuente re-rasteriza los glifos, así que zoomear por acá queda
+     * nítido; un `transform: scale()` de CSS agranda el raster ya dibujado.
+     */
+    setFontSize(px: number) {
+      applyFontSize(_raw, px)
+    },
+    /**
+     * Tamaño de fuente ACTUAL (`-1` si el build no trae el getter).
+     *
+     * Sin esto `setFontSize` sería un verde falso: es `void`, así que el host
+     * sólo podría afirmar "mandé el tamaño", no "el motor lo tiene".
+     */
+    getFontSize() {
+      return readFontSize(_raw)
+    },
+    /**
      * Tokens de color del host (delta LSP) + fuente de resaltado.
      *
      * El array NO se puede pasar directo: el export C espera un PUNTERO del
@@ -1251,4 +1287,23 @@ function applyReadOnly(raw: Record<string, unknown>, readOnly: boolean): void {
   const fn = raw['_SetInnertaReadOnly']
   if (typeof fn !== 'function') return
   ;(fn as (v: number) => void)(readOnly ? 1 : 0)
+}
+
+/**
+ * Aplica el tamaño de fuente del motor — ES el zoom (ver `SetInnertaFontSize`).
+ *
+ * Cambiar la fuente re-rasteriza los glifos, así que el resultado queda nítido;
+ * un `transform: scale()` de CSS, en cambio, agranda el raster ya dibujado.
+ */
+function applyFontSize(raw: Record<string, unknown>, px: number): void {
+  const fn = raw['_SetInnertaFontSize']
+  if (typeof fn !== 'function') return
+  ;(fn as (p: number) => void)(px)
+}
+
+/** Tamaño de fuente actual del motor (`-1` si el build no trae el getter). */
+function readFontSize(raw: Record<string, unknown>): number {
+  const fn = raw['_GetInnertaFontSize']
+  if (typeof fn !== 'function') return -1
+  return (fn as () => number)()
 }

@@ -323,3 +323,16 @@ published are not edited. The file goes per version:
   `buildCssVars` never published it, so 11 CSS call sites fell back to a
   hardcoded green (`var(--color-success, #3fb950)`) and ignored the theme —
   the same bug `warning`/`info` had before.
+
+### Terminal (node view)
+- **Zooming the canvas no longer blurs the terminals**: the view scales the whole
+  world with a CSS `transform: scale(k)`, which stretches each terminal's canvas
+  **bitmap** — at 2× the text turned to mush. The engine already has a crisp
+  zoom (the one behind Ctrl +/- and Ctrl+wheel) because it **re-rasterises the
+  glyphs**, so it is exposed to the host now (`SetInnertaFontSize` /
+  `GetInnertaFontSize`) and the node view drives it: when the wheel settles
+  (debounced), each terminal is asked to draw at that resolution
+  (`setRenderScale`). The canvas buffer and the font grow **together**, so
+  `cols = width / charWidth` does not move and **the PTY never reflows**. The CSS
+  transform keeps doing the layout, so the gesture stays fluid and the engine
+  re-render happens once, on settle.

@@ -58,6 +58,14 @@ class TerminalSessionImpl implements LiveSession {
   /** Versión del attach: un detach STALE (cleanup de un host viejo que corre
    *  después del attach a un host nuevo) no debe matar el RO del host actual. */
   private attachSeq = 0
+  /**
+   * Escala de RENDER del canvas (1 = nativo). La pide el visor de nodos: el
+   * zoom del mundo es CSS y estira el bitmap, así que acá se le da al motor la
+   * resolución que va a ocupar en pantalla (ver `setRenderScale`).
+   */
+  private renderScale = 1
+  /** Tamaño de fuente del motor a escala 1 (el que NO depende del zoom). */
+  private baseFontSize = 0
   private resizeRo: ResizeObserver | null = null
   private inputDispose: (() => void) | null = null
   private unsubTheme: (() => void) | null = null
@@ -134,6 +142,10 @@ class TerminalSessionImpl implements LiveSession {
     this.wireInput(canvas)
     void this.applyFont(view)
     this.applyTheme(view)
+    // Tamaño de fuente del motor a escala 1: el zoom del visor lo multiplica
+    // (ver `setRenderScale`). Si el build no expone el getter queda 0 y el
+    // escalado se saltea solo, sin romper nada.
+    this.baseFontSize = view.module.getFontSize?.() ?? 0
     this.unsubTheme = listenThemeChanges(() => {
       try {
         if (this.view) applyInnertaTheme(this.view.module)
@@ -200,8 +212,10 @@ class TerminalSessionImpl implements LiveSession {
     const cw = mod?.getCharWidth?.() ?? 0
     const lh = mod?.getLineHeight?.() ?? 0
     const host = this.liveHost()
-    const w = host?.clientWidth ?? 0
-    const h = host?.clientHeight ?? 0
+    // Con escala, el ancho Y el ancho de carácter crecen por igual: `cols`
+    // queda EXACTAMENTE igual que sin zoom — por eso el PTY no se reflowea.
+    const w = (host?.clientWidth ?? 0) * this.renderScale
+    const h = (host?.clientHeight ?? 0) * this.renderScale
     if (cw > 0 && lh > 0 && w > 0 && h > 0) {
       return { cols: Math.floor(w / cw), rows: Math.floor(h / lh) }
     }
@@ -234,14 +248,37 @@ class TerminalSessionImpl implements LiveSession {
     const w = host.clientWidth
     const h = host.clientHeight
     if (w > 0 && h > 0) {
+      // La ESCALA del visor de nodos entra acá: más píxeles de buffer Y la
+      // fuente multiplicada por el mismo factor. El motor re-rasteriza la
+      // fuente, así que el zoom del lienzo queda nítido en vez de estirar el
+      // bitmap ya dibujado.
+      const px = Math.round(w * this.renderScale)
+      const py = Math.round(h * this.renderScale)
+      if (this.canvas) {
+        this.canvas.width = px
+        this.canvas.height = py
+      }
       try {
-        this.view.module.setBounds(0, 0, w, h)
+        this.view.module.setBounds(0, 0, px, py)
+        if (this.baseFontSize > 0) {
+          this.view.module.setFontSize?.(this.baseFontSize * this.renderScale)
+        }
       } catch {
         // Vista cerrada.
       }
     }
     const { cols, rows } = this.getRealDims()
     if (cols > 0 && rows > 0) this.view.resize(cols, rows)
+  }
+
+  /** Ver `LiveSession.setRenderScale`. */
+  setRenderScale(scale: number): void {
+    // Sólo hacia ARRIBA: por debajo de 1 el navegador ya reduce un raster más
+    // grande, y no hace falta gastar buffer. El techo es el del zoom del visor.
+    const next = Math.min(2, Math.max(1, scale))
+    if (Math.abs(next - this.renderScale) < 0.02) return
+    this.renderScale = next
+    this.applyDims()
   }
 
   /**

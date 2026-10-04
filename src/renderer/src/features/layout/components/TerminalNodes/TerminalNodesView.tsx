@@ -658,6 +658,25 @@ export function TerminalNodesView({ onBack }: { onBack: () => void }): JSX.Eleme
   }
   const resetView = (): void => setCam({ x: 24, y: 24, k: 1 })
 
+  /**
+   * Zoom del lienzo → resolución del MOTOR.
+   *
+   * El `scale(k)` del mundo es CSS: estira el bitmap de cada canvas, y por eso
+   * a 2× se veía borroso. Acá, al soltar la rueda (debounce), se les pide a las
+   * terminales que dibujen a esa resolución: el motor re-rasteriza la fuente,
+   * así que el zoom queda nítido. Mientras girás, el CSS mantiene el gesto
+   * fluido; el re-render del motor pasa una vez, al asentarse.
+   */
+  useEffect(() => {
+    const handle = window.setTimeout(() => {
+      for (const tab of tabs) {
+        if (!tab.sessionId) continue
+        getTerminalSession(tab.sessionId).setRenderScale?.(cam.k)
+      }
+    }, 140)
+    return () => window.clearTimeout(handle)
+  }, [cam.k, tabs])
+
   const ordered = useMemo(() => {
     const arr = [...tabs]
     arr.sort((a, b) => {

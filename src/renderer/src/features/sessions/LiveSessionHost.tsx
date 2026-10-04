@@ -19,6 +19,17 @@ export interface LiveSession {
    */
   detach(host?: HTMLElement): void
   dispose(): void
+  /**
+   * Escala de RENDER del canvas (opcional; hoy sólo la terminal la usa).
+   *
+   * El visor de nodos zoomea el mundo por CSS (`scale(k)`), y eso **estira el
+   * bitmap** del canvas → borroso. Con esto el motor dibuja a esa resolución
+   * (más píxeles + la fuente re-rasterizada), así que el zoom queda nítido.
+   *
+   * Se puede pedir ANTES de que la sesión arranque: se guarda y se aplica
+   * cuando el canvas existe.
+   */
+  setRenderScale?(scale: number): void
 }
 
 interface LiveSessionHostProps {
