@@ -13,6 +13,7 @@ import { applyStartupTheme } from '@services/extensions/types/themes/bootstrap'
 import { bootExtensions } from '@services/extensions/boot'
 import { initDiagnosticsDecorations, initLspFileSync, initLspWorkspaceSync } from '@services/lsp'
 import { initDiffViews } from '@services/diff'
+import { initZoomGuard } from './core/zoomGuard'
 
 // Módulos de estilo global (tokens) — se importan aquí, una sola vez.
 // Los colores NO viven en CSS: vienen de los theme.json del sistema
@@ -44,6 +45,9 @@ initDiagnosticsDecorations()
 // Las tabs de diff se limpian solas al cerrarlas: su fondo de línea vive en el
 // store de decoraciones y nadie más lo iba a bajar (memoria que se acumulaba).
 initDiffViews()
+// El zoom de PÁGINA de Chromium se dispara en cualquier panel que no sea el
+// editor/terminal/visor (ver `zoomGuard`) y queda guardado en el perfil.
+initZoomGuard()
 
 const rootElement = document.getElementById('root')
 

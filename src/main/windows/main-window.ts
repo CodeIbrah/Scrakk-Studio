@@ -91,6 +91,18 @@ export function createMainWindow(): BrowserWindow {
     }
   })
 
+  // El zoom de PÁGINA de Chromium (Ctrl/⌘ + rueda) se guarda POR ORIGEN en el
+  // perfil (`partition.per_host_zoom_levels`), así que un accidente sobrevive al
+  // reinicio y deja el IDE entero enano, sin forma de volver desde la UI. Se
+  // resetea al crear la ventana; además el renderer lo bloquea (initZoomGuard).
+  window.webContents.setZoomFactor(1)
+  // …y OTRA VEZ al terminar de cargar: el nivel guardado por origen se aplica
+  // al navegar, así que el del constructor no alcanza (la ventana se crea antes
+  // de que exista el host del zoom).
+  window.webContents.on('did-finish-load', () => {
+    if (!window.isDestroyed()) window.webContents.setZoomFactor(1)
+  })
+
   // Bloqueo extra de atajos de DevTools en el build entregado (F12,
   // Ctrl/Cmd+Shift+I/J/C). Además del devTools:false de arriba.
   if (app.isPackaged) {
