@@ -70,6 +70,43 @@ function fcMatch(args: string): string {
 }
 
 /**
+ * Familia a usar como PATRÓN de fontconfig, saneada.
+ *
+ * El nombre va entre comillas en el comando, así que una comilla adentro
+ * rompería el shell — y el nombre viene de un ajuste del usuario.
+ */
+function safeFamily(family?: string): string {
+  const clean = (family ?? '').replace(/['"`$\n\\]/g, '').trim()
+  return clean.length > 0 ? clean : 'monospace'
+}
+
+/**
+ * Familias monoespaciadas instaladas, para el selector de Ajustes.
+ *
+ * Linux: `fc-list :spacing=mono` (lo que el sistema considera monoespaciado).
+ * Windows: la lista corta de las que trae Windows.
+ */
+export function listMonoFamilies(): string[] {
+  if (process.platform === 'win32') {
+    return ['Consolas', 'Cascadia Mono', 'Courier New', 'Lucida Console']
+  }
+  try {
+    const out = execSync('fc-list :spacing=mono --format=%{family[0]}\\n', {
+      encoding: 'utf-8',
+      timeout: 4000
+    })
+    const set = new Set<string>()
+    for (const line of out.split('\n')) {
+      const name = line.trim()
+      if (name) set.add(name)
+    }
+    return [...set].sort((a, b) => a.localeCompare(b))
+  } catch {
+    return []
+  }
+}
+
+/**
  * Fuente que fontconfig usaría para ESE code point (la verdad del sistema).
  *
  * Es la misma pregunta que responde una terminal de verdad cuando se topa con
@@ -77,21 +114,21 @@ function fcMatch(args: string): string {
  */
 export function systemFontForCodepoint(codepoint: number, family = 'monospace'): string | null {
   if (process.platform === 'win32') return null
-  const out = fcMatch(`--format=%{file} ':charset=${codepoint.toString(16)}' ${family}`)
+  const out = fcMatch(`--format=%{file} ':charset=${codepoint.toString(16)}' '${safeFamily(family)}'`)
   return out && fs.existsSync(out) ? out : null
 }
 
 /** La monoespaciada primaria del sistema. */
 export function systemPrimaryFont(family = 'monospace'): string | null {
   if (process.platform === 'win32') return null
-  const out = fcMatch(`--format=%{file} ${family}`)
+  const out = fcMatch(`--format=%{file} '${safeFamily(family)}'`)
   return out && fs.existsSync(out) ? out : null
 }
 
 /** Las candidatas ORDENADAS de fontconfig (`fc-match -s`), sin repetir. */
 export function systemFallbackList(family = 'monospace'): string[] {
   if (process.platform === 'win32') return []
-  const out = fcMatch(`-s --format=%{file}\\n ${family}`)
+  const out = fcMatch(`-s --format=%{file}\\n '${safeFamily(family)}'`)
   const list: string[] = []
   for (const line of out.split('\n')) {
     const file = line.trim()

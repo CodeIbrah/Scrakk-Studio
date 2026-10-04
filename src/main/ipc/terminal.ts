@@ -8,7 +8,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { execSync } from 'child_process'
 import { TERMINAL_IPC, type TerminalCreateRequest, type TerminalWriteRequest, type TerminalResizeRequest, type TerminalDestroyRequest } from '@shared/terminal'
-import { readFontStack, resolveFontCandidates } from '../fonts/systemFonts'
+import { listMonoFamilies, readFontStack, resolveFontCandidates } from '../fonts/systemFonts'
 
 import { t } from '@shared/i18n'
 interface PtyProc {
@@ -114,12 +114,23 @@ export function registerTerminalIpc(): void {
   })
 
   // Cadena COMPLETA de la terminal (primaria + reemplazos), resuelta EN CALIENTE
-  // desde el sistema. Ver `resolveFontStack`.
-  ipcMain.handle(TERMINAL_IPC.getFontStack, async () => {
+  // desde el sistema. Ver `resolveFontCandidates`.
+  //
+  // `family` es la elegida en Ajustes; sin ella se usa la mono del sistema.
+  ipcMain.handle(TERMINAL_IPC.getFontStack, async (_event, req?: { family?: string }) => {
     try {
-      return readFontStack(resolveFontCandidates())
+      return readFontStack(resolveFontCandidates(req?.family))
     } catch {
       return null
+    }
+  })
+
+  // Familias monoespaciadas instaladas, para el selector de Ajustes.
+  ipcMain.handle(TERMINAL_IPC.listMonoFonts, async () => {
+    try {
+      return listMonoFamilies()
+    } catch {
+      return []
     }
   })
 }

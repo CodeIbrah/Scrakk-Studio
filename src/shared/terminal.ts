@@ -14,7 +14,9 @@ export const TERMINAL_IPC = {
    * Cadena de fuentes de la terminal: la primaria y sus reemplazos, EN ORDEN,
    * tal como los resolvería la terminal del sistema.
    */
-  getFontStack: 'terminal:get-font-stack'
+  getFontStack: 'terminal:get-font-stack',
+  /** Familias monoespaciadas instaladas (para elegir la de la terminal). */
+  listMonoFonts: 'terminal:list-mono-fonts'
 } as const
 
 export type TerminalCreateRequest = {
@@ -56,9 +58,15 @@ export interface TerminalApi {
    * reemplazos, EN ORDEN — la misma cadena que resolvería la terminal del
    * sistema (fontconfig en Linux).
    *
+   * `family` es la familia elegida en Ajustes: si viene, ESA es la primaria y
+   * los reemplazos se resuelven como si el usuario tuviera esa fuente. Sin ella
+   * se usa la monoespaciada por defecto del sistema.
+   *
    * Se resuelve EN CALIENTE en cada llamada: no se guarda en disco ni se
    * empaqueta, así lo que se ve es siempre la fuente del sistema del usuario.
    * `null` si no se pudo resolver ninguna.
    */
-  getFontStack: () => Promise<TerminalFontFile[] | null>
+  getFontStack: (req?: { family?: string }) => Promise<TerminalFontFile[] | null>
+  /** Familias monoespaciadas instaladas (para el selector de Ajustes). */
+  listMonoFonts: () => Promise<string[]>
 }

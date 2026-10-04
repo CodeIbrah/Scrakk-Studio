@@ -35,11 +35,56 @@ interface TerminalApi {
    * Cadena de fuentes de la terminal (primaria + reemplazos), resuelta por el
    * main desde el SISTEMA. `null` si no se pudo resolver ninguna.
    */
-  getFontStack?: () => Promise<
+  getFontStack?: (req?: { family?: string }) => Promise<
     Array<{ family: string; file: string; data: Uint8Array }> | null
   >
   /** Legado: una sola monospace del sistema. */
   getMonoFont?: () => Promise<{ data: number[] } | null>
+  /** Familias monoespaciadas instaladas (selector de Ajustes). */
+  listMonoFonts?: () => Promise<string[]>
+}
+
+/**
+ * Familia elegida en Ajustes para la terminal.
+ *
+ * Vacío = la monoespaciada por defecto del sistema (lo que resuelve el main).
+ * Solo se guarda la ELECCIÓN; la fuente en sí se resuelve en caliente.
+ */
+export const TERMINAL_FONT_SETTING_KEY = 'scrakk-terminal-font'
+
+/** Familia elegida ('' = la del sistema). */
+export function getTerminalFontFamily(): string {
+  try {
+    return localStorage.getItem(TERMINAL_FONT_SETTING_KEY) ?? ''
+  } catch {
+    return ''
+  }
+}
+
+/**
+ * Guarda la familia elegida y la re-aplica en TODAS las terminales vivas.
+ *
+ * La fuente se vuelve a resolver desde el sistema (nada se cachea), así que la
+ * terminal abierta cambia al instante sin reabrir la pestaña.
+ */
+export function setTerminalFontFamilyEverywhere(family: string): void {
+  try {
+    localStorage.setItem(TERMINAL_FONT_SETTING_KEY, family)
+  } catch {
+    // Sin storage: solo aplica en runtime.
+  }
+  for (const session of sessions.values()) session.reloadFont()
+}
+
+/** Familias monoespaciadas instaladas (para el selector). */
+export async function listMonoFontFamilies(): Promise<string[]> {
+  const api = getTerminalApi()
+  if (!api?.listMonoFonts) return []
+  try {
+    return await api.listMonoFonts()
+  } catch {
+    return []
+  }
 }
 
 function getTerminalApi(): TerminalApi | null {
@@ -474,7 +519,11 @@ class TerminalSessionImpl implements LiveSession {
       const raw = view.module as unknown as Record<string, unknown>
       const fsApi = (raw as { FS?: { writeFile: (p: string, d: Uint8Array) => void } }).FS
 
-      const stack = api?.getFontStack && fsApi ? await api.getFontStack() : null
+      const family = getTerminalFontFamily()
+      const stack =
+        api?.getFontStack && fsApi
+          ? await api.getFontStack(family ? { family } : undefined)
+          : null
       if (this.disposed) return
 
       if (stack?.length && view.module.setTerminalFonts) {
@@ -524,6 +573,13 @@ class TerminalSessionImpl implements LiveSession {
       return
     }
     mod.setTerminalFont(this.fontPaths[0])
+  }
+
+  /** Re-resuelve la cadena desde el sistema (cambió la familia en Ajustes). */
+  reloadFont(): void {
+    const view = this.view
+    if (!view || this.disposed) return
+    void this.applyFont(view)
   }
 
   private applyTheme(view: InnertaViewHandle): void {

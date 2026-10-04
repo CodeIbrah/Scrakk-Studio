@@ -373,3 +373,7 @@ published are not edited. The file goes per version:
   skipped for now, so CJK still falls back. The invariant is covered by a test
   that asks fontconfig which font wins for each sample code point and fails if
   the chain would pick another one.
+- **Settings → Terminal**: a section to pick the terminal's font family (or leave
+  it on the system default), listing the monospaced families the machine actually
+  has. The choice is persisted and re-applied to every open terminal right away —
+  the chain is re-resolved from the system, so nothing is re-opened or cached.

@@ -19,6 +19,7 @@ import { ExtensionsSection } from './ExtensionsSection'
 import { PerformanceSection } from './PerformanceSection/PerformanceSection'
 import { ServersSection } from './ServersSection/ServersSection'
 import { HighlightSection } from './HighlightSection/HighlightSection'
+import { TerminalSection } from './TerminalSection/TerminalSection'
 import { InfoSection } from './InfoSection/InfoSection'
 import { ChatSection, ProvidersSection, ToolsSection, SkillsSection, AgentsSection, PermissionsSection } from './chat'
 
@@ -29,6 +30,7 @@ export type SettingsSectionId =
   | 'performance'
   | 'servers'
   | 'highlight'
+  | 'terminal'
   | 'chat'
   | 'chatProviders'
   | 'chatTools'
@@ -72,6 +74,7 @@ export const SETTINGS_SECTIONS: SettingsSectionDef[] = [
   section('editor', 'settings.nav.editor', 'code', EditorSection),
   section('servers', 'settings.nav.servers', 'server', ServersSection, 'editor'),
   section('highlight', 'settings.nav.highlight', 'code', HighlightSection, 'editor'),
+  section('terminal', 'settings.nav.terminal', 'terminal', TerminalSection),
   section('extensions', 'settings.nav.extensions', 'extensions', ExtensionsSection),
   section('performance', 'settings.nav.performance', 'chart', PerformanceSection),
   section('chat', 'settings.nav.chat', 'chat', ChatSection),

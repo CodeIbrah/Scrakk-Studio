@@ -426,8 +426,9 @@ const api: WindowApi = {
       return () => ipcRenderer.removeListener(TERMINAL_IPC.onExit, listener)
     },
     getMonoFont: () => ipcRenderer.invoke(TERMINAL_IPC.getMonoFont) as Promise<{ data: number[] } | null>,
-    getFontStack: () =>
-      ipcRenderer.invoke(TERMINAL_IPC.getFontStack) as Promise<TerminalFontFile[] | null>
+    getFontStack: (req?: { family?: string }) =>
+      ipcRenderer.invoke(TERMINAL_IPC.getFontStack, req) as Promise<TerminalFontFile[] | null>,
+    listMonoFonts: () => ipcRenderer.invoke(TERMINAL_IPC.listMonoFonts) as Promise<string[]>
   },
   git: {
     version: () => ipcRenderer.invoke(GIT_IPC.version),
