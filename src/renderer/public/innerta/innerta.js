@@ -8450,6 +8450,7 @@ var _GetInnertaUnderlineCount = Module['_GetInnertaUnderlineCount'] = makeInvali
 var _SetInnertaWasmClipboard = Module['_SetInnertaWasmClipboard'] = makeInvalidEarlyAccess('_SetInnertaWasmClipboard');
 var _InnertaHitTest = Module['_InnertaHitTest'] = makeInvalidEarlyAccess('_InnertaHitTest');
 var _GetInnertaTextXOffset = Module['_GetInnertaTextXOffset'] = makeInvalidEarlyAccess('_GetInnertaTextXOffset');
+var _InnertaIsOverScrollbar = Module['_InnertaIsOverScrollbar'] = makeInvalidEarlyAccess('_InnertaIsOverScrollbar');
 var _SetInnertaSemanticTokens = Module['_SetInnertaSemanticTokens'] = makeInvalidEarlyAccess('_SetInnertaSemanticTokens');
 var _SetInnertaHighlightSource = Module['_SetInnertaHighlightSource'] = makeInvalidEarlyAccess('_SetInnertaHighlightSource');
 var _GetInnertaSemanticTokens = Module['_GetInnertaSemanticTokens'] = makeInvalidEarlyAccess('_GetInnertaSemanticTokens');
@@ -8575,6 +8576,7 @@ function assignWasmExports(wasmExports) {
   assert(typeof wasmExports['SetInnertaWasmClipboard'] != 'undefined', 'missing Wasm export: SetInnertaWasmClipboard');
   assert(typeof wasmExports['InnertaHitTest'] != 'undefined', 'missing Wasm export: InnertaHitTest');
   assert(typeof wasmExports['GetInnertaTextXOffset'] != 'undefined', 'missing Wasm export: GetInnertaTextXOffset');
+  assert(typeof wasmExports['InnertaIsOverScrollbar'] != 'undefined', 'missing Wasm export: InnertaIsOverScrollbar');
   assert(typeof wasmExports['SetInnertaSemanticTokens'] != 'undefined', 'missing Wasm export: SetInnertaSemanticTokens');
   assert(typeof wasmExports['SetInnertaHighlightSource'] != 'undefined', 'missing Wasm export: SetInnertaHighlightSource');
   assert(typeof wasmExports['GetInnertaSemanticTokens'] != 'undefined', 'missing Wasm export: GetInnertaSemanticTokens');
@@ -8696,6 +8698,7 @@ function assignWasmExports(wasmExports) {
   _SetInnertaWasmClipboard = Module['_SetInnertaWasmClipboard'] = createExportWrapper('SetInnertaWasmClipboard', wasmExports['SetInnertaWasmClipboard'], 1);
   _InnertaHitTest = Module['_InnertaHitTest'] = createExportWrapper('InnertaHitTest', wasmExports['InnertaHitTest'], 2);
   _GetInnertaTextXOffset = Module['_GetInnertaTextXOffset'] = createExportWrapper('GetInnertaTextXOffset', wasmExports['GetInnertaTextXOffset'], 0);
+  _InnertaIsOverScrollbar = Module['_InnertaIsOverScrollbar'] = createExportWrapper('InnertaIsOverScrollbar', wasmExports['InnertaIsOverScrollbar'], 2);
   _SetInnertaSemanticTokens = Module['_SetInnertaSemanticTokens'] = createExportWrapper('SetInnertaSemanticTokens', wasmExports['SetInnertaSemanticTokens'], 2);
   _SetInnertaHighlightSource = Module['_SetInnertaHighlightSource'] = createExportWrapper('SetInnertaHighlightSource', wasmExports['SetInnertaHighlightSource'], 1);
   _GetInnertaSemanticTokens = Module['_GetInnertaSemanticTokens'] = createExportWrapper('GetInnertaSemanticTokens', wasmExports['GetInnertaSemanticTokens'], 1);

@@ -55,6 +55,12 @@ export interface InnertaModule {
    */
   getTextXOffset?(): number | null
   /**
+   * WASM: ¿el puntero está sobre el scrollbar? El scrollbar se pinta SOBRE el
+   * texto, así que el host lo usa para poner el cursor normal (flecha) en vez
+   * del I-beam de texto. Opcional: si el WASM no lo expone, `false`.
+   */
+  isOverScrollbar?(x: number, y: number): boolean
+  /**
    * WASM: posición actual del cursor del editor → { line, col } (0-based).
    * Opcional: si el engine no lo expone (versiones viejas del WASM) devuelve
    * null. Es la contraparte de lectura de `SetInnertaCursor` (C++).

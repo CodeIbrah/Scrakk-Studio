@@ -411,7 +411,11 @@ export function attachHostBridge(
     // El texto arranca en `textXOffset`; todo lo de su izquierda es el gutter.
     // Si el WASM no expone el offset (viejo), se cae al criterio de línea.
     const textX = mod.getTextXOffset?.() ?? null
-    const overText = hit.line >= 0 && (textX === null || localX + 0.5 >= textX)
+    // El scrollbar se pinta SOBRE el texto: si el puntero está encima, el
+    // cursor debe ser la flecha normal, no el I-beam, y no hay hover de
+    // lenguaje (el hit-test de texto dice "hay línea" igual).
+    const overScrollbar = mod.isOverScrollbar?.(localX, localY) ?? false
+    const overText = !overScrollbar && hit.line >= 0 && (textX === null || localX + 0.5 >= textX)
     lastOverText = overText
 
     // Con Ctrl/Cmd apretado el comportamiento es el de un editor: subrayar el

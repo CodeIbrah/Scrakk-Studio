@@ -317,6 +317,20 @@ function wrap(raw: Record<string, unknown>): InnertaModule {
       }
     },
     /**
+     * ¿El puntero está sobre el scrollbar? `false` si el WASM no lo trae. El
+     * scrollbar se pinta SOBRE el texto, así que sin esto el host lo trata como
+     * texto y deja el cursor en modo I-beam.
+     */
+    isOverScrollbar(x, y) {
+      const fn = (_raw as Record<string, unknown>)['_InnertaIsOverScrollbar']
+      if (typeof fn !== 'function') return false
+      try {
+        return (fn as (x: number, y: number) => number)(x, y) !== 0
+      } catch {
+        return false
+      }
+    },
+    /**
      * Posición del cursor. Opcional: si el WASM no exporta
      * `_GetInnertaCursor`, retorna `null` (la UI muestra "Ln —, Col —").
      * Cuando el otro repo sume el export, este wiring ya está listo.
@@ -858,6 +872,20 @@ function wrapIsolated(raw: Record<string, unknown>, canvas: HTMLCanvasElement): 
         return typeof value === 'number' && value >= 0 ? value : null
       } catch {
         return null
+      }
+    },
+    /**
+     * ¿El puntero está sobre el scrollbar? `false` si el WASM no lo trae. El
+     * scrollbar se pinta SOBRE el texto, así que sin esto el host lo trata como
+     * texto y deja el cursor en modo I-beam.
+     */
+    isOverScrollbar(x, y) {
+      const fn = (_raw as Record<string, unknown>)['_InnertaIsOverScrollbar']
+      if (typeof fn !== 'function') return false
+      try {
+        return (fn as (x: number, y: number) => number)(x, y) !== 0
+      } catch {
+        return false
       }
     },
     getCursor() {
