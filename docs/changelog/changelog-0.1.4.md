@@ -17,6 +17,16 @@ published are not edited. The file goes per version:
 
 ## 0.1.4 — TBD
 
+### Editor (UI)
+- **The mouse cursor turns into the normal arrow over the scrollbar**: the
+  scrollbar is painted **on top of the text**, so the engine's text hit-test
+  answered "there is a line here" and the host kept the I-beam over the thumb
+  and the track. There is now an `InnertaIsOverScrollbar` export (vertical and
+  horizontal, thumb and track) and the bridge consults it **before** deciding
+  the cursor, so hovering the scrollbar shows the arrow and also skips the
+  language hover — `GetInnertaTextXOffset` alone could not tell them apart,
+  because the scrollbar sits to the right of where the text starts.
+
 ### Editor — indent guides (engine)
 - **The guides no longer keep the previous file's columns, and they sit one
   indent to the left of the text instead of on top of it**: two bugs, one on
