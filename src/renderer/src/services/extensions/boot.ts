@@ -39,5 +39,16 @@ export async function bootExtensions(): Promise<void> {
   publishTelemetryEnabled()
   await loadBuiltinExtensions()
   initExtensionDocuments()
+  // Las extensiones del USUARIO (leer userData por IPC + correr su `activate`)
+  // NO hacen falta para el primer paint: se difieren al primer idle para no
+  // competir con los primeros frames. Las builtin sí van eager: los paneles
+  // iniciales (explorer/chat/terminal) salen de ahí.
+  await new Promise<void>((resolve) => {
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(() => resolve(), { timeout: 400 })
+    } else {
+      setTimeout(resolve, 0)
+    }
+  })
   await loadInstalledExtensions()
 }

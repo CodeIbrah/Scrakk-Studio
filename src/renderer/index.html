@@ -14,9 +14,51 @@
       content="default-src 'self'; script-src 'self' blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: scrakk-ext:; font-src 'self' data: https:; frame-src scrakk-ext:"
     />
     <title>Scrakk Studio</title>
+    <style>
+      /*
+       * Splash de arranque. La app arranca en NEGRO (el tema por defecto,
+       * `scrakk-night`, tiene `bg: #000000`), así que hasta que React monte no
+       * había NADA: se veía una pantalla negra "muerta" durante el boot.
+       *
+       * Esto se pinta ANTES de que cargue el bundle y `createRoot().render()`
+       * lo reemplaza cuando monta (React descarta los hijos del contenedor).
+       * El logo es el de la app (blanco + naranja), visible sobre negro y
+       * sobre claro. Sin texto: el idioma todavía no está resuelto.
+       */
+      .boot-splash {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .boot-splash img {
+        width: 84px;
+        height: 84px;
+        animation: boot-splash-pulse 1.2s ease-in-out infinite;
+      }
+      @keyframes boot-splash-pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.45;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .boot-splash img {
+          animation: none;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot-splash" aria-hidden="true">
+        <img src="logo/scrakk-studio.svg" alt="" />
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

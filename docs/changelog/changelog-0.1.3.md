@@ -517,3 +517,20 @@ published are not edited. The file goes per version:
   the press: a wheel has no release, and sending one produced the legacy
   protocol's button-3 release marker, which programs read as a **click** on
   every scroll.
+
+### Startup (UI)
+
+- **The app no longer looks dead while it boots**: the default theme's
+  background is pure black and `index.html` painted nothing at all, so the
+  window spent its whole boot as an empty black rectangle — while the first
+  paint only arrives once the engine mounts (the boot probe measures ~700 ms
+  for the engine and ~500 ms of main-thread blocking, the worst single block
+  being the WebAssembly instantiation). `index.html` now ships a boot splash
+  (the app logo, softly pulsing) that is painted before the bundle loads and
+  that `createRoot().render()` replaces on mount; checked over CDP, it is there
+  at 300 ms and gone once the UI is up.
+- **Less work before the first paint**: the workspace scan and the file sync
+  into the language servers move to the first idle frame, and so does loading
+  the user's installed extensions. The built-in extensions stay eager (the
+  initial panels come from them), and so do the diagnostics channel and the
+  page-zoom guard, which are cheap and must exist from the start.

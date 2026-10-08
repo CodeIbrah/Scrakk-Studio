@@ -33,11 +33,6 @@ registerBuiltinFileHandlers()
 
 // Sistema de extensiones SEF: carga builtin + extensiones del usuario.
 void bootExtensions()
-initLspWorkspaceSync()
-// El buffer del editor se sincroniza EN VIVO con los language servers: sin
-// esto el server sólo conocía el archivo tal como estaba al abrirlo (los
-// errores que escribes no aparecían hasta reabrirlo).
-initLspFileSync()
 // Los diagnósticos se pintan como subrayado en el editor (LSP + extensiones).
 // Se arranca temprano: el canal escucha al store, que es el que ya recibe los
 // dos streams, así que no depende de que haya un editor montado.
@@ -48,6 +43,29 @@ initDiffViews()
 // El zoom de PÁGINA de Chromium se dispara en cualquier panel que no sea el
 // editor/terminal/visor (ver `zoomGuard`) y queda guardado en el perfil.
 initZoomGuard()
+
+/**
+ * Corre `fn` DESPUÉS del primer paint (primer idle), no antes.
+ *
+ * Todo lo de arriba tiene que estar sí o sí (el tema y el idioma ANTES del
+ * primer render; los diagnósticos y el zoom son baratos y tienen que estar
+ * desde el arranque). Lo de abajo —el barrido del workspace y el alta de
+ * archivos en los language servers— es lo pesado y NO hace falta para que el
+ * usuario vea la app: diferido, no compite con los primeros frames.
+ */
+const afterFirstPaint = (fn: () => void): void => {
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(() => fn(), { timeout: 400 })
+  } else {
+    setTimeout(fn, 0)
+  }
+}
+
+afterFirstPaint(initLspWorkspaceSync)
+// El buffer del editor se sincroniza EN VIVO con los language servers: sin
+// esto el server sólo conocía el archivo tal como estaba al abrirlo (los
+// errores que escribes no aparecían hasta reabrirlo).
+afterFirstPaint(initLspFileSync)
 
 const rootElement = document.getElementById('root')
 
