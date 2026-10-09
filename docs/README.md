@@ -1,123 +1,129 @@
 ---
-title: "Scrakk Studio — Documentación"
+title: "Scrakk Studio — Documentation"
 group: start
 order: 0
-summary: "Punto de entrada a toda la documentación de Scrakk Studio: qué es, cómo arrancar, y el mapa completo de cada área."
+summary: "Entry point to all Scrakk Studio documentation: what it is, how to start, and the full map of every area."
 ---
 
-# Scrakk Studio — Documentación
+# Scrakk Studio — Documentation
 
-**Scrakk Studio** es un IDE agéntico: un editor (Innerta) con chat de IA,
-subagentes, extensiones (`.sef`) y LSP, pensado para que un agente trabaje
-*dentro* del editor, no al lado. Este archivo es el **punto de entrada**:
-explica qué hay y en qué orden leerlo.
+**Scrakk Studio** is an agentic IDE: an editor (Innerta) with an AI chat,
+subagents, extensions (`.sef`) and LSP, built so an agent works *inside* the
+editor, not next to it. This file is the **entry point**: it explains what there
+is and in what order to read it.
 
-> Si sos una IA que va a consumir estos docs: el índice máquina-legible está en
-> `index.json` (nav + metadata), el corpus completo en `llms.txt` y `docs.json`,
-> y cada doc se sirve crudo en `md/<slug>.md`. Todo bajo
-> [`docs.scrakk.art`](https://docs.scrakk.art) y
+> If you are an AI consuming these docs: the machine-readable index is in
+> `index.json` (nav + metadata), the full corpus in `llms.txt` and `docs.json`,
+> and each doc is served raw at `md/<slug>.md`. All under
+> [`docs.scrakk.art`](https://docs.scrakk.art) and
 > `api.scrakk.art/api/docs`.
 
-## Empezar rápido
+## Quick start
 
-1. **Instalar** la app (release de GitHub: AppImage/deb en Linux, instalador en
+1. **Install** the app (GitHub release: AppImage/deb on Linux, installer on
    Windows).
-2. **Abrir un proyecto**: *Archivo → Abrir carpeta*.
-3. **Conectar un modelo**: Ajustes → Modelos (local o API). Sin modelo, el chat
-   no tiene a quién preguntarle.
-4. **Primer chat**: escribí en el panel de chat; el agente puede leer/editar
-   archivos y correr comandos según los **permisos** ([Modos y permisos](chat/permissions.md)).
-5. **Extensiones**: Ajustes → Extensiones para instalar un `.sef`, o leé
-   [el sistema de extensiones](extensions/README.md) para crear uno.
+2. **Open a project**: *File → Open folder*.
+3. **Connect a model**: Settings → Models (local or API). Without a model, the
+   chat has nobody to ask.
+4. **First chat**: type in the chat panel; the agent can read/edit files and run
+   commands subject to the **permissions** ([Modes and permissions](chat/permissions.md)).
+5. **Extensions**: Settings → Extensions to install a `.sef`, or read
+   [the extension system](extensions/README.md) to create one.
 
-## Mapa de la documentación
+## Documentation map
 
-### Empezar
-| Documento | Qué cubre |
+### Getting started
+| Document | What it covers |
 | --- | --- |
-| [Actualizaciones](updates.md) | Cómo el IDE detecta, descarga e instala una versión nueva (release → Supabase → Realtime). |
+| [Updates](updates.md) | How the IDE detects, downloads and installs a new version (release → Supabase → Realtime). |
 
-### Chat con IA
-| Documento | Qué cubre |
+### AI chat
+| Document | What it covers |
 | --- | --- |
-| [Modos y permisos](chat/permissions.md) | Modos (primary/subagent), permisos deny-by-default y aprobaciones. |
-| [Comandos con barra](chat/slash-commands.md) | Comandos `/comando` del chat. |
+| [Modes and permissions](chat/permissions.md) | Modes (primary/subagent), deny-by-default permissions and approvals. |
+| [Slash commands](chat/slash-commands.md) | The chat's `/command` commands. |
 
 ### Editor (Innerta)
-| Documento | Qué cubre |
+| Document | What it covers |
 | --- | --- |
-| [Decoraciones del editor](editor/decorations.md) | Subrayado por rango y decoraciones que pinta el editor. |
-| [Innerta como superficie](editor/innerta-bridge.md) | Contrato Innerta ↔ Scrakk: quién es dueño de la UI. |
-| [Lenguajes](editor/languages.md) | Cómo una extensión agrega sintaxis (VS Code → SEF → Innerta). |
-| [Capturas del editor](editor/screenshots.md) | Cómo se verifica que el editor pinta. |
+| [Editor decorations](editor/decorations.md) | Range underlines and decorations the editor paints. |
+| [Innerta as a surface](editor/innerta-bridge.md) | The Innerta ↔ Scrakk contract: who owns the UI. |
+| [Languages](editor/languages.md) | How an extension adds syntax (VS Code → SEF → Innerta). |
+| [Editor screenshots](editor/screenshots.md) | How it is verified that the editor paints. |
 
-### Extensiones (SEF)
-| Documento | Qué cubre |
+### Extensions (SEF)
+| Document | What it covers |
 | --- | --- |
-| [Sistema de extensiones](extensions/README.md) | Los dos tipos (declarativa / con código) y el índice del área. |
-| [Manifest](extensions/manifest.md) | El `manifest.json`: campos y `contributes`. |
-| [Contribuciones](extensions/contributions.md) | Los trece tipos de contribución, con ejemplo. |
-| [Estructura](extensions/structure.md) | Dónde vive cada pieza del sistema. |
-| [Empaquetado `.sef`](extensions/sef.md) | Cómo armar un paquete instalable. |
-| [Builtin](extensions/builtin.md) | Extensiones compiladas dentro del bundle. |
-| [Paneles](extensions/panels/panel.md) | Paneles React de un slot. |
-| [Header de paneles](extensions/panels/header-actions.md) | Botones del header de un panel. |
-| [Botones de la activity bar](extensions/activitybar/button.md) | Botón que abre un panel. |
-| [Tabs centrales](extensions/centerTabs/tab.md) | Tabs del strip central. |
-| [Vistas con código](extensions/views/view.md) | Paneles servidos por el Extension Host. |
-| [VS Code → SEF](extensions/vscode.md) | Pipeline VSIX → SEF y compatibilidad. |
-| [Skills](extensions/skills.md) | Paquetes de skills (estándar Agent Skills). |
-| [Tools](extensions/tools.md) | Herramientas de IA que aporta una extensión. |
+| [SEF extensions](extensions/README.md) | The two kinds (declarative / with code) and the area index. |
+| [Your first extension](extensions/getting-started/your-first-extension.md) | Full tutorial: from zero to an installed `.sef`. |
+| [Manifest](extensions/reference/manifest.md) | `manifest.json`: every field. |
+| [Contributes](extensions/reference/contributes.md) | The 14 contribution kinds, with examples. |
+| [SEF CLI](extensions/reference/cli.md) | `sef create/build/pack/validate` and the package layout. |
+| [Extension API](extensions/reference/vscode-api.md) | The emulated `vscode.*` surface and its status. |
+| [Builtin](extensions/reference/builtin.md) | Extensions compiled inside the bundle. |
+| [Panels](extensions/guides/panels.md) | React panels in a layout slot. |
+| [Activity bar](extensions/guides/activity-bar.md) | The bar button that opens a panel. |
+| [Center tabs](extensions/guides/center-tabs.md) | Tabs in the center strip. |
+| [Views (with code)](extensions/guides/views.md) | Panels served by the Extension Host. |
+| [Themes](extensions/guides/themes.md) | Color themes. |
+| [Icons](extensions/guides/icons.md) | File and UI icon themes. |
+| [Languages](extensions/guides/languages.md) | The language kit (grammars, snippets). |
+| [Language servers](extensions/guides/lsp-servers.md) | Declaring an `lspServers` entry. |
+| [AI tools](extensions/guides/tools.md) | Tools an extension contributes to the chat. |
+| [Skills](extensions/guides/skills.md) | Skill packs (Agent Skills standard). |
+| [Formats and encodings](extensions/guides/file-handlers.md) | `fileHandlers` and `encodings`. |
+| [Permissions](extensions/guides/permissions.md) | The deny-by-default model and the path jail. |
+| [Packaging](extensions/guides/packaging.md) | The `.sef` package and installation. |
+| [VS Code compatibility](extensions/architecture/vscode-compatibility.md) | The VSIX → SEF pipeline and what is translated. |
+| [How it works](extensions/architecture/overview.md) | Boot, loader, registry. |
+| [Extension Host](extensions/architecture/extension-host.md) | The process that runs extension code. |
 
 ### Language Server (LSP)
-| Documento | Qué cubre |
+| Document | What it covers |
 | --- | --- |
-| [Sistema LSP](lsp/README.md) | Índice del área y visión general. |
-| [Arquitectura](lsp/architecture.md) | Cómo se orquesta el cliente LSP en el main. |
-| [API](lsp/api.md) | Superficie completa para frontend/editor/agente. |
-| [Configuración](lsp/configuration.md) | `.scrakk/lsp.json`. |
-| [Servidores](lsp/servers.md) | Builtin, detección y auto-instalación. |
-| [Proveedores](lsp/providers.md) | Proveedores de lenguaje (host ⇄ IDE). |
-| [Protocolo](lsp/protocol.md) | Protocolo soportado y límites. |
-| [Extensión `lspServers`](lsp/extensions.md) | Declarar un server desde una extensión. |
-| [vscode-languageclient](lsp/vscode-languageclient.md) | Extensiones VS Code con su server. |
-| [Testing](lsp/testing.md) | Tests del sistema LSP. |
+| [LSP system](lsp/README.md) | Area index and overview. |
+| [Architecture](lsp/architecture.md) | How the LSP client is orchestrated in the main. |
+| [API](lsp/api.md) | The full surface for frontend/editor/agent. |
+| [Configuration](lsp/configuration.md) | `.scrakk/lsp.json`. |
+| [Servers](lsp/servers.md) | Builtin, detection and auto-install. |
+| [Providers](lsp/providers.md) | Language providers (host ⇄ IDE). |
+| [Protocol](lsp/protocol.md) | Supported protocol and limits. |
+| [`lspServers` extension](lsp/extensions.md) | Declaring a server from an extension. |
+| [vscode-languageclient](lsp/vscode-languageclient.md) | VS Code extensions with their own server. |
+| [Testing](lsp/testing.md) | LSP system tests. |
 
-### Novedades
-| Documento | Qué cubre |
+### What's new
+| Document | What it covers |
 | --- | --- |
-| [Changelog 0.1.2](changelog/changelog-0.1.2.md) | Cambios de la última versión (también alimenta los Anuncios de la bienvenida). |
-| [Changelog 0.1.1](changelog/changelog-0.1.1.md) | Cambios de la versión anterior. |
+| [Changelog 0.1.2](changelog/changelog-0.1.2.md) | Changes in the latest version (also feeds the welcome screen's Announcements). |
+| [Changelog 0.1.1](changelog/changelog-0.1.1.md) | Changes in the previous version. |
 
-## Rutas de lectura
+## Reading paths
 
-- **Usuario nuevo** → *Empezar rápido* (arriba) → [Modos y permisos](chat/permissions.md) → [Actualizaciones](updates.md).
-- **Autora de extensiones** → [Sistema de extensiones](extensions/README.md) → [Manifest](extensions/manifest.md) → [Contribuciones](extensions/contributions.md) → [Empaquetado `.sef`](extensions/sef.md). Si venís de VS Code: [VS Code → SEF](extensions/vscode.md).
-- **Autor de un lenguaje** → [Lenguajes](editor/languages.md) → [LSP](lsp/README.md) → [Extensión `lspServers`](lsp/extensions.md).
-- **Dev del IDE** → [Arquitectura LSP](lsp/architecture.md) → [Innerta](editor/innerta-bridge.md) → [Estructura de extensiones](extensions/structure.md).
+- **New user** → *Quick start* (above) → [Modes and permissions](chat/permissions.md) → [Updates](updates.md).
+- **Extension author** → [SEF extensions](extensions/README.md) → [Your first extension](extensions/getting-started/your-first-extension.md) → [Manifest](extensions/reference/manifest.md) → [Contributes](extensions/reference/contributes.md). Coming from VS Code: [VS Code compatibility](extensions/architecture/vscode-compatibility.md).
+- **Language author** → [Languages](editor/languages.md) → [LSP](lsp/README.md) → [`lspServers` extension](lsp/extensions.md).
+- **IDE dev** → [LSP architecture](lsp/architecture.md) → [Innerta](editor/innerta-bridge.md) → [How it works](extensions/architecture/overview.md).
 
-## Cómo se publican estos docs
+## How these docs are published
 
-Estos `.md` son la **fuente de verdad** (GitHub, rama `master`). No se editan en
-la web. En cada release, un workflow:
+These `.md` files are the **source of truth** (GitHub, `master` branch). They are
+not edited on the web. On every release, a workflow:
 
-1. construye el bundle (`tools/docs/build.mjs` → `index.json`, `docs.json`,
+1. builds the bundle (`tools/docs/build.mjs` → `index.json`, `docs.json`,
    `llms.txt`, `doc/<slug>.json`);
-2. lo sube a **Cloudflare R2** (bucket `scrakk-docs`), versionado (`latest` + `vX.Y.Z`);
-3. la **web** lo renderiza en [scrakk.art/docs](https://scrakk.art/docs) con el
-   estilo del sitio; `docs.scrakk.art` es el host de datos (JSON / markdown /
-   `llms.txt`) y `api.scrakk.art/api/docs` el acceso programático.
+2. uploads it to **Cloudflare R2** (bucket `scrakk-docs`), versioned (`latest` + `vX.Y.Z`);
+3. the **web** renders it at [scrakk.art/docs](https://scrakk.art/docs) with the
+   site's style; `docs.scrakk.art` is the data host (JSON / markdown /
+   `llms.txt`) and `api.scrakk.art/api/docs` the programmatic access.
 
-El front-matter de cada doc manda sobre la navegación:
+Each doc's front-matter drives the navigation:
 
 ```yaml
 ---
 title: "..."
 group: extensions     # start | chat | editor | extensions | lsp | changelog
 order: 30
-summary: "Una línea para la nav y la búsqueda."
+summary: "One line for the nav and search."
 ---
 ```
-
-Agregar un `.md` con front-matter = aparece solo en la web, el índice y
-`llms.txt`. No hay que registrar nada a mano.

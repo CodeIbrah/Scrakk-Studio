@@ -1,0 +1,100 @@
+---
+title: "Color themes"
+group: extensions
+order: 80
+summary: "How to contribute a color theme: the manifest slice and the theme JSON (colors, tokens, background and fonts)."
+---
+# Color themes
+
+A **color theme** is a JSON that redefines the IDE's CSS tokens. It is declared
+under `contributes.themes` and the `path` points to the JSON inside the package.
+
+```json
+{
+  "themes": [
+    { "id": "acme-dark", "name": "Acme Dark", "type": "dark", "path": "themes/acme-dark.json" }
+  ]
+}
+```
+
+Package convention: if you omit `path`, `themes/<id>.json` is expected
+(`sef validate` checks it).
+
+| Field | Type | Required |
+|---|---|---|
+| `id` | global string | yes |
+| `name` | string | yes |
+| `type` | `dark` \| `light` | yes |
+| `path` | string | no (convention `themes/<id>.json`) |
+
+## The theme JSON
+
+```json
+{
+  "name": "Acme Dark",
+  "type": "dark",
+  "colors": {
+    "bg": "#0f1115",
+    "surface": "#161a20",
+    "accent": "#ff6b35",
+    "text": "#e6e6e6",
+    "textMuted": "#8a8f98",
+    "diffAdded": "rgba(63,185,80,0.16)",
+    "diffRemoved": "rgba(248,113,113,0.16)"
+  },
+  "tokenColors": [
+    { "scope": ["comment"], "foreground": "#6b7280", "fontStyle": "italic" },
+    { "scope": "keyword", "foreground": "#c586c0" }
+  ],
+  "flat": true,
+  "fonts": { "ui": { "family": "Inter", "source": "https://…/inter.woff2" } },
+  "background": { "type": "image", "image": "https://…/bg.jpg", "imageOpacity": 0.3, "imageBlur": "6px" }
+}
+```
+
+## Valid colors
+
+`colors` accepts **only** known keys (the others are ignored without a warning).
+Each value is a color: `#hex` (3/6/8 digits), `rgb()`/`rgba()`, `transparent` or
+`var(--token)`.
+
+Color keys: `bg`, `surface`, `surfaceRaised`, `border`, `borderStrong`, `accent`,
+`accentHover`, `accentActive`, `onAccent`, `text`, `textSecondary`, `textMuted`,
+`error`, `errorHover`, `onError`, `warning`, `success`, `info`, `hover`, `active`,
+`scrollbarThumb`, `scrollbarThumbHover`, `indentGuide`, `panelBorder`, `editorBg`,
+`titleBarBg`, `activityBarBg`, `statusBarBg`, `diffAdded`, `diffRemoved`,
+`diffModified`.
+
+Also:
+
+- `panelBorderOpacity` (number 0–100).
+- `diffAdded/Removed/Modified` must carry **alpha** (they are backgrounds and the
+  text is drawn on top).
+- Colors you do not define are **not** filled with hard defaults: they fall back
+  to the base theme coherent with `type`.
+
+## `tokenColors`
+
+TextMate-style syntax colors: `[{ scope, foreground?, fontStyle? }]`. `scope` is a
+string or a list.
+
+## Other fields
+
+- `flat: true` — single-color chrome (the bars add a border).
+- `fonts.ui` — UI font: `{ family, source?, size?, weight?, lineHeight? }`.
+  `source` accepts `https:` or `data:` (≤ 4096 chars).
+- `background` — background image: `{ type: "image", image, imageOpacity?, imageSize?, imagePosition?, imageBlur? }`.
+  `image` is `https:`/`data:` (no quotes or spaces, ≤ 4096 chars).
+
+The theme is validated **tolerantly**: anything invalid is dropped with a warning
+and the rest of the theme still applies.
+
+## Activate
+
+Themes are listed in **Settings → Appearance** (or the theme picker). `type`
+decides whether it groups as light or dark. It applies live.
+
+## Next steps
+
+- [Icons](icons.md) — file and UI icon themes.
+- [Contributes](../reference/contributes.md) — the rest of the kinds.

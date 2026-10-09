@@ -1,84 +1,115 @@
 ---
-title: "Sistema de Extensiones SEF (Scrakk Extension Format)"
+title: "SEF extensions"
 group: extensions
 order: 10
-summary: "Extiende la app con paquetes que aportan contribuciones declarativas: una builtin o un .sef que instala el usuario."
+summary: "Everything about the Scrakk Extension Format (SEF): what an extension can contribute, how to create, package and install one, and how it works under the hood."
 ---
-# Sistema de Extensiones SEF (Scrakk Extension Format)
+# SEF extensions
 
-Una **extensión** agrega funcionalidad a Scrakk Studio —un panel, un tema, una
-herramienta de IA— **sin tocar la app**: lo describís en un `manifest.json` y
-Scrakk lo registra solo. Un paquete puede ser:
+An **extension** adds functionality to Scrakk Studio —a panel, a theme, a button,
+an AI tool— **without touching the app**. You describe it in a `manifest.json`
+and Scrakk registers it. The format is called **SEF** (*Scrakk Extension
+Format*).
 
-- una **builtin** (`.tsx`/`.ts` compilados dentro del bundle de la app), o
-- un **`.sef` instalado por el usuario** (zip descomprimido en
+There are **two sources** for the same contract:
+
+- a **builtin** (compiled into the app bundle, under
+  `services/extensions/builtin/<type>/<id>/`), or
+- a **`.sef`** installed by the user (a **ZIP** extracted into
   `userData/extensions/<id>/`).
 
-El manifest más chico posible ya es una extensión válida: muestra un panel que
-dice "Hola".
+And **two kinds** depending on whether it runs code:
 
-```json
-{
-  "id": "hola",
-  "name": "Hola",
-  "version": "1.0.0",
-  "contributes": {
-    "panels": [{ "id": "hola", "title": "Hola", "component": "panels/Hola.tsx" }]
-  }
-}
-```
+| | **Declarative SEF** | **SEF with code** |
+|---|---|---|
+| Where the UI comes from | the package bundle (React) | the **Extension Host**: the extension runs in its own process and serves content over IPC |
+| Contribution kinds | `panels`, `activityBar`, `centerTabs`, `themes`, `fileIcons`, `productIcons`, `languages`, `lspServers`, `encodings`, `fileHandlers`, `notifications`, `tools`, `skills` | `views` (+ `runtime` in the manifest) |
+| Needs Node? | no | yes |
 
-En ambos casos, la fuente de verdad es el `manifest.json`: el loader resuelve
-los componentes por ruta y los registra en el `ExtensionRegistry`, que alimenta
-los sistemas ya existentes de la app (layout, activity bar, tabs, temas).
+The declarative kind **does not run your code**. The kind with code **does**, so
+it goes through the Extension Host: `views` is the declarative door (the IDE
+knows the panel exists **before** running anything) and the content arrives
+later, from the host.
 
-## Dos tipos de extensión
+---
 
-| | **SEF declarativa** | **SEF con código** |
-| --- | --- | --- |
-| De dónde sale la UI | del bundle del paquete (React) | del **Extension Host**: la extensión corre en su proceso Node y sirve su contenido por IPC |
-| Qué tipos usa | `panels`, `activityBar`, `centerTabs`, `themes`, `fileIcons`, `productIcons`, `encodings`, `notifications`, `lspServers`, `languages`, `tools`, `skills` | `views` (+ `runtime` en el manifest) |
-| Ejemplo | builtin `clock` | una extensión de VS Code convertida (Comment Anchors, Cline) |
-| ¿Necesita Node? | no | sí |
-
-La **declarativa** no ejecuta código de la extensión. La **con código** sí, y
-por eso pasa por el Extension Host: `views` es la puerta declarativa (el IDE
-sabe que el panel existe **antes** de ejecutar nada) y el contenido llega
-después, del host.
-
-## Tu primera extensión
-
-Dos comandos:
+## Quick start in 5 steps
 
 ```sh
-npm run sef:create -- "Mi Extensión"   # crea un esqueleto con un panel de ejemplo
-npm run sef:pack -- mi-extension        # valida y genera el .sef
+npm run sef:create -- "My Extension" ./my-extension   # 1. scaffold (sample panel)
+cd my-extension
+npm run sef:build -- .                                 # 2. bundle → dist/modules.js
+npm run sef:pack -- .                                  # 3. validates and writes ../my-extension.sef
+npm run sef:validate -- .                              # 4. (optional) validate without packing
 ```
 
-Después instalás el `.sef` desde **Ajustes → Extensiones**. El detalle de cada
-paso, en [Empaquetado `.sef`](sef.md).
+5. Install the `.sef` from **Settings → Extensions → Install .sef**.
 
-## Índice
+> The `id` comes from the name: use **ASCII** (`"Mi Extensión"` becomes
+> `mi-extensi-n` and the accent is lost; `"My Extension"` becomes
+> `my-extension`). The package is created under `<dir>/<id>/` and the `.sef`
+> lands **next to** that folder.
 
-- [Estructura](structure.md) — dónde vive cada pieza del sistema.
-- [Manifest](manifest.md) — el formato del `manifest.json`.
-- [Empaquetado .sef](sef.md) — cómo armar un paquete instalable.
-- [Contribuciones](contributions.md) — **los trece tipos**, con ejemplo y dónde se montan.
-- [Vistas (con código)](views/view.md) — paneles de la activity bar servidos por el host.
-- [Paneles](panels/panel.md) — paneles React de un slot del layout.
-- [Botones del header](panels/header-actions.md) — acciones de un panel, reordenables arrastrando.
-- [Activity bar](activitybar/button.md) — botones de la barra de actividades.
-- [Tabs centrales](centerTabs/tab.md) — pestañas del strip central.
-- [Builtin](builtin.md) — cómo crear una extensión que viaja en la app.
-- [Extensiones de VS Code](vscode.md) — qué hace hoy el pipeline VSIX → SEF.
+The full walkthrough is in
+[Your first extension](getting-started/your-first-extension.md).
 
-## Cómo lo carga la app (por dentro)
+## At a glance
 
-1. La extensión declara contribuciones en `manifest.json`.
-2. El **loader** (`loader/resolve.ts`) itera `contributes` y le pregunta al
-   **ExtensionTypeRegistry** por el handler de cada key — no conoce ningún tipo.
-3. El handler valida (`schema.ts`), registra (`api.ts` → `logic.ts` → `store.ts`)
-   y la app (layout, activity bar, tabs, temas) se re-renderiza sola.
+```text
+manifest.json                     ← the source of truth (declarative)
+contributes:
+  panels / activityBar / centerTabs   → React UI from the package itself
+  views (+ runtime)                   → UI served by the Extension Host (code)
+  themes / fileIcons / productIcons   → themes (data JSON)
+  languages / lspServers              → language support and language servers
+  tools / skills                      → AI (tools and workflows)
+  fileHandlers / encodings            → file formats and text encodings
+        │
+        ▼
+  loader/resolve.ts  ──►  ExtensionTypeRegistry  ──►  ExtensionRegistry
+   (generic: knows no types)        (one handler per type)      (the app reads it)
+```
 
-Agregar un tipo de contribución = crear `types/<kind>/` con sus cuatro archivos
-y sumar **una línea** a `ensureTypesRegistered()` en `types/index.ts`.
+---
+
+## Getting started
+
+| Document | What it covers |
+|---|---|
+| [Your first extension](getting-started/your-first-extension.md) | Full tutorial: panel + button + tab, from zero to an installed `.sef`. |
+
+## Guides (task oriented)
+
+| Document | What it covers |
+|---|---|
+| [Panels](guides/panels.md) | A React component in any layout slot. |
+| [Activity bar](guides/activity-bar.md) | The bar button that opens a panel. |
+| [Center tabs](guides/center-tabs.md) | A tab in the center strip. |
+| [Views (with code)](guides/views.md) | An activity bar panel served by the Extension Host. |
+| [Color themes](guides/themes.md) | The theme JSON and its tokens. |
+| [Icons](guides/icons.md) | File icon themes (`fileIcons`) and UI icon themes (`productIcons`). |
+| [Languages](guides/languages.md) | Language kit: association, tree-sitter/TextMate grammars, snippets. |
+| [Language servers](guides/lsp-servers.md) | Declaring an `lspServers` entry and making it run. |
+| [AI tools](guides/tools.md) | Contributing a tool: schema, command and visual. |
+| [Skills](guides/skills.md) | Packaging workflows (Agent Skills standard). |
+| [Formats and encodings](guides/file-handlers.md) | `fileHandlers` (your viewer) and `encodings` (your codec). |
+| [Permissions](guides/permissions.md) | The deny-by-default model and the path jail. |
+| [Packaging](guides/packaging.md) | The `.sef` layout, the bundle and how it is installed. |
+
+## Reference
+
+| Document | What it covers |
+|---|---|
+| [Manifest](reference/manifest.md) | Every field of `manifest.json`. |
+| [Contributes](reference/contributes.md) | The **14** contribution kinds with their real fields. |
+| [SEF CLI](reference/cli.md) | `sef create/build/pack/validate` and the v2 layout. |
+| [Extension API](reference/vscode-api.md) | The emulated `vscode.*` surface and its real status. |
+| [Builtin](reference/builtin.md) | Creating an extension that ships inside the app. |
+
+## Architecture
+
+| Document | What it covers |
+|---|---|
+| [How it works](architecture/overview.md) | Boot, the generic loader, the registry and the types. |
+| [Extension Host](architecture/extension-host.md) | The process that runs the code and how it talks to the IDE. |
+| [VS Code compatibility](architecture/vscode-compatibility.md) | The VSIX → SEF pipeline and what gets translated today. |
