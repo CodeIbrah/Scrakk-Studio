@@ -1,88 +1,86 @@
 ---
-title: "Comandos con barra (`/comando`)"
+title: "Slash commands (`/command`)"
 group: chat
 order: 20
-summary: "Comandos que empiezan con `/`: cualquier input puede ejecutarlos y registrar los suyos. El registry no sabe de UI; cada input decide cómo mostrar el resultado."
+summary: "Commands that start with `/`: any input can run them and register its own. The registry knows nothing about the UI; each input decides how to show the result."
 ---
-# Comandos con barra (`/comando`)
+# Slash commands (`/command`)
 
-Los **comandos con barra** son atajos que empiezan con `/` (por ejemplo,
-`/variants`). Cualquier input —el chat con IA, el chat social, un panel, una
-extensión— puede **ejecutarlos** y **registrar los suyos**. El registry no sabe
-de UI: cada comando recibe contexto y devuelve un mensaje, y el input decide
-cómo mostrarlo.
+**Slash commands** are shortcuts that start with `/` (for example, `/variants`).
+Any input —the AI chat, the social chat, a panel, an extension— can **run them**
+and **register its own**. The registry knows nothing about the UI: each command
+receives context and returns a message, and the input decides how to show it.
 
-## Ejecutar
+## Run
 
-Desde cualquier input:
+From any input:
 
 ```ts
 import { slashCommands, isSlashInput } from '@services/slash-commands'
 
-if (isSlashInput(texto)) {
-  const result = await slashCommands.run(texto, { source: 'chat', sessionId })
+if (isSlashInput(text)) {
+  const result = await slashCommands.run(text, { source: 'chat', sessionId })
   // result = { ok, message?, error? }
 }
 ```
 
-`source` identifica quién lo pidió (`'chat'`, `'social'`, …); `sessionId` es
-opcional.
+`source` identifies who asked for it (`'chat'`, `'social'`, …); `sessionId` is
+optional.
 
-## Registrar un comando
+## Register a command
 
-Cada comando vive en su carpeta, con la funcionalidad en `logic.ts` (mismo
-espíritu que las tools) y el contrato en `index.ts`:
+Each command lives in its own folder, with the functionality in `logic.ts` (same
+spirit as the tools) and the contract in `index.ts`:
 
 ```ts
 import { slashCommands, type SlashCommand } from '@services/slash-commands'
-import { miLogica } from './logic'
+import { myLogic } from './logic'
 
-const miComando: SlashCommand = {
-  name: 'mi-comando',
-  description: 'Qué hace, en una línea.',
-  usage: '/mi-comando [<algo>]',
+const myCommand: SlashCommand = {
+  name: 'my-command',
+  description: 'What it does, in one line.',
+  usage: '/my-command [<something>]',
   category: 'Chat',
-  args: [{ name: 'algo', description: 'Qué recibe' }],
-  run: (ctx) => miLogica(ctx.args)
+  args: [{ name: 'something', description: 'What it receives' }],
+  run: (ctx) => myLogic(ctx.args)
 }
 
-slashCommands.register(miComando) // allowOverwrite:true para reintentos del mismo dueño
+slashCommands.register(myCommand) // allowOverwrite:true for retries by the same owner
 ```
 
-`run` puede devolver el resultado o una promesa. Se llama con
+`run` can return the result or a promise. It is called with
 `{ source, sessionId, args, rawArgs }`.
 
-## UI propia
+## Custom UI
 
-Un comando puede mostrar su PROPIA interfaz y devolver `ui: true` para que el
-input NO agregue un mensaje de texto con el resultado:
+A command can show its **own** interface and return `ui: true` so the input does
+NOT add a text message with the result:
 
 ```ts
 import { showOptionModal } from '@services/modals'
 
 async function run() {
-  const elegido = await showOptionModal({ title: 'Variantes', items })
-  if (!elegido) return { ok: true, ui: true } // cancelado
-  aplicar(elegido)
+  const chosen = await showOptionModal({ title: 'Variants', items })
+  if (!chosen) return { ok: true, ui: true } // cancelled
+  apply(chosen)
   return { ok: true, ui: true }
 }
 ```
 
-`showOptionModal` (modal de opciones) y `showModal` (modal custom) son las dos
-herramientas para esto; cualquier comando puede usarlas.
+`showOptionModal` (options modal) and `showModal` (custom modal) are the two tools
+for this; any command can use them.
 
-## Comandos del chat con IA
+## AI chat commands
 
-Viven en `features/chat/commands/`, cada uno en su carpeta, y se registran con
-`registerChatCommands()` (que se llama al abrir el editor).
+They live in `features/chat/commands/`, each in its own folder, and are registered
+with `registerChatCommands()` (called when the editor opens).
 
-Hoy:
+Today:
 
-| Comando | Qué hace |
+| Command | What it does |
 | --- | --- |
-| `/variants [<valor>\|auto]` | Sin argumento abre el **selector de variantes** del modelo activo (modal de opciones). Con argumento aplica directo. Las opciones salen del catálogo (models.dev). |
+| `/variants [<value>\|auto]` | With no argument, opens the active model's **variant picker** (options modal). With an argument, applies it directly. The options come from the catalogue (models.dev). |
 
-El chat ejecuta los comandos sin mandarlos al modelo: el texto `/…` se
-intercepta en el panel. Si el comando pide `ui`, no se agrega nada al chat.
-Mientras escribes `/`, el input autocompleta con los comandos registrados.
-
+The chat runs commands without sending them to the model: the `/…` text is
+intercepted in the panel. If the command asks for `ui`, nothing is added to the
+chat. While you type `/`, the input autocompletes with the registered commands.

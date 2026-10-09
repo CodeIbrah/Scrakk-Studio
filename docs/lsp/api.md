@@ -1,167 +1,166 @@
 ---
-title: "API del LSP — superficie completa para frontend/editor/agente"
+title: "The LSP API — full surface for frontend/editor/agent"
 group: lsp
 order: 20
-summary: "Tres niveles: window.api.lsp (crudo, preload) · @services/lsp (renderer, tipado y conveniente) · tool lsp del agente. Todo corre sobre el runtime del proceso main."
+summary: "Three levels: window.api.lsp (raw, preload) · @services/lsp (renderer, typed and convenient) · the agent's lsp tool. Everything runs on the main-process runtime."
 ---
-# API del LSP — superficie completa para frontend/editor/agente
+# The LSP API — full surface for frontend/editor/agent
 
-La API del LSP está en **tres niveles**, según quién la use:
+The LSP API is in **three levels**, depending on who uses it:
 
-- `window.api.lsp` — crudo, en el preload.
-- `@services/lsp` — tipado y cómodo, para el renderer (editor, paneles).
-- tool `lsp` — para el agente.
+- `window.api.lsp` — raw, in the preload.
+- `@services/lsp` — typed and convenient, for the renderer (editor, panels).
+- the `lsp` tool — for the agent.
 
-Todo corre sobre el runtime del proceso main.
+Everything runs on the main-process runtime.
 
-## Workspace y multi-root
+## Workspace and multi-root
 
-Abrir la raíz del workspace y sumar/quitar roots adicionales:
+Open the workspace root and add/remove extra roots:
 
 ```ts
 import {
-  setLspWorkspace,        // (rootPath) → servers del root
-  lspAddWorkspaceRoot,    // multi-root real
+  setLspWorkspace,        // (rootPath) → the root's servers
+  lspAddWorkspaceRoot,    // real multi-root
   lspRemoveWorkspaceRoot,
   lspListWorkspaceRoots
 } from '@services/lsp'
 ```
 
-`initLspWorkspaceSync()` (llamado desde `main.tsx`) sincroniza automáticamente
-con la raíz que abre el Explorer (evento `workspace-changed`).
+`initLspWorkspaceSync()` (called from `main.tsx`) automatically syncs with the
+root the Explorer opens (`workspace-changed` event).
 
-## Sync de archivos
+## File sync
 
-Avisarle a los servers que un archivo cambió o se cerró:
+Tell the servers that a file changed or was closed:
 
 ```ts
 lspNotifyFileChanged(path, content)  // didOpen | didChange | didSave
-lspNotifyFileClosed(path)            // didClose en todos los servers
+lspNotifyFileClosed(path)            // didClose on all servers
 ```
 
-El cliente decide solo: si negoció sync incremental manda el diff mínimo;
-si no, texto completo. `content` es SIEMPRE el contenido completo nuevo —
-el diff lo calcula el runtime.
+The client decides on its own: if it negotiated incremental sync it sends the
+minimal diff; if not, full text. `content` is ALWAYS the full new content — the
+diff is computed by the runtime.
 
-**Un `content` idéntico al último sincronizado NO manda `didChange`** (sí el
-`didSave`). No es una optimización: en LSP un cambio **sin `range`** significa
-"reemplazá todo el documento por este texto", así que un cambio vacío BORRA el
-documento en el server. Pasaba al guardar (el sync re-manda el mismo contenido),
-y el server publicaba 0 diagnósticos: el subrayado y el chip se vaciaban con el
-archivo todavía roto. Cubierto por `tests/lsp/incremental.test.ts`.
+**A `content` identical to the last synced one does NOT send `didChange`** (it does
+send `didSave`). It is not an optimization: in LSP a change **without `range`**
+means "replace the whole document with this text", so an empty change DELETES the
+document on the server. It used to happen on save (the sync re-sent the same
+content), and the server published 0 diagnostics: the underline and the chip were
+cleared with the file still broken. Covered by `tests/lsp/incremental.test.ts`.
 
-### El ritmo del sync (renderer)
+### The sync rhythm (renderer)
 
-El editor llama a `lspNotifyFileChanged` por **cada** revisión del buffer
-(`services/lsp/fileSync.ts`), con una ventana de **40 ms con leading edge**: la
-primera edición de una ráfaga sale YA y lo que se agrupa es el resto. No es un
-debounce clásico, que esperaría a que dejes de tipear. Medido con
-`tools/_probe-lsp-realtime.mjs` (tipeo real sobre la app compilada).
+The editor calls `lspNotifyFileChanged` on **every** buffer revision
+(`services/lsp/fileSync.ts`), with a **40 ms leading-edge window**: the first edit
+of a burst goes out RIGHT AWAY and the rest is grouped. It is not a classic
+debounce, which would wait for you to stop typing. Measured with
+`tools/_probe-lsp-realtime.mjs` (real typing on the compiled app).
 
-Después de eso **el cliente LSP no espera a nadie**: pregunta por pull
-(`textDocument/diagnostic`, ver `architecture.md`) con un cap de 180 ms por
-documento. En los servers de CSS/HTML/JSON eso es la diferencia entre su push
-(`validationDelayMs = 500` fijo, que además se reinicia con cada cambio) y
-`validate(document)` sin espera. Medido en la app compilada con
-`tools/_probe-lsp-order.mjs`: **+185 ms** de la última tecla al diagnóstico
-(antes +636 ms con push), **+41 ms** para limpiarlo al deshacer, y errores en
-streaming mientras tipeás en vez de uno solo al final.
+After that, **the LSP client waits for nobody**: it asks via pull
+(`textDocument/diagnostic`, see `architecture.md`) with a 180 ms cap per document.
+On the CSS/HTML/JSON servers that is the difference between their push
+(`validationDelayMs = 500` fixed, which also restarts on every change) and
+`validate(document)` with no wait. Measured on the compiled app with
+`tools/_probe-lsp-order.mjs`: **+185 ms** from the last keystroke to the diagnostic
+(before +636 ms with push), **+41 ms** to clear it on undo, and errors in streaming
+while you type instead of a single one at the end.
 
-## Diagnósticos
+## Diagnostics
 
-Leer los diagnósticos que publicaron los servers (y esperar a los pendientes):
+Read the diagnostics the servers published (and wait for the pending ones):
 
 ```ts
-// Espera a TODOS los servers pendientes (default 500 ms) y agrega.
+// Waits for ALL pending servers (default 500 ms) and merges.
 const files = await lspDrainDiagnostics(timeoutMs?)
 // → FileDiagnostics[] { path, diagnostics: LspDiagnostic[] }
 
-// Lee diagnósticos actuales abriendo los archivos si hace falta.
-const entries = await lspReadDiagnostics(['/ruta/a.ts'])
+// Reads current diagnostics, opening the files if needed.
+const entries = await lspReadDiagnostics(['/path/a.ts'])
 ```
 
-### Cache reactiva (store, MULTI-FUENTE)
+### Reactive cache (store, MULTI-SOURCE)
 
-Los problemas de un archivo llegan por dos canales: el LSP
-(`publishDiagnostics`) y el Extension Host (una extensión que publica en su
-`DiagnosticCollection`). El store guarda **una entrada por fuente** y la
-lectura agrega, así que un linter de extensión y `tsc` no se pisan.
+A file's problems arrive through two channels: the LSP (`publishDiagnostics`) and
+the Extension Host (an extension publishing into its `DiagnosticCollection`). The
+store keeps **one entry per source** and the read merges, so an extension linter
+and `tsc` do not overwrite each other.
 
 ```ts
 import { getStoredDiagnostics, getProblems, getAllStoredDiagnostics,
          countProblems, subscribeToDiagnostics } from '@services/lsp'
 
-getProblems('/ruta/a.ts')      // solo ERROR/WARNING (contexto de code actions)
-getAllStoredDiagnostics()      // todo, con `sources` (quién lo publicó)
-countProblems()               // { errors, warnings, infos, total } — el chip
-subscribeToDiagnostics(fn)     // stream en vivo (los dos canales)
+getProblems('/path/a.ts')      // only ERROR/WARNING (code action context)
+getAllStoredDiagnostics()      // everything, with `sources` (who published it)
+countProblems()               // { errors, warnings, infos, total } — the chip
+subscribeToDiagnostics(fn)     // live stream (both channels)
 ```
 
-La UI que lo consume es el panel **Problemas** (layout, `problems`; lo abre el
-chip de la barra de estado con los conteos por severidad). Se puede abrir en
-cualquier slot:
+The UI consuming it is the **Problems** panel (layout, `problems`; opened by the
+status-bar chip with the counts per severity). It can be opened in any slot:
 
 ```ts
 toggleSlotPanel('bottom', 'problems')
 ```
 
-Lo que NO se ve solo en el panel: los mismos problemas se subrayan **dentro
-del texto** (canal de decoraciones del motor, ver `docs/editor/decorations.md`).
-Ondulado rojo = error, ámbar = advertencia, punteado = pista; el color sale del
-tema y al pasar el puntero por encima aparece el mensaje.
+What is NOT only seen in the panel: the same problems are underlined **inside the
+text** (the engine's decoration channel, see `docs/editor/decorations.md`). Red
+wavy = error, amber = warning, dotted = hint; the color comes from the theme and
+hovering shows the message.
 
-### Bloque `<lsp-diagnostics>`
+### The `<lsp-diagnostics>` block
 
-Lo que el agente recibe después de editar (sync + drain + formateo):
+What the agent receives after editing (sync + drain + formatting):
 
 ```ts
 import { lspAfterEdit } from '@services/lsp/format'
 
-// Gancho post-edición: sync + drain(500ms) + formateo CLI.
-// Ya está cableado en write_file / replace_in_file / append_file.
+// Post-edit hook: sync + drain(500ms) + CLI formatting.
+// Already wired into write_file / replace_in_file / append_file.
 const block = await lspAfterEdit(path, content) // string | null
 ```
 
-Formato (idéntico al CLI): `<lsp-diagnostics>\nruta:\n  error[L12]: msg\n</lsp-diagnostics>`
-con escape de tags de cierre dentro de mensajes.
+Format (identical to the CLI): `<lsp-diagnostics>\npath:\n  error[L12]: msg\n</lsp-diagnostics>`
+with escaping of closing tags inside messages.
 
-## Requests genéricos
+## Generic requests
 
-Pedir cualquier método LSP a mano (el resto de la API son atajos de esto):
+Ask for any LSP method by hand (the rest of the API are shortcuts over this):
 
 ```ts
 const res = await lspRequest(method, params, {
-  filePath?,     // enruta a los servers del archivo (abre si hace falta)
-  broadcast?,    // todos los corriendo
-  serverName?,   // UN server exacto (completionItem/resolve)
+  filePath?,     // routes to the file's servers (opens if needed)
+  broadcast?,    // all running ones
+  serverName?,   // ONE exact server (completionItem/resolve)
   timeoutMs?     // default 30s
 })
 // res.results: [{ serverName, result?, error? }]
 ```
 
-## Operaciones tipadas (posiciones 0-based, como el CLI)
+## Typed operations (0-based positions, like the CLI)
 
-Atajos para las operaciones típicas del editor:
+Shortcuts for the editor's typical operations:
 
-| Función | Método LSP |
+| Function | LSP method |
 |---|---|
 | `lspGoToDefinition/Implementation/TypeDefinition/Declaration` | textDocument/… |
-| `lspFindReferences` | textDocument/references (incluye declaración) |
-| `lspHover` | textDocument/hover → contents por server |
+| `lspFindReferences` | textDocument/references (includes declaration) |
+| `lspHover` | textDocument/hover → contents per server |
 | `lspDocumentHighlight` | textDocument/documentHighlight |
-| `lspDocumentSymbol` | flat + nested aplanados |
+| `lspDocumentSymbol` | flat + flattened nested |
 | `lspWorkspaceSymbol(query)` | broadcast |
-| `lspCompletion(filePath,l,c)` → ítems **taggeados** con serverName |
-| `lspCompletionResolve(filePath, tagged)` | completionItem/resolve dirigido |
-| `lspSignatureHelp` | primer signature activo |
-| `lspCodeAction(...)` | con diagnostics reales del store como contexto |
-| `lspRename(...)` + `flattenWorkspaceEdit(edit)` | ediciones `file:l:c-l:c => newText` |
-| `lspFormatting / lspRangeFormatting` | TextEdits por server |
-| `lspPrepareCallHierarchy / IncomingCallHierarchy / OutgoingCallHierarchy` | jerarquía de llamadas |
+| `lspCompletion(filePath,l,c)` → items **tagged** with serverName |
+| `lspCompletionResolve(filePath, tagged)` | targeted completionItem/resolve |
+| `lspSignatureHelp` | first active signature |
+| `lspCodeAction(...)` | with real diagnostics from the store as context |
+| `lspRename(...)` + `flattenWorkspaceEdit(edit)` | edits `file:l:c-l:c => newText` |
+| `lspFormatting / lspRangeFormatting` | TextEdits per server |
+| `lspPrepareCallHierarchy / IncomingCallHierarchy / OutgoingCallHierarchy` | call hierarchy |
 
-## Semantic tokens e inlay hints
+## Semantic tokens and inlay hints
 
-Datos extra con los que el editor pinta (color por token, hints):
+Extra data the editor paints with (per-token color, hints):
 
 ```ts
 lspSemanticTokensFull(filePath)             // { data: number[], resultId? } | null
@@ -170,46 +169,46 @@ lspInlayHints(filePath, startLine, endLine)
 lspInlayHintResolve(hint)
 ```
 
-**Elección de resaltado** (storage system, sin UI):
+**Highlight source choice** (storage system, no UI):
 
 ```ts
 import { getPersistedHighlightSource, persistHighlightSource } from '@services/storage'
 persistHighlightSource('lsp')        // 'treesitter' (default) | 'lsp'
 ```
 
-Innerta debe leer esta preferencia para decidir entre sus gramáticas
-Tree-sitter o pintar semantic tokens del server.
+Innerta must read this preference to decide between its Tree-sitter grammars or
+painting the server's semantic tokens.
 
-## Progreso $/progress
+## Progress $/progress
 
-El progreso que reporta un server:
+The progress a server reports:
 
 ```ts
 onLspProgress(({ serverName, token, phase, title, message, percentage }) => {})
 // phase: 'begin' → 'report'* → 'end'
 ```
 
-## Estado y eventos
+## Status and events
 
-Estado del runtime y eventos a los que suscribirse:
+Runtime status and events to subscribe to:
 
 ```ts
 lspStatus()  // [{ id: 'name@root', name, root, state, available, source, extensions }]
 onLspServerEvent(cb)   // starting | ready | crashed | retrying | failed | stopped
-onLspDiagnostics(cb)   // publishDiagnostics en vivo
+onLspDiagnostics(cb)   // publishDiagnostics in real time
 ```
 
-## Tool `lsp` del agente
+## The agent's `lsp` tool
 
-Una sola tool con enum `operation` (19 operaciones, posiciones 0-based):
+A single tool with an `operation` enum (19 operations, 0-based positions):
 goToDefinition, goToImplementation, findReferences, hover, goToTypeDefinition,
 goToDeclaration, documentHighlight, documentSymbol, workspaceSymbol,
 completion, codeAction, rename, signatureHelp, documentFormatting,
 documentRangeFormatting, callHierarchyIncoming, callHierarchyOutgoing,
 prepareCallHierarchy, diagnostics.
 
-- Locations → `path:line:col`; symbols → `name @ path:línea`.
-- rename/codeAction devuelven las ediciones para aplicarlas con
-  replace_in_file (no escriben solas).
-- Las tools de escritura inyectan `<lsp-diagnostics>` tras editar — el agente
-  ve sus errores sin pedirlos.
+- Locations → `path:line:col`; symbols → `name @ path:line`.
+- rename/codeAction return the edits so they can be applied with replace_in_file
+  (they do not write on their own).
+- The write tools inject `<lsp-diagnostics>` after editing — the agent sees its
+  errors without asking for them.

@@ -1,35 +1,35 @@
 ---
-title: "Configuración de servers — `.scrakk/lsp.json`"
+title: "Server configuration — `.scrakk/lsp.json`"
 group: lsp
 order: 40
-summary: "El sistema carga la MISMA configuración que scrakk-cli: dos capas JSON que se fusionan por nombre de server (el proyecto gana sobre el usuario)."
+summary: "The system loads the SAME config as scrakk-cli: two JSON layers merged by server name (the project wins over the user)."
 ---
-# Configuración de servers — `.scrakk/lsp.json`
+# Server configuration — `.scrakk/lsp.json`
 
-El sistema carga la MISMA configuración que scrakk-cli: dos capas JSON que se
-fusionan por nombre de server (el proyecto gana sobre el usuario).
+The system loads the SAME config as scrakk-cli: two JSON layers merged by server
+name (the project wins over the user).
 
-## Capas y prioridad
+## Layers and priority
 
-Quién gana cuando hay varias capas configuradas:
+Who wins when several layers are configured:
 
-| Prioridad | Capa | Ruta |
+| Priority | Layer | Path |
 |---|---|---|
-| 1 (más alta) | Proyecto | `<root>/.scrakk/lsp.json` |
-| 2 | Usuario | `~/.scrakk/lsp.json` |
-| 3 | Dinámicos | extensiones SEF con `contributes.lspServers` |
-| 4 (más baja) | Builtins | catálogo detectado automáticamente |
+| 1 (highest) | Project | `<root>/.scrakk/lsp.json` |
+| 2 | User | `~/.scrakk/lsp.json` |
+| 3 | Dynamic | SEF extensions with `contributes.lspServers` |
+| 4 (lowest) | Builtins | the automatically detected catalogue |
 
-Reglas:
-- Cada capa solo **llena huecos**; usuario y proyecto se pisan entre sí por
-  nombre, y **gana el proyecto**.
-- Una entrada inválida se descarta con warning; jamás tumba el boot
-  (tolerancia idéntica al CLI).
-- El home de usuario es `~/.scrakk` — overrideable con `SCRAKK_HOME` (tests).
+Rules:
+- Each layer only **fills gaps**; user and project override each other by name, and
+  **the project wins**.
+- An invalid entry is dropped with a warning; it never crashes the boot (identical
+  tolerance to the CLI).
+- The user home is `~/.scrakk` — overridable with `SCRAKK_HOME` (tests).
 
-## Formato de un server
+## A server's format
 
-Un server se ve así:
+A server looks like this:
 
 ```jsonc
 // <root>/.scrakk/lsp.json
@@ -45,7 +45,7 @@ Un server se ve así:
     },
     "initializationOptions": {},
     "settings": {},                     // → workspace/didChangeConfiguration
-    "workspaceFolder": "/ruta/alternativa",  // opcional: root propio del server
+    "workspaceFolder": "/alternative/path",  // optional: the server's own root
     "startupTimeout": 15000,
     "shutdownTimeout": 5000,
     "restartOnCrash": true,
@@ -54,46 +54,46 @@ Un server se ve así:
 }
 ```
 
-Aliases aceptados (compatibilidad con el CLI): `extensionToLanguage` /
-`extensionToLanguageId`, camelCase en todos los timeouts/flags.
+Accepted aliases (CLI compatibility): `extensionToLanguage` /
+`extensionToLanguageId`, camelCase for all the timeouts/flags.
 
-Normalizaciones:
-- Las extensiones pueden venir sin punto (`ts` → `.ts`) y en cualquier caso.
-- Sin `extensions` el server queda registrado pero nunca routeará archivos
-  (warning en consola).
+Normalizations:
+- Extensions may come without a dot (`ts` → `.ts`) and in any case.
+- Without `extensions` the server is registered but will never route files
+  (warning in the console).
 
-## Defaults (idénticos al CLI)
+## Defaults (identical to the CLI)
 
-Los valores por defecto si no los cambiás:
+The default values if you do not change them:
 
-| Parámetro | Default |
+| Parameter | Default |
 |---|---|
 | startupTimeout | 15 000 ms |
 | shutdownTimeout | 5 000 ms |
 | request timeout | 30 000 ms |
 | drain diagnostics | 500 ms |
 | maxRestarts | 3 |
-| backoff restart | 1 s → 30 s exponencial |
-| idle shutdown | 5 min sin documentos abiertos (`SCRAKK_LSP_IDLE_MS`) |
+| backoff restart | 1 s → 30 s exponential |
+| idle shutdown | 5 min with no open documents (`SCRAKK_LSP_IDLE_MS`) |
 
-## Transporte socket
+## Socket transport
 
-Con `"transport": "socket"` el campo `command` es `"host:port"` y el cliente
-conecta por TCP en vez de spawnear. Útil para servers ya corriendo fuera.
+With `"transport": "socket"` the `command` field is `"host:port"` and the client
+connects over TCP instead of spawning. Useful for servers already running outside.
 
-## Ejemplo multi-server
+## Multi-server example
 
-Dos servers atendiendo los mismos archivos:
+Two servers serving the same files:
 
 ```jsonc
 {
-  // Lenguaje + linter atienden los mismos archivos (respuestas agregadas).
+  // Language + linter serve the same files (aggregated responses).
   "typescript": { "command": "typescript-language-server", "args": ["--stdio"],
                   "extensions": { ".ts": "typescript", ".tsx": "typescriptreact" } },
   "eslint":     { "command": "vscode-eslint-language-server", "args": ["--stdio"],
                   "extensions": { ".ts": "typescript" } },
 
-  // Server remoto ya levantado.
+  // A remote server already up.
   "remote-py":  { "command": "127.0.0.1:2087", "transport": "socket",
                   "extensions": { ".py": "python" } }
 }

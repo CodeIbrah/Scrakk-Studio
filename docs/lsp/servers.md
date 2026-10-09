@@ -1,65 +1,66 @@
 ---
-title: "Servidores builtin, detección y auto-instalación"
+title: "Builtin servers, detection and auto-install"
 group: lsp
 order: 80
-summary: "Cómo Scrakk detecta, elige y (si hace falta) instala el language server de cada lenguaje, sin configuración."
+summary: "How Scrakk detects, chooses and (when needed) installs the language server for each language, with no configuration."
 ---
-# Servidores builtin, detección y auto-instalación
+# Builtin servers, detection and auto-install
 
-Scrakk trae un catálogo de servers (unos 26 lenguajes) y los elige solo; si
-falta el binario, lo instala.
+Scrakk ships a catalogue of servers (~26 languages) and picks them on its own; if
+the binary is missing, it installs it.
 
-## Detección
+## Detection
 
-Al cargar un root se descubren los builtins que cumplen TODO:
+When a root loads, the builtins that satisfy ALL of these are discovered:
 
-1. El binario existe en **PATH**, o en `<root>/node_modules/.bin/`.
-2. Si el server es `gatedBy` (linters): el `package.json` del proyecto declara
-   esa dependencia.
-3. Ningún server de capas superiores (user/project/dinámicos) usa su nombre —
-   los builtins solo llenan huecos.
+1. The binary exists in **PATH**, or in `<root>/node_modules/.bin/`.
+2. If the server is `gatedBy` (linters): the project's `package.json` declares that
+   dependency.
+3. No server from a higher layer (user/project/dynamic) uses its name — builtins
+   only fill gaps.
 
-Los servers builtin declaran `rootMarkers`: para routear un archivo, debe
-existir un marker caminando desde el archivo hacia arriba hasta el root
-(`nearest_root`, mismo algoritmo del CLI/opencode). Así `rust-analyzer` no
-arranca para un `.rs` suelto fuera de un proyecto Cargo.
+Builtin servers declare `rootMarkers`: to route a file, a marker must exist when
+walking from the file upward to the root (`nearest_root`, the same algorithm as
+the CLI/opencode). So `rust-analyzer` does not start for a loose `.rs` outside a
+Cargo project.
 
-## Catálogo (~26 lenguajes)
+## Catalogue (~26 languages)
 
 typescript/js/jsx · eslint (gated) · biome (gated) · python/pyright ·
 rust/rust-analyzer · go/gopls · c/cpp/clangd · java/jdtls · kotlin · ruby ·
 bash · lua · css/scss · html · json · yaml · markdown/marksman · zig ·
 elixir · dart · prisma · terraform · dockerfile · cmake · vue · svelte.
 
-Cada uno define `extensions` (ext → languageId LSP) y la mayoría `rootMarkers`.
+Each one defines `extensions` (ext → LSP languageId) and most define
+`rootMarkers`.
 
-## Auto-instalación
+## Auto-install
 
-Si un server no está instalado pero su definición tiene **receta**
-(`install`), el manager lo instala on-demand con timeout de 300 s:
+If a server is not installed but its definition has a **recipe** (`install`), the
+manager installs it on demand with a 300 s timeout:
 
-| Receta | Ejecuta | Binario resultante |
+| Recipe | Runs | Resulting binary |
 |---|---|---|
 | `npm` | `npm i -g --prefix ~/.scrakk/lsp/npm <pkg>` | `~/.scrakk/lsp/npm/bin/<cmd>` |
 | `go` | `GOBIN=~/.scrakk/lsp/bin go install <pkg>` | `~/.scrakk/lsp/bin/<cmd>` |
-| `gem` / `dotnet` | gestor del sistema | PATH del sistema |
-| `github` | descarga el asset del latest release y extrae (zip vía fflate, tar nativo) + chmod +x | `~/.scrakk/lsp/bin/<cmd>` |
-| `custom` | argv arbitrario | según el script |
+| `gem` / `dotnet` | the system manager | the system PATH |
+| `github` | downloads the latest release asset and extracts it (zip via fflate, native tar) + chmod +x | `~/.scrakk/lsp/bin/<cmd>` |
+| `custom` | arbitrary argv | depends on the script |
 
-Condiciones de seguridad:
+Safety conditions:
 
-- **Gate por extensiones**: antes de instalar se escanea el workspace
-  (presupuesto 8000 entradas, saltando node_modules/.git/dist/…) buscando
-  archivos de las extensiones del server. Si no hay ninguno, no se instala.
-- **Opt-out global**: env `SCRAKK_DISABLE_LSP_DOWNLOAD=1` desactiva toda
-  descarga.
-- Tras instalar, el `command` del config se reescrita a la ruta gestionada.
+- **Extension gate**: before installing, the workspace is scanned (budget of 8000
+  entries, skipping node_modules/.git/dist/…) looking for files with the server's
+  extensions. If there are none, it does not install.
+- **Global opt-out**: the env `SCRAKK_DISABLE_LSP_DOWNLOAD=1` disables all
+  downloads.
+- After installing, the config's `command` is rewritten to the managed path.
 
-## Recetas actuales
+## Current recipes
 
-Recetas de instalación ya incluidas:
+Install recipes already included:
 
-| Server | Receta |
+| Server | Recipe |
 |---|---|
 | typescript | npm `typescript-language-server typescript` |
 | python | npm `pyright` |
@@ -69,13 +70,13 @@ Recetas de instalación ya incluidas:
 | go | go `golang.org/x/tools/gopls@latest` |
 | markdown | GitHub release marksman (linux-x64) |
 
-## Agregar un server propio
+## Add your own server
 
-Tres caminos, sin tocar código:
+Three paths, without touching code:
 
-1. **`.scrakk/lsp.json`** (usuario o proyecto) — ver
+1. **`.scrakk/lsp.json`** (user or project) — see
    [configuration.md](configuration.md).
-2. **Extensión SEF** con `contributes.lspServers` — ver
-   [extensions.md](extensions.md) (soporta receta de instalación y markers).
-3. **PR al catálogo** (`src/main/lsp/builtinServers.ts`) si es útil para
-   todos: `{ id, command, extensions, rootMarkers?, gatedBy?, install? }`.
+2. **SEF extension** with `contributes.lspServers` — see
+   [extensions.md](extensions.md) (supports an install recipe and markers).
+3. **PR to the catalogue** (`src/main/lsp/builtinServers.ts`) if it is useful for
+   everyone: `{ id, command, extensions, rootMarkers?, gatedBy?, install? }`.

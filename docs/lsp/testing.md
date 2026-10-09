@@ -1,62 +1,61 @@
 ---
-title: "Tests del sistema LSP"
+title: "LSP system tests"
 group: lsp
 order: 90
-summary: "Cómo correr la suite del LSP: qué cubre cada test y cómo usar el mock server."
+summary: "How to run the LSP suite: what each test covers and how to use the mock server."
 ---
-# Tests del sistema LSP
+# LSP system tests
 
-Todo corre con **Vitest**: un archivo por área, más un mock server para no
-depender de binarios externos.
+Everything runs with **Vitest**: one file per area, plus a mock server so it does
+not depend on external binaries.
 
 ```bash
-npm test          # toda la suite
-npx vitest run tests/lsp/manager.test.ts   # un archivo
+npm test          # the whole suite
+npx vitest run tests/lsp/manager.test.ts   # one file
 ```
 
 ## Suites
 
-Qué cubre cada archivo:
+What each file covers:
 
-| Archivo | Cubre |
+| File | Covers |
 |---|---|
-| `config.test.ts` | parse de lsp.json (aliases, normalización de extensiones), fusión usuario→proyecto, descarte de inválidos, defaults de timeouts |
-| `routing.test.ts` | nearest_root (markers arriba/abajo/fuera), resolve_servers multi-server con orden alfabético y gating por markers |
-| `scrakkFolder.test.ts` | capas `.scrakk`: rutas, lectura tolerante, escritura, merge proyecto>usuario |
-| `client.test.ts` | E2E stdio: handshake → ready, didOpen → publishDiagnostics, versiones, definition request, shutdown ordenado (el hijo muere) |
-| `client-socket.test.ts` | E2E transport TCP: mock LSP sobre net.Server real |
-| `incremental.test.ts` | computeIncrementalChange (puro) + E2E: server incremental recibe range edits; full-sync sigue recibiendo texto completo |
-| `protocol.test.ts` | completionItem/resolve dirigido por serverName; $/progress begin/report/end con token único; semanticTokens passthrough |
-| `manager.test.ts` | integración: config de proyecto + builtins sin pisar, arranque lazy, drain agregando DOS servers, deadline, requests enrutados/broadcast/dirigidos, readDiagnostics bajo demanda, status con source |
-| `multiroot.test.ts` | dos roots con servers distintos (enruta solo al dueño), root anidado más profundo, servers dinámicos: registro/remoción y merge por id |
-| `manager-restart.test.ts` | kill SIGKILL real del hijo → crashed → retrying → NUEVO pid → replay verificado; y sin restartOnCrash queda caído |
-| `install.test.ts` | argv de recetas npm/go/gem/dotnet/custom, opt-out env, dirs gestionados, scan de extensiones con skip de node_modules |
-| `format.test.ts` | bloque `<lsp-diagnostics>` exacto (labels 1-based, escape de tags) |
+| `config.test.ts` | lsp.json parsing (aliases, extension normalization), user→project merge, dropping invalid entries, timeout defaults |
+| `routing.test.ts` | nearest_root (markers above/below/outside), resolve_servers multi-server with alphabetical order and marker gating |
+| `scrakkFolder.test.ts` | `.scrakk` layers: paths, tolerant read, write, project>user merge |
+| `client.test.ts` | stdio E2E: handshake → ready, didOpen → publishDiagnostics, versions, definition request, ordered shutdown (the child dies) |
+| `client-socket.test.ts` | TCP transport E2E: a mock LSP over a real net.Server |
+| `incremental.test.ts` | computeIncrementalChange (pure) + E2E: an incremental server receives range edits; full-sync keeps receiving full text |
+| `protocol.test.ts` | completionItem/resolve targeted by serverName; $/progress begin/report/end with a unique token; semanticTokens passthrough |
+| `manager.test.ts` | integration: project config + builtins without overriding, lazy start, drain merging TWO servers, deadline, routed/broadcast/targeted requests, readDiagnostics on demand, status with source |
+| `multiroot.test.ts` | two roots with different servers (routes only to the owner), deeper nested root, dynamic servers: register/remove and merge by id |
+| `manager-restart.test.ts` | real SIGKILL of the child → crashed → retrying → NEW pid → verified replay; and without restartOnCrash it stays down |
+| `install.test.ts` | argv for npm/go/gem/dotnet/custom recipes, env opt-out, managed dirs, extension scan with node_modules skipped |
+| `format.test.ts` | the exact `<lsp-diagnostics>` block (1-based labels, tag escaping) |
 
 ## Mock language server
 
-`tests/helpers/mock-lsp-server.mjs` — proceso Node que habla JSON-RPC/LSP
-real por stdio (framing Content-Length). Configurable por env:
+`tests/helpers/mock-lsp-server.mjs` — a Node process that speaks real JSON-RPC/LSP
+over stdio (Content-Length framing). Configurable through env:
 
-| Env | Efecto |
+| Env | Effect |
 |---|---|
-| `MOCK_INCREMENTAL=1` | negocia `textDocumentSync { change: 2 }` |
-| `MOCK_SEMANTIC=1` | capability semanticTokensProvider + data de respuesta |
-| `MOCK_DIAG_MESSAGE` / `MOCK_DIAG_LINE` | diagnóstico publicado en open/change/save |
-| `MOCK_TARGET` | destino del location en textDocument/definition |
+| `MOCK_INCREMENTAL=1` | negotiates `textDocumentSync { change: 2 }` |
+| `MOCK_SEMANTIC=1` | semanticTokensProvider capability + response data |
+| `MOCK_DIAG_MESSAGE` / `MOCK_DIAG_LINE` | diagnostic published on open/change/save |
+| `MOCK_TARGET` | the location target in textDocument/definition |
 
-Requests custom para aserciones: `mock/state` → `{ changes, version,
-incremental }` (lo último enviado en didChange).
+Custom requests for assertions: `mock/state` → `{ changes, version, incremental }`
+(the last thing sent in didChange).
 
-Métodos soportados: initialize, initialized, shutdown/exit, didOpen/
-didChange/didSave (publica diagnósticos), definition (con ciclo completo de
-$/progress alrededor), hover, completion + completionItem/resolve,
-semanticTokens/full.
+Supported methods: initialize, initialized, shutdown/exit, didOpen/didChange/didSave
+(publishes diagnostics), definition (with a full $/progress cycle around it),
+hover, completion + completionItem/resolve, semanticTokens/full.
 
-## Convenciones
+## Conventions
 
-- Cada test usa tmpdirs propios (`makeTempDir`) + `SCRAKK_HOME` overrideado —
-  nunca toca el home real.
-- `waitFor(fn)` hace polling con deadline (los publishes son async).
-- Los tests de manager escriben configs vía el propio sistema de capas
-  (`writeJsonLayer(projectConfigPath(...))`) — dogfooding total.
+- Each test uses its own tmpdirs (`makeTempDir`) + an overridden `SCRAKK_HOME` —
+  it never touches the real home.
+- `waitFor(fn)` polls with a deadline (publishes are async).
+- Manager tests write configs through the layering system itself
+  (`writeJsonLayer(projectConfigPath(...))`) — full dogfooding.

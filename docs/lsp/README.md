@@ -1,89 +1,89 @@
 ---
-title: "Sistema LSP — Scrakk Studio"
+title: "LSP system — Scrakk Studio"
 group: lsp
 order: 10
-summary: "Cliente LSP completo en el proceso main: autocompletado, diagnósticos, multi-root y multi-server para el editor y el agente."
+summary: "A full LSP client in the main process: completion, diagnostics, multi-root and multi-server for the editor and the agent."
 ---
-# Sistema LSP — Scrakk Studio
+# LSP system — Scrakk Studio
 
-El **LSP** (Language Server Protocol) es lo que le da "inteligencia de código"
-al editor: autocompletado, ir a la definición, diagnósticos, formateo… Scrakk
-incluye un **cliente LSP completo** que corre en el proceso main de Electron
-(contrato shared → runtime main → puente preload → API renderer).
+**LSP** (Language Server Protocol) is what gives the editor "code intelligence":
+completion, go-to-definition, diagnostics, formatting… Scrakk includes a **full
+LSP client** that runs in Electron's main process (shared contract → main runtime
+→ preload bridge → renderer API).
 
-## Qué soporta
+## What it supports
 
-- **Multi-root real**: N carpetas de workspace, cada archivo se atiende con la
-  config del root más profundo que lo contiene. Instancias `name@root`.
-- **Multi-server routing**: un `.ts` puede ser atendido por el TS server Y un
-  linter a la vez; las respuestas se agregan.
-- **Sync incremental**: si el server negocia `change=2`, cada edición envía
-  solo el diff (un range edit); fallback automático a full-text.
-- **Diagnósticos push** (`publishDiagnostics`) con drain semántico: tras una
-  edición se espera a que TODOS los servers pendientes reporten.
-- **Restart-on-crash** con backoff exponencial, presupuesto de vida y replay
-  real de documentos desde disco.
-- **Auto-instalación** de servers por recetas npm/go/gem/dotnet/GitHub/custom.
-- **Config en capas**: `~/.scrakk/lsp.json` + `<root>/.scrakk/lsp.json`
-  (mismo formato que ya detecta el CLI) + servers dinámicos desde
-  extensiones SEF + catálogo builtin con auto-detección.
-- **Extensiones de VS Code con su propio server**: la lib real
-  `vscode-languageclient` corre en el Extension Host, y sus proveedores
-  (hover, definición, referencias, formateo…) llegan al editor por
-  `provider/query` — el mismo canal `lsp:request` que los servers del sistema
-  (ver [vscode-languageclient.md](vscode-languageclient.md)).
-- **Diagnósticos en la UI**: los del LSP y los de las extensiones comparten
-  store (una entrada por fuente) y se listan en el panel **Problemas**, con el
-  chip de conteos en la barra de estado.
-- **Diagnósticos SUBRAYADOS en el editor**: el mismo store alimenta el
-  subrayado (ondulado/punteado según severidad, color del tema) y el mensaje al
-  pasar el puntero por encima; `editor.setDecorations` de una extensión entra
-  por el mismo canal (ver [../editor/decorations.md](../editor/decorations.md)).
-- **Servers apagados por el usuario**: Ajustes → Servidores los apaga de
-  verdad (no arrancan, y se apaga el que estaba corriendo).
-- **Protocolo moderno**: `$ /progress`, `completionItem/resolve` dirigido,
-  semantic tokens e inlay hints (capabilities declaradas).
+- **Real multi-root**: N workspace folders, each file served with the config of
+  the deepest root containing it. Instances `name@root`.
+- **Multi-server routing**: a `.ts` can be served by the TS server AND a linter at
+  the same time; the answers are merged.
+- **Incremental sync**: if the server negotiates `change=2`, every edit sends only
+  the diff (a range edit); automatic fallback to full text.
+- **Push diagnostics** (`publishDiagnostics`) with a semantic drain: after an edit
+  it waits for EVERY pending server to report.
+- **Restart-on-crash** with exponential backoff, a lifetime budget and a real
+  replay of documents from disk.
+- **Auto-install** of servers via npm/go/gem/dotnet/GitHub/custom recipes.
+- **Layered config**: `~/.scrakk/lsp.json` + `<root>/.scrakk/lsp.json` (the same
+  format the CLI detects) + dynamic servers from SEF extensions + a builtin
+  catalogue with auto-detection.
+- **VS Code extensions with their own server**: the real `vscode-languageclient`
+  library runs in the Extension Host, and its providers (hover, definition,
+  references, formatting…) reach the editor through `provider/query` — the same
+  `lsp:request` channel as the system servers (see
+  [vscode-languageclient.md](vscode-languageclient.md)).
+- **Diagnostics in the UI**: the LSP's and the extensions' share a store (one
+  entry per source) and are listed in the **Problems** panel, with a counts chip
+  in the status bar.
+- **Diagnostics UNDERLINED in the editor**: the same store feeds the underline
+  (wavy/dotted by severity, theme color) and the message on hover;
+  `editor.setDecorations` from an extension enters the same channel (see
+  [../editor/decorations.md](../editor/decorations.md)).
+- **Servers turned off by the user**: Settings → Servers really turns them off
+  (they do not start, and a running one is stopped).
+- **Modern protocol**: `$/progress`, targeted `completionItem/resolve`, semantic
+  tokens and inlay hints (declared capabilities).
 
-## Índice
+## Index
 
-| Doc | Contenido |
+| Doc | Content |
 |---|---|
-| [architecture.md](architecture.md) | Capas, flujo de datos, ciclo de vida, multi-root |
-| [configuration.md](configuration.md) | `.scrakk/lsp.json`: formato, capas y prioridades |
-| [servers.md](servers.md) | Catálogo builtin, detección, auto-instalación |
-| [api.md](api.md) | La API completa para frontend/editor/tools del agente |
-| [protocol.md](protocol.md) | Detalles del protocolo soportado y sus límites |
-| [extensions.md](extensions.md) | Tipo de contribución `lspServers` en SEF (y apagado/encendido desde Ajustes) |
-| [providers.md](providers.md) | Proveedores de lenguaje de las extensiones: cómo llegan al editor |
-| [vscode-languageclient.md](vscode-languageclient.md) | Un VSIX con su `LanguageClient`: la lib REAL corriendo en el Extension Host |
-| [../editor/decorations.md](../editor/decorations.md) | Cómo se subrayan los diagnósticos (y las decoraciones) en el editor |
-| [testing.md](testing.md) | Suite de tests, mock server, cómo correr todo |
+| [architecture.md](architecture.md) | Layers, data flow, lifecycle, multi-root |
+| [configuration.md](configuration.md) | `.scrakk/lsp.json`: format, layers and priorities |
+| [servers.md](servers.md) | Builtin catalogue, detection, auto-install |
+| [api.md](api.md) | The full API for frontend/editor/agent tools |
+| [protocol.md](protocol.md) | Details of the supported protocol and its limits |
+| [extensions.md](extensions.md) | The `lspServers` contribution kind in SEF (and on/off from Settings) |
+| [providers.md](providers.md) | Extensions' language providers: how they reach the editor |
+| [vscode-languageclient.md](vscode-languageclient.md) | A VSIX with its `LanguageClient`: the REAL lib running in the Extension Host |
+| [../editor/decorations.md](../editor/decorations.md) | How diagnostics (and decorations) are underlined in the editor |
+| [testing.md](testing.md) | Test suite, mock server, how to run everything |
 
-## En una línea
+## In one line
 
-El editor o el agente tocan un archivo → el manager resuelve qué servers lo
-atienden (por extensión + root markers, en su root dueño), los arranca lazy,
-sincroniza el buffer y expone diagnósticos/requests; toda la superficie está
-disponible vía `window.api.lsp` (preload) y `@services/lsp` (renderer).
+The editor or the agent touches a file → the manager resolves which servers serve
+it (by extension + root markers, in their owning root), starts them lazily,
+synchronizes the buffer and exposes diagnostics/requests; the whole surface is
+available through `window.api.lsp` (preload) and `@services/lsp` (renderer).
 
-## Dónde vive el código
+## Where the code lives
 
-El mapa de archivos:
+The file map:
 
 ```
-src/shared/lsp.ts                  # contrato IPC + tipos + parser compartido
-src/main/lsp/                      # runtime (proceso main)
-├── client.ts                      # conexión con UN server (stdio/socket)
+src/shared/lsp.ts                  # IPC contract + types + shared parser
+src/main/lsp/                      # runtime (main process)
+├── client.ts                      # connection to ONE server (stdio/socket)
 ├── manager.ts                     # multi-root, routing, drain, restart
-├── config.ts                      # carga de .scrakk/lsp.json en capas
+├── config.ts                      # layered .scrakk/lsp.json loading
 ├── routing.ts                     # nearest_root + resolve_servers
-├── builtinServers.ts              # catálogo + detección
-├── install.ts                     # recetas de auto-instalación
-└── index.ts                       # handlers IPC
-src/main/scrakkFolder.ts           # sistema de carpetas .scrakk (compartido)
+├── builtinServers.ts              # catalogue + detection
+├── install.ts                     # auto-install recipes
+└── index.ts                       # IPC handlers
+src/main/scrakkFolder.ts           # .scrakk folder system (shared)
 src/preload/index.ts               # window.api.lsp
-src/renderer/src/services/lsp/     # API pública del renderer
-├── api.ts                         # ops tipadas + requests genéricos
-├── diagnosticsStore.ts            # cache reactiva multi-server
-└── format.ts                      # bloque <lsp-diagnostics>
+src/renderer/src/services/lsp/     # renderer public API
+├── api.ts                         # typed ops + generic requests
+├── diagnosticsStore.ts            # reactive multi-server cache
+└── format.ts                      # <lsp-diagnostics> block
 ```

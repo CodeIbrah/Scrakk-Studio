@@ -1,246 +1,245 @@
 ---
-title: "Decoraciones del editor — subrayado por rango"
+title: "Editor decorations — range underlines"
 group: editor
 order: 10
-summary: "El subrayado (errores, TODO, imports sin usar) lo dibuja el canvas del motor dentro del texto, no un overlay DOM. Una API central reparte las decoraciones a cada editor."
+summary: "The underline (errors, TODO, unused imports) is drawn by the engine canvas inside the text, not a DOM overlay. One central API distributes the decorations to each editor."
 ---
-# Decoraciones del editor — subrayado por rango
+# Editor decorations — range underlines
 
-Cuando ves una palabra subrayada en rojo (o el aviso de un `TODO`), eso lo pinta
-el editor. Este doc explica cómo llega ese subrayado al canvas del motor.
+When you see a word underlined in red (or a `TODO` notice), the editor paints it.
+This doc explains how that underline reaches the engine's canvas.
 
-El subrayado (la ondulación de un error, el trazo de un `TODO`, el aviso de un
-import sin usar) se dibuja **dentro del plano del texto**, por el canvas del
-motor. No es un overlay DOM: un overlay necesita `lineToY/colToX` —la geometría
-que Innerta **no** expone— y además se desincroniza con el scroll y no mide
-tabs ni anchos dobles.
+The underline (the wavy line of an error, the stroke of a `TODO`, the notice of an
+unused import) is drawn **inside the text plane**, by the engine's canvas. It is
+not a DOM overlay: an overlay needs `lineToY/colToX` —the geometry Innerta does
+**not** expose— and it also desyncs with scrolling and does not measure tabs or
+wide glyphs.
 
 ```
-LSP (diagnósticos)      ┐
-extensiones (vscode)    ├─→ @services/decorations ─→ cada engine vivo → SetInnertaUnderlines
-búsqueda, git, SEF      ┘        (por archivo, por fuente)
+LSP (diagnostics)       ┐
+extensions (vscode)     ├─→ @services/decorations ─→ each live engine → SetInnertaUnderlines
+search, git, SEF        ┘        (per file, per source)
 ```
 
-## 1. El canal del motor
+## 1. The engine channel
 
-El motor expone tres funciones por el puente: el IDE le manda los rangos a
-subrayar y puede preguntar cuántos tiene.
+The engine exposes three functions over the bridge: the IDE sends it the ranges to
+underline and can ask how many it has.
 
 ```c
-void SetInnertaUnderlines(const int* data, int count);   // sextupletes
+void SetInnertaUnderlines(const int* data, int count);   // sextuplets
 void ClearInnertaUnderlines();
-int  GetInnertaUnderlineCount();                          // diagnóstico
+int  GetInnertaUnderlineCount();                          // diagnostic
 ```
 
-`count` es el total de **ints** (6 por rango), al estilo de bookmarks, tokens y
-plegado: el array se arma con `malloc` + `HEAP32` en el loader (un array de JS se
-coerciona a número → `0` = `NULL`, y la copia saldría de la dirección 0).
+`count` is the total number of **ints** (6 per range), in the style of bookmarks,
+tokens and folding: the array is built with `malloc` + `HEAP32` in the loader (a JS
+array is coerced to a number → `0` = `NULL`, and the copy would come from address
+0).
 
-Cada rango:
+Each range:
 
 ```
 (startLine, startCol, endLine, endCol, rgba, style)
 ```
 
-| Campo | Qué es |
+| Field | What it is |
 | --- | --- |
-| líneas / columnas | 0-based, la misma convención que el resto del puente |
-| `rgba` | `0xRRGGBBAA` (el orden que lee `ColorFromRGBA`) |
-| `style` | `0` ondulada · `1` recta · `2` punteada · `3` doble |
+| lines / columns | 0-based, the same convention as the rest of the bridge |
+| `rgba` | `0xRRGGBBAA` (the order read by `ColorFromRGBA`) |
+| `style` | `0` wavy · `1` straight · `2` dotted · `3` double |
 
-**La ondulada usa la geometría de VS Code, medida de su SVG, no una inventada.**
-Allá el squiggle es un tile de **6×3 px repetido en X**
-(`getSquigglySVGData`, `viewBox='0 0 6 3'`, `repeat-x bottom left`): una **sierra
-de 3 px de alto, 6 px de periodo y tramos a 45°**. El motor dibuja lo mismo,
-**1 px más abajo** que la raya recta: el glifo se centra en la celda con
-`lineHeight = ascender + descender + 2`, así que las 2 últimas filas están libres
-y una sierra de 3 px no entra sin comerse el descendente de g/j/p/q/y. VS Code
-tiene la misma restricción (su línea por defecto es 1.5 em) y también apoya la
-sierra en el borde inferior.
+**The wavy one uses VS Code's geometry, measured from its SVG, not invented.**
+There the squiggle is a **6×3 px tile repeated in X** (`getSquigglySVGData`,
+`viewBox='0 0 6 3'`, `repeat-x bottom left`): a **3 px tall sawtooth, 6 px period
+and 45° segments**. The engine draws the same, **1 px lower** than the straight
+line: the glyph is centered in the cell with `lineHeight = ascender + descender +
+2`, so the last 2 rows are free and a 3 px sawtooth does not fit without eating the
+descenders of g/j/p/q/y. VS Code has the same constraint (its default line is
+1.5 em) and also rests the sawtooth on the bottom edge.
 
-Sobre el suavizado, sin mentir: el SVG de VS Code lo rasteriza el navegador con
-antialias; aquí `DrawLine` emite un **quad sólido** y `SetAntialiasMode` sólo
-guarda un flag (no hay AA en el backend GL), así que a 45° el trazo sale
-escalonado. A 1 px de grosor la diferencia es un píxel de borde, no de forma.
+About antialiasing, without lying: VS Code's SVG is rasterized by the browser with
+antialias; here `DrawLine` emits a **solid quad** and `SetAntialiasMode` only
+stores a flag (there is no AA in the GL backend), so at 45° the stroke comes out
+stair-stepped. At 1 px thickness the difference is an edge pixel, not one of shape.
 
-> La primera versión usaba **0.75 px de alto y 4 px de periodo** y *no se veía
-> ondulada*: con un trazo de 1 px, los vértices caían dentro del mismo par de
-> filas y el resultado se leía como una **raya recta**. La amplitud tiene que
-> superar el alto del trazo para que la onda exista **en píxeles**, y por eso
-> VS Code usa 3 px.
+> The first version used **0.75 px height and 4 px period** and *did not look
+> wavy*: with a 1 px stroke, the vertices fell within the same pair of rows and the
+> result read as a **straight line**. The amplitude has to exceed the stroke height
+> for the wave to exist **in pixels**, and that is why VS Code uses 3 px.
 
-Detalles que importan:
+Details that matter:
 
-- **Un rango puede cruzar líneas.** El motor lo recorta a la parte visible de
-  cada línea, así el host no tiene que saber dónde termina cada línea del buffer.
-- **El tramo lo mide el layout del motor** (`HitTestTextRange`), la misma fuente
-  que el caret y el resaltado de la palabra bajo el cursor: el subrayado queda
-  alineado con el caret **por construcción**. Ojo con el detalle real: el modelo
-  de texto del motor es monoespaciado (`x = columna × charWidth`), así que en un
-  tab o un glyph ancho los dos se desvían igual — el punto es que no se
-desvíen *distinto*.
-- **Un array vacío es la orden de limpiar** (`count = 0`). Es lo que el puente
-  manda al abrir otro archivo y al cerrar la tab; omitir la llamada dejaría los
-  subrayados del archivo anterior.
-- **Un rango de ancho CERO (`start == end`) se ensancha a UN carácter.** No es
-  un caso raro: el server de CSS reporta `} expected` con `3:0 → 3:0` y
-  `semi-colon expected` igual. El motor dibuja de columna a columna, así que 0
-  de ancho son 0 píxeles; el ancho mínimo lo pone `packDecorations` (el modelo
-  del motor es monoespaciado: un carácter = un avance). Sin esto el problema
-  existía en el store y en el panel, y en el editor **no se pintaba nada**.
-- `GetInnertaUnderlineCount` existe porque `setUnderlines` es `void`: sin el
-  getter, el puente sólo puede afirmar "mandé los rangos", no "el motor los
-  tiene" (el mismo criterio que `GetInnertaFoldingCount`).
+- **A range can cross lines.** The engine clips it to the visible part of each
+  line, so the host does not need to know where each buffer line ends.
+- **The span is measured by the engine's layout** (`HitTestTextRange`), the same
+  source as the caret and the highlight of the word under the cursor: the underline
+  stays aligned with the caret **by construction**. Watch the real detail: the
+  engine's text model is monospaced (`x = column × charWidth`), so on a tab or a
+  wide glyph the two deviate equally — the point is that they do not deviate
+  *differently*.
+- **An empty array is the clear order** (`count = 0`). It is what the bridge sends
+  when opening another file and when closing the tab; skipping the call would leave
+  the previous file's underlines.
+- **A ZERO-width range (`start == end`) is widened to ONE character.** It is not a
+  rare case: the CSS server reports `} expected` with `3:0 → 3:0` and
+  `semi-colon expected` the same. The engine draws column to column, so 0 width is
+  0 pixels; the minimum width is set by `packDecorations` (the engine's model is
+  monospaced: one character = one advance). Without this the problem existed in
+  the store and in the panel, and in the editor **nothing was painted**.
+- `GetInnertaUnderlineCount` exists because `setUnderlines` is `void`: without the
+  getter, the bridge can only assert "I sent the ranges", not "the engine has them"
+  (the same criterion as `GetInnertaFoldingCount`).
 
-> Antes esto era un **stub vacío** (`SetInnertaUnderlines(const wchar_t*) {}` con
-> su `g_underlines` declarado y nunca leído): el host podía mandar subrayados
-> para siempre sin que se pintara un pixel, y no había forma de distinguirlo de
-> "no los pide".
+> This used to be an **empty stub** (`SetInnertaUnderlines(const wchar_t*) {}` with
+> its `g_underlines` declared and never read): the host could send underlines
+> forever without a pixel being painted, and there was no way to tell it apart from
+> "it does not ask for them".
 
-## 2. El store (`@services/decorations`)
+## 2. The store (`@services/decorations`)
 
-Un rango se registra **por fuente** y **por archivo**:
+A range is registered **per source** and **per file**:
 
 ```ts
 setDecorations('diagnostics:lsp:tsserver', '/w/a.ts', [
   { startLine: 4, startCol: 8, endLine: 4, endCol: 12, color: 0xf14c4cff, style: 'wavy',
-    message: 'no se puede asignar a un tipo `string`' }
+    message: 'cannot assign to a `string` type' }
 ])
 ```
 
-La lectura AGRUPA todas las fuentes (`getDecorations(path)`), y `path` filtra
-por archivo porque cada módulo WASM es **una** vista: los errores de `a.ts` no
-pueden aparecer sobre `b.ts`.
+Reading AGGREGATES all the sources (`getDecorations(path)`), and `path` filters by
+file because each WASM module is **one** view: `a.ts`'s errors cannot appear over
+`b.ts`.
 
-| Función | Para qué |
+| Function | What for |
 | --- | --- |
-| `setDecorations(sourceId, path, list)` | reemplaza lo de esa fuente en ese archivo (`[]` borra) |
-| `clearDecorations(sourceId, path?)` | baja una fuente (archivo o entera) |
-| `getDecorations(path)` | lo que se empuja al motor |
-| `getDecorationsAt(path, line, col)` | lo que hay debajo del puntero (hover; un rango vacío cuenta como su carácter) |
-| `packDecorations(list)` | los sextupletes (formato del motor) |
-| `themeColor(cssVar, fallback)` | var del tema → `0xRRGGBBAA` |
+| `setDecorations(sourceId, path, list)` | replaces that source's in that file (`[]` clears) |
+| `clearDecorations(sourceId, path?)` | drops a source (file or whole) |
+| `getDecorations(path)` | what is pushed to the engine |
+| `getDecorationsAt(path, line, col)` | what is under the cursor (hover; an empty range counts as its character) |
+| `packDecorations(list)` | the sextuplets (engine format) |
+| `themeColor(cssVar, fallback)` | theme var → `0xRRGGBBAA` |
 
-Por qué multi-fuente: con **una** lista por archivo, el último que escribe pisa al
-otro. `tsc` publica y borra el subrayado del linter, y viceversa — el mismo bug
-que ya tuvo el panel de Problemas.
+Why multi-source: with **one** list per file, the last writer overwrites the other.
+`tsc` publishes and clears the linter's underline, and vice versa — the same bug
+the Problems panel already had.
 
-**Velocidad de cambio**: dos listas iguales no emiten. Los servers repiten
-`publishDiagnostics` en cada tecla y hay N engines vivos (uno por tab): sin el
-corte, cada repetición recorrería todos los módulos para redibujar lo mismo.
+**Change speed**: two equal lists do not emit. Servers repeat
+`publishDiagnostics` on every keystroke and there are N live engines (one per tab):
+without the cut, each repetition would walk every module to redraw the same.
 
-## 3. Diagnósticos (LSP + extensiones)
+## 3. Diagnostics (LSP + extensions)
 
-`services/lsp/decorations.ts` es un **adaptador**, no un store: la verdad sigue
-en `diagnosticsStore`. Una fuente de diagnósticos = una fuente de decoraciones:
+`services/lsp/decorations.ts` is an **adapter**, not a store: the truth stays in
+`diagnosticsStore`. One diagnostics source = one decorations source:
 
 ```
-diagnostics:lsp:<server>          → color/label por severidad
-diagnostics:extension:<pub.name>  → idem
+diagnostics:lsp:<server>          → color/label per severity
+diagnostics:extension:<pub.name>  → same
 ```
 
-| Severidad | Estilo | Color (var del tema) |
+| Severity | Style | Color (theme var) |
 | --- | --- | --- |
-| Error | ondulada | `--color-danger` |
-| Advertencia | ondulada | `--color-warning` |
-| Información | ondulada | `--color-info` |
-| Sugerencia | **punteada** | `--color-text-muted` |
+| Error | wavy | `--color-danger` |
+| Warning | wavy | `--color-warning` |
+| Information | wavy | `--color-info` |
+| Hint | **dotted** | `--color-text-muted` |
 
-El color se lee del tema **al pintar** y se re-aplica cuando el tema cambia: un
-tema que redefine su rojo de error se ve tanto en el panel como en el editor.
+The color is read from the theme **when painting** and re-applied when the theme
+changes: a theme that redefines its error red shows it both in the panel and in the
+editor.
 
-`initDiagnosticsDecorations()` (llamado en `main.tsx`) arranca el canal y
-reconcilia con un **diff**: borrar todo y volver a poner haría parpadear el
-subrayado de todos los archivos abiertos en cada keystroke.
+`initDiagnosticsDecorations()` (called in `main.tsx`) starts the channel and
+reconciles with a **diff**: clearing everything and putting it back would make the
+underline of every open file flicker on every keystroke.
 
-**Hover**: pasar el puntero por encima del subrayado muestra el mensaje del
-problema, arriba del hover del lenguaje (`diagnosticsAt` + `diagnosticHoverText`).
+**Hover**: hovering over the underline shows the problem message, above the
+language hover (`diagnosticsAt` + `diagnosticHoverText`).
 
-## 4. Extensiones de VS Code (`editor.setDecorations`)
+## 4. VS Code extensions (`editor.setDecorations`)
 
-Una extensión puede subrayar rangos con el API de VS Code; el host lo traduce:
+An extension can underline ranges with the VS Code API; the host translates it:
 
 ```ts
 const type = vscode.window.createTextEditorDecorationType({
   textEditorDecorationType: 'underline wavy red'
 })
-vscode.window.activeTextEditor.setDecorations(type, ranges) // Range[] o DecorationOptions[]
+vscode.window.activeTextEditor.setDecorations(type, ranges) // Range[] or DecorationOptions[]
 ```
 
-Camino completo: el host **parsea** la cadena «CSS» (estilo + color), guarda los
-rangos por archivo y empuja el estado al IDE (`decorations/set` → renderer →
-store con fuente `extension:<id>`). El parseo vive en el host porque es Node puro
-y se testea sin levantar el IDE — el renderer recibe datos, no una cadena.
+Full path: the host **parses** the "CSS" string (style + color), stores the ranges
+per file and pushes the state to the IDE (`decorations/set` → renderer → store with
+source `extension:<id>`). The parsing lives in the host because it is pure Node and
+is tested without booting the IDE — the renderer receives data, not a string.
 
-Formas aceptadas: `textEditorDecorationType` (nueva), `textDecoration` + `color`
-(clásica), `hoverMessage` por rango (`{range, hoverMessage}`), y los nombres de
-color (`red`, `orange`, …) además de `#rgb`, `#rrggbb`, `#rrggbbaa`, `rgb()`,
-`rgba()`.
+Accepted forms: `textEditorDecorationType` (new), `textDecoration` + `color`
+(classic), `hoverMessage` per range (`{range, hoverMessage}`), and the color names
+(`red`, `orange`, …) besides `#rgb`, `#rrggbb`, `#rrggbbaa`, `rgb()`, `rgba()`.
 
-Una lista vacía borra las del tipo y `type.dispose()` también: es lo que usa la
-extensión para limpiar. Al apagarse la extensión (`deactivate` o muerte del
-host) sus subrayados se van con ella.
+An empty list clears the type's and `type.dispose()` too: it is what the extension
+uses to clean up. When the extension is turned off (`deactivate` or host death) its
+underlines go with it.
 
-## 5. Límites (dichos, no disimulados)
+## 5. Limits (stated, not disguised)
 
-Lo que todavía no se puede, sin disimulo:
+What is still not possible, without disguise:
 
-| Qué | Estado |
+| What | Status |
 | --- | --- |
-| Subrayado (4 estilos) + color | ✅ |
-| Rango multilínea | ✅ (lo parte el motor) |
-| Mensaje del problema al apuntar | ✅ |
-| Color de **texto** de una decoración (`color:`) | ❌ el motor sólo pinta el trazo |
+| Underline (4 styles) + color | ✅ |
+| Multi-line range | ✅ (the engine splits it) |
+| Problem message on hover | ✅ |
+| **Text** color of a decoration (`color:`) | ❌ the engine only paints the stroke |
 | `border`, `overviewRulerColor` (`after`/`before`) | ❌ |
-| Decoración por `renderOptions` de cada rango | 🟡 usa el color del **tipo**, no el del rango |
-| Ruler de scroll con los problemas | ❌ (es otro slot) |
-| Ancho de gutter por severidad | ❌ (es `S5` del plan de `innerta-bridge.md`) |
+| Decoration per-range `renderOptions` | 🟡 uses the **type's** color, not the range's |
+| Scroll ruler with the problems | ❌ (it is another slot) |
+| Gutter width per severity | ❌ (it is `S5` of the `innerta-bridge.md` plan) |
 
-Nada de esto se finge: lo que no se pinta no se pinta, y la tabla de
-compatibilidad (`src/shared/compatibility/surface/`) dice el nivel real de cada
-API.
+None of this is faked: what is not painted is not painted, and the compatibility
+table (`src/shared/compatibility/surface/`) states the real level of each API.
 
-## 6. Cómo se verifica (píxeles, no promesas)
+## 6. How it is verified (pixels, not promises)
 
-Los tests cubren el payload, el store y el empaquetado (`tests/decorations-store.test.ts`,
-`tests/editor-decorations.test.ts`, `tests/lsp-diagnostic-decorations.test.ts`,
-`tests/extension-host.test.ts`). Lo único que no se puede probar sin el motor es
-lo que el usuario ve, así que hay un probe que lo **mide en píxeles**:
+The tests cover the payload, the store and the packing
+(`tests/decorations-store.test.ts`, `tests/editor-decorations.test.ts`,
+`tests/lsp-diagnostic-decorations.test.ts`, `tests/extension-host.test.ts`). The
+only thing that cannot be tested without the engine is what the user sees, so there
+is a probe that **measures it in pixels**:
 
 ```bash
-node tools/_make-decorations-vsix.mjs      # extensión real que subraya
-node tools/_probe-decorations.mjs          # app compilada + screenshot
-node tools/_probe-lsp-underline.mjs        # LSP real + FORMA del trazo
+node tools/_make-decorations-vsix.mjs      # a real extension that underlines
+node tools/_probe-decorations.mjs          # compiled app + screenshot
+node tools/_probe-lsp-underline.mjs        # real LSP + stroke SHAPE
 ```
 
-El probe de decoraciones instala esa extensión, abre un archivo, corre su comando
-y cuenta píxeles naranjas (decoración de extensión) y rojos (diagnóstico de
-error) dentro del canvas del editor, contra la línea base y después de limpiar:
+The decorations probe installs that extension, opens a file, runs its command and
+counts orange pixels (extension decoration) and red pixels (error diagnostic)
+inside the editor canvas, against the baseline and after clearing:
 
 ```
-naranja=1337 (base 479) · rojo=828 (base 679)  ← subrayado dibujado
-naranja=479 rojo=679                           ← al limpiar, vuelve EXACTO a la base
+orange=1337 (base 479) · red=828 (base 679)  ← underline drawn
+orange=479 red=679                           ← on clearing, it returns EXACTLY to base
 ```
 
-**Contar píxeles no alcanza: hay que medir la FORMA.** Una raya recta y una
-ondulación pintan las dos, así que `_probe-lsp-underline.mjs` exporta el trazo
-como ASCII (fila superior por columna + bbox) y falla si el trazo se queda en una
-sola fila. Así se ve una sierra de verdad (rangos de 24 y 16 px):
+**Counting pixels is not enough: the SHAPE must be measured.** A straight line and
+a wave both paint, so `_probe-lsp-underline.mjs` exports the stroke as ASCII (top
+row per column + bbox) and fails if the stroke stays on a single row. This is how a
+real sawtooth looks (24 and 16 px ranges):
 
 ```
 ...#....##....#.....#.....##....##....##....##.....#..
 .##....####....##..###....###..####.........##........
 ##..####..####..####..####..####..####..####..####..##
 #....##....##....##....##....##....##....##....##....#
-   fila superior por columna: 151,150,150,149,151,151,151,150,149,…  ← periodo 6
+   top row per column: 151,150,150,149,151,151,151,150,149,…  ← period 6
 ```
 
-Es la forma que se busca: baja hasta la base cada 6 px y vuelve a subir, 3 px de
-alto. Una raya recta daría **una sola fila** y `SUBEN=0 BAJAN=0`.
+It is the shape being sought: it goes down to the baseline every 6 px and back up,
+3 px tall. A straight line would give **a single row** and `UP=0 DOWN=0`.
 
-## 7. Cómo agrega alguien una fuente nueva
+## 7. How someone adds a new source
 
-Una fuente nueva es solo un id + sus rangos:
+A new source is just an id + its ranges:
 
 ```ts
 import { setDecorations } from '@services/decorations'
@@ -252,5 +251,6 @@ setDecorations('search', path, matches.map((m) => ({
 })))
 ```
 
-Sin tocar el motor, sin tocar el host, sin canal nuevo. Basta dar de alta la
-fuente (`search`) y limpiarla cuando el usuario cierre la búsqueda.
+Without touching the engine, without touching the host, without a new channel. It
+is enough to register the source (`search`) and clear it when the user closes the
+search.

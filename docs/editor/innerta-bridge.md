@@ -1,94 +1,94 @@
 ---
-title: "Innerta como superficie, Scrakk como dueño de la UI"
+title: "Innerta as a surface, Scrakk as the owner of the UI"
 group: editor
 order: 20
-summary: "Plan de la familia de extensiones que tocan el editor: agregan cosas al gutter, hovers, menús, decoraciones y UI en caliente y sin recompilar Innerta. Este doc es diseño, no implementación."
+summary: "Plan for the family of extensions that touch the editor: they add things to the gutter, hovers, menus, decorations and UI live and without recompiling Innerta. This doc is design, not implementation."
 ---
-# Innerta como superficie, Scrakk como dueño de la UI
+# Innerta as a surface, Scrakk as the owner of the UI
 
-El editor (**Innerta**) es un motor C++ compilado a WASM. Este doc explica cómo
-Scrakk le agrega cosas —gutter, hovers, menús, decoraciones— **en caliente y sin
-recompilar el motor**. Es **diseño, no implementación**.
+The editor (**Innerta**) is a C++ engine compiled to WASM. This doc explains how
+Scrakk adds things to it —gutter, hovers, menus, decorations— **live and without
+recompiling the engine**. It is **design, not implementation**.
 
-> El otro track del mismo puente — **lenguajes, color y gramáticas**, con sus 4
-> fuentes y la carga dinámica de tree-sitter — está en [languages.md](languages.md).
+> The other track of the same bridge — **languages, color and grammars**, with its
+> 4 sources and dynamic tree-sitter loading — is in [languages.md](languages.md).
 
-Todo lo que dice "hoy" está medido sobre los dos repos.
+Everything that says "today" is measured across both repos.
 
 ```
 ~/Documentos/Proyectos/InnertaEngine/InnertaEngine-Linux   (C++ → WASM, emscripten)
 ~/Documentos/Proyectos/BorealChat                          (Scrakk: renderer + host)
 ```
 
-## 1. La tesis
+## 1. The thesis
 
-El error de diseño a evitar: implementar cada feature nueva **dentro** de
-Innerta (una función C por feature, un rebuild de WASM por feature). Eso es lo
-que pasa hoy con el gutter: para mostrar un marker de Git hay que tocar C++.
+The design mistake to avoid: implementing each new feature **inside** Innerta (a C
+function per feature, a WASM rebuild per feature). That is what happens today with
+the gutter: to show a Git marker you have to touch C++.
 
-La arquitectura correcta:
+The correct architecture:
 
-> **Innerta es una superficie de render** (texto, input, geometría, primitivas).
-> **Scrakk es dueño de la UI y de los datos**, y la monta por encima con React.
+> **Innerta is a render surface** (text, input, geometry, primitives).
+> **Scrakk owns the UI and the data**, and mounts it on top with React.
 
-Con eso, agregar cosas al gutter, un hover o un panel sobre el editor deja de
-ser una feature de motor y pasa a ser **una extensión instalada**.
+With that, adding things to the gutter, a hover or a panel over the editor stops
+being a feature of the engine and becomes **an installed extension**.
 
-### Los dos carriles (y por qué hacen falta los dos)
+### The two tracks (and why both are needed)
 
-| Carril | Quién aporta | Quién pinta | Ejemplo |
+| Track | Who provides | Who paints | Example |
 | --- | --- | --- | --- |
-| **UI** (SEF declarativo) | la extensión trae **componentes React** en su bundle | Scrakk, en un slot del editor | una lane de blame, un hover propio, un panel flotante |
-| **Datos** (API `vscode`) | la extensión provee **datos** desde el host (`registerHoverProvider`, diagnósticos…) | Scrakk, con su UI nativa | Cline, un linter, un formatter |
+| **UI** (declarative SEF) | the extension brings **React components** in its bundle | Scrakk, in an editor slot | a blame lane, its own hover, a floating panel |
+| **Data** (`vscode` API) | the extension provides **data** from the host (`registerHoverProvider`, diagnostics…) | Scrakk, with its native UI | Cline, a linter, a formatter |
 
-VS Code solo tiene el carril de datos (una extensión nunca aporta UI de editor).
-SEF puede tener los dos, y el carril UI es el que da el "sin recompilar".
+VS Code only has the data track (an extension never provides editor UI). SEF can
+have both, and the UI track is the one that gives the "without recompiling".
 
-## 2. El puente HOY — inventario exacto
+## 2. The bridge TODAY — exact inventory
 
-### 2.1 Ida (Scrakk → engine): 45 métodos, 11 opcionales
+### 2.1 Outbound (Scrakk → engine): 45 methods, 11 optional
 
-`InnertaModule` (`features/editor/engines/innerta/InnertaEngine.ts`). Los
-opcionales (`?`) son el sondeo **ad-hoc** de "¿este WASM sabe X?" — existe
-porque el WASM es un binario y puede ser más viejo que el renderer.
+`InnertaModule` (`features/editor/engines/innerta/InnertaEngine.ts`). The optional
+ones (`?`) are the **ad-hoc** probe of "does this WASM know X?" — it exists because
+the WASM is a binary and may be older than the renderer.
 
-| Grupo | Métodos |
+| Group | Methods |
 | --- | --- |
-| Ciclo | `init` `shutdown` `frame` `setBounds` `setFocus` `resize` |
+| Lifecycle | `init` `shutdown` `frame` `setBounds` `setFocus` `resize` |
 | Buffer | `setContent` `openFile` `getText?` `getSelectedText?` `getRevision?` `setCleanRevision?` `getCursor?` `hitTest?` |
 | Input | `mouseMove` `mouseLeave` `mouseButton` `scroll` `key` `char` `setWasmClipboard?` |
-| Tema | `setTheme` `setBgColor` `setAccentColor` `setTextColor` `setBorderColor` `setTextMutedColor` `setIndentGuideColor` `setTokenColor` |
+| Theme | `setTheme` `setBgColor` `setAccentColor` `setTextColor` `setBorderColor` `setTextMutedColor` `setIndentGuideColor` `setTokenColor` |
 | Extras | `setLanguage?` `setMinimapVisible?` `setBookmarks?` `heapBytes?` `getCharWidth` `getLineHeight` |
-| Cursor/selección | `setCursor?` (ir a la línea: outline e ir a la definición) `setSelection?` (rango exacto: expandir selección) |
-| Estructura | `setFoldingRanges?` (tripletes `start, end, kind` desde `folds.scm`) · `getFoldingCount?` / `foldingIsHost?` / `foldingFromEngine?` (el motor dice cuántos rangos tiene, si no son indentación, y si los calculó él con el `folds.scm` del lenguaje embebido) |
-| Terminal (mismo WASM) | `setTerminalFont` `terminalMouseButton` `terminalMouseMove` `terminalReadOutput` `isAltScreen` `terminalHasSelection` `terminalGetSelectionText` `terminalClearSelection` `terminalGetCursorRow` `terminalGetCursorCol` |
+| Cursor/selection | `setCursor?` (go to line: outline and go to definition) `setSelection?` (exact range: expand selection) |
+| Structure | `setFoldingRanges?` (triplets `start, end, kind` from `folds.scm`) · `getFoldingCount?` / `foldingIsHost?` / `foldingFromEngine?` (the engine tells how many ranges it has, whether they are not indentation, and whether it computed them with the embedded language's `folds.scm`) |
+| Terminal (same WASM) | `setTerminalFont` `terminalMouseButton` `terminalMouseMove` `terminalReadOutput` `isAltScreen` `terminalHasSelection` `terminalGetSelectionText` `terminalClearSelection` `terminalGetCursorRow` `terminalGetCursorCol` |
 
-### 2.2 Vuelta (engine → Scrakk): UN canal de 4 ints
+### 2.2 Return (engine → Scrakk): ONE channel of 4 ints
 
 ```
-Module._innertaOnEvent(type, a, b, c)   // fire-and-forget, sin strings, sin respuesta
+Module._innertaOnEvent(type, a, b, c)   // fire-and-forget, no strings, no response
 ```
 
 `ContextMenu(1)` · `CursorChanged(2)` · `RevisionChanged(3)` · `BookmarkToggled(4)`.
 
-### 2.3 Lo que YA funciona (y por eso es el molde, no el problema)
+### 2.3 What ALREADY works (and is therefore the mold, not the problem)
 
-| Molde | Canal | Estado |
+| Mold | Channel | Status |
 | --- | --- | --- |
-| **Hover LSP** (dwell 350 ms + `hitTest` + `lspHover` → TooltipHost HTML) | puntero → JS | ✅ **UI de Scrakk dibujada sobre Innerta** |
-| **Menú contextual** (ítems de Scrakk, coords del engine) | evento `ContextMenu` | ✅ idem |
-| **Bookmarks** (ida + click en el gutter + vuelta) | `setBookmarks(int[])` + `BookmarkToggled` | ✅ el único marker con ciclo completo |
-| Theme como **JSON dentro** | `SetInnertaTheme(json)` | ✅ |
-| Semantic tokens como **array de ints dentro** | `SetInnertaSemanticTokens(int[], count)` | ✅ **en uso y pintando** (antes: declarado y sin consumir) |
-| Rectángulos fuera del canvas (huecos/dim) | `SetInnertaOverlayHoles` / `DimRegions` | ✅ |
+| **LSP hover** (dwell 350 ms + `hitTest` + `lspHover` → HTML TooltipHost) | pointer → JS | ✅ **Scrakk UI drawn over Innerta** |
+| **Context menu** (Scrakk items, engine coords) | `ContextMenu` event | ✅ same |
+| **Bookmarks** (outbound + gutter click + return) | `setBookmarks(int[])` + `BookmarkToggled` | ✅ the only marker with a full cycle |
+| Theme as **JSON inside** | `SetInnertaTheme(json)` | ✅ |
+| Semantic tokens as an **array of ints inside** | `SetInnertaSemanticTokens(int[], count)` | ✅ **in use and painting** (before: declared and unconsumed) |
+| Rectangles outside the canvas (holes/dim) | `SetInnertaOverlayHoles` / `DimRegions` | ✅ |
 
-> Los dos primeros ya son exactamente el patrón que este plan generaliza:
-> **la UI es de Scrakk y se posiciona sobre el canvas.** Hoy está hardcodeada
-> (hover y menú de 5 ítems). El plan la vuelve un sistema.
+> The first two are already exactly the pattern this plan generalizes: **the UI
+> belongs to Scrakk and is positioned over the canvas.** Today it is hardcoded
+> (hover and a 5-item menu). The plan turns it into a system.
 
-### 2.4 La view API (ya en producción, y es el molde estructural)
+### 2.4 The view API (already in production, and it is the structural mold)
 
-`services/innerta/viewFactory.ts` envuelve `InnertaCreateView` con
+`services/innerta/viewFactory.ts` wraps `InnertaCreateView` with
 `InnertaViewOpts`:
 
 ```c
@@ -96,141 +96,143 @@ mode (custom|editor|terminal|preview), lsp, syntax, folding, lineNumbers,
 readOnly, cursorStyle, cursorBlink
 ```
 
-La usa el panel de terminal. Y `InnertaViewSetReadOnlyRanges(ranges, count)` ya
-es **un payload por rangos empujado desde el host** — el precedente exacto de lo
-que el paint list necesita.
+The terminal panel uses it. And `InnertaViewSetReadOnlyRanges(ranges, count)` is
+already **a per-range payload pushed from the host** — the exact precedent of what
+the paint list needs.
 
-Además el doc de `viewFactory` ya dice: *"en WASM cada módulo es 1 vista, así
-que la vista ES la ventana del módulo"*.
+Also, the `viewFactory` doc already says: *"in WASM each module is 1 view, so the
+view IS the module's window"*.
 
-### 2.5 Lo que Innerta declara y NO implementa
+### 2.5 What Innerta declares and does NOT implement
 
 `src/Core/API/innerta_api.cpp`:
 
 ```cpp
-INNERTA_API void INNERTA_CALL SetInnertaDiffDecorations(const wchar_t* /*json*/) {}  // ← vacío
+INNERTA_API void INNERTA_CALL SetInnertaDiffDecorations(const wchar_t* /*json*/) {}  // ← empty
 ```
 
-`g_diff_states` se guarda/no se dibuja. Es el caso testigo de por qué el puente
-necesita un handshake de capabilities: una promesa sin implementación no se
-puede distinguir de "no la pide".
+`g_diff_states` is stored/is not drawn. It is the test case for why the bridge
+needs a capabilities handshake: a promise without an implementation cannot be told
+apart from "it does not ask for it".
 
-**Actualizado**: `SetInnertaUnderlines` **ya no es un stub**. Era
-`void SetInnertaUnderlines(const wchar_t*) {}` (con su `g_underlines` declarado y
-nunca leído) y ahora es el canal real de subrayados por rango —sextupletes
-`(startLine, startCol, endLine, endCol, rgba, style)`, dibujo ondulado/recto/
-punteado/doble y `GetInnertaUnderlineCount`—. Ver
-[decorations.md](decorations.md): es el canal que usan los diagnósticos (LSP y de
-extensión) y `editor.setDecorations`.
+**Updated**: `SetInnertaUnderlines` **is no longer a stub**. It was
+`void SetInnertaUnderlines(const wchar_t*) {}` (with its `g_underlines` declared and
+never read) and now it is the real per-range underline channel —sextuplets
+`(startLine, startCol, endLine, endCol, rgba, style)`, wavy/straight/dotted/double
+drawing and `GetInnertaUnderlineCount`—. See [decorations.md](decorations.md): it
+is the channel used by diagnostics (LSP and extension) and
+`editor.setDecorations`.
 
-### 2.6 El gutter hoy dibuja exactamente tres cosas
+### 2.6 The gutter today draws exactly three things
 
-`Graphics/Gutter/GutterRenderer.h` (geometría = única fuente de verdad para
-dibujo **y** hit-test):
+`Graphics/Gutter/GutterRenderer.h` (geometry = single source of truth for drawing
+**and** hit-test):
 
 ```
-[números] [icono bookmark 12px, a 12px del texto] [chevron de fold, a 6px] | texto
+[numbers] [bookmark icon 12px, 12px from text] [fold chevron, at 6px] | text
 ```
 
-Constantes: `kBookmarkIconSize 12`, `kBookmarkIconRight 12`, `kFoldChevronCenter 6`,
-`kGhostAlpha 0.30`. Todo lo demás del gutter (diff, severidad, blame) **no existe**.
+Constants: `kBookmarkIconSize 12`, `kBookmarkIconRight 12`, `kFoldChevronCenter 6`,
+`kGhostAlpha 0.30`. Everything else in the gutter (diff, severity, blame) **does
+not exist**.
 
-### 2.7 Gramáticas: 20 tree-sitter compiladas DENTRO del binario
+### 2.7 Grammars: 20 tree-sitter grammars compiled INSIDE the binary
 
 `emscripten/queries/`: bash, c, cpp, c_sharp, css, go, html, java, javascript,
 json, lua, markdown, markdown_inline, python, ruby, rust, toml, tsx, typescript,
 yaml.
 
-Y el mapeo de color ya existe y es **lossy**: `innertaTheme.ts` tiene
-`scopeToSlot()` — scope TextMate → **15 slots** de `SetInnertaTokenColor`
-(0 keyword, 1 string, 2 number, 3 comment, 4 function, 6 type, 7 operator,
-9 property, 10 class, 11 constant, 12 parameter, 13 tag, 14 attribute), por
-**substring matching**, con `resolveTokenSlots()` aplicando el tema en "gana el
-último".
+And the color mapping already exists and is **lossy**: `innertaTheme.ts` has
+`scopeToSlot()` — TextMate scope → **15 slots** of `SetInnertaTokenColor`
+(0 keyword, 1 string, 2 number, 3 comment, 4 function, 6 type, 7 operator, 9
+property, 10 class, 11 constant, 12 parameter, 13 tag, 14 attribute), by
+**substring matching**, with `resolveTokenSlots()` applying the theme on
+"last wins".
 
-O sea: hoy el editor **categoriza** el color; no lo resuelve por scope real. Eso
-es un techo duro para temas de TextMate, y se arregla en el mismo canal que las
-decoraciones (§5.3).
+In other words: today the editor **categorizes** the color; it does not resolve it
+by real scope. That is a hard ceiling for TextMate themes, and it is fixed in the
+same channel as the decorations (§5.3).
 
-**Actualización**: el host ya resuelve scopes de verdad y los manda por el canal
-de tokens (ver [languages.md](languages.md) §12): gramáticas TextMate de
-extensiones, tree-sitter dinámico (`.wasm` del paquete, en un `utilityProcess`
-aparte) y semantic tokens del LSP, fusionados por prioridad. El techo de 15 slots
-del motor sigue siendo real; lo que ya es real es que el SLOT lo elige el tema
-(`tokenColors` entra como regla del resolutor) y que se puede AUDITAR: el comando
-`editor.inspectTokens` muestra por archivo y por fuente el scope stack, el slot y
-el color de cada token.
+**Update**: the host already resolves scopes for real and sends them over the token
+channel (see [languages.md](languages.md) §12): TextMate grammars from extensions,
+dynamic tree-sitter (the package's `.wasm`, in a separate `utilityProcess`) and LSP
+semantic tokens, merged by priority. The engine's 15-slot ceiling is still real;
+what is already real is that the SLOT is chosen by the theme (`tokenColors` enters
+as a rule of the resolver) and that it can be AUDITED: the `editor.inspectTokens`
+command shows, per file and per source, the scope stack, the slot and the color of
+each token.
 
-**Y el molde de "el host sabe, el engine dibuja" ya no es sólo color.** Tres
-canales nuevos siguen EXACTAMENTE el patrón de los bookmarks (payload por
-puntero, `malloc` + `HEAP32` + `free`, ver `innertaLoader.ts`):
+**And the "the host knows, the engine draws" mold is no longer only color.** Three
+new channels follow EXACTLY the bookmarks pattern (per-pointer payload, `malloc` +
+`HEAP32` + `free`, see `innertaLoader.ts`):
 
 ```c
-SetInnertaFoldingRanges(const int* data, int count)  // tripletes start,end,kind
+SetInnertaFoldingRanges(const int* data, int count)  // triplets start,end,kind
 ClearInnertaFoldingRanges()
-GetInnertaFoldingCount() / GetInnertaFoldingIsHost()  // diagnóstico
+GetInnertaFoldingCount() / GetInnertaFoldingIsHost()  // diagnostic
 SetInnertaSelection(anchorLine, anchorCol, activeLine, activeCol)
 ClearInnertaSelection()
 ```
 
-El de plegado obligó a tocar `FoldingManager`: la heurística de indentación
-regeneraba los rangos en cada cambio de buffer, así que ahora hay un modo host
-(`SetHostRanges` / `ClearHostRanges`) que la desactiva mientras haya rangos del
-árbol y **preserva el estado plegado** por línea de inicio (re-tokenizar no puede
-desplegar lo que el usuario plegó). Una lista vacía es la orden de volver a la
-indentación — es lo que manda el puente al abrir otro archivo, y sin eso el motor
-se quedaba con los folds del archivo anterior.
+The folding one forced a change in `FoldingManager`: the indentation heuristic
+regenerated the ranges on every buffer change, so now there is a host mode
+(`SetHostRanges` / `ClearHostRanges`) that disables it while there are tree ranges
+and **preserves the folded state** per start line (re-tokenizing cannot unfold what
+the user folded). An empty list is the order to go back to indentation — it is what
+the bridge sends when opening another file, and without it the engine kept the
+previous file's folds.
 
-Los dos getters de plegado no son decorativos: `setFoldingRanges` es `void`, así
-que `applyInnertaFolds` los usa para COMPARAR lo que pidió con lo que el motor
-tiene (`getFoldingCount()` / `foldingIsHost()` en el loader). Sin eso su valor de
-retorno sería "la llamada no lanzó", que es un verde falso con todas las letras.
+The two folding getters are not decorative: `setFoldingRanges` is `void`, so
+`applyInnertaFolds` uses them to COMPARE what it asked for with what the engine has
+(`getFoldingCount()` / `foldingIsHost()` in the loader). Without that its return
+value would be "the call did not throw", which is a false green in every sense.
 
-## 3. Los 5 servicios que Innerta debe exponer UNA vez
+## 3. The 5 services Innerta must expose ONCE
 
-Ninguno es "una feature": son canales genéricos. Después de esto, ninguna
-feature nueva toca C++.
+None of them is "a feature": they are generic channels. After this, no new feature
+touches C++.
 
-| # | Servicio | Por qué | Estado |
+| # | Service | Why | Status |
 | --- | --- | --- | --- |
-| **S1** | **Geometría out**: `textXOffset`, `gutterWidth`, `scrollOffset`, `firstVisibleLine`, `visibleLines`, `lineHeight`, `charWidth`; `lineToY(line)`, `colToX(line,col)` | es **el** hueco: existe el inverso (`InnertaHitTest`) y las métricas, pero no line/col → píxel, y el scroll es de solo escritura | ❌ **nada de esto existe** (verificado en los exports del build) |
-| **S2** | **Eventos de viewport** por el canal único: `ViewportChanged`, `Resized`, `FocusChanged`, `MarkerClick` | sin esto, la UI anclada no sigue el scroll | ❌ (el enum tiene 4) |
-| **S3** | **Paint list in**: spans + paleta (JSON) | lo que debe vivir **dentro** del plano del texto: color de sintaxis, subrayados, fondos, bordes. Reemplaza `SemanticTokens`+`Underlines`+`DiffDecorations` | 🟡 el **color ya pinta** por el canal de tokens (LSP + TextMate de extensión + tree-sitter dinámico, ver [languages.md](languages.md) §12), el **plegado por árbol** entra por su propio canal y los **subrayados ya pintan** ([decorations.md](decorations.md): diagnósticos + `editor.setDecorations`); fondos y diff siguen pendientes |
-| **S4** | **Edición por rango**: `SetInnertaTextRange(range, text)` | hoy toda escritura termina en `setContent(texto completo)` → **resetea el undo** | ❌ |
-| **S5** | **Lanes del gutter**: declarar anchos → el engine corre el texto | sólo si una lane necesita espacio propio; si no, es DOM sobre el gutter actual | ❌ |
+| **S1** | **Geometry out**: `textXOffset`, `gutterWidth`, `scrollOffset`, `firstVisibleLine`, `visibleLines`, `lineHeight`, `charWidth`; `lineToY(line)`, `colToX(line,col)` | it is **the** hole: the inverse exists (`InnertaHitTest`) and the metrics too, but not line/col → pixel, and the scroll is write-only | ❌ **none of this exists** (verified in the build's exports) |
+| **S2** | **Viewport events** over the single channel: `ViewportChanged`, `Resized`, `FocusChanged`, `MarkerClick` | without it, anchored UI does not follow the scroll | ❌ (the enum has 4) |
+| **S3** | **Paint list in**: spans + palette (JSON) | what must live **inside** the text plane: syntax color, underlines, backgrounds, borders. Replaces `SemanticTokens`+`Underlines`+`DiffDecorations` | 🟡 the **color already paints** over the token channel (LSP + extension TextMate + dynamic tree-sitter, see [languages.md](languages.md) §12), the **tree folding** enters over its own channel and the **underlines already paint** ([decorations.md](decorations.md): diagnostics + `editor.setDecorations`); backgrounds and diff are still pending |
+| **S4** | **Range editing**: `SetInnertaTextRange(range, text)` | today every write ends in `setContent(full text)` → **it resets undo** | ❌ |
+| **S5** | **Gutter lanes**: declare widths → the engine shifts the text | only if a lane needs its own space; if not, it is DOM over the current gutter | ❌ |
 
-> `S1` es el gate de casi todo: **lo anclado al puntero ya funciona hoy**
-> (hover, menú); lo anclado al **texto** (caret, línea, rango) necesita `S1`.
+> `S1` is the gate of almost everything: **pointer-anchored things already work
+> today** (hover, menu); **text-anchored** things (caret, line, range) need `S1`.
 
-## 4. El sistema de slots (nuevo tipo SEF)
+## 4. The slot system (a new SEF kind)
 
-Un **slot** es una zona con un anclaje donde Scrakk monta React. Innerta no sabe
-qué hay adentro.
+A **slot** is an area with an anchor where Scrakk mounts React. Innerta does not
+know what is inside.
 
-| Slot | Dónde | Anclaje | Primeros clientes (dogfooding) |
+| Slot | Where | Anchor | First clients (dogfooding) |
 | --- | --- | --- | --- |
-| `gutter` | izquierda del texto, por línea | `line` o `range` | Git diff, bookmarks (ya), severidad de diagnósticos, blame, coverage |
-| `hover` | flotante junto a un símbolo | `position` (puntero o caret) | hover LSP (**ya funciona**), hovers de extensión |
-| `overlay` | flotante libre, 2D | `pointer` o `caret` | menú contextual (**ya funciona**), completion, quick pick, peek |
-| `inline` | dentro del flujo del texto, entre caracteres | `position` | inlay hints, code lens, ghost text |
-| `ruler` | barra lateral de scroll | `line` | diagnósticos, resultados de búsqueda |
-| `title` | encabezado del editor | — | acciones de editor de la extensión |
+| `gutter` | left of the text, per line | `line` or `range` | Git diff, bookmarks (already), diagnostic severity, blame, coverage |
+| `hover` | floating next to a symbol | `position` (pointer or caret) | LSP hover (**already works**), extension hovers |
+| `overlay` | free floating, 2D | `pointer` or `caret` | context menu (**already works**), completion, quick pick, peek |
+| `inline` | inside the text flow, between characters | `position` | inlay hints, code lens, ghost text |
+| `ruler` | scroll side bar | `line` | diagnostics, search results |
+| `title` | editor header | — | the extension's editor actions |
 
-Reglas de la capa DOM (para no romper el input del editor):
+DOM layer rules (so the editor's input is not broken):
 
-- contenedor con `pointer-events: none`; **solo los widgets** con `auto`;
-- un widget nunca come `keydown` (el foco sigue siendo del canvas);
-- el ancla se recalcula con `ViewportChanged` (`S2`) — no en cada frame;
-- si un slot no tiene clientes, no se monta nada (cero costo).
+- container with `pointer-events: none`; **only the widgets** with `auto`;
+- a widget never eats `keydown` (focus stays on the canvas);
+- the anchor is recomputed with `ViewportChanged` (`S2`) — not every frame;
+- if a slot has no clients, nothing is mounted (zero cost).
 
-### 4.1 El tipo SEF
+### 4.1 The SEF kind
 
-**Va en SEF, no en la capa de compatibilidad**: `services/extensions/types/editorui/`
-(`schema.ts` + `api.ts` + `logic.ts` + `store.ts`, como los otros 10 tipos).
-Nombre del kind a decidir: `editorUI` / `editor` / `innerta`.
+**It goes in SEF, not in the compatibility layer**:
+`services/extensions/types/editorui/` (`schema.ts` + `api.ts` + `logic.ts` +
+`store.ts`, like the other 10 kinds). Kind name to decide: `editorUI` / `editor` /
+`innerta`.
 
 ```jsonc
-// manifest.json de una extensión SEF
+// manifest.json of a SEF extension
 {
   "contributes": {
     "editorUI": [
@@ -238,14 +240,14 @@ Nombre del kind a decidir: `editorUI` / `editor` / `innerta`.
         "id": "blame",
         "slot": "gutter",
         "anchor": { "kind": "line" },
-        "component": "ui/Blame.tsx",          // React del bundle (igual que panels)
+        "component": "ui/Blame.tsx",          // React from the bundle (like panels)
         "trigger": { "kind": "always" },       // always | dwell | click | hover
         "when": "resourceExtname == .ts",
         "order": 100,
-        "commands": ["miExt.abrirBlame"]        // lo que el componente puede ejecutar
+        "commands": ["myExt.openBlame"]        // what the component can run
       },
       {
-        "id": "mi-hover",
+        "id": "my-hover",
         "slot": "hover",
         "anchor": { "kind": "position" },
         "trigger": { "kind": "dwell", "ms": 350 },
@@ -256,7 +258,7 @@ Nombre del kind a decidir: `editorUI` / `editor` / `innerta`.
 }
 ```
 
-Contexto que recibe el componente:
+Context the component receives:
 
 ```ts
 {
@@ -270,126 +272,126 @@ Contexto que recibe el componente:
 }
 ```
 
-Lo que ya existe y se reusa **sin inventar nada**: el loader de componentes del
-bundle (`types/panels`), el ciclo de vida de extensiones, el evaluador de `when`
-(`services/extensions/when.ts`) y el registry de comandos.
+What already exists and is reused **without inventing anything**: the bundle
+component loader (`types/panels`), the extension lifecycle, the `when` evaluator
+(`services/extensions/when.ts`) and the command registry.
 
-## 5. Las tres respuestas que pedía el plan
+## 5. The three answers the plan asked for
 
-### 5.1 LSP consumido de verdad
+### 5.1 LSP truly consumed
 
-**La inteligencia ya está**: `docs/lsp/api.md` documenta el cliente completo en
-el main (19 operaciones, multi-root, multi-server, semantic tokens, inlay hints,
-store reactivo de diagnósticos, `$/progress`, rename, code actions).
+**The intelligence is already there**: `docs/lsp/api.md` documents the full client
+in the main (19 operations, multi-root, multi-server, semantic tokens, inlay hints,
+reactive diagnostics store, `$/progress`, rename, code actions).
 
-Lo que falta es repartir cada operación en su ruta natural:
+What is missing is distributing each operation on its natural route:
 
-| Operación | Cómo se muestra | Servicio que necesita |
+| Operation | How it is shown | Service it needs |
 | --- | --- | --- |
-| Hover | slot `hover` (ya funciona) | — |
-| Ir a definición / refs / jerarquías | slot `overlay` + lista propia | `S1` para anclaje en caret |
-| Completion / firma / rename | slot `overlay` (UI nativa de Scrakk) | **`S1`** |
-| Diagnósticos | paint list (squiggle) + marker en `gutter` | **`S3`** |
-| Semantic tokens | paint list | `S3` (hoy ya por el canal viejo) |
-| Formateo / code actions / rename edit | **edición por rango** | **`S4`** |
+| Hover | `hover` slot (already works) | — |
+| Go to definition / refs / hierarchies | `overlay` slot + its own list | `S1` for caret anchoring |
+| Completion / signature / rename | `overlay` slot (Scrakk native UI) | **`S1`** |
+| Diagnostics | paint list (squiggle) + marker in `gutter` | **`S3`** |
+| Semantic tokens | paint list | `S3` (today already over the old channel) |
+| Formatting / code actions / rename edit | **range editing** | **`S4`** |
 
-### 5.2 Gutter dinámico
+### 5.2 Dynamic gutter
 
-El bookmark **ya tiene el ciclo completo** (host empuja líneas → engine dibuja →
-click vuelve por el canal único). El plan lo generaliza:
+The bookmark **already has the full cycle** (host pushes lines → engine draws →
+click returns over the single channel). The plan generalizes it:
 
 - `setBookmarks(int[])` → **markers**: `{ kind, line|range, icon, color, tooltip, commandId }[]`.
-- Devuelve `MarkerClick(line, index)` por el canal único.
-- **Dos implementaciones, en este orden**:
-  1. **DOM sobre el gutter** (cero C++): el ancrado por línea sale de `S1`;
-     Scrakk pinta las lanes nuevas. Git diff, diagnósticos y decoraciones de
-     extensión entran por aquí.
-  2. **Lanes declaradas** (`S5`) cuando una lane necesite espacio propio (el
-     engine corre el texto). Requiere C++.
+- Returns `MarkerClick(line, index)` over the single channel.
+- **Two implementations, in this order**:
+  1. **DOM over the gutter** (zero C++): the per-line anchoring comes from `S1`;
+     Scrakk paints the new lanes. Git diff, diagnostics and extension decorations
+     enter here.
+  2. **Declared lanes** (`S5`) when a lane needs its own space (the engine shifts
+     the text). Requires C++.
 
-### 5.3 Gramáticas
+### 5.3 Grammars
 
-**Tiene doc propio: [languages.md](languages.md)** (con la anatomía de una
-extensión de lenguaje de VS Code, las 4 fuentes y la carga dinámica con su
-seguridad). La decisión, en corto:
+**It has its own doc: [languages.md](languages.md)** (with the anatomy of a VS Code
+language extension, the 4 sources and dynamic loading with its security). The
+decision, in short:
 
-tree-sitter **no es el fallback: es una de las fuentes**. Las 20 gramáticas
-compiladas dentro del binario son la fuente **nativa** de esos lenguajes (sin
-worker, sin costo de datos), y una gramática que trae una extensión corre en un
-**worker** (`web-tree-sitter`, wasm) y entra por el **mismo canal** que las demás.
+tree-sitter **is not the fallback: it is one of the sources**. The 20 grammars
+compiled inside the binary are the **native** source for those languages (no
+worker, no data cost), and a grammar an extension brings runs in a **worker**
+(`web-tree-sitter`, wasm) and enters over the **same channel** as the others.
 
-El puente conceptual que lo permite: **un capture de tree-sitter
-(`@type.builtin`, `@variable.parameter`) y un scope de TextMate
-(`type.builtin.ts`) son el mismo espacio de nombres con puntos** — y
-`MapCaptureColor()` en Innerta **ya asigna prioridades** (comment 100 … variable
-10). Así que hay **un solo resolutor de estilos** para las 4 fuentes:
+The conceptual bridge that allows it: **a tree-sitter capture (`@type.builtin`,
+`@variable.parameter`) and a TextMate scope (`type.builtin.ts`) are the same
+dot-separated namespace** — and `MapCaptureColor()` in Innerta **already assigns
+priorities** (comment 100 … variable 10). So there is **a single style resolver**
+for the 4 sources:
 
-tree-sitter nativo · tree-sitter dinámico · TextMate · semantic tokens del LSP
+native tree-sitter · dynamic tree-sitter · TextMate · LSP semantic tokens
 
-Ese resolutor es lo que rompe el techo actual de **15 categorías por substring**
-(`scopeToSlot`) y lo que hace que un `tokenColors` de tema funcione igual para
-las cuatro fuentes.
+That resolver is what breaks the current ceiling of **15 categories by substring**
+(`scopeToSlot`) and what makes a theme's `tokenColors` work the same for all four
+sources.
 
-## 6. Fases
+## 6. Phases
 
-Ordenadas por dependencia y rinde, no por brillo.
+Ordered by dependency and payoff, not by shine.
 
-| Fase | Qué | Toca C++ | Destraba |
+| Phase | What | Touches C++ | Unlocks |
 | --- | --- | --- | --- |
-| **F0** | **Handshake de capabilities** + contrato versionado (reemplaza el sondeo ad-hoc de 11 métodos opcionales) | no | saber qué puede el WASM cargado (los stubs dejan de mentir) |
-| **F1** | **`S1` geometría + `S2` eventos de viewport** | sí (chico) | **toda** la UI anclada al texto: gutter DOM, completion, hints, decoraciones |
-| **F2** | **Capa DOM de slots en Scrakk** + sistema de anclaje. Primeros clientes: hover y menú contextual **reescritos sobre el sistema** | no | que "agregar UI" sea montar un componente |
-| **F3** | **Gutter como slot** (DOM sobre el gutter): Git diff, severidad, markers, click | no | gutter real sin tocar el motor |
-| **F4** | **Tipo SEF `editorUI`** (§4.1) | no | que una **extensión** agregue gutter/hover/UI en caliente |
-| **F5** | **`S3` paint list**: squiggles/diagnósticos, fondos, bordes, decoraciones, y el panel de Problemas | sí | 🟡 **los squiggles ya están** ([decorations.md](decorations.md), canal por rangos + `editor.setDecorations`) y el panel de Problemas también; faltan fondos/bordes y el ruler |
-| **F6** | **Gramáticas** → se movió al track de lenguajes: [languages.md](languages.md) L3 (tree-sitter dinámico) y L4 (TextMate) | — | — |
-| **F7** | **`S4` edición por rango** | sí | formatters, quick fixes y rename **sin perder el undo** |
-| **F8** | Lo pesado: inlay hints, code lens, sticky, peek, diff editor, custom editors (ya hay `InnertaCreateView` para vistas propias) | sí | fidelidad fina |
+| **F0** | **Capabilities handshake** + versioned contract (replaces the ad-hoc probe of 11 optional methods) | no | knowing what the loaded WASM can do (the stubs stop lying) |
+| **F1** | **`S1` geometry + `S2` viewport events** | yes (small) | **all** text-anchored UI: DOM gutter, completion, hints, decorations |
+| **F2** | **DOM slot layer in Scrakk** + anchoring system. First clients: hover and context menu **rewritten on the system** | no | making "add UI" equal to mounting a component |
+| **F3** | **Gutter as a slot** (DOM over the gutter): Git diff, severity, markers, click | no | a real gutter without touching the engine |
+| **F4** | **SEF kind `editorUI`** (§4.1) | no | an **extension** adding gutter/hover/UI live |
+| **F5** | **`S3` paint list**: squiggles/diagnostics, backgrounds, borders, decorations, and the Problems panel | yes | 🟡 **the squiggles are already there** ([decorations.md](decorations.md), per-range channel + `editor.setDecorations`) and the Problems panel too; backgrounds/borders and the ruler are missing |
+| **F6** | **Grammars** → moved to the languages track: [languages.md](languages.md) L3 (dynamic tree-sitter) and L4 (TextMate) | — | — |
+| **F7** | **`S4` range editing** | yes | formatters, quick fixes and rename **without losing undo** |
+| **F8** | The heavy stuff: inlay hints, code lens, sticky, peek, diff editor, custom editors (there is already `InnertaCreateView` for custom views) | yes | fine fidelity |
 
-**Dos tracks en paralelo, con fundamentos compartidos.** No hay "camino corto":
-el orden sale de las dependencias, y hay una dependencia dura que no se puede
-saltear — **el resolutor de scopes + paint list** (`S3`) es de donde dependen las
-tres fuentes de color. Ponerlo al final obliga a reescribir las tres.
+**Two tracks in parallel, with shared foundations.** There is no "shortcut": the
+order comes from the dependencies, and there is a hard dependency that cannot be
+skipped — **the scope resolver + paint list** (`S3`) is what the three color
+sources depend on. Putting it at the end forces rewriting the three.
 
-| Track | Fundamento compartido | Después |
+| Track | Shared foundation | After |
 | --- | --- | --- |
-| **UI** (F0–F4): slots, geometría, gutter, `editorUI` | **F0** capabilities + **F1** geometría/viewport | F2 capa de slots → F3 gutter → F4 `editorUI` |
-| **Lenguajes** ([languages.md](languages.md) L0–L7): 4 fuentes, tree-sitter dinámico, TextMate | **L1** resolutor de scopes + paint list | L2 tipo SEF `languages` → L3 tree-sitter dinámico → L4 TextMate → L5 merge LSP |
+| **UI** (F0–F4): slots, geometry, gutter, `editorUI` | **F0** capabilities + **F1** geometry/viewport | F2 slot layer → F3 gutter → F4 `editorUI` |
+| **Languages** ([languages.md](languages.md) L0–L7): 4 sources, dynamic tree-sitter, TextMate | **L1** scope resolver + paint list | L2 SEF kind `languages` → L3 dynamic tree-sitter → L4 TextMate → L5 LSP merge |
 
-El único fork real: `F1` (geometría) y `L1` (resolutor) son ambos "primero", y
-tocan el mismo motor. Se pueden hacer en ramas separadas pero **no se pisan**
-(una es geometría, la otra es estilos).
+The only real fork: `F1` (geometry) and `L1` (resolver) are both "first", and they
+touch the same engine. They can be done in separate branches but **they do not
+clash** (one is geometry, the other is styles).
 
-## 7. Decisiones abiertas
+## 7. Open decisions
 
-**D1 — Nombre del kind SEF**: `editorUI` / `editor` / `innerta`.
-**D2 — ¿El gutter es DOM sobre el área actual (cero C++) o lanes declaradas (`S5`)?**
-Recomendación: DOM primero; `S5` solo cuando una lane necesite ancho propio.
-**D3 — ¿Dónde vive el estado de los markers/decoraciones?** El engine es
-stateless y recibe lo que le empujen; el estado y la persistencia viven en
-Scrakk (hay **N módulos WASM**, uno por tab: el estado no puede vivir ahí).
-**D4 — ¿`S1` como funciones de lectura (ints, sin alloc) o JSON?** Recomendación:
-ints por `out` pointer para lo que se llama por frame; JSON solo para payloads.
-**D5 — ¿Un solo canal de datos (`S3` paint list) o mantener los tres actuales?**
-Recomendación: **uno**, y que los tres viejos pasen a ser casos de uso (si no,
-cada feature nueva inventa su canal).
-**D6 — Gramáticas**: las decisiones están en [languages.md](languages.md) §10
-(nombre del kind, worker compartido o por editor, dueño del parser, ¿nativo o
-solo wasm?, ¿`tags.scm` habilita outline/goto-definition sin LSP?).
-**D7 — ¿Eliminar la duplicación de caminos?** Hoy conviven la API de módulo
-(45 métodos, un módulo por tab) y la view API (`InnertaCreateView`, N vistas por
-módulo, ya en producción con el terminal). Unificarlas sería un gran ahorro de
-RAM en multi-editor.
+**D1 — SEF kind name**: `editorUI` / `editor` / `innerta`.
+**D2 — Is the gutter DOM over the current area (zero C++) or declared lanes
+(`S5`)?** Recommendation: DOM first; `S5` only when a lane needs its own width.
+**D3 — Where does the state of the markers/decorations live?** The engine is
+stateless and receives whatever is pushed to it; the state and persistence live in
+Scrakk (there are **N WASM modules**, one per tab: the state cannot live there).
+**D4 — `S1` as read functions (ints, no alloc) or JSON?** Recommendation: ints via
+an `out` pointer for what is called per frame; JSON only for payloads.
+**D5 — A single data channel (`S3` paint list) or keeping the current three?**
+Recommendation: **one**, and the three old ones become use cases (otherwise, every
+new feature invents its channel).
+**D6 — Grammars**: the decisions are in [languages.md](languages.md) §10 (kind
+name, shared worker or per editor, parser owner, native or wasm-only?, does
+`tags.scm` enable outline/goto-definition without an LSP?).
+**D7 — Remove the path duplication?** Today the module API (45 methods, one module
+per tab) and the view API (`InnertaCreateView`, N views per module, already in
+production with the terminal) coexist. Unifying them would be a big RAM saving in
+multi-editor.
 
-## 8. Riesgos
+## 8. Risks
 
-Los puntos donde la cosa se puede romper:
+The points where things can break:
 
-| Riesgo | Por qué duele | Mitigación |
+| Risk | Why it hurts | Mitigation |
 | --- | --- | --- |
-| El WASM cargado no coincide con el header | ya hay 2 stubs vacíos que "existen" | F0: capabilities + test contra los símbolos reales del `Module` |
-| N módulos WASM (uno por tab) | cada feature se multiplica; RAM | D3: motor stateless, estado en Scrakk; medir con `heapBytes?` |
-| Dos tokenizadores (tree-sitter nativo + TextMate wasm) | CPU/RAM, y dos verdades de color | tree-sitter default offline, TextMate para lo demás, prioridad explícita; tokenizar solo el rango visible en un worker |
-| El overlay DOM se desincroniza en scroll rápido | la UI "flota" mal | re-anclaje por `ViewportChanged`, no por frame; transform en el contenedor |
-| El overlay se come el input | el editor deja de escribir | `pointer-events: none` + nunca capturar teclado |
-| Duplicar la verdad de cobertura | `surface/` de Scrakk ya existe para esto | cada fase actualiza **una** entrada de la tabla, no una lista nueva |
+| The loaded WASM does not match the header | there are already 2 empty stubs that "exist" | F0: capabilities + a test against the real symbols of the `Module` |
+| N WASM modules (one per tab) | each feature multiplies; RAM | D3: stateless engine, state in Scrakk; measure with `heapBytes?` |
+| Two tokenizers (native tree-sitter + TextMate wasm) | CPU/RAM, and two color truths | tree-sitter default offline, TextMate for the rest, explicit priority; tokenize only the visible range in a worker |
+| The DOM overlay desyncs on fast scroll | the UI "floats" badly | re-anchor via `ViewportChanged`, not per frame; transform on the container |
+| The overlay eats the input | the editor stops typing | `pointer-events: none` + never capture the keyboard |
+| Duplicating the coverage truth | Scrakk's `surface/` already exists for this | each phase updates **one** table entry, not a new list |

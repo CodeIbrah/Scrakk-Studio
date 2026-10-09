@@ -1,71 +1,71 @@
 ---
-title: "Lenguajes: cómo una extensión agrega sintaxis (VS Code → SEF → Innerta)"
+title: "Languages: how an extension adds syntax (VS Code → SEF → Innerta)"
 group: editor
 order: 30
-summary: "Cómo una extensión agrega sintaxis a un lenguaje: tree-sitter y TextMate como fuentes, un resolutor de estilos y un tipo SEF que trae el kit completo sin recompilar."
+summary: "How an extension adds syntax for a language: tree-sitter and TextMate as sources, a style resolver and a SEF kind that brings the whole kit without recompiling."
 ---
-# Lenguajes: cómo una extensión agrega sintaxis (VS Code → SEF → Innerta)
+# Languages: how an extension adds syntax (VS Code → SEF → Innerta)
 
-Cuando abrís un `.rs` o un `.py`, el editor lo colorea. Este doc explica de
-dónde sale ese color y cómo una extensión agrega un lenguaje nuevo.
+When you open a `.rs` or a `.py`, the editor colors it. This doc explains where
+that color comes from and how an extension adds a new language.
 
-Plan del sistema de lenguajes: **tree-sitter y TextMate como fuentes de primera
-clase**, un solo resolutor de estilos, un tipo SEF que trae el kit completo y
-carga de gramáticas **sin recompilar**. Diseño, no implementación.
+Plan for the language system: **tree-sitter and TextMate as first-class sources**,
+a single style resolver, a SEF kind that brings the whole kit and grammar loading
+**without recompiling**. Design, not implementation.
 
-Evidencia: el source de VS Code (`~/Documentos/Proyectos/vscode`) y el de Innerta
+Evidence: VS Code's source (`~/Documentos/Proyectos/vscode`) and Innerta's
 (`~/Documentos/Proyectos/InnertaEngine/InnertaEngine-Linux`).
 
 ---
 
-## 1. Anatomía REAL de una extensión de lenguaje en VS Code
+## 1. The REAL anatomy of a VS Code language extension
 
-No es "un tipo": es un **kit**. Una extensión como `rust-analyzer` o
-`vscode-python` activa entre 5 y 15 contribution points a la vez.
+It is not "a kind": it is a **kit**. An extension like `rust-analyzer` or
+`vscode-python` activates between 5 and 15 contribution points at once.
 
-| Pieza | Contribution point | Qué aporta |
+| Piece | Contribution point | What it adds |
 | --- | --- | --- |
-| Identidad y asociación | `languages` | `id`, `extensions`, `filenames`, `filenamePatterns`, `firstLine`, `aliases`, `mimetypes`, `icon` (light/dark) |
-| Comportamiento de edición | `languages[].configuration` | `language-configuration.json`: brackets, `autoClosingPairs`, `surroundingPairs`, `comments`, `folding`, `wordPattern`, `onEnterRules`, `indentationRules` |
-| Color/tokenizado **TextMate** | `grammars` | `scopeName`, `path`, `embeddedLanguages`, `tokenTypes`, `injectTo`, `balancedBracketScopes`, `unbalancedBracketScopes` |
+| Identity and association | `languages` | `id`, `extensions`, `filenames`, `filenamePatterns`, `firstLine`, `aliases`, `mimetypes`, `icon` (light/dark) |
+| Editing behavior | `languages[].configuration` | `language-configuration.json`: brackets, `autoClosingPairs`, `surroundingPairs`, `comments`, `folding`, `wordPattern`, `onEnterRules`, `indentationRules` |
+| **TextMate** color/tokenization | `grammars` | `scopeName`, `path`, `embeddedLanguages`, `tokenTypes`, `injectTo`, `balancedBracketScopes`, `unbalancedBracketScopes` |
 | Snippets | `snippets` | `language` + `path` |
-| Defaults de editor por lenguaje | `configurationDefaults` | `"[rust]": { "editor.tabSize": 4 }` |
-| Semantic tokens | `semanticTokenTypes`, `semanticTokenModifiers`, `semanticTokenScopes` | tipos propios + **mapeo tokenType/modifier → scope** |
-| Servidor de lenguaje | (su `main` lo arranca; en SEF: `lspServers`) | navegación, diagnósticos, formato |
-| Diagnósticos de build | `problemMatchers`, `problemPatterns` | parsear salidas de compilador |
-| Tareas | `taskDefinitions` | cómo compilar/correr |
-| Debug | `debuggers`, `breakpoints` | adaptador + tipos de archivo |
-| UI y comandos | `commands`, `menus`, `keybindings`, `walkthroughs` | lo que el usuario ve |
-| Validación de JSON/YAML | `jsonValidation` | schema para los archivos de config del lenguaje |
-| REPL | `notebooks`, `notebookRenderer`, `notebookPreload` | consola interactiva |
-| Plugins del TS server | `typescriptServerPlugins` | extensiones del servicio de TS |
-| Empaquetado | `extensionPack`, `extensionDependencies` | un pack de lenguajes trae varios |
+| Per-language editor defaults | `configurationDefaults` | `"[rust]": { "editor.tabSize": 4 }` |
+| Semantic tokens | `semanticTokenTypes`, `semanticTokenModifiers`, `semanticTokenScopes` | its own types + **tokenType/modifier → scope mapping** |
+| Language server | (its `main` starts it; in SEF: `lspServers`) | navigation, diagnostics, formatting |
+| Build diagnostics | `problemMatchers`, `problemPatterns` | parsing compiler output |
+| Tasks | `taskDefinitions` | how to build/run |
+| Debug | `debuggers`, `breakpoints` | adapter + file types |
+| UI and commands | `commands`, `menus`, `keybindings`, `walkthroughs` | what the user sees |
+| JSON/YAML validation | `jsonValidation` | schema for the language's config files |
+| REPL | `notebooks`, `notebookRenderer`, `notebookPreload` | interactive console |
+| TS server plugins | `typescriptServerPlugins` | extensions of the TS service |
+| Packaging | `extensionPack`, `extensionDependencies` | a language pack brings several |
 
-**Consecuencias para el plan:**
-1. El reporte de instalación debe ser **por pieza**, no "soportado/no": la misma
-   extensión puede dar color ✓, outline ✓, LSP ✓ y debug ✗.
-2. Hay que modelar **activación por lenguaje** (`onLanguage:<id>`): el parser y
-   las queries se cargan **lazy** al abrir el primer archivo de ese lenguaje.
-3. Un kit de lenguaje toca varios tipos SEF (lenguaje + `lspServers` +
-   `commands` + `menus` + `editorUI`). El loader ya resuelve kind por kind; el
-   "kit" es una **presentación** (una ficha, no veinte).
+**Consequences for the plan:**
+1. The install report must be **per piece**, not "supported/no": the same extension
+   can give color ✓, outline ✓, LSP ✓ and debug ✗.
+2. **Activation per language** must be modeled (`onLanguage:<id>`): the parser and
+   the queries load **lazily** when the first file of that language opens.
+3. A language kit touches several SEF kinds (language + `lspServers` + `commands` +
+   `menus` + `editorUI`). The loader already resolves kind by kind; the "kit" is a
+   **presentation** (one card, not twenty).
 
 ---
 
-## 2. Cómo tokeniza VS Code (pipeline real, con archivo)
+## 2. How VS Code tokenizes (the real pipeline, with files)
 
-1. **Registro**: `TMScopeRegistry` mapea `scopeName` → definición de gramática,
-   guardando `injectTo`, `embeddedLanguages` y `tokenTypes`
+1. **Registration**: `TMScopeRegistry` maps `scopeName` → grammar definition,
+   storing `injectTo`, `embeddedLanguages` and `tokenTypes`
    (`services/textMate/common/TMScopeRegistry.ts`).
-2. **Contenido**: el Extension Host manda el `.tmLanguage` (JSON o plist) al
+2. **Content**: the Extension Host sends the `.tmLanguage` (JSON or plist) to the
    renderer.
-3. **Compilación**: `TMGrammarFactory` lo compila a un tokenizador; las
-   gramáticas con `injectTo` se **inyectan en el tokenizador de otro lenguaje**
-   (un plugin puede extender el grammar de otro).
-4. **Tokenizado en un WORKER**: `textMateTokenizationWorker` +
-   `threadedBackgroundTokenizerFactory`, con invalidación por región sucia.
-   Nunca en el hilo de UI.
-5. **Codificación del estilo**: cada token es **un u32**
+3. **Compilation**: `TMGrammarFactory` compiles it into a tokenizer; grammars with
+   `injectTo` are **injected into another language's tokenizer** (a plugin can
+   extend another's grammar).
+4. **Tokenization in a WORKER**: `textMateTokenizationWorker` +
+   `threadedBackgroundTokenizerFactory`, with dirty-region invalidation. Never on
+   the UI thread.
+5. **Style encoding**: each token is **a u32**
    (`editor/common/encodedTokenAttributes.ts`):
 
 ```
@@ -73,111 +73,114 @@ bbbb bbbb ffff ffff fFFF FBTT LLLL LLLL
    bg(8)   fg(9)  style(4) B(1) type(2) lang(8)
 ```
 
-   Y los semantic tokens reusan el **mismo u32** con flags `SEMANTIC_USE_*`
-   (italic/bold/underline/strikethrough/foreground/background) en el byte de
-   languageId → **un token semántico pisa SOLO lo que declara** (si no declara
-   color, conserva el del TextMate).
-6. **Resolución de tema**: `textMateScopeMatcher.ts` implementa un **lenguaje de
-   selectores**: `,` = alternativas · espacio = conjunción · `-` = negación ·
-   paréntesis · y **prioridades `R:` / `L:`** (más específico gana).
-7. El array de u32 es el stream de tokens del editor, que pinta desde ahí.
+   And semantic tokens reuse the **same u32** with `SEMANTIC_USE_*` flags
+   (italic/bold/underline/strikethrough/foreground/background) in the languageId
+   byte → **a semantic token overrides ONLY what it declares** (if it does not
+   declare a color, it keeps the TextMate one).
+6. **Theme resolution**: `textMateScopeMatcher.ts` implements a **selector
+   language**: `,` = alternatives · space = conjunction · `-` = negation ·
+   parentheses · and **`R:` / `L:` priorities** (more specific wins).
+7. The u32 array is the editor's token stream, which it paints from.
 
-> **La lección**: VS Code separa 4 cosas — (a) tokenizar, (b) resolver
-> scope→estilo, (c) codificar el estilo, (d) pintar. **Innerta mezcla (a) y (b)
-> dentro del C++**: `MapCaptureColor()` decide color con `substring` y 15 campos
-> fijos del tema. Ese es el punto exacto a generalizar.
+> **The lesson**: VS Code separates 4 things — (a) tokenizing, (b) resolving
+> scope→style, (c) encoding the style, (d) painting. **Innerta mixes (a) and (b)
+> inside the C++**: `MapCaptureColor()` decides color by `substring` and 15 fixed
+> theme fields. That is the exact point to generalize.
 
 ---
 
-## 3. El puente conceptual: `@capture` ≡ `scope`
+## 3. The conceptual bridge: `@capture` ≡ `scope`
 
-Medido en las queries reales de Innerta (`emscripten/queries/typescript/*.scm`):
+Measured on Innerta's real queries (`emscripten/queries/typescript/*.scm`):
 
 ```
 @keyword  @type.builtin  @variable.parameter  @punctuation.bracket  @definition.function
 ```
 
-Y los scopes de TextMate:
+And TextMate scopes:
 
 ```
 keyword.control.flow.js   variable.parameter.function.js   punctuation.definition.string.begin.ts
 ```
 
-**Son el mismo espacio de nombres con puntos.** Y `MapCaptureColor` **ya asigna
-prioridades** (comment 100, string 90, keyword/operator 80, type 70, tag 70,
+**They are the same dot-separated namespace.** And `MapCaptureColor` **already
+assigns priorities** (comment 100, string 90, keyword/operator 80, type 70, tag 70,
 function 60, constant 50, parameter 40, property/attribute 30, builtin 20,
 punctuation 15, variable 10).
 
-De ahí sale el diseño:
+From that comes the design:
 
-> **Un solo resolutor**: toda fuente produce `(rango, scope, prioridad)` y un
-> único módulo resuelve estilo con selectores de scope (los del tema).
+> **A single resolver**: every source produces `(range, scope, priority)` and a
+> single module resolves style with scope selectors (the theme's).
 
-Esto elimina el techo de 15 categorías por substring **de una sola vez** y hace
-que `tokenColors` de un tema funcione **igual** para tree-sitter, TextMate y
-semantic tokens. Ni tree-sitter ni TextMate son casos especiales: son fuentes.
+This removes the ceiling of 15 categories by substring **in one go** and makes a
+theme's `tokenColors` work **the same** for tree-sitter, TextMate and semantic
+tokens. Neither tree-sitter nor TextMate is a special case: they are sources.
 
 ---
 
-## 4. Las cuatro fuentes y su prioridad
+## 4. The four sources and their priority
 
-De dónde puede venir el color, y cuál gana:
+Where color can come from, and which one wins:
 
-| # | Fuente | Dónde corre | Qué produce | Rol |
+| # | Source | Where it runs | What it produces | Role |
 | --- | --- | --- | --- | --- |
-| 1 | **tree-sitter compilado** (20 lenguajes dentro del `.wasm` del engine) | dentro del engine | spans con capture | fuente base de esos 20, sin costo de datos y sin worker |
-| 2 | **tree-sitter dinámico** (`.wasm` del `.sef`) | worker (`web-tree-sitter`) | spans + **tags/locals/injections** | el "agregar lenguajes sin recompilar" |
-| 3 | **TextMate** (`.tmLanguage` de VSIX) | worker (`vscode-textmate` + `vscode-oniguruma`) | spans con scope stack | compatibilidad VSIX y lenguajes sin parser |
-| 4 | **LSP semantic tokens** (ya funciona, `docs/lsp/api.md`) | main | spans con tokenType/modifier | **pisa por rango** lo que declara |
+| 1 | **compiled tree-sitter** (20 languages inside the engine's `.wasm`) | inside the engine | spans with capture | base source for those 20, no data cost and no worker |
+| 2 | **dynamic tree-sitter** (the `.sef`'s `.wasm`) | worker (`web-tree-sitter`) | spans + **tags/locals/injections** | the "add languages without recompiling" |
+| 3 | **TextMate** (VSIX `.tmLanguage`) | worker (`vscode-textmate` + `vscode-oniguruma`) | spans with scope stack | VSIX compatibility and languages without a parser |
+| 4 | **LSP semantic tokens** (already works, `docs/lsp/api.md`) | main | spans with tokenType/modifier | **overrides per range** what it declares |
 
-Más una capa aparte para **decoraciones y diagnósticos** (subrayados, fondos).
+Plus a separate layer for **decorations and diagnostics** (underlines,
+backgrounds).
 
-Regla de desempate: por rango gana la fuente de mayor prioridad; dentro de una
-fuente, gana el selector de scope más específico (`R:`/`L:` como VS Code).
+Tie-break rule: per range the highest-priority source wins; within a source, the
+most specific scope selector wins (`R:`/`L:` like VS Code).
 
-**tree-sitter no es el fallback**: es la fuente #1 (nativa) y #2 (dinámica). Las
-otras dos cubren lo que tree-sitter no puede (gramáticas VSIX, y el refinamiento
-del LSP).
-
----
-
-## 5. Hallazgos que cambian el trabajo
-
-### 5.1 `tags.scm` y `locals.scm` se envían y NUNCA se cargan
-
-El repo trae `tags.scm` (definiciones y referencias) y `locals.scm` (variables
-locales) por lenguaje, pero el C++ solo abre `highlights.scm` e `injections.scm`.
-
-**Oportunidad grande**: `tags.scm` da **outline de símbolos y goto-definition sin
-LSP** (es lo que hace nvim con este mismo ecosistema), y `locals.scm` da
-resolución de locales. Son archivos que **ya están** en el repo.
-
-### 5.2 Cargar una gramática nueva hoy implica recompilar
-
-- **Desktop**: `TreeSitterLoader.cpp` hace `dlopen(path)` y resuelve
-  `tree_sitter_<lang>` con `dlsym`. O sea: **ya es dinámico**… con dos problemas:
-  - el `dlopen` corre **dentro del proceso** (en Electron eso es ejecución de
-    código nativo arbitrario);
-  - la lista de candidatos incluye **una ruta absoluta de una máquina de
-    desarrollo** (`/home/julian/.../build-linux/libtreesitter.so`) → smell de deploy.
-- **WASM**: la lookup va contra `kInnertaWasmSymbols`, una **tabla estática
-  compilada** (`TreeSitterLoader.cpp`), y el build **no** usa dynamic linking.
-  Más: los lenguajes válidos son un `switch` hardcodeado
-  (`EditorWindow.cpp:941`, con el comentario *"Must match `tree_sitter_<name>`
-  exports in libtreesitter.so + `queries/<name>/highlights.scm`"*).
-- Las queries se buscan en `exeDir + "/queries/"` / `"queries/"` + fallbacks de
-  dev → el layout es configurable (bien), pero **al lado del binario**.
-
-### 5.3 VS Code usa exactamente las librerías que proponemos
-
-`package.json` de VS Code: `"vscode-oniguruma": "1.7.0"` y
-`"vscode-textmate": "^9.3.2"`. No es una apuesta: es el estándar.
+**tree-sitter is not the fallback**: it is source #1 (native) and #2 (dynamic). The
+other two cover what tree-sitter cannot (VSIX grammars, and the LSP's refinement).
 
 ---
 
-## 6. El tipo SEF nuevo: `languages` (kit de lenguaje)
+## 5. Findings that change the work
 
-Va en SEF: `src/renderer/src/services/extensions/types/languages/{schema,api,logic,store}.ts`.
+### 5.1 `tags.scm` and `locals.scm` are shipped and NEVER loaded
+
+The repo brings `tags.scm` (definitions and references) and `locals.scm` (local
+variables) per language, but the C++ only opens `highlights.scm` and
+`injections.scm`.
+
+**Big opportunity**: `tags.scm` gives **symbol outline and goto-definition without
+an LSP** (what nvim does with this same ecosystem), and `locals.scm` gives local
+resolution. They are files that are **already** in the repo.
+
+### 5.2 Loading a new grammar today means recompiling
+
+- **Desktop**: `TreeSitterLoader.cpp` does `dlopen(path)` and resolves
+  `tree_sitter_<lang>` with `dlsym`. In other words: it **is already dynamic**…
+  with two problems:
+  - the `dlopen` runs **inside the process** (in Electron that is arbitrary native
+    code execution);
+  - the candidate list includes **an absolute path from a development machine**
+    (`/home/julian/.../build-linux/libtreesitter.so`) → a deploy smell.
+- **WASM**: the lookup goes against `kInnertaWasmSymbols`, a **compiled static
+  table** (`TreeSitterLoader.cpp`), and the build does **not** use dynamic linking.
+  More: the valid languages are a hardcoded `switch` (`EditorWindow.cpp:941`, with
+  the comment *"Must match `tree_sitter_<name>` exports in libtreesitter.so +
+  `queries/<name>/highlights.scm`"*).
+- The queries are looked up in `exeDir + "/queries/"` / `"queries/"` + dev
+  fallbacks → the layout is configurable (good), but **next to the binary**.
+
+### 5.3 VS Code uses exactly the libraries we propose
+
+VS Code's `package.json`: `"vscode-oniguruma": "1.7.0"` and
+`"vscode-textmate": "^9.3.2"`. It is not a bet: it is the standard.
+
+---
+
+## 6. The new SEF kind: `languages` (language kit)
+
+It goes in SEF:
+`src/renderer/src/services/extensions/types/languages/{schema,api,logic,store}.ts`.
 
 ```jsonc
 // manifest.json
@@ -195,13 +198,13 @@ Va en SEF: `src/renderer/src/services/extensions/types/languages/{schema,api,log
 
         "grammars": [
           {
-            "kind": "treeSitter",                 // ← el pedido central
-            "parser": "grammars/rust.wasm",       // wasm: recomendado
+            "kind": "treeSitter",                 // ← the central ask
+            "parser": "grammars/rust.wasm",       // wasm: recommended
             "queries": "grammars/queries/rust/",  // highlights/localstags/injections
             "sha256": "…"
           },
           {
-            "kind": "textMate",                   // ← compat VSIX
+            "kind": "textMate",                   // ← VSIX compatibility
             "scopeName": "source.rust",
             "path": "syntaxes/rust.tmLanguage.json",
             "embeddedLanguages": { "meta.embedded.block.sql": "sql" },
@@ -219,419 +222,425 @@ Va en SEF: `src/renderer/src/services/extensions/types/languages/{schema,api,log
 }
 ```
 
-Puntos de diseño:
+Design points:
 
-- **Un kind, no tres**: en SEF "una extensión de lenguaje" es una cosa. El
-  traductor VSIX junta `contributes.languages` + `contributes.grammars` +
-  `contributes.snippets` + `configurationDefaults` en **una entrada**.
-- **`grammars[].kind`** es lo que permite traer tree-sitter **o** TextMate (y
-  ambos: tree-sitter para el árbol, TextMate para el color de terceros).
-- Mapeo directo de VS Code → nuestro modelo:
+- **One kind, not three**: in SEF "a language extension" is one thing. The VSIX
+  translator joins `contributes.languages` + `contributes.grammars` +
+  `contributes.snippets` + `configurationDefaults` into **one entry**.
+- **`grammars[].kind`** is what allows bringing tree-sitter **or** TextMate (and
+  both: tree-sitter for the tree, TextMate for third-party color).
+- Direct mapping VS Code → our model:
 
-| VS Code (TextMate) | Nuestro equivalente tree-sitter |
+| VS Code (TextMate) | Our tree-sitter equivalent |
 | --- | --- |
-| `scopeName` + `path` (tmLanguage) | `parser` (wasm/nativo) + `highlights.scm` |
+| `scopeName` + `path` (tmLanguage) | `parser` (wasm/native) + `highlights.scm` |
 | `embeddedLanguages` (scope → languageId) | `injections.scm` (`@injection.content` / `@injection.language`) |
-| `injectTo` (inyectar en el grammar de otro lenguaje) | `injections.scm` (inyecciones hacia otros lenguajes) |
-| `tokenTypes` (scope → string/comment/regex) | capture name → tipo estándar (`StandardTokenType`) |
-| `semanticTokenScopes` | idem (lado LSP) |
-| — | **`tags.scm` → símbolos y goto-definition sin LSP** |
-| `balancedBracketScopes` | (sin equivalente) |
+| `injectTo` (inject into another language's grammar) | `injections.scm` (injections toward other languages) |
+| `tokenTypes` (scope → string/comment/regex) | capture name → standard type (`StandardTokenType`) |
+| `semanticTokenScopes` | same (LSP side) |
+| — | **`tags.scm` → symbols and goto-definition without an LSP** |
+| `balancedBracketScopes` | (no equivalent) |
 
 ---
 
-## 7. Cargar gramáticas sin recompilar: los tres mecanismos
+## 7. Loading grammars without recompiling: the three mechanisms
 
-### (A) WASM en un worker — **recomendado**
+### (A) WASM in a worker — **recommended**
 
-- `web-tree-sitter` (el build emscripten **oficial** de tree-sitter, diseñado
-  para cargar parsers `.wasm` en runtime) en un **worker**.
-- El `.sef` trae `parser.wasm` (generado con `tree-sitter build --wasm`).
-- El worker corre las queries (`highlights`, `tags`, `locals`, `injections`) y
-  devuelve **datos**: spans, símbolos, folds, inyecciones.
-- Esos datos entran al engine por el **paint list** (la misma ruta que TextMate
-  y semantic tokens).
-- **Seguridad**: el wasm corre en el sandbox del runtime (memoria propia, sin
-  syscalls, sin FS, sin red). El `.sef` **no ejecuta código nativo**.
-- **Costo**: CPU. Se paga con lo mismo que VS Code: tokenizar el rango visible
-  primero, cache por línea e invalidación por región sucia.
-- **Límite honesto**: el árbol vive en el worker, así que el engine no lo puede
-  usar internamente (fold/injections/tags viajan como datos calculados).
+- `web-tree-sitter` (tree-sitter's **official** emscripten build, designed to load
+  `.wasm` parsers at runtime) in a **worker**.
+- The `.sef` brings `parser.wasm` (generated with `tree-sitter build --wasm`).
+- The worker runs the queries (`highlights`, `tags`, `locals`, `injections`) and
+  returns **data**: spans, symbols, folds, injections.
+- That data enters the engine through the **paint list** (the same route as
+  TextMate and semantic tokens).
+- **Security**: the wasm runs in the runtime's sandbox (its own memory, no
+  syscalls, no FS, no network). The `.sef` **does not execute native code**.
+- **Cost**: CPU. It is paid for with the same as VS Code: tokenize the visible
+  range first, per-line cache and dirty-region invalidation.
+- **Honest limit**: the tree lives in the worker, so the engine cannot use it
+  internally (fold/injections/tags travel as computed data).
 
-### (B) `.so` / `.dll` nativo — escape hatch, **aislado**
+### (B) Native `.so` / `.dll` — escape hatch, **isolated**
 
-- **Nunca** `dlopen` en el proceso principal: es Electron main → cualquier `.sef`
-  de terceros sería ejecución de código nativo con acceso a fs/red/IPC.
-- Cargar en un **proceso separado** (`utilityProcess`) con:
-  - **pre-flight**: leer la tabla de símbolos del binario **sin ejecutarlo** y
-    exigir la allowlist (`tree_sitter_<lang>`, `tree_sitter_<lang>_external_scanner_*`, ABI);
-  - hash/pin por `sha256` del asset;
-  - sin acceso al IPC de la app salvo su `MessagePort`; matable y reiniciable;
-  - **consentimiento explícito** ("esta extensión trae código nativo") + nivel de
-    confianza, como Workspace Trust de VS Code.
-- Sirve para: gramáticas sin build wasm, o donde la perf importe.
+- **Never** `dlopen` in the main process: that is Electron main → any third-party
+  `.sef` would be native code execution with access to fs/network/IPC.
+- Load it in a **separate process** (`utilityProcess`) with:
+  - **pre-flight**: read the binary's symbol table **without executing it** and
+    require the allowlist (`tree_sitter_<lang>`,
+    `tree_sitter_<lang>_external_scanner_*`, ABI);
+  - hash/pin by the asset's `sha256`;
+  - no access to the app's IPC except its `MessagePort`; killable and restartable;
+  - **explicit consent** ("this extension brings native code") + a trust level,
+    like VS Code's Workspace Trust.
+- It is useful for: grammars without a wasm build, or where perf matters.
 
-### (C) dynamic linking de emscripten (`dlopen` de *side modules* wasm)
+### (C) emscripten dynamic linking (`dlopen` of wasm *side modules*)
 
-- Emscripten soporta `dlopen` de módulos wasm side (`-sMAIN_MODULE` /
-  `-sSIDE_MODULE`): el engine cargaría `grammar.wasm` **en su propio runtime** y
-  tendría el árbol adentro (fold, tags, injections sin worker).
-- Costo: **todo** el build de Innerta pasa a dynamic linking (tamaño, arranque,
-  complejidad) y el `.wasm` debe ser side module (no el formato estándar del
-  ecosistema).
-- Veredicto: **no de entrada**. Solo si (A) no alcanza.
+- Emscripten supports `dlopen` of wasm side modules (`-sMAIN_MODULE` /
+  `-sSIDE_MODULE`): the engine would load `grammar.wasm` **in its own runtime** and
+  have the tree inside (fold, tags, injections without a worker).
+- Cost: **all** of Innerta's build moves to dynamic linking (size, startup,
+  complexity) and the `.wasm` must be a side module (not the ecosystem's standard
+  format).
+- Verdict: **not to start with**. Only if (A) is not enough.
 
-> Con (A), el pedido "añadir lenguajes sin recompilar" se cumple **sin tocar el
-> build de Innerta**. (C) es la versión "el engine también quiere el árbol".
-
----
-
-## 8. Multi-tipo: cómo se compone y se reporta
-
-- **Reporte por pieza** (color, outline, navegación, LSP, snippets, debug…), con
-  su motivo cuando falta. Una extensión de lenguaje nunca es "soportada" o "no"
-  en bloque.
-- **Composición**: `languages` + `lspServers` (ya existe) + `editorUI` +
-  `commands`/`menus` + `configuration` son tipos distintos que el loader ya
-  despacha por separado. El kit es la **ficha** que los agrupa.
-- **Activación**: `onLanguage:<id>` al abrir el primer archivo → cargar parser,
-  queries y (si existe) arrancar el server. Sin eso, instalar 20 lenguajes
-  costaría 20 workers al abrir la app.
-- **Conflictos**: dos extensiones con el mismo `scopeName`/`id` (VS Code avisa y
-  gana la última). Necesita regla explícita + override del usuario.
+> With (A), the "add languages without recompiling" ask is met **without touching
+> Innerta's build**. (C) is the version where "the engine also wants the tree".
 
 ---
 
-## 9. Fases
+## 8. Multi-kind: how it composes and is reported
 
-El plan por fases:
+- **Report per piece** (color, outline, navigation, LSP, snippets, debug…), with
+  its reason when missing. A language extension is never "supported" or "not" as a
+  block.
+- **Composition**: `languages` + `lspServers` (already exists) + `editorUI` +
+  `commands`/`menus` + `configuration` are different kinds the loader already
+  dispatches separately. The kit is the **card** that groups them.
+- **Activation**: `onLanguage:<id>` when the first file opens → load the parser,
+  the queries and (if it exists) start the server. Without this, installing 20
+  languages would cost 20 workers when the app opens.
+- **Conflicts**: two extensions with the same `scopeName`/`id` (VS Code warns and
+  the last one wins). It needs an explicit rule + a user override.
 
-| Fase | Qué | Destraba |
+---
+
+## 9. Phases
+
+The plan by phases:
+
+| Phase | What | Unlocks |
 | --- | --- | --- |
-| **L0** | Ordenar el terreno: sacar la ruta absoluta del loader, unificar la lista hardcodeada de lenguajes de `EditorWindow.cpp`, declarar el layout de `queries/` | nada visible; evita seguir apilando sobre deuda |
-| **L1** | **Resolutor de scopes + paint list** (el u32-style + paleta): una sola resolución para las 4 fuentes | **fundamento**: sin esto ninguna fuente colorea bien y el techo de 15 sigue |
-| **L2** | **Tipo SEF `languages`** + registro + `onLanguage` + asociaciones + `language-configuration` | declarar un lenguaje (sin color todavía) |
-| **L3** | **tree-sitter dinámico wasm en worker** (parser + `highlights` + `tags` + `injections` + `locals`) | **agregar lenguajes sin recompilar**, y outline/goto-definition sin LSP |
-| **L4** | **TextMate** (`vscode-textmate` + oniguruma) para VSIX | `contributes.grammars` soportado; cualquier lenguaje colorea |
-| **L5** | **Merge de semantic tokens** sobre el resolutor (pisa por rango lo que declara) | color exacto con LSP, sin perder el del árbol |
-| **L6** | Snippets, folding desde el árbol, inyecciones anidadas, `locals` | fidelidad de lenguaje |
-| **L7** | Nativo aislado (`utilityProcess`) + trust/permisos + hash | gramáticas sin wasm, con seguridad explícita |
+| **L0** | Clear the ground: remove the absolute path from the loader, unify `EditorWindow.cpp`'s hardcoded language list, declare the `queries/` layout | nothing visible; stops stacking on debt |
+| **L1** | **Scope resolver + paint list** (the u32-style + palette): a single resolution for the 4 sources | **foundation**: without this no source colors well and the 15 ceiling stays |
+| **L2** | **SEF kind `languages`** + registration + `onLanguage` + associations + `language-configuration` | declare a language (no color yet) |
+| **L3** | **dynamic tree-sitter wasm in a worker** (parser + `highlights` + `tags` + `injections` + `locals`) | **add languages without recompiling**, and outline/goto-definition without an LSP |
+| **L4** | **TextMate** (`vscode-textmate` + oniguruma) for VSIX | `contributes.grammars` supported; any language colors |
+| **L5** | **Semantic tokens merge** on the resolver (overrides per range what it declares) | exact color with an LSP, without losing the tree's |
+| **L6** | Snippets, folding from the tree, nested injections, `locals` | language fidelity |
+| **L7** | Isolated native (`utilityProcess`) + trust/permissions + hash | grammars without wasm, with explicit security |
 
-**L1 es primero por una razón dura**: es el único punto del que dependen L3, L4 y
-L5. Si se hace al final, hay que reescribir las tres.
-
----
-
-## 10. Decisiones abiertas
-
-1. **Nombre del kind**: `languages` (kit) vs `grammars` vs `treeSitter`. Con las
-   tres cosas juntas (asociación + configuración + gramáticas), `languages` describe mejor.
-2. **¿Un worker de tokenizado o uno por editor?** Hoy cada tab es un módulo WASM;
-   un worker por tab multiplica RAM. Candidato: **un worker compartido** con cola.
-3. **¿Quién es dueño del parser de un lenguaje?** Criterio propuesto: si el
-   engine ya lo tiene compilado → engine (fuente #1); si no → worker (fuente #2).
-   ¿Y si una extensión aporta una versión **mejor** de un lenguaje ya compilado?
-4. **¿`.so`/`.dll` se soportan o solo wasm?** Recomendación: **wasm por defecto**,
-   nativo opt-in con permiso.
-5. **¿`tags.scm` habilita goto-definition y outline propios cuando no hay LSP?**
-   Recomendación: **sí** — es gratis (archivos ya presentes) y es lo que hace nvim.
-6. **¿Qué pasa con los 20 lenguajes hardcodeados** cuando exista la carga
-   dinámica? ¿Se quedan como fast path (recomendado) o se migran todos al worker?
+**L1 is first for a hard reason**: it is the only point L3, L4 and L5 depend on. If
+it is done last, the three must be rewritten.
 
 ---
 
-## 11. Riesgos
+## 10. Open decisions
 
-Lo que puede doler:
+1. **Kind name**: `languages` (kit) vs `grammars` vs `treeSitter`. With the three
+   things together (association + configuration + grammars), `languages` describes
+   it better.
+2. **One tokenization worker or one per editor?** Today each tab is a WASM module;
+   a worker per tab multiplies RAM. Candidate: **a shared worker** with a queue.
+3. **Who owns a language's parser?** Proposed criterion: if the engine already has
+   it compiled → engine (source #1); if not → worker (source #2). And if an
+   extension brings a **better** version of an already-compiled language?
+4. **Are `.so`/`.dll` supported or only wasm?** Recommendation: **wasm by
+   default**, native opt-in with permission.
+5. **Does `tags.scm` enable goto-definition and outline on its own when there is no
+   LSP?** Recommendation: **yes** — it is free (files already present) and it is
+   what nvim does.
+6. **What happens with the 20 hardcoded languages** once dynamic loading exists? Do
+   they stay as a fast path (recommended) or do they all migrate to the worker?
 
-| Riesgo | Por qué duele | Mitigación |
+---
+
+## 11. Risks
+
+What can hurt:
+
+| Risk | Why it hurts | Mitigation |
 | --- | --- | --- |
-| 3 tokenizadores (engine nativo, worker tree-sitter, worker TextMate) | costo de CPU/RAM y tres verdades de color | una sola salida (spans) + un solo resolutor + tokenizar visible-first |
-| Latencia del worker en archivos grandes | el color "llega tarde" | región sucia + cache por línea + prioridad a lo visible |
-| El engine no puede consumir el árbol del worker | fold/injections/tags no son gratis | se calculan en el worker y viajan como datos |
-| `dlopen` = RCE | cualquier `.sef` de terceros | proceso separado + allowlist de símbolos + hash + consentimiento |
-| Deploy: ruta absoluta en el loader, `queries/` al lado del binario | funciona en la máquina de desarrollo y no en la del usuario | L0 |
-| Dos extensiones con el mismo `scopeName`/`id` | color "aleatorio" según orden de instalación | regla explícita + override del usuario |
-| Duplicar la verdad de cobertura | `surface/` ya existe para esto | cada fase actualiza una entrada, no una lista nueva |
+| 3 tokenizers (native engine, tree-sitter worker, TextMate worker) | CPU/RAM cost and three color truths | a single output (spans) + a single resolver + visible-first tokenization |
+| Worker latency on large files | the color "arrives late" | dirty region + per-line cache + priority to the visible |
+| The engine cannot consume the worker's tree | fold/injections/tags are not free | they are computed in the worker and travel as data |
+| `dlopen` = RCE | any third-party `.sef` | separate process + symbol allowlist + hash + consent |
+| Deploy: absolute path in the loader, `queries/` next to the binary | it works on the dev machine and not on the user's | L0 |
+| Two extensions with the same `scopeName`/`id` | "random" color depending on install order | explicit rule + user override |
+| Duplicating the coverage truth | `surface/` already exists for this | each phase updates one entry, not a new list |
 
 ---
 
-## 12. Estado de implementación (lo que YA funciona)
+## 12. Implementation status (what ALREADY works)
 
-Esta sección es la que hay que leer para saber qué está hecho de verdad. Todo lo
-marcado ✅ está **verificado sobre la app compilada** con la extensión REAL de
-Gleam (`gleam.gleam 2.13.0`, el `.vsix` queda en `~/Descargas`).
+This section is the one to read to know what is really done. Everything marked ✅
+is **verified on the compiled app** with the REAL Gleam extension
+(`gleam.gleam 2.13.0`, the `.vsix` is left in `~/Descargas`).
 
-| Fase | Estado | Dónde vive |
+| Phase | Status | Where it lives |
 | --- | --- | --- |
-| **L0** terreno | ✅ | rutas absolutas fuera del loader (`INNERTA_TREESITTER_LIB`, `INNERTA_QUERIES_DIR`); lenguaje por ID en `SetInnertaLanguage`; fallback del engine ya no es `javascript` |
-| **L1** resolutor + paint list | ✅ | `src/shared/syntax/scopes.ts` · `spans.ts` · `legend.ts` (selectores `R:`/`L:`, `-`, paréntesis, comas; u32 de VS Code; paleta) |
-| **L2** tipo SEF `languages` | ✅ | `services/extensions/types/languages/{schema,logic,store,api}.ts` + traductor VSIX |
-| **L3** tree-sitter dinámico | ✅ | `main/extensions/treeSitter/{manager,tokenizer,scopes,queryData,abi}.ts` + worker `entry.ts` (proceso aparte) + `treeSitterHighlightBridge.ts` |
-| **L4** TextMate | ✅ | `main/extensions/tokenize.ts` (main, no worker: ver abajo) + `types/languages/highlight.ts` |
-| **L5** merge LSP ↔ gramática | ✅ | `hostTokens.ts` (dueño único del canal) + `mergeHostTokens` |
-| **L6** snippets / folding / locals | ✅ | snippets y `language-configuration` al registrar; **folding por árbol** (`SetInnertaFoldingRanges`) y **locals** (`resolveDefinition`) consumidos de verdad (ver 12.5) |
-| **L7** nativo aislado | 🟡 | consentimiento por hash implementado (`store.ts`) y verificado en el manager; el camino nativo (`.so`/`.dll`) todavía no se carga |
-| **Extra** lenguajes embebidos | ✅ | segunda pasada en `tokenize.ts` (inyecciones + `embeddedLanguages`) y, del lado dinámico, `injections.scm` re-tokenizado con el parser del lenguaje inyectado |
-| **Extra** tokenColors del tema | ✅ | `themeTokenRules.ts`: los `tokenColors` entran como reglas del resolutor |
-| **Extra** panel de inspección | ✅ | comando `editor.inspectTokens` + `features/editor/inspect/` |
-| **Extra** outline por árbol | ✅ | `tags.scm` → `dynamicSyntax.ts` → panel **Esquema** (con click que mueve el cursor) |
-| **Extra** ir a la definición sin LSP | ✅ | `locals.scm` → `resolveDefinition` → comando `editor.goToDefinition` (F12), con el LSP como respaldo |
-| **Extra** expandir selección | ✅ | `textobjects.scm` → `editor.expandSelection` (Shift+Alt+→) vía `SetInnertaSelection` |
-| **Extra** motor de gramática elegible | ✅ | `editor.grammarEngine` (`auto` / `treeSitter` / `textMate`) en Ajustes → Resaltado; la decisión vive en `grammarSelection.ts` |
+| **L0** ground | ✅ | absolute paths out of the loader (`INNERTA_TREESITTER_LIB`, `INNERTA_QUERIES_DIR`); language by ID in `SetInnertaLanguage`; the engine's fallback is no longer `javascript` |
+| **L1** resolver + paint list | ✅ | `src/shared/syntax/scopes.ts` · `spans.ts` · `legend.ts` (`R:`/`L:` selectors, `-`, parentheses, commas; VS Code's u32; palette) |
+| **L2** SEF kind `languages` | ✅ | `services/extensions/types/languages/{schema,logic,store,api}.ts` + VSIX translator |
+| **L3** dynamic tree-sitter | ✅ | `main/extensions/treeSitter/{manager,tokenizer,scopes,queryData,abi}.ts` + worker `entry.ts` (separate process) + `treeSitterHighlightBridge.ts` |
+| **L4** TextMate | ✅ | `main/extensions/tokenize.ts` (main, not a worker: see below) + `types/languages/highlight.ts` |
+| **L5** LSP ↔ grammar merge | ✅ | `hostTokens.ts` (single owner of the channel) + `mergeHostTokens` |
+| **L6** snippets / folding / locals | ✅ | snippets and `language-configuration` at registration; **tree folding** (`SetInnertaFoldingRanges`) and **locals** (`resolveDefinition`) truly consumed (see 12.5) |
+| **L7** isolated native | 🟡 | per-hash consent implemented (`store.ts`) and verified in the manager; the native path (`.so`/`.dll`) is not loaded yet |
+| **Extra** embedded languages | ✅ | a second pass in `tokenize.ts` (injections + `embeddedLanguages`) and, on the dynamic side, `injections.scm` re-tokenized with the injected language's parser |
+| **Extra** theme tokenColors | ✅ | `themeTokenRules.ts`: `tokenColors` enter as resolver rules |
+| **Extra** inspection panel | ✅ | `editor.inspectTokens` command + `features/editor/inspect/` |
+| **Extra** outline from the tree | ✅ | `tags.scm` → `dynamicSyntax.ts` → **Outline** panel (with a click that moves the cursor) |
+| **Extra** go to definition without an LSP | ✅ | `locals.scm` → `resolveDefinition` → `editor.goToDefinition` command (F12), with the LSP as fallback |
+| **Extra** expand selection | ✅ | `textobjects.scm` → `editor.expandSelection` (Shift+Alt+→) via `SetInnertaSelection` |
+| **Extra** selectable grammar engine | ✅ | `editor.grammarEngine` (`auto` / `treeSitter` / `textMate`) in Settings → Highlighting; the decision lives in `grammarSelection.ts` |
 
-### El canal que hizo posible todo esto
+### The channel that made all of this possible
 
-El motor tenía `SetInnertaSemanticTokens` **declarado y sin usar**: guardaba el
-array y nada lo leía. Ahora es el canal único de color del host:
+The engine had `SetInnertaSemanticTokens` **declared and unused**: it stored the
+array and nothing read it. Now it is the host's single color channel:
 
 ```
-LSP (leyenda del server) ─────┐
-Gramática TextMate ───────────┼─→ mergeHostTokens ─→ encodeHostTokens ─→ SetInnertaSemanticTokens
-Tree-sitter dinámico (.wasm) ─┘        (prioridad)        (delta LSP)          (pinta el C++)
+LSP (server legend) ──────────┐
+TextMate grammar ─────────────┼─→ mergeHostTokens ─→ encodeHostTokens ─→ SetInnertaSemanticTokens
+Dynamic tree-sitter (.wasm) ──┘        (priority)        (LSP delta)          (the C++ paints)
 ```
 
-Y hay un detalle que sólo se ve mirando la glue de emscripten: **pasar un array
-JS a un export que espera puntero no funciona** (se coerciona a número → `NULL`).
-El camino viejo hacía exactamente eso, así que los tokens del LSP nunca llegaron
-al motor y no había ningún error visible. La forma correcta (`malloc` + `HEAP32`
-+ `free`) está en `innertaLoader.ts` y es la que usan los bookmarks.
+And there is a detail only visible when looking at the emscripten glue: **passing a
+JS array to an export that expects a pointer does not work** (it is coerced to a
+number → `NULL`). The old path did exactly that, so the LSP tokens never reached
+the engine and there was no visible error. The correct form (`malloc` + `HEAP32` +
+`free`) is in `innertaLoader.ts` and is what the bookmarks use.
 
-### Tokenizar en el main (y no en un worker)
+### Tokenizing in the main (and not in a worker)
 
-El plan pedía un worker. La implementación usa el **proceso main** porque:
+The plan asked for a worker. The implementation uses the **main process** because:
 
-1. los `.tmLanguage` están en disco y el main ya puede leerlos (con verificación
-   de que la ruta esté DENTRO de `userData/extensions`: una ruta que viene de un
-   manifest es dato de terceros);
-2. el `.wasm` de Oniguruma se resuelve por `require.resolve` — en el renderer
-   habría que versionar un binario en `public/` o pelear con `fetch` sobre `file://`;
-3. **no bloquea la UI** igual que un worker: es otro proceso.
+1. the `.tmLanguage` files are on disk and the main can already read them (with a
+   check that the path is INSIDE `userData/extensions`: a path coming from a
+   manifest is third-party data);
+2. Oniguruma's `.wasm` is resolved with `require.resolve` — in the renderer you
+   would have to version a binary in `public/` or fight `fetch` over `file://`;
+3. it does **not** block the UI, just like a worker: it is another process.
 
-El renderer manda rutas + texto y recibe **scopes** (internea-dos, para que un
-archivo grande no viaje como decenas de miles de objetos). El color se resuelve
-en el renderer porque el tema vive ahí.
+The renderer sends paths + text and receives **scopes** (interned, so a large file
+does not travel as tens of thousands of objects). The color is resolved in the
+renderer because the theme lives there.
 
-### Lenguajes embebidos (hecho)
+### Embedded languages (done)
 
-Un bloque de Gleam dentro de markdown necesita DOS cosas y las dos están:
+A Gleam block inside markdown needs TWO things and both are there:
 
-1. **Inyección** (`injectTo`): la gramática ajena se aplica DENTRO de la padre y
-   marca el tramo (`meta.embedded.block.gleam`). Sin esto no hay nada que
-   re-tokenizar; es el error clásico de implementar sólo la mitad.
-2. **Segunda pasada** (`embeddedLanguages`): ese scope mapea a un id de lenguaje
-   y su gramática tokeniza el tramo con su propio stack, que se conserva entre
-   líneas (si no, un bloque multilínea se rompe en la segunda línea).
+1. **Injection** (`injectTo`): the foreign grammar is applied INSIDE the parent and
+   marks the span (`meta.embedded.block.gleam`). Without this there is nothing to
+   re-tokenize; it is the classic mistake of implementing only half.
+2. **Second pass** (`embeddedLanguages`): that scope maps to a language id and its
+   grammar tokenizes the span with its own stack, which is preserved across lines
+   (otherwise a multi-line block breaks on the second line).
 
-El renderer manda las tres familias de gramáticas (raíz, embebidas e inyectadas)
-para que el main pueda hacer las dos pasadas.
+The renderer sends the three grammar families (root, embedded and injected) so the
+main can do both passes.
 
-### El color del tema manda (también en las gramáticas)
+### The theme's color rules (also in grammars)
 
-`applyInnertaTheme` ya mapeaba `tokenColors` a los 15 campos del motor. Lo que
-faltaba es que ese mismo mapeo entrara como REGLAS al resolutor de scopes: sin
-eso, un tema que distingue `comment.line` de `comment.block` los pintaba igual,
-porque la tabla por defecto manda todo `comment*` al mismo slot. Ahora
-`themeTokenRules.ts` empuja cada selector del tema con su score, así que a igual
-selector gana el tema y a mayor especificidad gana el del tema. Lo que NO viaja
-todavía son los `fontStyle` (el `LineStyle` del motor es sólo color).
+`applyInnertaTheme` already mapped `tokenColors` to the engine's 15 fields. What was
+missing is that same mapping entering the scope resolver as RULES: without that, a
+theme that distinguishes `comment.line` from `comment.block` painted them the same,
+because the default table sends all `comment*` to the same slot. Now
+`themeTokenRules.ts` pushes each theme selector with its score, so for an equal
+selector the theme wins, and for higher specificity the theme's wins. What does NOT
+travel yet are `fontStyle`s (the engine's `LineStyle` is color only).
 
-### Panel "Inspeccionar tokens" (`editor.inspectTokens`)
+### "Inspect tokens" panel (`editor.inspectTokens`)
 
-El slot no dice quién se equivocó. El panel muestra, por archivo y por FUENTE (en
-orden de prioridad, con la que pisa marcada), el scope stack de cada token, el
-slot al que resolvió y el color que el tema le dio — con resumen agrupado por
-scope y la lista cruda de tokens. La procedencia la guarda `highlightSnapshot.ts`
-(una entrada por fuente: el LSP y la gramática conviven en el mismo archivo y con
-una sola entrada se borraban el rastro mutuamente). Se abre desde la paleta o
-desde Ajustes → Resaltado.
+The slot does not say who got it wrong. The panel shows, per file and per SOURCE
+(in priority order, with the one that overrides marked), each token's scope stack,
+the slot it resolved to and the color the theme gave it — with a summary grouped by
+scope and the raw token list. Provenance is kept by `highlightSnapshot.ts` (one
+entry per source: the LSP and the grammar coexist in the same file and with a
+single entry they erased each other's trace). It opens from the palette or from
+Settings → Highlighting.
 
-### Tree-sitter dinámico: un `.wasm` de terceros, en su propio proceso
+### Dynamic tree-sitter: a third-party `.wasm`, in its own process
 
-Un paquete SEF puede traer su parser (`grammars/x.wasm`) y sus queries `.scm`. Eso
-es más preciso que un `.tmLanguage`: el árbol de sintaxis sabe que ese `*` es
-multiplicación y no un puntero. El precio es ejecutar un binario de terceros, así
-que va en un **`utilityProcess` aparte** (`tree-sitter/manager.ts`):
+A SEF package can bring its parser (`grammars/x.wasm`) and its `.scm` queries. That
+is more precise than a `.tmLanguage`: the syntax tree knows that `*` is a
+multiplication and not a pointer. The price is running a third-party binary, so it
+goes in a **separate `utilityProcess`** (`tree-sitter/manager.ts`):
 
-- **timeout por pedido** (10 s) y si se cuelga se MATA el proceso — un wasm
-  colgado dentro del main se lleva la ventana;
-- **apagado por inactividad** (1 min): la mayoría de las sesiones no abre un
-  lenguaje dinámico y no carga con un proceso vivo;
-- **jail de rutas** (parser y queries dentro de `userData/extensions`) y
-  **sha256 obligatorio cuando el paquete lo declara** — el hash es lo que
-  convierte "confío en el paquete que instalé" en algo verificable;
-- **ABI**: se compara la declarada con la real y se AVISA (no se falla: un parser
-  de otra ABI muchas veces parsea y produce nodos que las queries ya no conocen).
+- **per-request timeout** (10 s) and if it hangs the process is KILLED — a hung
+  wasm inside the main takes the window with it;
+- **idle shutdown** (1 min): most sessions do not open a dynamic language and do
+  not load with a live process;
+- **path jail** (parser and queries inside `userData/extensions`) and **sha256
+  required when the package declares it** — the hash is what turns "I trust the
+  package I installed" into something verifiable;
+- **ABI**: the declared one is compared with the real one and it WARNS (does not
+  fail: a parser from another ABI often parses and produces nodes the queries no
+  longer know).
 
-Las dos fuentes tienen la misma prioridad en el merge, así que publicar por las
-dos sería no poder decidir quién manda. Quién gana **lo elige el usuario** en
-Ajustes → Resaltado (`editor.grammarEngine`), porque no hay una respuesta
-correcta para todos: `auto` (default) le da prioridad a TextMate —el camino que
-usan las extensiones de VS Code—, `treeSitter` al árbol siempre que haya uno
-usable (un `.tmLanguage` no puede saber que ese `*` es una multiplicación) y
-`textMate` no levanta el proceso del parser. La decisión vive en UN solo lugar
-(`grammarSelection.ts`) y los dos puentes la consultan: el que no gana no publica
-nada. Si el lenguaje elegido no tiene esa gramática, se cae a la otra (nunca se
-deja el archivo sin color porque sí) y el motivo sale en el log de diagnóstico.
+Both sources have the same priority in the merge, so publishing through both would
+mean not being able to decide who rules. Who wins is **chosen by the user** in
+Settings → Highlighting (`editor.grammarEngine`), because there is no correct
+answer for everyone: `auto` (default) prioritizes TextMate —the path VS Code
+extensions use—, `treeSitter` prioritizes the tree whenever there is a usable one
+(a `.tmLanguage` cannot know that `*` is a multiplication) and `textMate` does not
+start the parser process. The decision lives in ONE place (`grammarSelection.ts`)
+and both bridges consult it: the one that does not win publishes nothing. If the
+chosen language does not have that grammar, it falls back to the other (the file is
+never left uncolored for no reason) and the reason goes into the diagnostic log.
 
-#### El hallazgo que casi rompe todo (medido, no supuesto)
+#### The finding that almost broke everything (measured, not assumed)
 
-La documentación de tree-sitter habla de offsets en BYTES, así que lo natural es
-codificar a UTF-8 y traducir cada índice a columna UTF-16. **Eso descoloca el
-color** a partir del primer carácter multibyte: el binding de `web-tree-sitter`
-pasa el texto con `(i) => texto.slice(i)`, o sea que su espacio de índices son
-unidades UTF-16 aunque los docs digan "bytes". Medido con el parser real de
-JavaScript:
+tree-sitter's documentation talks about BYTE offsets, so the natural thing is to
+encode to UTF-8 and translate each index to a UTF-16 column. **That desyncs the
+color** from the first multibyte character on: the `web-tree-sitter` binding passes
+the text with `(i) => text.slice(i)`, i.e. its index space is UTF-16 units even
+though the docs say "bytes". Measured with the real JavaScript parser:
 
 ```
-`const a = "😀"`  → la captura de string es [10, 14]   (4 unidades UTF-16)
+`const a = "😀"`  → the string capture is [10, 14]   (4 UTF-16 units)
 `const a = "ab"`  → [10, 14]
-(en bytes, la primera sería [10, 16] → todo lo que sigue, corrido)
+(in bytes, the first would be [10, 16] → everything after it, shifted)
 ```
 
-Por eso `scopes.ts` NO convierte: usa el índice del parser tal cual, que ya está
-en la unidad de la línea del editor (y lo recorta si un parser devuelve un rango
-más largo que el texto).
+That is why `scopes.ts` does NOT convert: it uses the parser's index as-is, which
+is already in the editor line's unit (and clamps it if a parser returns a range
+longer than the text).
 
-### 12.5 Los datos del árbol (no sólo color)
+### 12.5 Tree data (not just color)
 
-El tokenizador devolvía **sólo** color: cargaba `tags.scm`, `folds.scm`,
-`locals.scm`… y las ignoraba con un `if (category !== 'highlights') continue`.
-O sea: se pagaba el costo de leer y compilar esas queries para tirar su dato —el
-árbol sabe dónde está cada función, qué se pliega y a qué definición apunta cada
-variable, y nada de eso llegaba a la UI. Ahora el pedido viaja con TODAS las
-categorías y la respuesta trae, en una sola pasada:
+The tokenizer returned **only** color: it loaded `tags.scm`, `folds.scm`,
+`locals.scm`… and ignored them with an `if (category !== 'highlights') continue`.
+In other words: the cost of reading and compiling those queries was paid to throw
+their data away —the tree knows where each function is, what folds and which
+definition each variable points to, and none of that reached the UI. Now the
+request travels with ALL categories and the response brings, in a single pass:
 
-| Query | Dato | Quién lo consume |
+| Query | Data | Who consumes it |
 | --- | --- | --- |
 | `highlights.scm` | tokens (scope + slot) | `hostTokens` → `SetInnertaSemanticTokens` |
-| `tags.scm` | símbolos anidados | panel **Esquema** (`services/extensions/dynamicSyntax.ts`) |
-| `folds.scm` | rangos plegables | motor: `SetInnertaFoldingRanges` (chevrons del gutter), con estado leído de vuelta con `GetInnertaFoldingCount` / `GetInnertaFoldingIsHost` / `GetInnertaFoldingFromEngine` |
-| `injections.scm` | tramos de otro lenguaje | se re-tokenizan en el MISMO pedido con el parser del lenguaje inyectado |
-| `locals.scm` | definiciones y referencias con su ámbito | **Ir a la definición** (`treeNavigationLogic.resolveDefinition`) |
-| `textobjects.scm` | rangos de función/clase/parámetro | **Expandir selección** (`SetInnertaSelection`) |
-| `indents.scm`, `unknown` | — | se cargan y se reportan; todavía no hay consumidor (ver Límites) |
+| `tags.scm` | nested symbols | **Outline** panel (`services/extensions/dynamicSyntax.ts`) |
+| `folds.scm` | foldable ranges | engine: `SetInnertaFoldingRanges` (gutter chevrons), with state read back with `GetInnertaFoldingCount` / `GetInnertaFoldingIsHost` / `GetInnertaFoldingFromEngine` |
+| `injections.scm` | spans of another language | re-tokenized in the SAME request with the injected language's parser |
+| `locals.scm` | definitions and references with their scope | **Go to definition** (`treeNavigationLogic.resolveDefinition`) |
+| `textobjects.scm` | function/class/parameter ranges | **Expand selection** (`SetInnertaSelection`) |
+| `indents.scm`, `unknown` | — | they load and are reported; there is no consumer yet (see Limits) |
 
-**La convención de cada query es el contrato** y por eso está en un módulo propio
-(`treeSitter/queryData.ts`), puro y testeado: los símbolos salen de `@definition.X`
-con un `@name` adentro (o del texto del propio capture si la gramática captura el
-identificador), el plegado de `@fold[.kind]`, las inyecciones del `#set!
-injection.language` (o del texto de un `@injection.language`, que es el caso de
-los heredocs) y los alcances de `@local.definition` / `@local.reference` / `@local.scope`.
+**Each query's convention is the contract** and that is why it is in a module of its
+own (`treeSitter/queryData.ts`), pure and tested: symbols come from `@definition.X`
+with a `@name` inside (or from the capture's own text if the grammar captures the
+identifier), folding from `@fold[.kind]`, injections from
+`#set! injection.language` (or from the text of an `@injection.language`, which is
+the heredoc case) and scopes from `@local.definition` / `@local.reference` /
+`@local.scope`.
 
-Dos detalles que costaron un bug cada uno:
+Two details that each cost a bug:
 
-1. **El fin de un rango es EXCLUSIVO.** Si se calcula con `positionAt(end)`, un
-   nodo que termina justo en un salto de línea reporta la línea siguiente: una
-   función de 4 líneas se veía de 5 y su plegado se comía la línea en blanco de
-   abajo. Se calcula desde el ÚLTIMO CARÁCTER capturado.
-2. **Un rango de una línea no se pliega** y se descarta; y si dos queries
-   capturan la MISMA línea de inicio, gana el rango más grande (plegar la línea
-   de arriba esconde el bloque, no su cabecera).
+1. **A range's end is EXCLUSIVE.** If computed with `positionAt(end)`, a node that
+   ends right at a line break reports the next line: a 4-line function looked
+   5 lines and its fold ate the blank line below. It is computed from the LAST
+   captured CHARACTER.
+2. **A single-line range is not folded** and is dropped; and if two queries capture
+   the SAME start line, the larger range wins (folding the line above hides the
+   block, not its header).
 
-El plegado es hostil a equivocarse de a poco: `FoldingManager::UpdateRanges` corre
-en cada cambio de buffer y **pisa** los rangos, así que ahora tiene un modo host
-(`SetHostRanges`/`ClearHostRanges`): mientras el host tenga rangos del árbol, la
-heurística de indentación no los toca (una tecla desplegaría todo el archivo).
-Mandar una lista VACÍA es la orden de volver a la indentación, y es lo que hace el
-puente al abrir otro archivo.
+Folding is hostile to getting it wrong little by little: `FoldingManager::UpdateRanges`
+runs on every buffer change and **overwrites** the ranges, so it now has a host mode
+(`SetHostRanges`/`ClearHostRanges`): while the host has tree ranges, the
+indentation heuristic does not touch them (one keystroke would unfold the whole
+file). Sending an EMPTY list is the order to go back to indentation, and it is what
+the bridge does when opening another file.
 
-### 12.6 El CLI resuelve las queries que el repo NO publica
+### 12.6 The CLI resolves the queries the repo does NOT publish
 
-Lo medido sobre los 18 lenguajes del motor: `folds.scm` **0/18**, `indents` 0/18,
-`textobjects` 0/18, `locals` 4/18, `injections` 7/18. No era un olvido del CLI:
-es lo que publica cada repo de parser. Y no fallaba con un error, fallaba con un
-SILENCIO: el paquete se instalaba sin `folds.scm` y el editor plegaba por
-sangría sin que nadie supiera por qué.
+Measured over the engine's 18 languages: `folds.scm` **0/18**, `indents` 0/18,
+`textobjects` 0/18, `locals` 4/18, `injections` 7/18. It was not a CLI oversight: it
+is what each parser repo publishes. And it did not fail with an error, it failed
+with SILENCE: the package installed without `folds.scm` and the editor folded by
+indentation without anyone knowing why.
 
-`tools/grammar.mjs` ahora resuelve **por categoría** y reporta el resultado:
+`tools/grammar.mjs` now resolves **per category** and reports the result:
 
-1. **ajuste propio** — `deps/queries-overrides/<símbolo>/<categoría>.scm`, que es
-   lo que el engine ya sabe aplicar (`applyQueryOverrides` pisa o agrega);
-2. **repo del parser** (upstream);
-3. **suplemento** — nvim-treesitter **fijado por commit** (Apache-2.0), que es
-   donde vive el catálogo supplementary real. Se guarda en el directorio de
-   ajustes: la próxima corrida no necesita red y el MISMO archivo sirve para el
-   paquete SEF y para el engine embebido (una sola fuente de verdad).
+1. **own override** — `deps/queries-overrides/<symbol>/<category>.scm`, which is
+   what the engine already knows how to apply (`applyQueryOverrides` overwrites or
+   adds);
+2. **parser repo** (upstream);
+3. **supplement** — nvim-treesitter **pinned by commit** (Apache-2.0), which is
+   where the real supplementary catalogue lives. It is stored in the settings
+   directory: the next run needs no network and the SAME file serves both the SEF
+   package and the embedded engine (a single source of truth).
 
-Lo que gana cada categoría queda en el `grammar.json` del paquete con su
-procedencia (`source`, `origin`, `ref`, `license`, `sha256`) y las que no se
-pudieron traer se declaran en `missingCategories` — el IDE cae a su alternativa y
-queda constancia de que fue a propósito. `--verify` corre las queries y **un
-categoría con 0 captures es un error de instalación**, no un aviso. Flags:
-`--categories`, `--supplement none|nvim`, `--supplement-ref`, `--overrides`,
-`--verify`.
+What each category wins goes into the package's `grammar.json` with its provenance
+(`source`, `origin`, `ref`, `license`, `sha256`) and the ones that could not be
+brought are declared in `missingCategories` — the IDE falls back to its
+alternative and there is a record that it was on purpose. `--verify` runs the
+queries and **a category with 0 captures is an install error**, not a notice.
+Flags: `--categories`, `--supplement none|nvim`, `--supplement-ref`,
+`--overrides`, `--verify`.
 
-Modo `--target engine`: copia las fuentes (lista negra de lo que el build en C no
-usa — y no "sólo `src/`", porque varios monorepos incluyen hermanos del parser),
-anota los suplementos en `deps/queries-overrides/<símbolo>/` y, con `--build`,
-regenera los fragmentos del wasm (`tools/tui /build-wasm`) y recompila con
-`emscripten/build-wasm.sh`, que ya deja `innerta.wasm`/`innerta.js` en
-`src/renderer/public/innerta/`.
+`--target engine` mode: copies the sources (blacklist of what the C build does not
+use — and not "only `src/`", because several monorepos include siblings of the
+parser), annotates the supplements in `deps/queries-overrides/<symbol>/` and, with
+`--build`, regenerates the wasm fragments (`tools/tui /build-wasm`) and recompiles
+with `emscripten/build-wasm.sh`, which already leaves `innerta.wasm`/`innerta.js`
+in `src/renderer/public/innerta/`.
 
-### 12.7 El motor también lee `folds.scm` (lenguajes de fábrica)
+### 12.7 The engine also reads `folds.scm` (built-in languages)
 
-Hasta aquí el plegado por árbol sólo llegaba por el host (`SetInnertaFoldingRanges`,
-que es el camino de la gramática dinámica y del `.sef`). Un lenguaje EMBEBIDO no
-tiene host que le empuje nada, así que plegaba por indentación aunque el árbol
-supiera dónde empieza y termina cada bloque.
+Until here, tree folding only arrived through the host (`SetInnertaFoldingRanges`,
+which is the dynamic grammar and `.sef` path). An EMBEDDED language has no host to
+push anything to it, so it folded by indentation even though the tree knew where
+each block starts and ends.
 
-`SyntaxHighlighter::CollectFoldRanges()` corre `folds.scm` sobre el árbol que dejó
-el resaltado (mismo frame, sin parsear dos veces) y `EditorWindow` lo aplica:
+`SyntaxHighlighter::CollectFoldRanges()` runs `folds.scm` on the tree left by the
+highlighting (same frame, without parsing twice) and `EditorWindow` applies it:
 
-- **quién manda**: el host, en SU lenguaje (una gramática dinámica gana sobre la
-  embebida). El motor no gana ni se queda mudo por un push viejo: la propiedad se
-  anota por lenguaje y el host la suelta al mandar una lista vacía;
-- **y el `[]` del host devuelve el plegado al motor, no a la indentación**: el
-  IDE manda la lista vacía al abrir un archivo (`startHighlightPipelines`), y ese
-  clear llegaba DESPUÉS del primer pintado — borraba los rangos del `folds.scm`
-  embebido y no había nada que los recalculara hasta una tecla, así que un
-  lenguaje de fábrica plegaba por indentación para siempre. Ahora ese `[]` pide un
-  resaltado nuevo, y el próximo Paint vuelve a correr la query del árbol;
-- **el dato**: sólo líneas (`startLine` + 1 .. `endLine`, el mismo contrato que el
-  host) y el `kind` por sufijo del capture (`@fold.comment` → 1, `@fold.imports`
-  → 2, resto 0), igual criterio que `foldKindCode` del lado TS. Las directivas
-  `(#set! fold.kind …)` de nvim se ignoran a propósito: el motor no interpreta
-  `#set!`;
-- **sin query no se inventa nada**: a diferencia de `injections.scm`, no hay
-  patrón por defecto (una query de plegado adivinada plegaría mal); sin
-  `folds.scm` se sigue plegando por indentación, y el `nullptr` se cachea para no
-  releer el disco en cada frame;
-- **diagnóstico honesto**: `GetInnertaFoldingIsHost` respondía "no es
-  indentación", que ahora tiene dos causas (gramática dinámica del host o el
-  `folds.scm` embebido). `GetInnertaFoldingFromEngine` las distingue, así que la
-  línea `[languages] …` ya no reporta como "del host" el plegado de un lenguaje
-  de fábrica.
+- **who rules**: the host, in ITS language (a dynamic grammar wins over the
+  embedded one). The engine neither wins nor stays mute because of an old push:
+  ownership is annotated per language and the host releases it by sending an empty
+  list;
+- **and the host's `[]` returns folding to the ENGINE, not to indentation**: the
+  IDE sends the empty list when opening a file (`startHighlightPipelines`), and
+  that clear arrived AFTER the first paint — it erased the embedded `folds.scm`
+  ranges and there was nothing to recompute them until a keystroke, so a built-in
+  language folded by indentation forever. Now that `[]` asks for a new highlight,
+  and the next Paint runs the tree query again;
+- **the data**: only lines (`startLine` + 1 .. `endLine`, the same contract as the
+  host) and the `kind` from the capture's suffix (`@fold.comment` → 1,
+  `@fold.imports` → 2, rest 0), the same criterion as `foldKindCode` on the TS
+  side. nvim's `(#set! fold.kind …)` directives are ignored on purpose: the engine
+  does not interpret `#set!`;
+- **no query means nothing is invented**: unlike `injections.scm`, there is no
+  default pattern (a guessed fold query would fold wrongly); without `folds.scm` it
+  keeps folding by indentation, and the `nullptr` is cached so it does not re-read
+  disk every frame;
+- **honest diagnostic**: `GetInnertaFoldingIsHost` answered "it is not
+  indentation", which now has two causes (a dynamic grammar from the host or the
+  embedded `folds.scm`). `GetInnertaFoldingFromEngine` tells them apart, so the
+  `[languages] …` line no longer reports a built-in language's folding as "from the
+  host".
 
-### Límites conocidos (dichos, no escondidos)
-- **`file.saveAll`** devolvía siempre error (`{ ok }` vs `{ success }`) —
-  corregido de paso, porque un formatter de lenguaje lo usa.
-- **`tag`** es una entrada EXTRA de la leyenda (índice 23): el LSP no tiene
-  `tag`, y sin ella una etiqueta HTML caía en el color de tipos. El espejo entre
-  `legend.ts` (TS) y `SyntaxHighlighter::LspTokenTypeToSlot` (C++) es un contrato:
-  el test `tests/syntax-legend.test.ts` lo verifica del lado TS.
-- **Temas**: los `fontStyle` (italic/bold por scope) no viajan al motor: su
-  `LineStyle` es sólo color. El dato no se pierde en el camino del host (el paint
-  list ya lo modela) pero el canvas no lo pinta.
-- **Tree-sitter dinámico**: `indents.scm` (y las queries `unknown`) se cargan y se
-  reportan, pero su dato todavía no tiene consumidor: la indentación al apretar
-  Enter la decide el motor, y para cambiarla hace falta un canal nuevo
-  (`SetInnertaIndentRules`) que no existe.
-- **Inyecciones dinámicas**: el tramo se re-tokeniza sólo si el lenguaje
-  inyectado está instalado y tiene parser `.wasm`. Los lenguajes declarados en
-  una `injections.scm` se leen al indexar la query (`injectionLanguagesOf`), así
-  que no se mandan candidatos a ciegas.
-- **Selección**: `expandSelection` recuerda el último rango por archivo (el motor
-  sólo devuelve el TEXTO seleccionado, no el rango), así que un click manual en
-  el medio reinicia el ciclo al objeto más chico.
-- **Parser nativo** (`.so`/`.dll`): el schema lo declara, el manager lo exige
-  explícito y el worker lo rechaza con el motivo correcto. Cargarlo necesita el
-  proceso aislado con consentimiento que todavía no está.
+### Known limits (stated, not hidden)
+- **`file.saveAll`** always returned an error (`{ ok }` vs `{ success }`) — fixed
+  along the way, because a language formatter uses it.
+- **`tag`** is an EXTRA legend entry (index 23): the LSP has no `tag`, and without
+  it an HTML label fell into the type color. The mirror between `legend.ts` (TS)
+  and `SyntaxHighlighter::LspTokenTypeToSlot` (C++) is a contract: the test
+  `tests/syntax-legend.test.ts` verifies it on the TS side.
+- **Themes**: `fontStyle`s (italic/bold per scope) do not travel to the engine: its
+  `LineStyle` is color only. The data is not lost on the host path (the paint list
+  already models it) but the canvas does not paint it.
+- **Dynamic tree-sitter**: `indents.scm` (and `unknown` queries) load and are
+  reported, but their data still has no consumer: indentation on Enter is decided
+  by the engine, and changing it needs a new channel (`SetInnertaIndentRules`) that
+  does not exist.
+- **Dynamic injections**: the span is re-tokenized only if the injected language is
+  installed and has a `.wasm` parser. The languages declared in an `injections.scm`
+  are read when indexing the query (`injectionLanguagesOf`), so candidates are not
+  sent blindly.
+- **Selection**: `expandSelection` remembers the last range per file (the engine
+  only returns the selected TEXT, not the range), so a manual click in the middle
+  restarts the cycle at the smallest object.
+- **Native parser** (`.so`/`.dll`): the schema declares it, the manager requires it
+  explicitly and the worker rejects it with the correct reason. Loading it needs
+  the isolated process with consent that is not there yet.
 
-### Cómo se prueba
+### How it is tested
 
 ```bash
-# Unidades (rápido, sin red)
+# Units (fast, no network)
 npx vitest run tests/syntax-legend.test.ts tests/language-tokenizer.test.ts \
                tests/language-highlight-map.test.ts tests/languages-translator.test.ts \
                tests/tree-sitter-scopes.test.ts tests/tree-sitter-manager.test.ts \
@@ -639,71 +648,70 @@ npx vitest run tests/syntax-legend.test.ts tests/language-tokenizer.test.ts \
                tests/dynamic-syntax.test.ts \
                tests/highlight-snapshot.test.ts tests/theme-token-rules.test.ts
 
-# Parser wasm REAL (el binario no se versiona: se baja el paquete que publica VS Code)
+# REAL wasm parser (the binary is not committed: the package published by VS Code is downloaded)
 npm pack @vscode/tree-sitter-wasm@0.3.1 && tar xzf vscode-tree-sitter-wasm-0.3.1.tgz
 SCRAKK_TS_PARSER=$PWD/package/wasm/tree-sitter-javascript.wasm npx vitest run tests/tree-sitter-tokenizer.test.ts
 
-# Worker COMPILADO en Node (bundle de producción + runtime wasm + parser real)
+# COMPILED worker in Node (production bundle + wasm runtime + real parser)
 npm run build && node tools/_probe-tree-sitter.mjs $PWD/package/wasm/tree-sitter-javascript.wasm
 
-# App REAL: instala el .sef, tokeniza por IPC (utilityProcess) y verifica el PINTADO
+# REAL app: installs the .sef, tokenizes over IPC (utilityProcess) and verifies PAINTING
 node tools/_make-dynamic-sef.mjs $PWD/package/wasm/tree-sitter-javascript.wasm
 xvfb-run -a node tools/_probe-dynamic-app.mjs
-# Mismo archivo con y sin la extensión: los píxeles que pasan de gris a color
-# son los tokens que pintó la extensión (ver docs/editor/screenshots.md)
-node tools/_look-png.mjs /tmp/innerta-shots/editor-sin-extension.png \
-                         /tmp/innerta-shots/editor-con-extension.png
+# Same file with and without the extension: the pixels that go from gray to color
+# are the tokens the extension painted (see docs/editor/screenshots.md)
+node tools/_look-png.mjs /tmp/innerta-shots/editor-without-extension.png \
+                         /tmp/innerta-shots/editor-with-extension.png
 
-tools/_make-openfile-vsix.mjs && node tools/_probe-language.mjs   # app compilada
+tools/_make-openfile-vsix.mjs && node tools/_probe-language.mjs   # compiled app
 ```
 
-El probe dinámico corre sobre Electron real y verifica, en este orden: que el
-`.sef` se instale; que `tokenizeDynamic` responda con tokens y scopes (o sea que
-el `utilityProcess` levante, reciba el pedido y conteste); que un pedido con las
-SEIS categorías devuelva símbolos anidados, plegado, alcances (con su ámbito),
-objetos de texto y una inyección de CSS; que un sha256 que no coincide se rechace
-ANTES de ejecutar el wasm; que abrir el archivo pinte los píxeles de gris a color
-y que el panel **Esquema** muestre el símbolo del ÁRBOL; y que el ajuste de motor
-de gramática apague y vuelva a encender el árbol sin reabrir el archivo.
+The dynamic probe runs on real Electron and verifies, in this order: that the
+`.sef` installs; that `tokenizeDynamic` answers with tokens and scopes (i.e. that
+the `utilityProcess` comes up, receives the request and answers); that a request
+with the SIX categories returns nested symbols, folding, scopes (with their scope),
+text objects and a CSS injection; that a sha256 that does not match is rejected
+BEFORE running the wasm; that opening the file paints the pixels from gray to
+color and that the **Outline** panel shows the TREE's symbol; and that the grammar
+engine setting turns the tree off and back on without reopening the file.
 
-Y desde la última pasada el probe **maneja la app** en lugar de mirar el store,
-porque que el dato haya llegado no prueba que el usuario pueda usarlo:
+And since the last pass the probe **drives the app** instead of watching the store,
+because the fact that the data arrived does not prove the user can use it:
 
-- **F12 sobre una referencia** → la statusbar queda en `Ln 8, Col 10`: la
-  DEFINICIÓN de `saludar`, resuelta con `locals.scm` (y en la columna del
-  identificador, no en la del `function`).
-- **Shift+Alt+→** → se captura antes/después y se comparan los píxeles del
-  canvas; y para que no quede duda de QUÉ se seleccionó, **Ctrl+C y se lee el
-  portapapeles**: `"function saludar(nombre) {\n  return nombre\n}"`, que es
-  exactamente el objeto `function.outer` que declaró el árbol. Una segunda
-  pulsación ya no tiene objeto más grande y el comando LO DICE.
-- **Click en el chevron del gutter** → el bloque se pliega: la captura lo
-  muestra (las líneas del cuerpo desaparecen). Para clickear donde hay que
-  clickear, el probe **calibra la geometría del editor contra la statusbar**
-  (barrido de clicks y ajuste de alto de línea, origen del texto y ancho de
-  carácter, con verificación de residuos): nada de asumir el layout, y con dos
-  puntos no alcanza — el redondeo del `floor` hacía creer que la línea medía
-  17.2px cuando medía 16.
+- **F12 on a reference** → the status bar stays at `Ln 8, Col 10`: the DEFINITION
+  of `saludar`, resolved with `locals.scm` (and at the identifier's column, not the
+  `function` one).
+- **Shift+Alt+→** → the before/after is captured and the canvas pixels are compared;
+  and so there is no doubt about WHAT was selected, **Ctrl+C and the clipboard is
+  read**: `"function saludar(nombre) {\n  return nombre\n}"`, which is exactly the
+  `function.outer` object the tree declared. A second press has no larger object and
+  the command SAYS so.
+- **Click on the gutter chevron** → the block folds: the capture shows it (the body
+  lines disappear). To click where it has to click, the probe **calibrates the
+  editor's geometry against the status bar** (click sweep and adjustment of line
+  height, text origin and char width, with residual verification): no assuming the
+  layout, and two points are not enough — `floor` rounding made it think the line
+  measured 17.2px when it measured 16.
 
-El plegado es lo único que no se puede leer del DOM, y su evidencia es la línea
-de diagnóstico del puente:
+Folding is the only thing that cannot be read from the DOM, and its evidence is the
+bridge's diagnostic line:
 
 ```
-[languages] dynjs: 13 tokens · 4 símbolos · folds: 2 en el motor, del host (aplicados) · 6 locales · …
+[languages] dynjs: 13 tokens · 4 symbols · folds: 2 in the engine, from the host (applied) · 6 locals · …
 ```
 
-`2 en el motor, del host` sale del CONTADOR DEL PROPIO MOTOR
-(`GetInnertaFoldingCount` / `GetInnertaFoldingIsHost`, ahora expuestos en el
-loader): dice cuántos rangos tiene adentro y que son los del host, no los de la
-heurística de indentación. Es a propósito que no alcance con "la llamada no
-lanzó": `setFoldingRanges` es `void`, y dar por bueno un `void` sin lanzar es
-exactamente el verde falso que hace buscar el bug en el lugar equivocado.
+`2 in the engine, from the host` comes from the ENGINE'S OWN COUNTER
+(`GetInnertaFoldingCount` / `GetInnertaFoldingIsHost`, now exposed in the loader):
+it says how many ranges it holds and that they are the host's, not the indentation
+heuristic's. It is on purpose that "the call did not throw" is not enough:
+`setFoldingRanges` is `void`, and taking a non-throwing `void` as good is exactly
+the false green that makes you look for the bug in the wrong place.
 
-Como control desinstala la extensión y vuelve a capturar: si los conteos no
-bajan, la métrica está mintiendo (fue exactamente lo que pasó con la primera
-versión del chequeo, que medía el color del wallpaper).
+As a control it uninstalls the extension and captures again: if the counts do not
+drop, the metric is lying (it is exactly what happened with the first version of
+the check, which measured the wallpaper's color).
 
-El último probe instala el VSIX real de Gleam, verifica el manifest traducido,
-tokeniza la GRAMÁTICA REAL, comprueba el round-trip del canal del motor en el WASM
-compilado, abre el archivo por una extensión y mide los píxeles del editor para
-confirmar que hay **color de token** (no sólo texto gris).
+The last probe installs the real Gleam VSIX, verifies the translated manifest,
+tokenizes the REAL GRAMMAR, checks the engine channel round-trip in the compiled
+WASM, opens the file through an extension and measures the editor's pixels to
+confirm there is **token color** (not just gray text).

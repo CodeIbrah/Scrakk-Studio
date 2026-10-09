@@ -1,148 +1,147 @@
 ---
-title: "Arquitectura del sistema LSP"
+title: "LSP system architecture"
 group: lsp
 order: 30
-summary: "Cómo se conectan las capas del LSP: renderer → preload → main → servidores, con routing multi-root y el ciclo de vida de cada cliente."
+summary: "How the LSP layers connect: renderer → preload → main → servers, with multi-root routing and each client's lifecycle."
 ---
-# Arquitectura del sistema LSP
+# LSP system architecture
 
-El renderer pide por IPC, el proceso **main** orquesta, y cada language server
-corre como un **proceso hijo** (o por TCP). Esta es la foto de conjunto.
+The renderer asks over IPC, the **main** process orchestrates, and each language
+server runs as a **child process** (or over TCP). This is the whole picture.
 
-## Capas
+## Layers
 
-Los procesos, de arriba hacia abajo:
+The processes, top to bottom:
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │ RENDERER (sandbox)                                            │
-│  services/lsp/api.ts          ← ops tipadas + request genérico│
-│  services/lsp/diagnosticsStore← cache reactiva multi-server   │
-│  services/lsp/format.ts       ← bloque <lsp-diagnostics>      │
-│  services/ai/tools/lsp/       ← tool 'lsp' del agente         │
+│  services/lsp/api.ts          ← typed ops + generic request   │
+│  services/lsp/diagnosticsStore← reactive multi-server cache   │
+│  services/lsp/format.ts       ← <lsp-diagnostics> block       │
+│  services/ai/tools/lsp/       ← the agent's 'lsp' tool        │
 └───────────────▲──────────────────────────────┬───────────────┘
-                │ eventos push                  │ invoke
+                │ push events                   │ invoke
 ┌───────────────┴──────────────────────────────▼───────────────┐
 │ PRELOAD (contextBridge): window.api.lsp                       │
 └───────────────▲──────────────────────────────┬───────────────┘
                 │                              │
 ┌───────────────┴──────────────────────────────▼───────────────┐
-│ MAIN — src/main/lsp/index.ts (handlers IPC + broadcast)       │
-│  manager.ts: roots · routing · clientes · drain · restart     │
-│  client.ts : conexión JSON-RPC con cada server (hijo real)    │
+│ MAIN — src/main/lsp/index.ts (IPC handlers + broadcast)       │
+│  manager.ts: roots · routing · clients · drain · restart      │
+│  client.ts : JSON-RPC connection to each server (real child)  │
 │  config/routing/builtinServers/install                        │
 └───────────────┬───────────────────────────────────────────────┘
                 │ stdio / TCP (JSON-RPC 2.0, Content-Length)
         ┌───────▼────────┐
-        │ language server │  ← un proceso hijo por `name@root`
+        │ language server │  ← one child process per `name@root`
         └────────────────┘
 ```
 
-El renderer corre sandboxeado: **nunca** toca procesos. Toda operación pasa
-por IPC; los eventos push (diagnósticos, estado de servers, progreso) se
-difunden a todas las ventanas vivas.
+The renderer runs sandboxed: it **never** touches processes. Every operation goes
+over IPC; push events (diagnostics, server status, progress) are broadcast to all
+live windows.
 
-## Ciclo de vida de un cliente
+## A client's lifecycle
 
-Un cliente nace **lazy** (recién cuando un archivo se toca o hay un request),
-pasa por el handshake y muere ordenado. Los pasos:
+A client is born **lazy** (only when a file is touched or there is a request),
+goes through the handshake and dies in an orderly way. The steps:
 
-1. **Arranque lazy**: solo cuando un archivo se toca o se hace un request.
-2. `resolveOrInstall`: binario en PATH → binario gestionado
-   (`~/.scrakk/lsp/{bin,npm}`) → receta de instalación del catálogo/extensión.
-3. **Handshake**: `initialize` con timeout (15 s default) → `initialized` →
-   `workspace/didChangeConfiguration` si hay settings.
-4. **Negociación**: si el server declara `textDocumentSync.change = 2`, el
-   cliente activa sync incremental para ese server.
-5. **Uso**: didOpen/didChange(versionado)/didSave en cada sync; requests con
-   timeout (30 s default). Si el `content` es **idéntico** al último sincronizado
-   el `didChange` NO se manda (en LSP un cambio sin `range` reemplaza el
-   documento entero, así que un cambio vacío lo BORRA en el server).
-6. **Shutdown ordenado**: didClose de todos → `shutdown` → `exit` con timeout
-   (5 s default) → kill del hijo.
-7. **Apagado por inactividad**: si se queda sin documentos abiertos durante
-   5 min (`SCRAKK_LSP_IDLE_MS`), se apaga solo; el próximo archivo de ese
-   lenguaje lo vuelve a levantar (lazy).
+1. **Lazy start**: only when a file is touched or a request is made.
+2. `resolveOrInstall`: binary in PATH → managed binary
+   (`~/.scrakk/lsp/{bin,npm}`) → install recipe from the catalogue/extension.
+3. **Handshake**: `initialize` with a timeout (15 s default) → `initialized` →
+   `workspace/didChangeConfiguration` if there are settings.
+4. **Negotiation**: if the server declares `textDocumentSync.change = 2`, the
+   client enables incremental sync for that server.
+5. **Use**: didOpen/didChange(versioned)/didSave on each sync; requests with a
+   timeout (30 s default). If the `content` is **identical** to the last synced
+   one, the `didChange` is NOT sent (in LSP a change without `range` replaces the
+   whole document, so an empty change DELETES it on the server).
+6. **Ordered shutdown**: didClose of all → `shutdown` → `exit` with a timeout
+   (5 s default) → kill the child.
+7. **Idle shutdown**: if it is left with no open documents for 5 min
+   (`SCRAKK_LSP_IDLE_MS`), it turns itself off; the next file in that language
+   brings it back up (lazy).
 
 ## Multi-root
 
-- `setWorkspace(root)` resetea a UN root primario.
-- `addWorkspaceRoot/removeWorkspaceRoot` agregan/quitan roots adicionales.
-- Cada root carga sus propias capas de configuración (ver
-  [configuration.md](configuration.md)); el user layer es global, el project
-  layer es `<root>/.scrakk/lsp.json`.
-- **Ownership de archivos**: un archivo pertenece al root más profundo que lo
-  contenga como prefijo de ruta; fallback al primario.
-- Los servers son instancias por par `(name, root)` — key interna
-  `name@root`. El mismo nombre puede correr en dos roots con procesos
-  distintos y configs distintas.
+- `setWorkspace(root)` resets to ONE primary root.
+- `addWorkspaceRoot/removeWorkspaceRoot` add/remove extra roots.
+- Each root loads its own config layers (see
+  [configuration.md](configuration.md)); the user layer is global, the project
+  layer is `<root>/.scrakk/lsp.json`.
+- **File ownership**: a file belongs to the deepest root that contains it as a
+  path prefix; fallback to the primary.
+- Servers are instances per `(name, root)` pair — internal key `name@root`. The
+  same name can run in two roots with different processes and different configs.
 
-## Diagnósticos: PULL (y push como respaldo)
+## Diagnostics: PULL (and push as fallback)
 
-- **Pull es el camino normal** (`textDocument/diagnostic`, LSP 3.17): el cliente
-  anuncia `textDocument.diagnostic` en `initialize` y, si el server devuelve
-  `diagnosticProvider`, es él quien pregunta. No es una preferencia de estilo:
-  los servers de **CSS/HTML/JSON** eligen TODO su modo de validación con esa
-  capability — con push usan `validationDelayMs = 500` **fijo** (y cada cambio
-  reinicia el timer, así que una edición dentro de esa ventana CANCELA la
-  validación: el error que acabás de escribir no se marcaba nunca), y con pull
-  `validate(document)` corre **sin espera** (`registerDiagnosticsPullSupport`).
-  Medido en la app compilada (`tools/_probe-lsp-order.mjs`): **+185 ms** de la
-  última tecla al diagnóstico, contra +636 ms del push; y durante el tipeo los
-  errores llegan en streaming (~180 ms) en vez de esperar a que te detengas.
-- El ritmo del pull lo fija `PULL_MIN_INTERVAL_MS` (180 ms por documento, con
-  leading edge): el primer cambio después de una pausa sale YA y una ráfaga se
-  agrupa — no hay un request por tecla. El renderer ya coalesce a 40 ms
-  (`services/lsp/fileSync.ts`).
-- **Push sigue soportado y es el respaldo**: se declara
-  `publishDiagnostics` siempre, y los servers sin `diagnosticProvider`
-  (typescript-language-server viejo, etc.) funcionan igual que antes. Si un
-  server anuncia pull y contesta `MethodNotFound`, el cliente **apaga el pull
-  para esa sesión** y sigue con push (válvula de escape: sin ella, un
-  capability mal puesto dejaría los archivos sin diagnósticos para siempre).
-- Los dos caminos terminan en `applyDiagnostics` → mapa por ruta absoluta
-  dentro del cliente + broadcast al renderer (`lsp:on-diagnostics`), así que el
-  editor no sabe ni le importa por dónde llegó.
-- **Con pull, el server ya no avisa nada al cambiar el documento**: el único
-  aviso que queda es `workspace/diagnostic/refresh` (el server pide
-  re-consultar) y ahí se re-piden los documentos abiertos. Al cerrar un
-  documento, el `[]` lo manda el cliente (con push lo mandaba el server).
-- Diagnóstico de esta cadena: `SCRAKK_LSP_DEBUG=1` en el proceso main imprime
-  cada `notify` (versión, largo, cola) y cada llegada de diagnósticos con su
-  origen (`push`/`pull`). Es la forma rápida de responder "¿esto llegó por dónde
-  y con qué texto?".
-- Tras una edición (`notifyFileChanged`), el manager marca pendientes por
-  `(cliente, lifecycle_id)`.
-- `drainDiagnostics(timeout)` espera hasta que **todos** los servers con
-  pendientes hayan publicado (presencia, no longitud: un "sin errores" cuenta
-  como reportado), agrega ERROR/WARNING multi-server y limpia el estado.
-  Al vencer el deadline devuelve lo que llegó y conserva lo faltante.
-- Tras una edición (`notifyFileChanged`), el manager marca pendientes por
-  `(cliente, lifecycle_id)`.
-- `drainDiagnostics(timeout)` espera hasta que **todos** los servers con
-  pendientes hayan publicado (presencia, no longitud: un "sin errores" cuenta
-  como reportado), agrega ERROR/WARNING multi-server y limpia el estado.
-  Al vencer el deadline devuelve lo que llegó y conserva lo faltante.
+- **Pull is the normal path** (`textDocument/diagnostic`, LSP 3.17): the client
+  announces `textDocument.diagnostic` in `initialize` and, if the server returns
+  `diagnosticProvider`, the server is the one asking. It is not a style
+  preference: the **CSS/HTML/JSON** servers choose their WHOLE validation mode
+  with that capability — with push they use `validationDelayMs = 500` **fixed**
+  (and every change restarts the timer, so an edit within that window CANCELS
+  validation: the error you just typed is never marked), and with pull
+  `validate(document)` runs **without waiting** (`registerDiagnosticsPullSupport`).
+  Measured in the compiled app (`tools/_probe-lsp-order.mjs`): **+185 ms** from the
+  last keystroke to the diagnostic, versus +636 ms with push; and while typing the
+  errors arrive in streaming (~180 ms) instead of waiting for you to stop.
+- The pull rhythm is set by `PULL_MIN_INTERVAL_MS` (180 ms per document, with a
+  leading edge): the first change after a pause goes out RIGHT AWAY and a burst is
+  grouped — there is no request per keystroke. The renderer already coalesces at
+  40 ms (`services/lsp/fileSync.ts`).
+- **Push is still supported and is the fallback**: `publishDiagnostics` is always
+  declared, and servers without `diagnosticProvider` (old
+  typescript-language-server, etc.) work as before. If a server announces pull and
+  answers `MethodNotFound`, the client **turns pull off for that session** and
+  continues with push (escape valve: without it, a wrong capability would leave
+  files without diagnostics forever).
+- Both paths end in `applyDiagnostics` → a map by absolute path inside the client
+  + broadcast to the renderer (`lsp:on-diagnostics`), so the editor does not know
+  or care how it arrived.
+- **With pull, the server no longer notifies anything on document change**: the
+  only notice left is `workspace/diagnostic/refresh` (the server asks to
+  re-query) and there the open documents are re-requested. On closing a document,
+  the `[]` is sent by the client (with push the server sent it).
+- Debugging this chain: `SCRAKK_LSP_DEBUG=1` in the main process prints each
+  `notify` (version, length, queue) and each diagnostics arrival with its origin
+  (`push`/`pull`). It is the quick way to answer "where did this come from and
+  with what text?".
+- After an edit (`notifyFileChanged`), the manager marks pending by
+  `(client, lifecycle_id)`.
+- `drainDiagnostics(timeout)` waits until **all** servers with pending work have
+  published (presence, not length: a "no errors" counts as reported), merges
+  multi-server ERROR/WARNING and clears the state. When the deadline expires it
+  returns what arrived and keeps what is missing.
+- After an edit (`notifyFileChanged`), the manager marks pending by
+  `(client, lifecycle_id)`.
+- `drainDiagnostics(timeout)` waits until **all** servers with pending work have
+  published (presence, not length: a "no errors" counts as reported), merges
+  multi-server ERROR/WARNING and clears the state. When the deadline expires it
+  returns what arrived and keeps what is missing.
 
 ## Restart-on-crash
 
-- Si la config lo pide (`restartOnCrash: true`):
-  - detección por salida del proceso/cierre de conexión,
-  - backoff exponencial 1 s → 30 s,
-  - presupuesto de vida `maxRestarts` (default 3),
-  - tras reiniciar: **replay** de documentos (re-lee del disco, reabre,
-    reencola diagnósticos).
-- Sin la flag: queda `crashed` hasta que el host vuelva a tocarlo.
+- If the config asks for it (`restartOnCrash: true`):
+  - detection by process exit/connection close,
+  - exponential backoff 1 s → 30 s,
+  - lifetime budget `maxRestarts` (default 3),
+  - after restarting: a **replay** of documents (re-read from disk, reopen,
+    re-enqueue diagnostics).
+- Without the flag: it stays `crashed` until the host touches it again.
 
 ## Requests
 
-Dos modos de pedir:
+Two ways to ask:
 
-| Modo | Cómo |
+| Mode | How |
 |---|---|
-| Por archivo | `filePath` → se abre en su(s) server(s) y se enruta ahí |
-| Broadcast | `broadcast: true` → todos los corriendo |
-| Dirigido | `serverName` → exactamente ese server (completionItem/resolve) |
+| Per file | `filePath` → opened in its server(s) and routed there |
+| Broadcast | `broadcast: true` → all running ones |
+| Targeted | `serverName` → exactly that server (completionItem/resolve) |
 
-Los resultados llegan como `results[]` con una entrada por server
-(`{ serverName, result?, error? }`); errores individuales no tumban al resto.
+Results arrive as `results[]` with one entry per server
+(`{ serverName, result?, error? }`); individual errors do not crash the rest.

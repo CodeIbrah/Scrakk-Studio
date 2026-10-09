@@ -1,20 +1,21 @@
 ---
-title: "Protocolo soportado y límites"
+title: "Supported protocol and limits"
 group: lsp
 order: 60
-summary: "Qué partes del handshake y del protocolo LSP soporta Scrakk, y qué queda fuera."
+summary: "Which parts of the LSP handshake and protocol Scrakk supports, and what is left out."
 ---
-# Protocolo soportado y límites
+# Supported protocol and limits
 
-El LSP es JSON-RPC 2.0. Acá está qué implementa Scrakk del protocolo y qué no.
+LSP is JSON-RPC 2.0. Here is what Scrakk implements of the protocol and what it
+does not.
 
 ## Handshake
 
-`initialize` con:
+`initialize` with:
 
-- `processId`, `rootUri` + `rootPath` + `workspaceFolders` (del root dueño,
-  o `workspaceFolder` override del config del server).
-- Capabilities declaradas (el server NO ofrece lo que no se declara):
+- `processId`, `rootUri` + `rootPath` + `workspaceFolders` (of the owning root, or
+  the server config's `workspaceFolder` override).
+- Declared capabilities (the server does NOT offer what is not declared):
   - synchronization didOpen/didChange/didSave
   - publishDiagnostics (relatedInformation, versionSupport)
   - hover plaintext/markdown · definition linkSupport:false · references
@@ -27,65 +28,65 @@ El LSP es JSON-RPC 2.0. Acá está qué implementa Scrakk del protocolo y qué n
   - codeAction literal + dataSupport · callHierarchy · foldingRange ·
     selectionRange · documentHighlight · rename prepareSupport
 
-Después: `initialized` → `didChangeConfiguration` con `settings` si existen.
+Then: `initialized` → `didChangeConfiguration` with `settings` if any.
 
-## Sync de documentos
+## Document sync
 
-Los modos de sincronización:
+The synchronization modes:
 
-| Modo | Cuándo | Qué se envía |
+| Mode | When | What is sent |
 |---|---|---|
-| Incremental | server declara `textDocumentSync.change = 2` | UN range edit (diff prefijo/sufijo mínimo) |
-| Full-text | resto | `{ text }` completo |
+| Incremental | the server declares `textDocumentSync.change = 2` | ONE range edit (minimal prefix/suffix diff) |
+| Full-text | the rest | the full `{ text }` |
 
-Ambos con versión creciente por documento y `didSave` SIEMPRE después
-(algunos servers solo publican diagnósticos al save). El contenido actual
-queda cacheado en el cliente para calcular diffs.
+Both with an increasing version per document and `didSave` ALWAYS afterwards (some
+servers publish diagnostics only on save). The current content stays cached in the
+client to compute diffs.
 
-## Requests y timeouts
+## Requests and timeouts
 
-- Request default 30 s; configurable por llamada.
-- Respuestas agregadas multi-server; cada entrada lleva su serverName.
-- `completionItem/resolve` e `inlayHint/resolve` deben ir **dirigidos**
-  (`serverName`) porque el resultado depende del server que emitió el ítem.
+- Default request 30 s; configurable per call.
+- Multi-server aggregated responses; each entry carries its serverName.
+- `completionItem/resolve` and `inlayHint/resolve` must go **targeted**
+  (`serverName`) because the result depends on the server that emitted the item.
 
-## Progreso ($/progress)
+## Progress ($/progress)
 
-- `window/workDoneProgress/create` → registra el token.
-- `$/progress` begin/report/end → difundido a las ventanas
-  (`lsp:on-progress`) con serverName/token/phase/message/percentage.
+- `window/workDoneProgress/create` → registers the token.
+- `$/progress` begin/report/end → broadcast to the windows (`lsp:on-progress`)
+  with serverName/token/phase/message/percentage.
 
-## Diagnósticos
+## Diagnostics
 
-- `publishDiagnostics` → mapa por ruta absoluta (multi-server) + broadcast.
-- Semántica del drain: un server "reporta" cuando PUBLICA para la ruta,
-  aunque sea vacío (presencia en el mapa, igual que el CLI).
-- Solo ERROR/WARNING se exponen en drain/readDiagnostics/bloque formateado.
+- `publishDiagnostics` → a map by absolute path (multi-server) + broadcast.
+- Drain semantics: a server "reports" when it PUBLISHES for the path, even if
+  empty (presence in the map, same as the CLI).
+- Only ERROR/WARNING are exposed in drain/readDiagnostics/the formatted block.
 
-## Lo que aún NO está (límites honestos)
+## What is NOT there yet (honest limits)
 
-- **Delta tokens**: se declara capability pero no se pide `delta`
-  sobre `resultId` previo (full en cada pedido).
-- **Partial results** (`partialResultToken`): los requests no streamean
-  resultados parciales; esperan la respuesta final.
-- **didChangeWatchedFiles**: la capability está declarada pero el runtime no
-  emite notificaciones por cambios externos (git pull, ediciones fuera).
-  Los buffers se refrescan cuando el host toca el archivo.
-- **willSave/willSaveWaitUntil, onTypeFormatting, linkedEditing,
-  colorProvider, monikers, typeHierarchy**: sin implementar.
-- Un server = un root por instancia (no servers compartidos entre roots).
+- **Delta tokens**: the capability is declared but `delta` is not requested on a
+  previous `resultId` (full on every request).
+- **Partial results** (`partialResultToken`): requests do not stream partial
+  results; they wait for the final response.
+- **didChangeWatchedFiles**: the capability is declared but the runtime does not
+  emit notifications for external changes (git pull, edits outside). Buffers
+  refresh when the host touches the file.
+- **willSave/willSaveWaitUntil, onTypeFormatting, linkedEditing, colorProvider,
+  monikers, typeHierarchy**: not implemented.
+- One server = one root per instance (no servers shared between roots).
 
-## Timeouts y presupuestos
+## Timeouts and budgets
 
-Los números:
+The numbers:
 
-| Concepto | Valor |
+| Concept | Value |
 |---|---|
 | initialize | 15 s (configurable) |
 | shutdown | 5 s (configurable) |
 | request | 30 s |
 | drain diagnostics | 500 ms |
 | readDiagnostics settle | 2 s |
-| instalación | 300 s |
-| scan workspace (install gate) | 8000 entradas |
-| restart backoff | 1 s ×2^n hasta 30 s |
+| install | 300 s |
+| workspace scan (install gate) | 8000 entries |
+| restart backoff | 1 s ×2^n up to 30 s |

@@ -1,64 +1,64 @@
 ---
-title: "Proveedores de lenguaje (host ⇄ IDE)"
+title: "Language providers (host ⇄ IDE)"
 group: lsp
 order: 70
-summary: "Cómo llegan al editor los proveedores de lenguaje de una extensión de VS Code (hover, definición, formateo): del `registerXProvider` al editor, por IPC."
+summary: "How a VS Code extension's language providers (hover, definition, formatting) reach the editor: from `registerXProvider` to the editor, over IPC."
 ---
-# Proveedores de lenguaje (host ⇄ IDE)
+# Language providers (host ⇄ IDE)
 
-Los problemas de un lenguaje pueden resolverse de dos maneras en Scrakk:
+A language's problems can be solved in two ways in Scrakk:
 
-1. **Un server del sistema** (o instalado por receta) con config declarativa
+1. **A system server** (or one installed by recipe) with declarative config
    (`~/.scrakk/lsp.json`, `<root>/.scrakk/lsp.json`, `contributes.lspServers`).
-   Ese camino lo lleva el `LspManager` y está documentado en
+   That path is handled by the `LspManager` and documented in
    [architecture.md](architecture.md).
-2. **Una extensión de VS Code** que arranca su server con
-   `vscode-languageclient` —o que aporta el cálculo sin server, como un linter.
+2. **A VS Code extension** that starts its server with `vscode-languageclient`
+   —or that contributes the computation without a server, like a linter.
 
-La segunda forma no es config: es CÓDIGO que registra **proveedores** en el API
-de `vscode` (`languages.registerHoverProvider(selector, { provideHover })` y
-compañía). Este documento explica cómo esos proveedores llegan al editor.
+The second way is not config: it is CODE that registers **providers** on the
+`vscode` API (`languages.registerHoverProvider(selector, { provideHover })` and
+friends). This document explains how those providers reach the editor.
 
-## El camino completo
+## The full path
 
-El recorrido, de punta a punta:
+The journey, end to end:
 
 ```
-editor (hover / ir a definición / formatear)
+editor (hover / go to definition / format)
   └─ services/lsp (api.ts)                 renderer
        └─ IPC `lsp:request`                 preload
-            └─ src/main/lsp/index.ts        main: junta las DOS fuentes
-                 ├─ LspManager.request()    servers del sistema
+            └─ src/main/lsp/index.ts        main: joins the TWO sources
+                 ├─ LspManager.request()    system servers
                  └─ queryExtensionProviders()  ← providerBridge.ts
-                        └─ cada Extension Host vivo
+                        └─ each live Extension Host
                              └─ provider/query   (hostProcess.ts)
                                   └─ LanguageProviderRegistry.query()
-                                       └─ el proveedor REAL de la extensión
+                                       └─ the extension's REAL provider
 ```
 
-Las respuestas de las dos fuentes se agregan en la misma lista
-(`LspRequestResponse.results`), con `serverName` = nombre del server **o id de
-la extensión**. El editor no distingue: pinta lo que llegue. Es exactamente lo
-que VS Code hace con varios providers sobre el mismo selector.
+Both sources' answers are merged into the same list
+(`LspRequestResponse.results`), with `serverName` = the server's name **or the
+extension's id**. The editor does not tell them apart: it paints whatever arrives.
+It is exactly what VS Code does with several providers on the same selector.
 
-## Qué se consulta hoy
+## What is queried today
 
-Qué métodos responden hoy:
+Which methods answer today:
 
-| Tipo | Método del proveedor | Lo pinta el IDE |
+| Type | Provider method | Painted by the IDE |
 |---|---|---|
-| `hover` | `provideHover` | ✅ tooltip del editor |
-| `definition` | `provideDefinition` | ✅ (menú contextual / atajo) |
-| `formatting` | `provideDocumentFormattingEdits` | ✅ (cliente LSP; sin entrada en el menú contextual) |
-| `declaration` | `provideDeclaration` | ❌ responde, sin UI |
-| `typeDefinition` | `provideTypeDefinition` | ❌ responde, sin UI |
-| `implementation` | `provideImplementation` | ❌ responde, sin UI |
-| `references` | `provideReferences` | ❌ responde, sin UI |
-| `documentHighlight` | `provideDocumentHighlights` | ❌ responde, sin UI |
-| `rangeFormatting` | `provideDocumentRangeFormattingEdits` | ❌ responde, sin UI |
+| `hover` | `provideHover` | ✅ editor tooltip |
+| `definition` | `provideDefinition` | ✅ (context menu / shortcut) |
+| `formatting` | `provideDocumentFormattingEdits` | ✅ (LSP client; no context-menu entry) |
+| `declaration` | `provideDeclaration` | ❌ answers, no UI |
+| `typeDefinition` | `provideTypeDefinition` | ❌ answers, no UI |
+| `implementation` | `provideImplementation` | ❌ answers, no UI |
+| `references` | `provideReferences` | ❌ answers, no UI |
+| `documentHighlight` | `provideDocumentHighlights` | ❌ answers, no UI |
+| `rangeFormatting` | `provideDocumentRangeFormattingEdits` | ❌ answers, no UI |
 
-**No consultados todavía** (se registran, devuelven un `Disposable` y avisan
-UNA vez por el log, con el nombre de la API): `registerCompletionItemProvider`,
+**Not queried yet** (they register, return a `Disposable` and warn ONCE in the log,
+with the API name): `registerCompletionItemProvider`,
 `registerSignatureHelpProvider`, `registerCodeActionsProvider`,
 `registerCodeLensProvider`, `registerDocumentLinkProvider`,
 `registerFoldingRangeProvider`, `registerSelectionRangeProvider`,
@@ -67,54 +67,55 @@ UNA vez por el log, con el nombre de la API): `registerCompletionItemProvider`,
 `registerRenameProvider`, `registerDocumentSymbolProvider`,
 `registerWorkspaceSymbolProvider`.
 
-La lista es CERRADA a propósito (ver `LanguageProviderKind` en
-`src/shared/extensionHost/protocol.ts`): agregar un tipo es agregar su
-serialización **y** su consumidor, no sólo declararlo.
+The list is intentionally CLOSED (see `LanguageProviderKind` in
+`src/shared/extensionHost/protocol.ts`): adding a type is adding its serialization
+**and** its consumer, not just declaring it.
 
-## Decisiones que importan
+## Decisions that matter
 
-- **El documento se resuelve en el host.** Si el archivo no está abierto en el
-  editor (el caso de "ir a la definición" hacia otro archivo), el host lo lee
-  por el canal enjaulado del main y materializa un `TextDocument` real
-  (`workspace.textDocuments`). Un proveedor que recibe `undefined` no puede
-  hacer su trabajo.
-- **Serialización en el host.** `Hover.contents` (string, `MarkdownString`,
-  `MarkedString` o array), `Location` **y** `LocationLink` (tsserver/rust
-  devuelven el segundo) y `TextEdit[]` se aplanan a la forma del LSP, que es la
-  que el editor ya sabe consumir. La conversión vive donde existen las clases
-  reales del API.
-- **Un proveedor roto no tumba nada.** Si tira, se loguea con el tipo y el
-  error, y la consulta sigue (puede haber otro host que sí responda). El
-  proveedor tampoco ve un `CancellationToken` cancelable: sin UI de progreso no
-  hay cancelación real, y fingirla sería peor.
-- **Timeout en el main.** 5 s por consulta: un proveedor colgado no puede
-  congelar el hover del editor.
-- **Sin hosts no se paga nada.** `hasExtensionProviders()` deja cortar el
-  camino cuando no hay ninguna extensión corriendo.
+- **The document is resolved in the host.** If the file is not open in the editor
+  (the "go to definition" into another file case), the host reads it through the
+  main's jailed channel and materializes a real `TextDocument`
+  (`workspace.textDocuments`). A provider that receives `undefined` cannot do its
+  job.
+- **Serialization in the host.** `Hover.contents` (string, `MarkdownString`,
+  `MarkedString` or array), `Location` **and** `LocationLink` (tsserver/rust
+  return the latter) and `TextEdit[]` are flattened to the LSP shape, which is
+  what the editor already knows how to consume. The conversion lives where the
+  real API classes exist.
+- **A broken provider crashes nothing.** If it throws, it is logged with the type
+  and the error, and the query continues (there may be another host that answers).
+  The provider also does not see a cancellable `CancellationToken`: with no
+  progress UI there is no real cancellation, and faking it would be worse.
+- **Timeout in the main.** 5 s per query: a hung provider cannot freeze the
+  editor's hover.
+- **With no hosts, nothing is paid.** `hasExtensionProviders()` lets the path be
+  cut when no extension is running.
 
-## Cómo probarlo
+## How to test it
 
-Se prueba sobre la app compilada:
+It is tested against the compiled app:
 
 ```bash
-# registro + serialización + consulta (host)
+# registration + serialization + query (host)
 npx vitest run tests/language-providers.test.ts
 
-# traducción del pedido LSP y fan-out (main)
+# LSP request translation and fan-out (main)
 npx vitest run tests/provider-bridge.test.ts
 
-# el IDE consultando un proveedor real, extremo a extremo
+# the IDE querying a real provider, end to end
 npx vitest run tests/extension-host.test.ts -t "proveedores de lenguaje"
 ```
 
-## MIGRACIÓN A OWEAR (leer antes de tocar)
+## MIGRATION TO OWEAR (read before touching)
 
-Ninguna de las tres piezas conoce Electron ni stdio:
+None of the three pieces knows Electron or stdio:
 
-- `languageProviders.ts` (host) habla documentos y proveedores.
-- `providerBridge.ts` (main) es una tabla de una función + un timeout.
-- El transporte entre ambos sigue siendo `RpcPeer` (`provider/query`), el mismo
-  sobre que los demás métodos del host.
+- `languageProviders.ts` (host) talks documents and providers.
+- `providerBridge.ts` (main) is a table of one function + a timeout.
+- The transport between them is still `RpcPeer` (`provider/query`), the same one
+  the host's other methods use.
 
-Si Owear cambia el runtime, lo único a revisar es el registro de la función en
-`src/main/ipc/extension-host.ts` (que es donde vive el `ExtensionHostManager`).
+If Owear changes the runtime, the only thing to review is where the function is
+registered in `src/main/ipc/extension-host.ts` (where the `ExtensionHostManager`
+lives).

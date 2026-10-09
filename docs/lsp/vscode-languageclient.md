@@ -1,171 +1,167 @@
 ---
-title: "Extensiones de VS Code que traen su language server"
+title: "VS Code extensions that bring their own language server"
 group: lsp
 order: 100
-summary: "Cómo una extensión de VS Code que trae su propio `LanguageClient` corre en el Extension Host y sus proveedores (hover, definición…) llegan al editor."
+summary: "How a VS Code extension that brings its own `LanguageClient` runs in the Extension Host and its providers (hover, definition…) reach the editor."
 ---
-# Extensiones de VS Code que traen su language server
+# VS Code extensions that bring their own language server
 
-En VS Code un language server **no es un contribution point: es código**. La
-extensión hace `new LanguageClient(...)` en su `activate` y toda la negociación
-(initialize, capabilities, sync de documentos, diagnósticos, requests) la lleva
-el paquete `vscode-languageclient`.
+In VS Code a language server **is not a contribution point: it is code**. The
+extension does `new LanguageClient(...)` in its `activate`, and all the negotiation
+(initialize, capabilities, document sync, diagnostics, requests) is carried by the
+`vscode-languageclient` package.
 
-Scrakk no reimplementa ese paquete: **corre el real**. Lo que aporta el IDE es
-el API `vscode` que la librería consume, exactamente como hace VS Code.
+Scrakk does not reimplement that package: it **runs the real one**. What the IDE
+provides is the `vscode` API the library consumes, exactly as VS Code does.
 
 ```
-extensión (bundle) ──require('vscode-languageclient/node')──┐
+extension (bundle) ──require('vscode-languageclient/node')──┐
                                                             ↓
-                                       la LIB REAL (npm)  ←──┐
+                                       the REAL lib (npm)  ←──┐
                                                             │  require('vscode')
                                                             ↓
-                              Extension Host ── shim del API (vscodeApi.ts)
+                              Extension Host ── API shim (vscodeApi.ts)
 ```
 
-## Cómo se resuelve el paquete
+## How the package is resolved
 
-Dos casos, y la precedencia importa:
+Two cases, and the precedence matters:
 
-| Caso | Qué pasa | Por qué |
+| Case | What happens | Why |
 |---|---|---|
-| **La extensión lo bundlea** (webpack/esbuild) | el `require` sale de su bundle; sólo `vscode` lo intercepta el host | es el ~90% de las extensiones reales y no necesita nada nuestro |
-| **Lo declara como dependencia externa** y no lo trae instalado | el host responde con **su** copia (`vscode-languageclient` es dependencia de la app) | sin esto la extensión moría con `Cannot find module` |
+| **The extension bundles it** (webpack/esbuild) | the `require` comes from its bundle; only `vscode` is intercepted by the host | it is ~90% of real extensions and needs nothing from us |
+| **It declares it as an external dependency** and does not bring it installed | the host answers with **its** copy (`vscode-languageclient` is an app dependency) | without this the extension died with `Cannot find module` |
 
-La copia de la **extensión gana** siempre (es su versión fijada); la del host es
-el respaldo. Se avisa por el log sólo cuando se usa el respaldo, y **sólo se
-responde por un `MODULE_NOT_FOUND` del specifier pedido**: si la extensión trae
-el paquete y lo que falta es una dependencia suya, el error se propaga en vez de
-taparse con nuestra copia.
+The **extension's** copy always wins (it is its pinned version); the host's is the
+fallback. The log warns only when the fallback is used, and it **only answers for a
+`MODULE_NOT_FOUND` of the requested specifier**: if the extension brings the
+package and what is missing is one of its dependencies, the error propagates
+instead of being masked by our copy.
 
-Implementación: `src/main/extensions/host/languageClientBridge.ts` +
-el interceptor de `installVscodeResolver` en `hostProcess.ts`.
+Implementation: `src/main/extensions/host/languageClientBridge.ts` + the
+interceptor in `installVscodeResolver` in `hostProcess.ts`.
 
-## Dos bugs de la capa que esto destapó
+## Two layer bugs this exposed
 
-La lib real falla RÁPIDO y con mensajes exactos, así que corrió como un test de
-compatibilidad del shim. Encontró dos cosas que ninguna extensión de paneles
-había tocado:
+The real lib fails FAST and with exact messages, so it ran as a compatibility test
+of the shim. It found two things no panel extension had touched:
 
-1. **`vscode.version` reportaba la versión de la APP.** La librería la usa como
-   gate:
+1. **`vscode.version` reported the APP version.** The library uses it as a gate:
    `The language client requires VS Code version ^1.82.0 but received version 0.1.0`
-   → **toda** extensión con LSP moría al construir su cliente, con un mensaje
-   que habla de VS Code y no dice nada del host. Ahora `vscode.version` es la
-   versión del API (`@shared/compatibility/apiVersion`), que es lo que el campo
-   promete en VS Code; la versión de la app se sigue reportando en `env.version`.
-2. **`languages.match` era un stub que devolvía `null`.** La lib decide con eso
-   si un documento entra en el `documentSelector` del server
-   (`features.js` pregunta `> 0`): con el stub, ningún documento matcheaba y el
-   server **nunca recibía un `didOpen`** — el LSP arrancaba y jamás veía un
-   archivo. Ahora es real (lenguaje, scheme y glob; un selector vacío matchea,
-   como en VS Code).
+   → **every** extension with an LSP died while building its client, with a message
+   that talks about VS Code and says nothing about the host. Now `vscode.version` is
+   the API version (`@shared/compatibility/apiVersion`), which is what the field
+   promises in VS Code; the app version is still reported in `env.version`.
+2. **`languages.match` was a stub returning `null`.** The lib uses it to decide
+   whether a document falls in the server's `documentSelector` (`features.js` asks
+   `> 0`): with the stub, no document matched and the server **never received a
+   `didOpen`** — the LSP started and never saw a file. It is real now (language,
+   scheme and glob; an empty selector matches, like in VS Code).
 
-## Un detalle del protocolo que cuesta una tarde
+## A protocol detail that costs an afternoon
 
-Con `TransportKind.stdio` la librería **agrega `--stdio` a los args** del
-proceso:
+With `TransportKind.stdio` the library **appends `--stdio` to the process `args`**:
 
 ```js
 // vscode-languageclient/lib/node/main.js
 if (transport === TransportKind.stdio) { args.push('--stdio') }
 ```
 
-Por eso el server se lanza como archivo (`node server.js --stdio`) y no con
-`node -e "<código>"`: con `-e` el `--stdio` cae en el parseo de opciones de Node
-(`bad option`) y el hijo muere antes del handshake — que se ve, del lado del
-cliente, como un `EPIPE` en el primer `initialize` (un síntoma que no señala a
-su causa).
+That is why the server is launched as a file (`node server.js --stdio`) and not
+with `node -e "<code>"`: with `-e` the `--stdio` falls into Node's option parsing
+(`bad option`) and the child dies before the handshake — which, on the client side,
+looks like an `EPIPE` on the first `initialize` (a symptom that does not point to
+its cause).
 
-## Cómo verificarlo
+## How to verify it
 
-Se verifica con un probe real sobre la app:
+It is verified with a real probe against the app:
 
 ```bash
 npx vitest run tests/language-client-bridge.test.ts
 ```
 
-El test corre el host REAL (`createHostRuntime`, con el interceptor de módulos
-instalado), carga una extensión de fixture del disco que hace
-`require('vscode-languageclient/node')`, y esa extensión arranca su client
-contra un server LSP real (proceso hijo, framing `Content-Length`) y le manda un
-request propio. Si eso pasa, la cadena entera funciona: resolución + shim +
-handshake + ida y vuelta.
+The test runs the REAL host (`createHostRuntime`, with the module interceptor
+installed), loads a fixture extension from disk that does
+`require('vscode-languageclient/node')`, and that extension starts its client
+against a real LSP server (child process, `Content-Length` framing) and sends it a
+request of its own. If that passes, the whole chain works: resolution + shim +
+handshake + round trip.
 
-También hay un arnés de descubrimiento para medir qué superficie del API toca la
-librería cuando sube de versión:
+There is also a discovery harness to measure which API surface the library touches
+when it is upgraded:
 
 ```bash
 node tools/_probe-languageclient.mjs
 ```
 
-## Cómo añade alguien su language server (las tres vías)
+## How someone adds their language server (the three paths)
 
-Tres caminos, sin tocar el core:
+Three paths, without touching the core:
 
-| Vía | Quién la usa | Estado |
+| Path | Who uses it | Status |
 |---|---|---|
-| `.scrakk/lsp.json` (proyecto o `~/.scrakk/lsp.json`) | quien no escribe una extensión | ✅ `command`/`args`/`extensions`/`rootMarkers` |
-| `contributes.lspServers` (SEF) | un paquete declarativo de Scrakk | ✅ ver [extensions.md](extensions.md) |
-| **Un VSIX con `vscode-languageclient`** | una extensión de VS Code tal cual | ✅ el server arranca (esta página) |
+| `.scrakk/lsp.json` (project or `~/.scrakk/lsp.json`) | someone who does not write an extension | ✅ `command`/`args`/`extensions`/`rootMarkers` |
+| `contributes.lspServers` (SEF) | a declarative Scrakk package | ✅ see [extensions.md](extensions.md) |
+| **A VSIX with `vscode-languageclient`** | a VS Code extension as-is | ✅ the server starts (this page) |
 
-## Cómo llegan los proveedores al editor
+## How providers reach the editor
 
-La librería no responde requests "por su cuenta": los registra como
-**proveedores del API `vscode`** (`languages.registerHoverProvider(selector,
-provider)` y compañía) y espera que el editor la consulte. Ese era el corte:
-el server arrancaba, recibía `didOpen`… y nadie le preguntaba nada.
+The library does not answer requests "on its own": it registers them as **providers
+of the `vscode` API** (`languages.registerHoverProvider(selector, provider)` and
+friends) and waits for the editor to query it. That was the cut: the server
+started, received `didOpen`… and nobody asked it anything.
 
 ```
 editor (hover) → services/lsp → IPC `lsp:request`
-   ├─ LspManager   (server del sistema o de .scrakk/lsp.json)
-   └─ providerBridge (main) → cada Extension Host → su proveedor real
-                              └─ si la extensión usa LanguageClient, es el client
-                                 el que responde (hablando con SU server)
+   ├─ LspManager   (system server or from .scrakk/lsp.json)
+   └─ providerBridge (main) → each Extension Host → its real provider
+                              └─ if the extension uses LanguageClient, it is the client
+                                 that answers (talking to ITS server)
 ```
 
-- **Host**: `src/main/extensions/host/languageProviders.ts` registra y consulta
-  de verdad (con `documentSelector`), y serializa el resultado a la forma del
-  LSP (que es la que el editor ya sabe pintar).
-- **Main**: `src/main/extensions/providerBridge.ts` traduce el pedido del LSP a
-  una consulta y le pregunta a todos los hosts vivos (los que no opinan no
-  aparecen). Hay timeout: un proveedor colgado no congela el hover.
-- **Consultables hoy**: hover, definición, declaración, implementación, tipo,
-  referencias, resaltado de ocurrencias, formateo y formateo de rango. El IDE
-  ya PINTA hover, definición y formateo; los demás responden y esperan su UI.
-- **Todavía inertes** (registran, avisan por el log y no se consultan):
-  completions, signatura, acciones de código, code lens, links, plegado, tokens
-  semánticos, inlay hints y las jerarquías. No hay UI para ese resultado.
+- **Host**: `src/main/extensions/host/languageProviders.ts` registers and queries
+  for real (with `documentSelector`), and serializes the result to the LSP shape
+  (the one the editor already knows how to paint).
+- **Main**: `src/main/extensions/providerBridge.ts` translates the LSP request into
+  a query and asks all the live hosts (those that do not answer do not appear).
+  There is a timeout: a hung provider does not freeze the hover.
+- **Queryable today**: hover, definition, declaration, implementation, type,
+  references, occurrences highlight, formatting and range formatting. The IDE
+  already PAINTS hover, definition and formatting; the rest answer and wait for
+  their UI.
+- **Still inert** (they register, warn in the log and are not queried): completions,
+  signature, code actions, code lens, links, folding, semantic tokens, inlay hints
+  and the hierarchies. There is no UI for that result.
 
-## Diagnósticos: ahora se VEN
+## Diagnostics: now they are SEEN
 
-El cliente publica `publishDiagnostics`, el registro del host
-(`diagnostics.ts`) los guarda y los EMPUJA al main (`diagnostics/change`), y el
-renderer los lista: panel **Problemas** (chip de la barra de estado incluido,
-con los conteos por severidad). Comparten store con los del LSP
-(`services/lsp/diagnosticsStore.ts`), con una entrada por fuente, así que el
-linter de una extensión y `tsc` no se pisan entre sí.
+The client publishes `publishDiagnostics`, the host registry (`diagnostics.ts`)
+stores them and PUSHES them to the main (`diagnostics/change`), and the renderer
+lists them: the **Problems** panel (including the status-bar chip, with the counts
+per severity). They share a store with the LSP's
+(`services/lsp/diagnosticsStore.ts`), with one entry per source, so an extension's
+linter and `tsc` do not overwrite each other.
 
-Los diagnósticos se subrayan en el editor: entran por el mismo canal que las
-decoraciones (ver [../editor/decorations.md](../editor/decorations.md)).
+Diagnostics are underlined in the editor: they enter through the same channel as
+decorations (see [../editor/decorations.md](../editor/decorations.md)).
 
-## Límites (dichos, no escondidos)
+## Limits (stated, not hidden)
 
-- **El server es hijo del HOST, no del manager LSP del IDE.** El ciclo de vida
-  (estado, reinicio, auto-instalación, botón de la UI) vive en `src/main/lsp`, y
-  un client que arranca la extensión no pasa por ahí. Unificar los dos caminos
-  es el siguiente paso natural.
-- **`TransportKind.ipc` / `pipe` / `socket`**: los soporta la librería por su
-  cuenta (spawnea ella), así que funcionan igual que stdio; lo que NO está
-  medido todavía es un server que negocie `workspace/configuration` con
-  settings reales del IDE.
-- **Extensiones que son SOLO server** (rust-analyzer, pyright, clangd de VS
-  Code) todavía necesitan que su binario exista: el IDE no instala sus
-  dependencias por ellas (eso sí lo hace la vía `lspServers` con `install`).
+- **The server is a child of the HOST, not of the IDE's LSP manager.** The lifecycle
+  (state, restart, auto-install, the UI button) lives in `src/main/lsp`, and a
+  client the extension starts does not go through it. Unifying the two paths is the
+  natural next step.
+- **`TransportKind.ipc` / `pipe` / `socket`**: the library supports them on its own
+  (it spawns itself), so they work like stdio; what is NOT measured yet is a server
+  that negotiates `workspace/configuration` with real IDE settings.
+- **Extensions that are ONLY a server** (rust-analyzer, pyright, clangd from VS
+  Code) still need their binary to exist: the IDE does not install their
+  dependencies for them (that is what the `lspServers` path does with `install`).
 
-## MIGRACIÓN A OWEAR (leer antes de tocar)
+## MIGRATION TO OWEAR (read before touching)
 
-El puente no conoce Electron, ni stdio, ni el sistema de módulos más allá del
-interceptor. Cuando Owear reemplace el runtime: `languageClientBridge.ts` se
-conserva o se tira entero, y lo único que hay que reescribir es
-`installVscodeResolver` (el mismo punto que ya estaba marcado para eso).
+The bridge knows no Electron, no stdio, and no module system beyond the
+interceptor. When Owear replaces the runtime: `languageClientBridge.ts` is kept or
+thrown away whole, and the only thing to rewrite is `installVscodeResolver` (the
+same point already marked for that).

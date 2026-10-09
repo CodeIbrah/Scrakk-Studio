@@ -1,24 +1,24 @@
 ---
-title: "Tipo de extensión `lspServers` (SEF)"
+title: "The `lspServers` extension kind (SEF)"
 group: lsp
 order: 50
-summary: "Las extensiones pueden aportar language servers completos de forma declarativa — sin ejecutar código. El handler valida el manifest y sincroniza con el runtime LSP del proceso main vía IPC."
+summary: "Extensions can contribute complete language servers declaratively — without running code. The handler validates the manifest and syncs with the main-process LSP runtime over IPC."
 ---
-# Tipo de extensión `lspServers` (SEF)
+# The `lspServers` extension kind (SEF)
 
-Las extensiones pueden aportar **language servers completos** de forma
-declarativa — sin ejecutar código. El handler valida el manifest y sincroniza
-con el runtime LSP del proceso main vía IPC.
+Extensions can contribute **complete language servers** declaratively — without
+running code. The handler validates the manifest and syncs with the main-process
+LSP runtime over IPC.
 
 ## Manifest
 
-Se declara así dentro del `manifest.json`:
+Declared like this inside `manifest.json`:
 
 ```jsonc
 // manifest.json
 {
-  "id": "mi-lsp-pack",
-  "name": "Mi LSP Pack",
+  "id": "my-lsp-pack",
+  "name": "My LSP Pack",
   "version": "0.1.0",
   "contributes": {
     "lspServers": [
@@ -36,103 +36,102 @@ Se declara así dentro del `manifest.json`:
 }
 ```
 
-### Campos por server
+### Fields per server
 
-Lo que acepta cada entrada de `lspServers`:
+What each `lspServers` entry accepts:
 
-| Campo | Tipo | Notas |
+| Field | Type | Notes |
 |---|---|---|
-| `id` | string | Único global; colisiona con builtin → gana la extensión sobre builtin, pierde contra user/project |
-| `command` | string | Binario, `"host:port"`, o `./ruta` DENTRO del paquete (ver abajo) |
-| `args` | string[] | Opcional |
-| `extensions` | object | ext → languageId (punto opcional) |
-| `rootMarkers` | string[] | Opcionales; gating por proyecto |
-| `gatedBy` | string | Solo registrar si package.json declara la dependencia |
-| `install` | receta | `{ kind: npm\|go\|gem\|dotnet\|github\|custom, … }` — misma máquina que los builtin |
+| `id` | string | Globally unique; collides with a builtin → the extension wins over the builtin, loses to user/project |
+| `command` | string | Binary, `"host:port"`, or `./path` INSIDE the package (see below) |
+| `args` | string[] | Optional |
+| `extensions` | object | ext → languageId (dot optional) |
+| `rootMarkers` | string[] | Optional; per-project gating |
+| `gatedBy` | string | Only register if package.json declares the dependency |
+| `install` | recipe | `{ kind: npm\|go\|gem\|dotnet\|github\|custom, … }` — the same machine as the builtins |
 
-### Un server que viaja DENTRO del paquete
+### A server that travels INSIDE the package
 
-Muchos LSPs no son un binario del sistema: su entry es un módulo node que viene
-con la extensión. Para ese caso el `command` se escribe **relativo al paquete**:
+Many LSPs are not a system binary: their entry is a node module that comes with
+the extension. For that case the `command` is written **relative to the package**:
 
 ```jsonc
 "lspServers": [{
   "id": "toml",
-  "command": "./server/out/server.js",     // ← relativo al paquete
+  "command": "./server/out/server.js",     // ← relative to the package
   "extensions": { "toml": "toml" }
 }]
 ```
 
-El handler lo absolutiza contra la raíz del paquete antes de registrarlo (el
-manager sólo sabe buscar en el PATH, en `~/.scrakk/lsp/{bin,npm/.bin}` o
-instalar por receta — un archivo adentro de una extensión no está en ninguno de
-los tres). La regla es **explícita** (el prefijo `./` o `../`): adivinar por
-"tiene una barra" rompería un `command` como `node_modules/.bin/x`, que puede
-venir del PATH.
+The handler absolutizes it against the package root before registering it (the
+manager only knows how to look in PATH, in `~/.scrakk/lsp/{bin,npm/.bin}` or
+install by recipe — a file inside an extension is in none of the three). The rule
+is **explicit** (the `./` or `../` prefix): guessing by "it has a slash" would
+break a `command` like `node_modules/.bin/x`, which can come from PATH.
 
-Los `args` siguen la MISMA regla (un `./…` se resuelve contra el paquete; un
-flag como `--stdio` queda intacto), que es lo que necesita un server node:
+The `args` follow the SAME rule (a `./…` is resolved against the package; a flag
+like `--stdio` stays intact), which is what a node server needs:
 
 ```jsonc
 "command": "node",
 "args": ["./server/out/server.js", "--stdio"]
 ```
 
-Ojo con el intérprete: el `command` es el EJECUTABLE. Un `command` que apunta
-directo a un `.js` sólo funciona si el archivo tiene shebang y permiso de
-ejecución — si no, va `node` como command y el script como arg.
+Watch out for the interpreter: `command` is the EXECUTABLE. A `command` pointing
+straight at a `.js` only works if the file has a shebang and the execute
+permission — otherwise, use `node` as the command and the script as an arg.
 
-## Prioridad final
+## Final priority
 
-Quién gana entre las capas:
+Who wins between the layers:
 
 ```
 project (<root>/.scrakk/lsp.json)
  > user (~/.scrakk/lsp.json)
-  > dynamic (extensiones lspServers)   ← este tipo
-   > builtin (catálogo detectado)
+  > dynamic (lspServers extensions)   ← this kind
+   > builtin (detected catalogue)
 ```
 
-## Ciclo de vida
+## Lifecycle
 
-1. **Boot/instalación**: el loader genérico despacha cada contribución al
+1. **Boot/install**: the generic loader dispatches each contribution to the
    handler → `window.api.lsp.registerDynamicServers(extensionId, defs)`
-   (merge por id si la extensión aporta varios servers).
-2. El manager invalida las cargas por root; los nuevos servers arrancan
-   **lazy** en el próximo archivo que matchee.
-3. **Desinstalación**: `removeDynamicServers(extensionId)` — desaparecen del
-   registro y dejan de routear.
-4. **Apagado por el usuario**: Ajustes → Servidores tiene un botón
-   Encender/Apagar por server (aparecen con la etiqueta `Extensión · <id>`).
-   La preferencia se persiste en el renderer y se empuja al main, que la aplica
-   en su ÚNICO camino de arranque (`startClient`): un server apagado no corre de
-   verdad — y si estaba corriendo, se apaga (se cortan sus diagnósticos).
+   (merge by id if the extension contributes several servers).
+2. The manager invalidates the per-root loads; the new servers start **lazily** on
+   the next matching file.
+3. **Uninstall**: `removeDynamicServers(extensionId)` — they disappear from the
+   registry and stop routing.
+4. **User off switch**: Settings → Servers has an On/Off button per server (they
+   appear labeled `Extension · <id>`). The preference is persisted in the renderer
+   and pushed to the main, which applies it in its ONLY start path
+   (`startClient`): a disabled server really does not run — and if it was running,
+   it is stopped (its diagnostics are cut).
 
    ```ts
-   // lo que viaja (IPC)
+   // what travels (IPC)
    lsp:set-disabled-servers  { ids: ['ocaml'] }
    lsp:get-disabled-servers  → { ids: ['ocaml'] }
    ```
 
-   En `status()` un server apagado sigue LISTADO con `disabled: true` (si no,
-   no habría forma de volver a encenderlo desde la UI).
+   In `status()` a disabled server is still LISTED with `disabled: true` (otherwise
+   there would be no way to turn it back on from the UI).
 
-## Dónde vive
+## Where it lives
 
-El código del tipo `lspServers`:
+The code of the `lspServers` kind:
 
 ```
 src/renderer/src/services/extensions/types/lsp/
-├── api.ts     # handler (kind 'lspServers') hacia la capa extensions
-├── logic.ts   # sync con el runtime main (IPC)
-├── schema.ts  # validación del slice del manifest + receta
-└── store.ts   # estado del tipo (el apagado/encendido vive en
-               # services/lsp/disabledServers.ts, que es del IDE, no del tipo)
+├── api.ts     # handler (kind 'lspServers') toward the extensions layer
+├── logic.ts   # sync with the main runtime (IPC)
+├── schema.ts  # validation of the manifest slice + recipe
+└── store.ts   # state of the kind (the on/off lives in
+               # services/lsp/disabledServers.ts, which belongs to the IDE, not the kind)
 ```
 
-## API disponible para extensiones (`ctx.api.lsp`)
+## API available to extensions (`ctx.api.lsp`)
 
-Todo handler de contribución recibe `ctx.api` con el namespace LSP completo:
+Every contribution handler receives `ctx.api` with the full LSP namespace:
 
 ```ts
 ctx.api.lsp.status()
@@ -143,5 +142,5 @@ ctx.api.lsp.notifyFileChanged(path, content)
 ctx.api.lsp.notifyFileClosed(path)
 ```
 
-Así una extensión de código puede consumir navegación/diagnósticos del core
-sin duplicar clientes.
+So an extension with code can consume core navigation/diagnostics without
+duplicating clients.

@@ -1,100 +1,100 @@
 ---
-title: "Capturas del editor (y cómo se verifica que el editor PINTA)"
+title: "Editor screenshots (and how the editor is verified to PAINT)"
 group: editor
 order: 40
-summary: "El comando `editor.captureScreenshot` guarda un PNG de la zona del editor. También sirve para verificar que el editor pinta los tokens de una extensión."
+summary: "The `editor.captureScreenshot` command saves a PNG of the editor area. It is also how you verify that the editor paints an extension's tokens."
 ---
-# Capturas del editor (y cómo se verifica que el editor PINTA)
+# Editor screenshots (and how the editor is verified to PAINT)
 
-Sacar una foto del editor y, de paso, comprobar que **pinta** de verdad los
-tokens de una extensión.
+Take a picture of the editor and, along the way, check that it really **paints** an
+extension's tokens.
 
-## 1. La feature
+## 1. The feature
 
-Comando **`editor.captureScreenshot`** — "Capturar el editor (PNG)" — en la paleta
-de comandos. Guarda un PNG de la zona del editor en la carpeta de descargas del
-usuario y avisa con la ruta (con botón para mostrar el archivo en el gestor).
+The **`editor.captureScreenshot`** command — "Capture the editor (PNG)" — in the
+command palette. It saves a PNG of the editor area into the user's downloads
+folder and notifies with the path (with a button to reveal the file in the file
+manager).
 
-| Pieza | Dónde |
+| Piece | Where |
 | --- | --- |
-| Contrato (IPC + tipos) | `src/shared/screenshot.ts` |
-| Captura y escritura | `src/main/ipc/screenshot.ts` (`webContents.capturePage()`) |
-| Puente | `src/preload/index.ts` → `window.api.screenshot.capture({ rect, dir, name })` |
-| Comando + aviso | `src/renderer/src/features/editor/screenshot.ts` |
+| Contract (IPC + types) | `src/shared/screenshot.ts` |
+| Capture and write | `src/main/ipc/screenshot.ts` (`webContents.capturePage()`) |
+| Bridge | `src/preload/index.ts` → `window.api.screenshot.capture({ rect, dir, name })` |
+| Command + notice | `src/renderer/src/features/editor/screenshot.ts` |
 
-### Por qué la captura la hace el main
+### Why the main does the capture
 
-El canvas del editor es **WebGL**. Desde el renderer no se pueden leer sus
-píxeles:
+The editor canvas is **WebGL**. From the renderer you cannot read its pixels:
 
-- `canvas.getContext('2d')` devuelve `null` (ya hay un contexto GL), y
-- `canvas.toDataURL()` sale vacío porque el buffer se compone y se limpia al
-  terminar el frame.
+- `canvas.getContext('2d')` returns `null` (there is already a GL context), and
+- `canvas.toDataURL()` comes out empty because the buffer is composed and cleared
+  when the frame ends.
 
-`webContents.capturePage()` devuelve la página **ya compuesta**, o sea los
-píxeles exactos que ve el usuario (tema, resaltado, cursor, todo), y el recorte
-se hace ahí mismo con la escala real del display (HiDPI incluido). El renderer
-sólo dice *qué* zona quiere y *dónde* guardarla.
+`webContents.capturePage()` returns the **already composed** page, i.e. the exact
+pixels the user sees (theme, highlighting, cursor, everything), and the crop is
+done right there with the display's real scale (HiDPI included). The renderer only
+says *which* area it wants and *where* to save it.
 
-## 2. Por qué existe (más allá de sacarse una foto)
+## 2. Why it exists (beyond taking a picture)
 
-Antes de esto, lo máximo que se podía verificar desde afuera era que los tokens
-llegaran al motor. Que el editor los **pintara** quedaba sin comprobar.
+Before this, the most that could be verified from outside was that the tokens
+reached the engine. Whether the editor **painted** them went unchecked.
 
-Y la primera verificación que intenté estaba **mal**: contar "píxeles con tinte"
-dentro del canvas. El canvas es semitransparente sobre el wallpaper de la app, así
-que el degradado de fondo aportaba miles de píxeles con color y la métrica decía
-"hay color" con y sin extensión. Un falso verde, que es peor que un test rojo.
+And the first verification I tried was **wrong**: counting "tinted pixels" inside
+the canvas. The canvas is semi-transparent over the app wallpaper, so the
+background gradient contributed thousands of colored pixels and the metric said
+"there is color" with and without the extension. A false green, which is worse than
+a red test.
 
-Lo que sí funciona es **A/B sobre la misma zona**:
+What does work is **A/B over the same area**:
 
 ```
-1. con la extensión de lenguaje instalada     → captura A
-2. se desinstala, se recarga, mismo archivo   → captura B
-3. se cuentan los píxeles que pasan de NEUTRO (texto gris/blanco) a VÍVIDO
+1. with the language extension installed     → capture A
+2. uninstall it, reload, same file           → capture B
+3. count the pixels that go from NEUTRAL (gray/white text) to VIVID
 ```
 
-Esos píxeles son, literalmente, los tokens que la extensión pintó. En el probe
-del camino dinámico: **550 px neutros → vivos** (naranja de string, verde de
-comentario, violeta de keyword) y ~1.500 cambios fuertes, sobre el mismo archivo
-y el mismo rectángulo.
+Those pixels are, literally, the tokens the extension painted. In the probe of the
+dynamic path: **550 neutral → vivid px** (string orange, comment green, keyword
+violet) and ~1,500 strong changes, over the same file and the same rectangle.
 
-## 3. Herramientas
+## 3. Tools
 
-Dos utilidades, sin dependencias:
+Two utilities, no dependencies:
 
 ```bash
-# Mapa de color en texto (letra por clase: R/Y/G/C/M, g = gris, . = fondo)
-node tools/_look-png.mjs captura.png [columnas] [--bright] [--crop=x,y,w,h]
+# Color map as text (letter per class: R/Y/G/C/M, g = gray, . = background)
+node tools/_look-png.mjs capture.png [columns] [--bright] [--crop=x,y,w,h]
 
-# Comparación A/B de dos capturas + qué colores cambiaron
-node tools/_look-png.mjs antes.png despues.png [columnas]
+# A/B comparison of two captures + which colors changed
+node tools/_look-png.mjs before.png after.png [columns]
 ```
 
-`tools/lib/png-read.mjs` decodifica PNG (zlib + unfilter, sin dependencias) y
-expone el helper `diffNeutralToVivid(before, after)` que usa el probe. El
-decodificador está a mano porque el PNG de Electron es siempre el mismo caso
-simple y no valía la pena una dependencia nativa por esto.
+`tools/lib/png-read.mjs` decodes PNG (zlib + unfilter, no dependencies) and exposes
+the `diffNeutralToVivid(before, after)` helper the probe uses. The decoder is
+hand-written because Electron's PNG is always the same simple case and a native
+dependency was not worth it for this.
 
-Uso típico desde un probe:
+Typical use from a probe:
 
 ```js
 const shot = await evaluate(ws, `window.api.screenshot.capture(${JSON.stringify({
-  dir: '/tmp/innerta-shots', name: 'editor-con-extension', rect
+  dir: '/tmp/innerta-shots', name: 'editor-with-extension', rect
 })})`)
 ```
 
-## 4. Ver el resultado
+## 4. See the result
 
-De punta a punta (compila, arma el `.sef` de prueba y compara capturas):
+End to end (builds, assembles the test `.sef` and compares captures):
 
 ```bash
 npm run build
 node tools/_make-dynamic-sef.mjs <tree-sitter-javascript.wasm>
-xvfb-run -a node tools/_probe-dynamic-app.mjs          # deja los PNG en /tmp/innerta-shots
-node tools/_look-png.mjs /tmp/innerta-shots/editor-sin-extension.png \
-                         /tmp/innerta-shots/editor-con-extension.png
+xvfb-run -a node tools/_probe-dynamic-app.mjs          # leaves the PNGs in /tmp/innerta-shots
+node tools/_look-png.mjs /tmp/innerta-shots/editor-without-extension.png \
+                         /tmp/innerta-shots/editor-with-extension.png
 ```
 
-El probe imprime además dónde quedaron las capturas, y el comando de la app deja
-la suya en `~/Descargas/innerta-<fecha>.png`.
+The probe also prints where the captures ended up, and the app command leaves its
+own in `~/Descargas/innerta-<date>.png`.

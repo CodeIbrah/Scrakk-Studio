@@ -1,44 +1,44 @@
 ---
-title: "Modos y permisos"
+title: "Modes and permissions"
 group: chat
 order: 10
-summary: "Dos piezas deciden qué puede hacer la IA: modos (un preset de efectos) y reglas (permitir / preguntar / negar por herramienta). Se combinan en el policy-engine para cada tool call."
+summary: "Two pieces decide what the AI can do: modes (a preset of behaviors) and rules (allow / ask / deny per tool). They are combined in the policy engine for each tool call."
 ---
-# Modos y permisos
+# Modes and permissions
 
-Dos piezas deciden qué puede hacer la IA: **modos** (un preset de efectos) y
-**reglas** (permitir / preguntar / negar por herramienta). Se combinan en el
-`policy-engine` para cada tool call.
+Two pieces decide what the AI can do: **modes** (a preset of behaviors) and
+**rules** (allow / ask / deny per tool). They are combined in the
+`policy-engine` for each tool call.
 
-## Modos
+## Modes
 
-Un modo define cómo se tratan las ediciones, el shell y las confirmaciones.
+A mode defines how edits, the shell and confirmations are handled.
 
-### Integrados
+### Built-in
 
-| Id | Qué hace |
+| Id | What it does |
 |---|---|
-| `default` | Pregunta por ediciones y shell. |
-| `plan` | Solo lectura: bloquea mutaciones y shell. |
-| `acceptEdits` | Autoaprueba ediciones; el shell igual pregunta. |
-| `auto` | Heurístico: aprueba lo seguro/rutinario, pregunta lo dudoso. |
-| `dontAsk` | Nunca pregunta: lo que pediría confirmación se niega. |
-| `bypassPermissions` | Aprueba todo (con cuidado). |
+| `default` | Asks for edits and shell. |
+| `plan` | Read-only: blocks mutations and the shell. |
+| `acceptEdits` | Auto-approves edits; the shell still asks. |
+| `auto` | Heuristic: approves safe/routine things, asks about doubtful ones. |
+| `dontAsk` | Never asks: whatever would need confirmation is denied. |
+| `bypassPermissions` | Approves everything (careful). |
 
-`auto_edit` y `all_allow` son alias históricos que no se listan.
+`auto_edit` and `all_allow` are historical aliases that are not listed.
 
-### Modos propios
+### Custom modes
 
-Se crean desde **Ajustes → Chat → Modos** partiendo de un integrado, y se
-guardan en `.scrakk/modes.json` (usuario y proyecto; el proyecto gana por id).
+Created from **Settings → Chat → Modes** starting from a built-in one, and stored
+in `.scrakk/modes.json` (user and project; the project wins by id).
 
 ```json
 {
   "modes": [
     {
-      "id": "shell-segura",
-      "label": "Shell segura",
-      "description": "Pregunta antes de tocar el shell.",
+      "id": "safe-shell",
+      "label": "Safe shell",
+      "description": "Asks before touching the shell.",
       "color": "#22c55e",
       "base": "default",
       "overrides": {
@@ -53,20 +53,19 @@ guardan en `.scrakk/modes.json` (usuario y proyecto; el proyecto gana por id).
 }
 ```
 
-- `base`: cualquier modo integrado del que se hereda.
-- `overrides`: lo que se cambia (`mutationBehavior`, `shellBehavior`,
+- `base`: any built-in mode to inherit from.
+- `overrides`: what is changed (`mutationBehavior`, `shellBehavior`,
   `promptPolicy`, `acceptEdits`, `bypassPermissions`, `toolFilter`).
-- `toolFilter.exclude`: herramientas que **no existen** en ese modo (no se
-  anuncian al modelo y el executor las niega).
-- `toolFilter.include`: si está, solo esas herramientas existen.
+- `toolFilter.exclude`: tools that **do not exist** in that mode (they are not
+  announced to the model and the executor denies them).
+- `toolFilter.include`: if present, only those tools exist.
 
-Los ids no pueden colisionar con un modo integrado.
+Ids cannot collide with a built-in mode.
 
-## Reglas
+## Rules
 
-En `.scrakk/permissions.json` (usuario y proyecto, gana el proyecto). Cada
-regla es un string con la sintaxis del CLI/Claude, o un objeto para acotarla a
-modos.
+In `.scrakk/permissions.json` (user and project, the project wins). Each rule is
+a string with the CLI/Claude syntax, or an object to scope it to modes.
 
 ```json
 {
@@ -83,19 +82,19 @@ modos.
 }
 ```
 
-Precedencia **deny > ask > allow**, sin importar el orden. Las reglas globales
-y las del modo activo se evalúan juntas. Un `deny` global es piso duro.
+Precedence is **deny > ask > allow**, regardless of order. Global rules and the
+active mode's rules are evaluated together. A global `deny` is a hard floor.
 
-Sintaxis soportada: `Bash(...)`, `Read(...)`, `Edit(...)`, `Grep(...)`,
-`WebFetch(domain:...)`, `WebSearch`, `MCPTool(...)`, o la herramienta sin
-paréntesis para todas sus variantes. En paths, `*` no cruza `/` y `**` sí.
+Supported syntax: `Bash(...)`, `Read(...)`, `Edit(...)`, `Grep(...)`,
+`WebFetch(domain:...)`, `WebSearch`, `MCPTool(...)`, or the tool without
+parentheses for all its variants. In paths, `*` does not cross `/` and `**` does.
 
-## Orden de resolución
+## Resolution order
 
-1. Filtro de herramientas del modo (lo excluido se niega).
-2. Reglas del usuario (globales + del modo activo).
-3. Modo `auto`: heurístico.
-4. `bypassPermissions`: aprueba.
-5. Seguridad del shell (comandos peligrosos).
-6. Comportamiento de mutación del modo.
-7. Por defecto: permite.
+1. The mode's tool filter (anything excluded is denied).
+2. The user's rules (global + the active mode's).
+3. `auto` mode: heuristic.
+4. `bypassPermissions`: approves.
+5. Shell safety (dangerous commands).
+6. The mode's mutation behavior.
+7. Default: allow.
