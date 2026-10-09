@@ -30,6 +30,17 @@ published are not edited. The file goes per version:
   item is gone, along with the LSP `TextEdit` application code it was the only
   caller of. It replaced the whole buffer with `setContent`, which resets the
   editor's undo — it can come back when ranged edits land without that cost.
+- **The titlebar's Edit menu finally acts on the editor**: it called
+  `document.execCommand(...)`, which works on the DOM and **not** on the
+  editor's canvas, so Copy/Paste/Select All did nothing with a file open. The
+  items now run through the editor's own actions (shared with the context menu
+  via a new `editorActions` module): **Copy/Cut** write the selection to the
+  system clipboard (the engine's `Ctrl+C` fills its *internal* one), **Paste**
+  loads the system clipboard and only then sends `Ctrl+V`, and **Undo/Redo/Cut/
+  Select All** send the engine's own combos (`Ctrl+Z`, `Ctrl+Y`, `Ctrl+X`,
+  `Ctrl+A`). When the focus is a text field — the chat, a search box — the menu
+  keeps the old DOM behaviour, so the editor's actions do not steal the copy
+  that was meant for the field.
 
 ### Editor — indent guides (engine)
 - **The guides no longer keep the previous file's columns, and they sit one
