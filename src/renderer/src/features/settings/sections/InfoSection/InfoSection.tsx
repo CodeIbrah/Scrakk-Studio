@@ -18,6 +18,7 @@ import {
   refreshLatest,
   useUpdates
 } from '@services/updates'
+import { SCRAKK_WEBSITE } from '@shared/links'
 import styles from './InfoSection.module.css'
 
 import { t } from '@core/i18n'
@@ -60,8 +61,8 @@ export function InfoSection(): JSX.Element {
 
   return (
     <div className={styles.info}>
-      <p><strong>{t('settings.scrakk.studio')}</strong> {t('settings.editor.de.codigo')}</p>
-      <p>{t('settings.react.typescript.electron.sistema.de')}</p>
+      <p><strong>{t('settings.scrakk.studio')}</strong> {t('settings.acerca.descripcion')}</p>
+      <p>{t('settings.creado.por.scrakk.team')}</p>
       <p className={styles.version}>
         v{updates.currentVersion} {t('settings.build')} {typeof __BUILD_ID__ === 'string' ? __BUILD_ID__ : 'dev'}
       </p>
@@ -75,6 +76,14 @@ export function InfoSection(): JSX.Element {
             disabled={checking || downloading}
           >
             {checking ? t('settings.buscando') : t('settings.buscar.actualizaciones')}
+          </button>
+
+          <button
+            type="button"
+            className={styles.actionBtn}
+            onClick={() => window.open(SCRAKK_WEBSITE, '_blank', 'noopener')}
+          >
+            {t('settings.ver.mas')}
           </button>
 
           {downloaded && (

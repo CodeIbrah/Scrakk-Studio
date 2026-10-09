@@ -11,10 +11,11 @@ import {
   type JSX,
   type KeyboardEvent
 } from 'react'
-import { Modal, ContextMenu, type ContextMenuItem } from '@ui'
+import { ContextMenu, type ContextMenuItem } from '@ui'
 import { isHistoryViewOpen, setSkillsViewOpen, subscribeToHistoryView, toggleHistoryView, useLayout } from '@features/layout'
 import { getEditorFiles, performEditorEdit, requestCloseFile, type EditorEditAction } from '@features/editor'
 import { openFilesViaDialog, openFolderViaDialog } from '@features/explorer'
+import { SCRAKK_WEBSITE } from '@shared/links'
 import { useTheme } from '@core/theme/ThemeProvider'
 import styles from './MenuBar.module.css'
 
@@ -60,7 +61,6 @@ export function MenuBar(): JSX.Element {
 
   const [openMenu, setOpenMenu] = useState<MenuId | null>(null)
   const [anchor, setAnchor] = useState<{ x: number; y: number } | null>(null)
-  const [aboutOpen, setAboutOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const buttonRefs = useRef<Map<MenuId, HTMLButtonElement>>(new Map())
 
@@ -209,7 +209,8 @@ export function MenuBar(): JSX.Element {
         items: [
           {
             label: t('menu.help.about'),
-            onClick: () => setAboutOpen(true)
+            // La web oficial, no un modal con info inventada/desactualizada.
+            onClick: () => window.open(SCRAKK_WEBSITE, '_blank', 'noopener')
           }
         ]
       }
@@ -320,18 +321,6 @@ export function MenuBar(): JSX.Element {
           onClose={close}
         />
       ) : null}
-
-      <Modal open={aboutOpen} onClose={() => setAboutOpen(false)} title={t('titlebar.acerca.de.scrakk.studio')}>
-        <div className={styles.about}>
-          <p>
-            <strong>{t('titlebar.scrakk.studio')}</strong> {t('titlebar.chat.modular.para.agentes.ia')}
-          </p>
-          <p>
-            {t('titlebar.react.typescript.electron.sistema.de')}
-          </p>
-          <p className={styles.aboutVersion}>v{__APP_VERSION__}</p>
-        </div>
-      </Modal>
     </div>
   )
 }

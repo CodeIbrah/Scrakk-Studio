@@ -40,17 +40,3 @@
   background: var(--color-hover);
   color: var(--color-text);
 }
-
-.about {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  line-height: var(--leading-normal);
-}
-
-.aboutVersion {
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-}

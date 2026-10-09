@@ -8136,6 +8136,14 @@
       "at": "2026-09-25T17:45:36.561Z",
       "approvedAt": "2026-09-25T17:45:46.198Z"
     },
+    "settings.acerca.descripcion": {
+      "src": "7043364bcf68b683",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-09T21:58:16.052Z",
+      "approvedAt": "2026-10-09T21:58:16.052Z"
+    },
     "settings.activa.o.desactiva.las.skills": {
       "src": "13a980464a63e9b4",
       "area": "settings",
@@ -8414,6 +8422,14 @@
       "at": "2026-09-25T17:29:52.461Z",
       "approvedAt": "2026-09-25T17:32:07.887Z"
     },
+    "settings.creado.por.scrakk.team": {
+      "src": "0decea795661dfc5",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-09T21:50:00.693Z",
+      "approvedAt": "2026-10-09T21:50:00.693Z"
+    },
     "settings.cualquier.herramienta": {
       "src": "b5d3a7aee2e25d4f",
       "area": "settings",
@@ -8539,14 +8555,6 @@
       "machine": true,
       "needsReview": false,
       "at": "2026-09-25T17:29:52.461Z",
-      "approvedAt": "2026-09-25T17:32:07.887Z"
-    },
-    "settings.editor.de.codigo": {
-      "src": "92c4c06ea28adb3d",
-      "area": "settings",
-      "machine": true,
-      "needsReview": false,
-      "at": "2026-09-25T17:29:52.462Z",
       "approvedAt": "2026-09-25T17:32:07.887Z"
     },
     "settings.el.editor.usa.un.motor": {
@@ -9396,14 +9404,6 @@
       "at": "2026-09-25T17:29:54.309Z",
       "approvedAt": "2026-09-25T17:32:07.887Z"
     },
-    "settings.react.typescript.electron.sistema.de": {
-      "src": "9142a3a0fe7b83db",
-      "area": "settings",
-      "machine": true,
-      "needsReview": false,
-      "at": "2026-09-25T17:29:54.309Z",
-      "approvedAt": "2026-09-25T17:32:07.887Z"
-    },
     "settings.reglas": {
       "src": "db8661d1e95a31b0",
       "area": "settings",
@@ -9675,6 +9675,14 @@
       "needsReview": false,
       "at": "2026-09-25T17:45:36.563Z",
       "approvedAt": "2026-09-25T17:45:46.198Z"
+    },
+    "settings.ver.mas": {
+      "src": "6044f32c7a20e32e",
+      "area": "settings",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-09T21:50:00.693Z",
+      "approvedAt": "2026-10-09T21:50:00.693Z"
     },
     "settings.ver.release.v": {
       "src": "488255fa851511da",
@@ -11212,24 +11220,8 @@
       "at": "2026-09-25T18:24:40.396Z",
       "approvedAt": "2026-09-25T18:24:40.591Z"
     },
-    "titlebar.acerca.de.scrakk.studio": {
-      "src": "8ed691ab9eb594d0",
-      "area": "titlebar",
-      "machine": true,
-      "needsReview": false,
-      "at": "2026-09-25T17:29:59.148Z",
-      "approvedAt": "2026-09-25T17:32:07.888Z"
-    },
     "titlebar.agregar.workspace": {
       "src": "78d876c7332690f6",
-      "area": "titlebar",
-      "machine": true,
-      "needsReview": false,
-      "at": "2026-09-25T17:29:59.149Z",
-      "approvedAt": "2026-09-25T17:32:07.888Z"
-    },
-    "titlebar.chat.modular.para.agentes.ia": {
-      "src": "b24919bf02967442",
       "area": "titlebar",
       "machine": true,
       "needsReview": false,
@@ -11246,22 +11238,6 @@
     },
     "titlebar.menu.de.la.aplicacion": {
       "src": "e82c266122eb63de",
-      "area": "titlebar",
-      "machine": true,
-      "needsReview": false,
-      "at": "2026-09-25T17:29:59.149Z",
-      "approvedAt": "2026-09-25T17:32:07.888Z"
-    },
-    "titlebar.react.typescript.electron.sistema.de": {
-      "src": "1f9ee8f229b7c373",
-      "area": "titlebar",
-      "machine": true,
-      "needsReview": false,
-      "at": "2026-09-25T18:04:49.539Z",
-      "approvedAt": "2026-09-25T18:04:49.749Z"
-    },
-    "titlebar.scrakk.studio": {
-      "src": "0f5d91ba2e304fe9",
       "area": "titlebar",
       "machine": true,
       "needsReview": false,
