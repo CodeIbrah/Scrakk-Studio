@@ -42,6 +42,15 @@ published are not edited. The file goes per version:
   keeps the old DOM behaviour, so the editor's actions do not steal the copy
   that was meant for the field.
 
+### About (UI)
+- **"About Scrakk Studio" opens the site instead of a made-up modal**: the
+  titlebar's Help → About popped a modal with stale copy (a hand-written "React +
+  TypeScript + Electron" blurb); it now opens **https://scrakk.art** in the
+  system browser. Settings → About was rewritten too: it shows the editor's
+  tagline, credits **Scrakk Team** and adds a **See more** button **next to
+  "Check for updates"** — one row, not stacked. The URL lives in one place
+  (`@shared/links`) so the next change is a one-liner.
+
 ### Editor — indent guides (engine)
 - **The guides no longer keep the previous file's columns, and they sit one
   indent to the left of the text instead of on top of it**: two bugs, one on
