@@ -49,7 +49,7 @@ Qué métodos responden hoy:
 |---|---|---|
 | `hover` | `provideHover` | ✅ tooltip del editor |
 | `definition` | `provideDefinition` | ✅ (menú contextual / atajo) |
-| `formatting` | `provideDocumentFormattingEdits` | ✅ (menú contextual "Formatear") |
+| `formatting` | `provideDocumentFormattingEdits` | ✅ (cliente LSP; sin entrada en el menú contextual) |
 | `declaration` | `provideDeclaration` | ❌ responde, sin UI |
 | `typeDefinition` | `provideTypeDefinition` | ❌ responde, sin UI |
 | `implementation` | `provideImplementation` | ❌ responde, sin UI |

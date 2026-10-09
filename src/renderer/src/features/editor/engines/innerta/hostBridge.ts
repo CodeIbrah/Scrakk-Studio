@@ -488,7 +488,7 @@ export function attachHostBridge(
   const onContext = (event: MouseEvent): void => {
     event.preventDefault()
     event.stopPropagation()
-    openEditorContextMenu(getModule(), activePath, event.clientX, event.clientY)
+    openEditorContextMenu(getModule(), event.clientX, event.clientY)
   }
 
   canvas.addEventListener('pointermove', onPointerMove, { passive: true })
@@ -510,7 +510,7 @@ export function attachHostBridge(
         case InnertaHostEvent.ContextMenu: {
           const rect = canvas.getBoundingClientRect()
           // `a`/`b` son coords canvas-locales (el C++ emite mx/my).
-          openEditorContextMenu(getModule(), activePath, rect.left + a, rect.top + b)
+          openEditorContextMenu(getModule(), rect.left + a, rect.top + b)
           break
         }
         case InnertaHostEvent.BookmarkToggled: {
