@@ -26,6 +26,10 @@ published are not edited. The file goes per version:
   the cursor, so hovering the scrollbar shows the arrow and also skips the
   language hover — `GetInnertaTextXOffset` alone could not tell them apart,
   because the scrollbar sits to the right of where the text starts.
+- **The editor's context menu no longer offers "Formatear documento"**: the
+  item is gone, along with the LSP `TextEdit` application code it was the only
+  caller of. It replaced the whole buffer with `setContent`, which resets the
+  editor's undo — it can come back when ranged edits land without that cost.
 
 ### Editor — indent guides (engine)
 - **The guides no longer keep the previous file's columns, and they sit one
