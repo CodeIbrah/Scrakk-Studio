@@ -39,7 +39,8 @@ describe('activitybar layout — defaults', () => {
       'search',
       'browser',
       'debug',
-      'tabs'
+      'tabs',
+      'extensions'
     ])
     // `history` ya no vive en la barra: es una vista dentro del panel de chat.
     expect(getOrderedButtons('right').map((b) => b.id)).toEqual([
@@ -65,7 +66,8 @@ describe('activitybar layout — moveButton', () => {
       'explorer',
       'search',
       'browser',
-      'tabs'
+      'tabs',
+      'extensions'
     ])
   })
 
@@ -77,7 +79,8 @@ describe('activitybar layout — moveButton', () => {
       'search',
       'browser',
       'debug',
-      'tabs'
+      'tabs',
+      'extensions'
     ])
     expect(getOrderedButtons('right').map((b) => b.id)).toEqual(['chat', 'social', 'notes'])
   })
@@ -123,12 +126,13 @@ describe('activitybar layout — moveButton', () => {
       'search',
       'browser',
       'debug',
-      'tabs'
+      'tabs',
+      'extensions'
     ])
   })
 
   it('restore inválido no rompe', () => {
     restoreButtonLayout('{{{')
-    expect(getOrderedButtons('left')).toHaveLength(5)
+    expect(getOrderedButtons('left')).toHaveLength(6)
   })
 })

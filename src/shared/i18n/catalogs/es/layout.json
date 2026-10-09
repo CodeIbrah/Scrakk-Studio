@@ -89,6 +89,7 @@
   "layout.panel.debug": "Debug",
   "layout.panel.editor": "Editor",
   "layout.panel.explorer": "Explorador",
+  "layout.panel.extensions": "Extensiones",
   "layout.panel.git": "Git",
   "layout.panel.history": "Historial",
   "layout.panel.notes": "Notas",

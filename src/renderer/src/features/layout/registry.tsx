@@ -96,6 +96,10 @@ export const PANEL_REGISTRY: Record<PanelId, PanelEntry> = {
   problems: panel('problems', 'layout.panel.problems', () =>
     import('./panels/ProblemsPanel/ProblemsPanel').then((module) => module.ProblemsPanel)
   ),
+  // Panel de extensiones: cascarón vacío por ahora (solo el título).
+  extensions: panel('extensions', 'layout.panel.extensions', () =>
+    import('./panels/ExtensionsPanel/ExtensionsPanel').then((module) => module.ExtensionsPanel)
+  ),
   social: panel('social', 'layout.panel.social', () =>
     import('./panels/SocialPanel/SocialPanel').then((module) => module.SocialPanel)
   ),

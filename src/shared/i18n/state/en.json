@@ -4776,6 +4776,14 @@
       "at": "2026-09-25T17:31:23.927Z",
       "approvedAt": "2026-09-25T17:32:07.888Z"
     },
+    "layout.panel.extensions": {
+      "src": "f8980f8b253d6f4b",
+      "area": "layout",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-09T00:00:00.000Z",
+      "approvedAt": "2026-10-09T00:00:00.000Z"
+    },
     "layout.panel.git": {
       "src": "b949c922b6ef9ffb",
       "area": "layout",
