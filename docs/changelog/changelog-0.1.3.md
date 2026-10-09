@@ -31,6 +31,18 @@ published are not edited. The file goes per version:
   closes the panel). The mode persists, and the tab state is untouched: they are
   the same tabs, only shown vertically.
 
+### Extensions (SEF)
+- **The `sef create` scaffold now writes `entry`**: the scaffold omitted it while
+  the packer compiles to `dist/modules.js`, and the loader falls back to
+  `dist/index.js` when `entry` is missing — so a freshly created, packed and
+  installed extension registered but **without its code** (its panel never
+  mounted). The scaffold now emits `entry: "dist/modules.js"`, so create → build
+  → pack → install works end to end.
+- **A new empty Extensions panel** in the activity bar: a normal panel + button
+  (the proicons `extensions` icon) with no content yet, following the same
+  modular pattern as the rest of the panels. It is the shell the extension
+  manager UI will grow into.
+
 ### Welcome (UI)
 - **The 3 buttons on the welcome screen actually work**: they called props that
   **nobody passed** (`PanelHost` mounts the panel with no props, so the
