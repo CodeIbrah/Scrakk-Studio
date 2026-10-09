@@ -13,7 +13,7 @@ import {
 } from 'react'
 import { Modal, ContextMenu, type ContextMenuItem } from '@ui'
 import { isHistoryViewOpen, setSkillsViewOpen, subscribeToHistoryView, toggleHistoryView, useLayout } from '@features/layout'
-import { getEditorFiles, requestCloseFile } from '@features/editor'
+import { getEditorFiles, performEditorEdit, requestCloseFile, type EditorEditAction } from '@features/editor'
 import { openFilesViaDialog, openFolderViaDialog } from '@features/explorer'
 import { useTheme } from '@core/theme/ThemeProvider'
 import styles from './MenuBar.module.css'
@@ -29,6 +29,19 @@ function runCommand(command: string): void {
   } catch {
     // Comando no soportado por el entorno: no-op.
   }
+}
+
+/**
+ * Fallback DOM de cada acción de Editar. Se usa cuando el foco NO es el editor
+ * Innerta (chat, buscador, inputs): ahí `execCommand` sí opera sobre el campo.
+ */
+const DOM_COMMAND: Record<EditorEditAction, string> = {
+  copy: 'copy',
+  cut: 'cut',
+  paste: 'paste',
+  selectAll: 'selectAll',
+  undo: 'undo',
+  redo: 'redo'
 }
 
 /**
@@ -62,6 +75,27 @@ export function MenuBar(): JSX.Element {
     const rect = btn.getBoundingClientRect()
     setAnchor({ x: rect.left, y: rect.bottom + 2 })
     setOpenMenu(menuId)
+  }, [])
+
+  // ¿El foco, ANTES de abrir el menú, estaba en un campo de texto? El botón del
+  // menú se lleva el foco al abrirse, así que hay que mirarlo en el
+  // `pointerdown` (antes de que el navegador mueva el foco) para no robarle el
+  // Copiar/Pegar al chat o al buscador.
+  const focusWasEditable = useRef(false)
+  const rememberFocus = useCallback((): void => {
+    const el = document.activeElement as HTMLElement | null
+    focusWasEditable.current =
+      !!el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)
+  }, [])
+
+  // ── Acciones del menú Editar ────────────────────────────────────────────
+  // Con el foco en un campo de texto el menú hace lo de siempre (DOM); si no,
+  // se lo damos al editor Innerta activo. Antes SIEMPRE iba por
+  // `document.execCommand`, que no toca el canvas del motor: por eso no hacía
+  // nada con el editor.
+  const editAction = useCallback((action: EditorEditAction): void => {
+    if (!focusWasEditable.current && performEditorEdit(action)) return
+    runCommand(DOM_COMMAND[action])
   }, [])
 
   // ── Acciones del menú Archivo ────────────────────────────────────────────
@@ -107,20 +141,36 @@ export function MenuBar(): JSX.Element {
         label: t('menu.edit'),
         items: [
           {
+            label: t('menu.edit.undo'),
+            shortcut: 'Ctrl+Z',
+            onClick: () => editAction('undo')
+          },
+          {
+            label: t('menu.edit.redo'),
+            shortcut: 'Ctrl+Y',
+            onClick: () => editAction('redo')
+          },
+          {
+            label: t('menu.edit.cut'),
+            shortcut: 'Ctrl+X',
+            separatorBefore: true,
+            onClick: () => editAction('cut')
+          },
+          {
             label: t('menu.edit.copy'),
             shortcut: 'Ctrl+C',
-            onClick: () => runCommand('copy')
+            onClick: () => editAction('copy')
           },
           {
             label: t('menu.edit.paste'),
             shortcut: 'Ctrl+V',
-            onClick: () => runCommand('paste')
+            onClick: () => editAction('paste')
           },
           {
             label: t('menu.edit.selectAll'),
             shortcut: 'Ctrl+A',
             separatorBefore: true,
-            onClick: () => runCommand('selectAll')
+            onClick: () => editAction('selectAll')
           }
         ]
       },
@@ -174,7 +224,8 @@ export function MenuBar(): JSX.Element {
     historyOpen,
     openFilesViaDialog,
     openFolderViaDialog,
-    closeActiveFile
+    closeActiveFile,
+    editAction
   ])
 
   const handleButtonClick = (menuId: MenuId): void => {
@@ -220,6 +271,7 @@ export function MenuBar(): JSX.Element {
       className={styles.menubar}
       role="menubar"
       aria-label={t('titlebar.menu.de.la.aplicacion')}
+      onPointerDownCapture={rememberFocus}
     >
       {MENU_IDS.map((menuId) => {
         const menu = menuDefinitions[menuId]

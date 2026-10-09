@@ -1,8 +1,11 @@
 {
   "menu.edit": "Editar",
   "menu.edit.copy": "Copiar",
+  "menu.edit.cut": "Cortar",
   "menu.edit.paste": "Pegar",
+  "menu.edit.redo": "Rehacer",
   "menu.edit.selectAll": "Seleccionar todo",
+  "menu.edit.undo": "Deshacer",
   "menu.file": "Archivo",
   "menu.file.closeFile": "Cerrar archivo",
   "menu.file.closeWindow": "Cerrar ventana",

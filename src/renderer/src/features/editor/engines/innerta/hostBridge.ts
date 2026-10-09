@@ -115,6 +115,16 @@ function engineFor(path: string | null | undefined): LiveEngineEntry | null {
 }
 
 /**
+ * El MÓDULO del editor de `path` (o el único vivo), ya resuelto.
+ *
+ * Lo usan las acciones del menú Editar de la titlebar, que no viven dentro del
+ * árbol de React de un editor y no tienen la instancia a mano.
+ */
+export function innertaModuleFor(path: string | null | undefined): InnertaModule | null {
+  return engineFor(path)?.getModule() ?? null
+}
+
+/**
  * Mueve el cursor del editor de `path` a una posición (0-based).
  *
  * Devuelve `false` si no hay engine vivo para ese archivo — el llamador decide

@@ -6520,6 +6520,14 @@
       "at": "2026-09-25T17:31:26.368Z",
       "approvedAt": "2026-09-25T17:32:07.888Z"
     },
+    "menu.edit.cut": {
+      "src": "2f04fbd94be9442b",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-09T18:45:45.366Z",
+      "approvedAt": "2026-10-09T18:45:45.366Z"
+    },
     "menu.edit.paste": {
       "src": "9536d53c4922de14",
       "area": "titlebar",
@@ -6528,6 +6536,14 @@
       "at": "2026-09-25T17:31:26.368Z",
       "approvedAt": "2026-09-25T17:32:07.888Z"
     },
+    "menu.edit.redo": {
+      "src": "0cfa9a607a45f565",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-09T18:45:45.366Z",
+      "approvedAt": "2026-10-09T18:45:45.366Z"
+    },
     "menu.edit.selectAll": {
       "src": "f691776fbc8ed669",
       "area": "titlebar",
@@ -6535,6 +6551,14 @@
       "needsReview": false,
       "at": "2026-09-25T17:31:26.368Z",
       "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "menu.edit.undo": {
+      "src": "29fa864fd744397e",
+      "area": "titlebar",
+      "machine": true,
+      "needsReview": false,
+      "at": "2026-10-09T18:45:45.366Z",
+      "approvedAt": "2026-10-09T18:45:45.366Z"
     },
     "menu.file": {
       "src": "75d6b4579e1d29eb",
