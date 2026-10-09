@@ -38,6 +38,9 @@ export async function createScaffold(options: ScaffoldOptions): Promise<string> 
     description: `${options.name} — extensión Scrakk Studio.`,
     engine: '>=0.1.0',
     permissions: [] as string[],
+    // El packer escribe el bundle acá (ver `SEF.ENTRY`). Sin `entry`, el loader
+    // busca `dist/index.js` y la extensión instala sin código.
+    entry: SEF.ENTRY,
     contributes: {
       panels: [
         {
