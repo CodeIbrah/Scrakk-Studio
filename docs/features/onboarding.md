@@ -11,6 +11,11 @@ summary: "The first-run setup wizard: five registry-driven steps, the real steps
 concrete step: the step list, order, side navigation and the final summary all come from a
 registry, so a new step is a new component plus one registry entry.
 
+> **Beta:** the wizard is currently hidden. `ONBOARDING_ENABLED = false` in
+> `features/onboarding/config.ts` makes it paint nothing and skip its palette
+> command. The registry and builtin steps stay in place; flip the flag to
+> re-enable it. This page documents the feature as designed.
+
 ## How it is triggered
 
 There is no separate "first launch" flag. The trigger is the **absence of a persisted
