@@ -42,3 +42,36 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # La app se distribuye también en Windows, y la suite tiene tests que tocan el
+  # filesystem de verdad (instalación atómica de extensiones, cuentas, LSP). Con
+  # un solo job en Linux, un test que sólo rompiera en win32 pasaba inadvertido:
+  # `panel-header-effects.test.ts` construía rutas con `URL.pathname`, que en
+  # Windows devuelve `/C:/...` y revienta con ENOENT al hacer `scandir`.
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Permitir scripts de instalación (electron)
+        run: npm config set ignore-scripts false
+
+      - name: Instalar dependencias
+        run: |
+          npm install --ignore-scripts
+          node node_modules/electron/install.js
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # 2 suites se saltan aquí por diseño: `terminal-font-stack` y
+      # `tree-sitter-tokenizer` requieren `fc-match` (fontconfig), que no
+      # existe en Windows. Se declaran en el propio archivo; no es cobertura
+      # oculta, pero conviene tenerlo presente al leer el resultado.
+      - name: Tests
+        run: npm test
