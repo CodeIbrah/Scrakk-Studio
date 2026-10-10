@@ -36,31 +36,6 @@ support or headlessly for scripting.
 - **Models** — 160+ providers; works out of the box with the default
   **DeepSeek V4 Flash**.
 
-## Built for the terminal
-
-Scrakk runs natively in your terminal with full TUI support, or headlessly for
-scripting:
-
-```bash
-scrakk -p "Build a todo app in React"
-scrakk -p "Fix the bug in src/utils/api.ts" --tools read_file,edit,bash
-```
-
-```bash
-# macOS (Homebrew)
-brew install scrakk-cli/scrakk/scrakk
-# Linux (curl | npm | cargo)
-curl -fsSL https://scrakk.art/install.sh | bash
-npm install -g scrakk-cli
-cargo install scrakk-cli
-# Windows (Scoop | PowerShell)
-scoop install scrakk
-iwr https://scrakk.art/install.ps1 | iex
-```
-
-Then run `/connect` in the TUI to add your API key, or use the free DeepSeek V4
-Flash. See the [getting started guide](https://docs.scrakk.art/getting-started).
-
 ## Development
 
 Requirements: **Node.js 22+** (the tooling imports `.ts` directly via type
