@@ -440,7 +440,7 @@ export function MessageComposer({
     >
       {replyTo ? (
         <div className={styles.replyPreview}>
-          <span className={styles.replyLabel}>{t('social.respondiendo.a')} {replySenderName ?? 'mensaje'}</span>
+          <span className={styles.replyLabel}>{t('social.respondiendo.a')} {replySenderName ?? t('social.mensaje')}</span>
           <span className={styles.replyText}>
             {replyTo.body.trim().slice(0, 80) ||
               (replyTo.attachments?.length ? t('social.imagen.adjunta') : '')}

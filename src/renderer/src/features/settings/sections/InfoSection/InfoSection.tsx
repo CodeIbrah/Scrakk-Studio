@@ -40,13 +40,13 @@ export function InfoSection(): JSX.Element {
       const version = state.version ?? release?.version ?? updates.latest?.version
 
       if (state.status === 'not-available') {
-        setMessage(`Estás al día (v${updates.currentVersion}).`)
+        setMessage(t('settings.estas.al.dia', { version: updates.currentVersion }))
       } else if (state.status === 'available') {
-        setMessage(`Nueva versión v${version} disponible.`)
+        setMessage(t('settings.nueva.version', { version: version ?? '' }))
       } else if (state.status === 'unsupported') {
         setMessage(
           release && updates.updateAvailable
-            ? `Nueva versión v${release.version} disponible.`
+            ? t('settings.nueva.version', { version: release.version })
             : t('settings.esta.instalacion.no.se.actualiza')
         )
       } else if (state.status === 'error') {
@@ -129,15 +129,17 @@ export function InfoSection(): JSX.Element {
         <p className={styles.status}>
           {message ??
             (downloading
-              ? `Descargando… ${Math.round(updater.percent ?? 0)}%`
+              ? t('settings.descargando.porcentaje', {
+                  percent: String(Math.round(updater.percent ?? 0))
+                })
               : downloaded
-                ? `v${updater.version} lista para instalar.`
+                ? t('settings.lista.para.instalar', { version: updater.version ?? '' })
                 : updater.status === 'unsupported'
                   ? updates.updateAvailable
-                    ? `Nueva versión v${updates.latest?.version} disponible.`
+                    ? t('settings.nueva.version', { version: updates.latest?.version ?? '' })
                     : t('settings.al.dia')
                   : updates.updateAvailable
-                    ? `Nueva versión v${updates.latest?.version} disponible.`
+                    ? t('settings.nueva.version', { version: updates.latest?.version ?? '' })
                     : t('settings.al.dia'))}
         </p>
       </div>

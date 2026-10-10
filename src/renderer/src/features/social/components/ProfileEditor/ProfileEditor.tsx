@@ -126,7 +126,7 @@ export function ProfileEditor({
             className={styles.inputBare}
             value={handle.replace(/^@/, '')}
             onChange={(event: ChangeEvent<HTMLInputElement>) => setHandle(event.target.value)}
-            placeholder="usuario"
+            placeholder={t('social.username.placeholder')}
             maxLength={24}
             spellCheck={false}
           />

@@ -596,7 +596,7 @@ export function GitPanel(): JSX.Element {
               className={styles.input}
               value={newBranchName}
               onChange={(event) => setNewBranchName(event.target.value)}
-              placeholder="nombre-rama"
+              placeholder={t('git.branch.placeholder')}
               aria-label={t('git.nombre.de.rama')}
               autoFocus
               spellCheck={false}
@@ -1413,7 +1413,7 @@ function AccountLoginForm(props: {
           className={styles.input}
           value={props.host}
           onChange={(event) => props.setHost(event.target.value)}
-          placeholder="Host (vacío = github.com, enterprise opcional)"
+          placeholder={t('git.host.placeholder')}
           aria-label={t('git.host.de.github.enterprise.opcional')}
           spellCheck={false}
         />

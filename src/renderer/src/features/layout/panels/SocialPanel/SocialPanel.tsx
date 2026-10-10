@@ -320,7 +320,9 @@ function SocialPanelInner(): JSX.Element {
           </span>
           <span className={styles.switchHint}>
             <ProductIcon id="people" size={13} />
-            {accounts.accounts.length > 1 ? `${accounts.accounts.length} cuentas` : t('layout.cuentas')}
+            {accounts.accounts.length > 1
+              ? t('social.n.cuentas', { count: String(accounts.accounts.length) })
+              : t('layout.cuentas')}
           </span>
         </button>
 
