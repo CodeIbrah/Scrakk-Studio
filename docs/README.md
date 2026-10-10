@@ -35,20 +35,30 @@ is and in what order to read it.
 ### Getting started
 | Document | What it covers |
 | --- | --- |
+| [Install](getting-started/install.md) | Getting the app (releases + building from source). |
+| [Quick start](getting-started/quickstart.md) | Open a project, connect a model, first chat. |
+| [Project structure](getting-started/project-structure.md) | The repo layout (main / preload / renderer / shared). |
 | [Updates](updates.md) | How the IDE detects, downloads and installs a new version (release → Supabase → Realtime). |
 
 ### AI chat
 | Document | What it covers |
 | --- | --- |
+| [AI chat](chat/chat.md) | The chat panel: sessions, streaming, tool cards, message actions. |
+| [AI tools](chat/tools.md) | The built-in tools the agent can call, and the tool registry. |
+| [Subagents](chat/subagents.md) | The `task` tool and subagent sessions. |
+| [Models & providers](chat/providers.md) | The models.dev catalogue and provider settings. |
 | [Modes and permissions](chat/permissions.md) | Modes (primary/subagent), deny-by-default permissions and approvals. |
 | [Slash commands](chat/slash-commands.md) | The chat's `/command` commands. |
 
 ### Editor (Innerta)
 | Document | What it covers |
 | --- | --- |
+| [The editor](editor/editor.md) | Tabs, splits, the engine-per-panel model, minimap, bookmarks, zoom. |
 | [Editor decorations](editor/decorations.md) | Range underlines and decorations the editor paints. |
 | [Innerta as a surface](editor/innerta-bridge.md) | The Innerta ↔ Scrakk contract: who owns the UI. |
 | [Languages](editor/languages.md) | How an extension adds syntax (VS Code → SEF → Innerta). |
+| [Completion](editor/completion.md) | The completion suggestions list. |
+| [Diff tabs](editor/diff.md) | Read-only diff tabs (git + AI edits). |
 | [Editor screenshots](editor/screenshots.md) | How it is verified that the editor paints. |
 
 ### Extensions (SEF)
@@ -92,11 +102,37 @@ is and in what order to read it.
 | [vscode-languageclient](lsp/vscode-languageclient.md) | VS Code extensions with their own server. |
 | [Testing](lsp/testing.md) | LSP system tests. |
 
+### Panels & features
+| Document | What it covers |
+| --- | --- |
+| [Panels & features](features/README.md) | Index of the built-in panels and the feature area. |
+| [Explorer](features/explorer.md) | The workspace file tree. |
+| [Search](features/search.md) | Content grep over the workspace. |
+| [Git](features/git.md) | Status, staging, history and diffs. |
+| [Browser](features/browser.md) | The browser panel (placeholder) and the real web surfaces. |
+| [Debug](features/debug.md) | The debug panel (placeholder — no debugger yet). |
+| [Problems](features/problems.md) | Diagnostics from language servers and extensions. |
+| [Notes](features/notes.md) | The notes panel. |
+| [Terminal](features/terminal.md) | Integrated terminal and the node view. |
+| [Social](features/social.md) | Friends, direct messages, presence, profiles. |
+| [Sessions](features/sessions.md) | Live sessions (canvas + engine). |
+| [Layout & panels](features/layout.md) | Slots, strips, splits and the activity bar. |
+| [Shortcuts & commands](features/shortcuts.md) | Keybindings and the command palette. |
+| [Settings](features/settings.md) | The Settings area. |
+| [Themes & icons](features/themes.md) | Color themes, file icons and UI icons. |
+
+### Development
+| Document | What it covers |
+| --- | --- |
+| [Contributing](dev/contributing.md) | Dev setup, scripts, tests, docs and commit style. |
+
 ### What's new
 | Document | What it covers |
 | --- | --- |
-| [Changelog 0.1.2](changelog/changelog-0.1.2.md) | Changes in the latest version (also feeds the welcome screen's Announcements). |
-| [Changelog 0.1.1](changelog/changelog-0.1.1.md) | Changes in the previous version. |
+| [Changelog 0.1.4](changelog/changelog-0.1.4.md) | Changes in the latest version (also feeds the welcome screen's Announcements). |
+| [Changelog 0.1.3](changelog/changelog-0.1.3.md) | Previous version. |
+| [Changelog 0.1.2](changelog/changelog-0.1.2.md) | Previous version. |
+| [Changelog 0.1.1](changelog/changelog-0.1.1.md) | Previous version. |
 
 ## Reading paths
 
@@ -122,7 +158,7 @@ Each doc's front-matter drives the navigation:
 ```yaml
 ---
 title: "..."
-group: extensions     # start | chat | editor | extensions | lsp | changelog
+group: extensions     # start | chat | editor | features | extensions | lsp | dev | changelog
 order: 30
 summary: "One line for the nav and search."
 ---

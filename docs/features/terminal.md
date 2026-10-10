@@ -1,0 +1,84 @@
+---
+title: "Terminal"
+group: features
+order: 90
+summary: "The terminal: a builtin extension rendered by the Innerta engine, with live PTY sessions, system fonts, and an infinite node-canvas view."
+---
+# Terminal
+
+The terminal is **not** built into the layout core: it is a **builtin extension**
+(`innerta-terminal`) that contributes a panel, and its content is rendered by the
+**Innerta engine** in terminal mode (the same engine as the editor, not VTE). It
+lives in the **bottom** slot and is opened from the status bar / the terminal
+buttons:
+
+```ts
+openTerminalTab('bottom')       // focus (or create) the terminal tab
+openNewTerminalTab('bottom')    // the strip's "+": a new session
+```
+
+See the builtin manifest:
+[`innerta-terminal`](../extensions/reference/builtin.md).
+
+## Live sessions
+
+A **session** (`src/renderer/src/services/innerta/terminalSession.ts`) owns three
+things together: the **canvas**, the **Innerta view**, and the **PTY** (in the
+main process). They are decoupled from the React mount so the shell survives:
+
+- **`attach()` / `detach()` re-parent the canvas** — moving the terminal tab
+  between slots does **not** kill the session (the WASM module and the PTY stay
+  alive).
+- **`dispose()`** (closing the tab) is the only thing that destroys everything.
+
+The PTY is driven through the preload API:
+
+```ts
+window.api.terminal.create({ id, shell, cwd, cols, rows })
+window.api.terminal.write({ id, data })
+window.api.terminal.resize({ id, cols, rows })
+window.api.terminal.destroy({ id })
+window.api.terminal.onData(({ id, data }) => { /* … */ })
+window.api.terminal.onExit(({ id, exitCode }) => { /* … */ })
+```
+
+## Fonts (resolved from the system)
+
+The terminal resolves its fonts from the **machine**, per code point, so it
+matches your real terminal:
+
+- **Primary stack + size**: `getSystemFont()` / `getFontStack()` — the family and
+  px the system uses (read at runtime in the main; nothing is written to disk).
+- **CJK on demand**: when the buffer has kana/han/hangul, `getCjkFont()` loads the
+  system CJK font once for that session.
+- **Colour emoji**: `getEmojiFont()`, applied only to `\p{Emoji_Presentation}`
+  code points (`✓ ❤ ☀ ⚠` stay monochrome; `⚡ ✅ ✨ 😀` get colour).
+- **Settings → Terminal**: pick the family (or leave it on the system default);
+  the choice is persisted (`scrakk-terminal-font`) and re-applied live.
+
+## The node view (terminal canvas)
+
+The bottom strip has a **"view nodes"** button that swaps the terminal for an
+**infinite canvas** (`features/layout/components/TerminalNodes/`) where each live
+session is a **node**:
+
+- drag nodes, **zoom/pan** the camera, and **link** nodes through their ports
+  (`terminalNodesModel`: ports, edges, connected groups);
+- positions, camera and links persist in localStorage
+  (`scrakk:term-nodes-pos`, `-cam`, `-links`);
+- a `+` creates a new session directly on the canvas; closing a node closes its
+  tab.
+
+## Limits
+
+- The terminal is a **PTY renderer**, not a shell manager: no split panes inside
+  one terminal, no built-in profiles beyond the system shell.
+- Font metrics come from the system; if none can be resolved, the engine falls
+  back to its bundled faces.
+- The node view is a **view** of the sessions, not a separate terminal system.
+
+## Next steps
+
+- [Panels & features](README.md) — the other built-in panels.
+- [`innerta-terminal`](../extensions/reference/builtin.md) — the builtin extension.
+- [The editor](../editor/editor.md) — the same engine in editor mode.

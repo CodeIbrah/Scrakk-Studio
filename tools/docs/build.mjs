@@ -40,12 +40,14 @@ const OUT = path.join(DOCS, '.generated')
 
 /** Grupos de navegación (el `group:` del front-matter apunta a un id). */
 const GROUPS = [
-  { id: 'start', title: 'Empezar', order: 0 },
-  { id: 'chat', title: 'Chat con IA', order: 10 },
+  { id: 'start', title: 'Getting started', order: 0 },
+  { id: 'chat', title: 'AI chat', order: 10 },
   { id: 'editor', title: 'Editor', order: 20 },
-  { id: 'extensions', title: 'Extensiones', order: 30 },
+  { id: 'features', title: 'Panels & features', order: 25 },
+  { id: 'extensions', title: 'Extensions', order: 30 },
   { id: 'lsp', title: 'Language Server (LSP)', order: 40 },
-  { id: 'changelog', title: 'Novedades', order: 90 }
+  { id: 'dev', title: 'Development', order: 50 },
+  { id: 'changelog', title: 'What\'s new', order: 90 }
 ]
 const GROUP_BY_ID = Object.fromEntries(GROUPS.map((g) => [g.id, g]))
 
