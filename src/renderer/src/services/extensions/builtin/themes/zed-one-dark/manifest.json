@@ -1,0 +1,18 @@
+{
+  "id": "zed-one-dark",
+  "name": "Zed One Dark",
+  "version": "0.1.0",
+  "author": "Scrakk Studio",
+  "description": "Tema Zed One Dark — builtin (contribution themes).",
+  "engine": ">=0.1.0",
+  "contributes": {
+    "themes": [
+      {
+        "id": "zed-one-dark",
+        "name": "Zed One Dark",
+        "type": "dark",
+        "path": "./theme.json"
+      }
+    ]
+  }
+}
