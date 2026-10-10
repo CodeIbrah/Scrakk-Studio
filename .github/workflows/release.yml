@@ -85,9 +85,14 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      # Sin tests en Windows: la suite completa gatea en el job linux.
-      # grammar-cli rompe la colección bajo vitest+win32 (import .ts-desde-.mjs)
-      # y hay casos POSIX-only; se corre build + empaquetado del .exe.
+      # El motivo histórico para no correr tests aquí ("grammar-cli rompe la
+      # colección bajo vitest+win32") era en realidad un problema que NO era de
+      # plataforma: un shebang `#!/usr/bin/env node` en un módulo ESM, que el
+      # transform SSR de Vite dejaba huérfano. Ya está corregido y la suite
+      # pasa en windows-latest, así que aquí se corre también.
+      - name: Tests
+        run: npm test
+
       - name: Build
         run: npm run build
 
