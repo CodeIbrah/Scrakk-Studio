@@ -24,10 +24,18 @@ jobs:
       - name: Permitir scripts de instalación (electron)
         run: npm config set ignore-scripts false
 
+      # `npm ci`, no `npm install`: instala exactamente lo que dice el
+      # lockfile. Con `npm install` + rangos caret el CI flotaba sobre minors, y
+      # una actualización de vite rompió el build sin que nadie tocara el repo.
       - name: Instalar dependencias
         run: |
-          npm install --ignore-scripts
+          npm ci --ignore-scripts
           node node_modules/electron/install.js
+
+      # Si una herramienta reescribió el lockfile, el build no es reproducible:
+      # hay que enterarse en el PR, no tres meses después.
+      - name: El lockfile no cambió
+        run: git diff --exit-code -- package-lock.json
 
       - name: Typecheck
         run: npm run typecheck
@@ -63,8 +71,11 @@ jobs:
 
       - name: Instalar dependencias
         run: |
-          npm install --ignore-scripts
+          npm ci --ignore-scripts
           node node_modules/electron/install.js
+
+      - name: El lockfile no cambió
+        run: git diff --exit-code -- package-lock.json
 
       - name: Typecheck
         run: npm run typecheck
