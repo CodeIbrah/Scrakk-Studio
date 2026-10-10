@@ -113,6 +113,7 @@
   "main.no.se.pudo.enviar.el": "The code could not be sent",
   "main.no.se.pudo.identificar.la": "Account not found",
   "main.no.se.pudo.leer.el": "Unable to read the profile",
+  "main.no.se.pudo.registrar.la.aceptacion": "Could not record the acceptance.",
   "main.nombre.de.rama.invalido": "Invalid branch name",
   "main.nombre.de.remoto.invalido": "Invalid remote name",
   "main.nombre.de.tag.invalido": "Invalid tag name",

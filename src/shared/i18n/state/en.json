@@ -6152,6 +6152,14 @@
       "at": "2026-09-25T17:50:54.426Z",
       "approvedAt": "2026-09-25T17:50:58.932Z"
     },
+    "main.no.se.pudo.registrar.la.aceptacion": {
+      "src": "b888249ab358be59",
+      "area": "main",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:39:47.681Z",
+      "approvedAt": "2026-10-10T17:39:47.681Z"
+    },
     "main.nombre.de.rama.invalido": {
       "src": "d58bda23b87e8966",
       "area": "main",
@@ -8933,6 +8941,46 @@
       "at": "2026-09-25T17:45:36.563Z",
       "approvedAt": "2026-09-25T17:45:46.198Z"
     },
+    "settings.legal.descripcion": {
+      "src": "dcd5bedcb37a5347",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:39:47.681Z",
+      "approvedAt": "2026-10-10T17:39:47.681Z"
+    },
+    "settings.legal.licencia": {
+      "src": "4ce42e8559d1ee2e",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:39:47.681Z",
+      "approvedAt": "2026-10-10T17:39:47.681Z"
+    },
+    "settings.legal.privacidad": {
+      "src": "298dfe180a7fba91",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:39:47.681Z",
+      "approvedAt": "2026-10-10T17:39:47.681Z"
+    },
+    "settings.legal.terminos": {
+      "src": "206f4cc40d6744b3",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:39:47.681Z",
+      "approvedAt": "2026-10-10T17:39:47.681Z"
+    },
+    "settings.legal.version": {
+      "src": "bc5655d2bf2fc148",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:39:47.681Z",
+      "approvedAt": "2026-10-10T17:39:47.681Z"
+    },
     "settings.lsp.semantic.tokens": {
       "src": "e3dd5b7634cd5997",
       "area": "settings",
@@ -9091,6 +9139,14 @@
       "needsReview": false,
       "at": "2026-09-25T17:31:24.680Z",
       "approvedAt": "2026-09-25T17:32:07.888Z"
+    },
+    "settings.nav.legal": {
+      "src": "4787eaf7c938045f",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:39:47.681Z",
+      "approvedAt": "2026-10-10T17:39:47.681Z"
     },
     "settings.nav.performance": {
       "src": "0fb6f5157a9090e0",
@@ -9748,6 +9804,14 @@
       "at": "2026-09-25T17:29:56.010Z",
       "approvedAt": "2026-09-25T17:32:07.887Z"
     },
+    "social.acepto.los.terminos": {
+      "src": "ecb78841019bf31b",
+      "area": "social",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:39:47.681Z",
+      "approvedAt": "2026-10-10T17:39:47.681Z"
+    },
     "social.actividades": {
       "src": "0c91432cf9b924ac",
       "area": "social",
@@ -10139,6 +10203,14 @@
       "needsReview": false,
       "at": "2026-09-25T17:29:56.010Z",
       "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.email.placeholder": {
+      "src": "070fb5e0761841e7",
+      "area": "social",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:39:47.681Z",
+      "approvedAt": "2026-10-10T17:39:47.681Z"
     },
     "social.emojis": {
       "src": "0a76ba756cf5e3a5",
@@ -10612,6 +10684,14 @@
       "at": "2026-09-25T18:24:39.634Z",
       "approvedAt": "2026-09-25T18:24:40.591Z"
     },
+    "social.politica.de.privacidad": {
+      "src": "fa322aa36e894213",
+      "area": "social",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:39:47.681Z",
+      "approvedAt": "2026-10-10T17:39:47.681Z"
+    },
     "social.prefiero.no.decir": {
       "src": "577ff2e365d6fccc",
       "area": "social",
@@ -10819,6 +10899,14 @@
       "needsReview": false,
       "at": "2026-09-25T17:29:56.020Z",
       "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "social.terminos": {
+      "src": "60eaf1f65f219475",
+      "area": "social",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:39:47.681Z",
+      "approvedAt": "2026-10-10T17:39:47.681Z"
     },
     "social.todavia.no.hay.mensajes.escribe": {
       "src": "7ead7b387ebf83de",
