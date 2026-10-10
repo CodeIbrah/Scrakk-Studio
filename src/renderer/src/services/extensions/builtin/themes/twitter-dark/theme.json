@@ -2,34 +2,34 @@
   "name": "Twitter Dark",
   "type": "dark",
   "colors": {
-    "bg": "#15202b",
-    "surface": "#1e2732",
-    "surfaceRaised": "#263340",
-    "border": "#38444d",
-    "borderStrong": "#4a5a66",
-    "accent": "#1d9bf0",
-    "accentHover": "#4db1f3",
-    "accentActive": "#1a8cd8",
-    "onAccent": "#ffffff",
-    "text": "#ffffff",
-    "textSecondary": "#8b98a5",
-    "textMuted": "#6e7b8a",
+    "bg": "#000000",
+    "surface": "#16181c",
+    "surfaceRaised": "#1e2126",
+    "border": "#2f3336",
+    "borderStrong": "#3e4144",
+    "accent": "#eff3f4",
+    "accentHover": "#ffffff",
+    "accentActive": "#d6d9db",
+    "onAccent": "#0f1419",
+    "text": "#e7e9ea",
+    "textSecondary": "#71767b",
+    "textMuted": "#536471",
     "error": "#f4212e",
     "errorHover": "#ff5a66",
     "onError": "#ffffff",
     "warning": "#ffad1f",
     "success": "#00ba7c",
     "info": "#1d9bf0",
-    "hover": "#22303c",
-    "active": "#2c3a47",
-    "scrollbarThumb": "#38444d",
-    "scrollbarThumbHover": "#4a5a66",
-    "indentGuide": "#22303c",
-    "panelBorder": "#38444d",
-    "editorBg": "#15202b",
-    "titleBarBg": "#15202b",
-    "activityBarBg": "#15202b",
-    "statusBarBg": "#15202b",
+    "hover": "#16181c",
+    "active": "#1e2126",
+    "scrollbarThumb": "#333639",
+    "scrollbarThumbHover": "#3e4144",
+    "indentGuide": "#1e2126",
+    "panelBorder": "#2f3336",
+    "editorBg": "#000000",
+    "titleBarBg": "#000000",
+    "activityBarBg": "#000000",
+    "statusBarBg": "#000000",
     "diffAdded": "rgba(0, 186, 124, 0.16)",
     "diffRemoved": "rgba(244, 33, 46, 0.16)",
     "diffModified": "rgba(29, 155, 240, 0.16)"
@@ -65,7 +65,7 @@
         "comment.line",
         "comment.block"
       ],
-      "foreground": "#8b98a5",
+      "foreground": "#71767b",
       "fontStyle": "italic"
     },
     {
@@ -105,7 +105,7 @@
         "keyword.operator",
         "operator"
       ],
-      "foreground": "#ff9f68"
+      "foreground": "#f91880"
     },
     {
       "scope": [
@@ -122,7 +122,7 @@
         "storage.type",
         "storage.modifier"
       ],
-      "foreground": "#2ec4b6"
+      "foreground": "#56c9e0"
     },
     {
       "scope": [
@@ -155,7 +155,7 @@
     },
     {
       "scope": "variable.parameter",
-      "foreground": "#ff6b81"
+      "foreground": "#2ec4b6"
     },
     {
       "scope": [
@@ -163,7 +163,7 @@
         "meta.object-literal.key",
         "support.type.property-name"
       ],
-      "foreground": "#f91880"
+      "foreground": "#ff5a7e"
     },
     {
       "scope": [

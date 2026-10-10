@@ -5,11 +5,11 @@
     "bg": "#ffffff",
     "surface": "#f7f9f9",
     "surfaceRaised": "#eff3f4",
-    "border": "#cfd9de",
-    "borderStrong": "#b9cad3",
-    "accent": "#1d9bf0",
-    "accentHover": "#1a8cd8",
-    "accentActive": "#0c7abf",
+    "border": "#eff3f4",
+    "borderStrong": "#cfd9de",
+    "accent": "#0f1419",
+    "accentHover": "#272c30",
+    "accentActive": "#3b4043",
     "onAccent": "#ffffff",
     "text": "#0f1419",
     "textSecondary": "#536471",
@@ -23,9 +23,9 @@
     "hover": "#f7f9f9",
     "active": "#eff3f4",
     "scrollbarThumb": "#cfd9de",
-    "scrollbarThumbHover": "#b9cad3",
+    "scrollbarThumbHover": "#8899a6",
     "indentGuide": "#eff3f4",
-    "panelBorder": "#cfd9de",
+    "panelBorder": "#eff3f4",
     "editorBg": "#ffffff",
     "titleBarBg": "#ffffff",
     "activityBarBg": "#ffffff",
@@ -65,7 +65,7 @@
         "comment.line",
         "comment.block"
       ],
-      "foreground": "#8b98a5",
+      "foreground": "#536471",
       "fontStyle": "italic"
     },
     {
@@ -105,7 +105,7 @@
         "keyword.operator",
         "operator"
       ],
-      "foreground": "#1a7f8e"
+      "foreground": "#d6237a"
     },
     {
       "scope": [
@@ -151,11 +151,11 @@
         "variable",
         "variable.other"
       ],
-      "foreground": "#5b7083"
+      "foreground": "#5a6b7a"
     },
     {
       "scope": "variable.parameter",
-      "foreground": "#c0392b"
+      "foreground": "#1a7f8e"
     },
     {
       "scope": [
@@ -163,7 +163,7 @@
         "meta.object-literal.key",
         "support.type.property-name"
       ],
-      "foreground": "#d6237a"
+      "foreground": "#b02a37"
     },
     {
       "scope": [
@@ -171,7 +171,7 @@
         "punctuation.definition",
         "punctuation.separator"
       ],
-      "foreground": "#7a8b99"
+      "foreground": "#8b98a5"
     },
     {
       "scope": "markup.heading",
