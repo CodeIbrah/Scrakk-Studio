@@ -1,0 +1,18 @@
+{
+  "id": "twitter-dark",
+  "name": "Twitter Dark",
+  "version": "0.1.0",
+  "author": "Scrakk Studio",
+  "description": "Tema Twitter Dark — builtin (contribution themes).",
+  "engine": ">=0.1.0",
+  "contributes": {
+    "themes": [
+      {
+        "id": "twitter-dark",
+        "name": "Twitter Dark",
+        "type": "dark",
+        "path": "./theme.json"
+      }
+    ]
+  }
+}

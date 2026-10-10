@@ -1,0 +1,190 @@
+{
+  "name": "Twitter Dark",
+  "type": "dark",
+  "colors": {
+    "bg": "#15202b",
+    "surface": "#1e2732",
+    "surfaceRaised": "#263340",
+    "border": "#38444d",
+    "borderStrong": "#4a5a66",
+    "accent": "#1d9bf0",
+    "accentHover": "#4db1f3",
+    "accentActive": "#1a8cd8",
+    "onAccent": "#ffffff",
+    "text": "#ffffff",
+    "textSecondary": "#8b98a5",
+    "textMuted": "#6e7b8a",
+    "error": "#f4212e",
+    "errorHover": "#ff5a66",
+    "onError": "#ffffff",
+    "warning": "#ffad1f",
+    "success": "#00ba7c",
+    "info": "#1d9bf0",
+    "hover": "#22303c",
+    "active": "#2c3a47",
+    "scrollbarThumb": "#38444d",
+    "scrollbarThumbHover": "#4a5a66",
+    "indentGuide": "#22303c",
+    "panelBorder": "#38444d",
+    "editorBg": "#15202b",
+    "titleBarBg": "#15202b",
+    "activityBarBg": "#15202b",
+    "statusBarBg": "#15202b",
+    "diffAdded": "rgba(0, 186, 124, 0.16)",
+    "diffRemoved": "rgba(244, 33, 46, 0.16)",
+    "diffModified": "rgba(29, 155, 240, 0.16)"
+  },
+  "fonts": {
+    "ui": {
+      "family": "Inter",
+      "source": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      "size": "13px",
+      "weight": "400",
+      "lineHeight": "1.5"
+    },
+    "editor": {
+      "family": "JetBrains Mono",
+      "source": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap",
+      "size": "13px",
+      "lineHeight": "1.6"
+    },
+    "terminal": {
+      "family": "JetBrains Mono, monospace",
+      "size": "12.5px"
+    },
+    "heading": {
+      "family": "Inter",
+      "weight": "600",
+      "size": "14px"
+    }
+  },
+  "tokenColors": [
+    {
+      "scope": [
+        "comment",
+        "comment.line",
+        "comment.block"
+      ],
+      "foreground": "#8b98a5",
+      "fontStyle": "italic"
+    },
+    {
+      "scope": [
+        "string",
+        "string.quoted",
+        "string.template"
+      ],
+      "foreground": "#00ba7c"
+    },
+    {
+      "scope": [
+        "constant.numeric",
+        "number"
+      ],
+      "foreground": "#ffad1f"
+    },
+    {
+      "scope": [
+        "constant.language",
+        "constant",
+        "variable.other.constant",
+        "variable.other.enummember"
+      ],
+      "foreground": "#ffc861"
+    },
+    {
+      "scope": [
+        "keyword",
+        "keyword.control",
+        "keyword.other"
+      ],
+      "foreground": "#1d9bf0"
+    },
+    {
+      "scope": [
+        "keyword.operator",
+        "operator"
+      ],
+      "foreground": "#ff9f68"
+    },
+    {
+      "scope": [
+        "entity.name.function",
+        "support.function",
+        "function.name"
+      ],
+      "foreground": "#7856ff"
+    },
+    {
+      "scope": [
+        "support.type",
+        "entity.name.type",
+        "storage.type",
+        "storage.modifier"
+      ],
+      "foreground": "#2ec4b6"
+    },
+    {
+      "scope": [
+        "entity.name.class",
+        "meta.class",
+        "type.name"
+      ],
+      "foreground": "#a78bfa"
+    },
+    {
+      "scope": [
+        "entity.name.tag",
+        "tag"
+      ],
+      "foreground": "#f4212e"
+    },
+    {
+      "scope": [
+        "entity.other.attribute-name",
+        "attribute"
+      ],
+      "foreground": "#6ee7b7"
+    },
+    {
+      "scope": [
+        "variable",
+        "variable.other"
+      ],
+      "foreground": "#b3c7d6"
+    },
+    {
+      "scope": "variable.parameter",
+      "foreground": "#ff6b81"
+    },
+    {
+      "scope": [
+        "variable.object.property",
+        "meta.object-literal.key",
+        "support.type.property-name"
+      ],
+      "foreground": "#f91880"
+    },
+    {
+      "scope": [
+        "punctuation",
+        "punctuation.definition",
+        "punctuation.separator"
+      ],
+      "foreground": "#6e7b8a"
+    },
+    {
+      "scope": "markup.heading",
+      "foreground": "#1d9bf0",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.bold",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.italic",
+      "fontStyle": "italic"
+    }
+  ]
+}

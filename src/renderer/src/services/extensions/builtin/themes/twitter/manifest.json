@@ -1,0 +1,18 @@
+{
+  "id": "twitter",
+  "name": "Twitter",
+  "version": "0.1.0",
+  "author": "Scrakk Studio",
+  "description": "Tema Twitter — builtin (contribution themes).",
+  "engine": ">=0.1.0",
+  "contributes": {
+    "themes": [
+      {
+        "id": "twitter",
+        "name": "Twitter",
+        "type": "light",
+        "path": "./theme.json"
+      }
+    ]
+  }
+}
