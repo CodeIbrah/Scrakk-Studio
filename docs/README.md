@@ -106,25 +106,17 @@ is and in what order to read it.
 | Document | What it covers |
 | --- | --- |
 | [Panels & features](features/README.md) | Index of the built-in panels and the feature area. |
-| [Explorer](features/explorer.md) | The workspace file tree. |
-| [Search](features/search.md) | Content grep over the workspace. |
-| [Git](features/git.md) | Status, staging, history and diffs. |
-| [Browser](features/browser.md) | The browser panel (placeholder) and the real web surfaces. |
-| [Debug](features/debug.md) | The debug panel (placeholder — no debugger yet). |
-| [Problems](features/problems.md) | Diagnostics from language servers and extensions. |
-| [Notes](features/notes.md) | The notes panel. |
-| [Terminal](features/terminal.md) | Integrated terminal and the node view. |
-| [Social](features/social.md) | Friends, direct messages, presence, profiles. |
-| [Sessions](features/sessions.md) | Live sessions (canvas + engine). |
-| [Layout & panels](features/layout.md) | Slots, strips, splits and the activity bar. |
-| [Shortcuts & commands](features/shortcuts.md) | Keybindings and the command palette. |
-| [Settings](features/settings.md) | The Settings area. |
-| [Themes & icons](features/themes.md) | Color themes, file icons and UI icons. |
+| [Explorer](features/explorer.md) · [Search](features/search.md) · [Git](features/git.md) · [Problems](features/problems.md) · [Notes](features/notes.md) · [Terminal](features/terminal.md) · [Social](features/social.md) · [Browser](features/browser.md) · [Debug](features/debug.md) | The built-in panels. |
+| [Layout & panels](features/layout.md) · [Status bar](features/status-bar.md) · [Titlebar & menus](features/titlebar.md) · [Notifications](features/notifications.md) · [Command palette](features/command-palette.md) · [Breadcrumbs](features/breadcrumbs.md) · [Tool dock](features/tool-dock.md) · [Shortcuts & commands](features/shortcuts.md) | The app chrome. |
+| [Outline](features/outline.md) · [File viewers](features/file-viewers.md) · [Encodings](features/encodings.md) · [Bookmarks](features/bookmarks.md) · [File timeline](features/file-timeline.md) · [Themes & icons](features/themes.md) | Editor views and tooling. |
+| [Workspaces](features/workspaces.md) · [`.scrakk` folder](features/dot-scrakk.md) · [Account](features/account.md) · [Onboarding](features/onboarding.md) · [Sessions](features/sessions.md) · [Performance](features/performance.md) · [Settings](features/settings.md) | Project, account and config. |
 
 ### Development
 | Document | What it covers |
 | --- | --- |
 | [Contributing](dev/contributing.md) | Dev setup, scripts, tests, docs and commit style. |
+| [Architecture](dev/architecture.md) | The app's process model and where each subsystem lives. |
+| [i18n](dev/i18n.md) | The translation system, catalogs and tooling. |
 
 ### What's new
 | Document | What it covers |

@@ -12,9 +12,9 @@ This section documents the built-in ones — the panels shipped with the app —
 the features they expose. For the panel system itself (slots, strips, splits,
 header actions), see [panels](../extensions/guides/panels.md).
 
-## Built-in panels
+## Docs in this area
 
-The full set of docs in this area:
+### Panels
 
 | Doc | Covers |
 |---|---|
@@ -27,11 +27,42 @@ The full set of docs in this area:
 | [notes.md](notes.md) | Notes: the notes panel |
 | [terminal.md](terminal.md) | Terminal: integrated terminal sessions |
 | [social.md](social.md) | Social: friends, direct messages, presence and profiles |
-| [sessions.md](sessions.md) | Live sessions: canvas + engine that survives slot moves |
+
+### App chrome
+
+| Doc | Covers |
+|---|---|
 | [layout.md](layout.md) | Layout & panels: slots, strips, splits and the panel system |
-| [shortcuts.md](shortcuts.md) | Shortcuts & commands: keybindings and the command palette |
-| [settings.md](settings.md) | Settings: app configuration |
+| [status-bar.md](status-bar.md) | Status bar: chips, counts and extension items |
+| [titlebar.md](titlebar.md) | Titlebar & menus |
+| [notifications.md](notifications.md) | Notifications: severities, timing and actions |
+| [command-palette.md](command-palette.md) | Command palette: fuzzy search over commands |
+| [breadcrumbs.md](breadcrumbs.md) | Breadcrumbs: the path above the editor |
+| [tool-dock.md](tool-dock.md) | Tool dock: dockable tool items (bookmarks, outline, timeline) |
+| [shortcuts.md](shortcuts.md) | Shortcuts & commands: keybindings and the command registry |
+
+### Editor views
+
+| Doc | Covers |
+|---|---|
+| [outline.md](outline.md) | Outline: the symbol tree of the current file |
+| [file-viewers.md](file-viewers.md) | File viewers for non-code files (markdown, image, …) |
+| [encodings.md](encodings.md) | Text encodings: detect, pick, save |
+| [bookmarks.md](bookmarks.md) | Bookmarks: toggle and jump |
+| [file-timeline.md](file-timeline.md) | File timeline |
 | [themes.md](themes.md) | Themes & icons: color themes, file icons and UI icons |
+
+### Project & account
+
+| Doc | Covers |
+|---|---|
+| [workspaces.md](workspaces.md) | Workspaces: the open root and multiple roots |
+| [dot-scrakk.md](dot-scrakk.md) | The `.scrakk` folder (project/user config) |
+| [account.md](account.md) | Account and sign-in |
+| [onboarding.md](onboarding.md) | First-run onboarding |
+| [sessions.md](sessions.md) | Live sessions: canvas + engine that survives slot moves |
+| [performance.md](performance.md) | Performance tooling and the low-end switches |
+| [settings.md](settings.md) | Settings: app configuration |
 
 ## How a panel mounts
 
