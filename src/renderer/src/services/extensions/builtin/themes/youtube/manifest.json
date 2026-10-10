@@ -1,0 +1,18 @@
+{
+  "id": "youtube",
+  "name": "YouTube",
+  "version": "0.1.0",
+  "author": "Scrakk Studio",
+  "description": "Tema YouTube — builtin (contribution themes).",
+  "engine": ">=0.1.0",
+  "contributes": {
+    "themes": [
+      {
+        "id": "youtube",
+        "name": "YouTube",
+        "type": "light",
+        "path": "./theme.json"
+      }
+    ]
+  }
+}

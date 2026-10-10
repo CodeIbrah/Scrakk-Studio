@@ -1,0 +1,18 @@
+{
+  "id": "youtube-dark",
+  "name": "YouTube Dark",
+  "version": "0.1.0",
+  "author": "Scrakk Studio",
+  "description": "Tema YouTube Dark — builtin (contribution themes).",
+  "engine": ">=0.1.0",
+  "contributes": {
+    "themes": [
+      {
+        "id": "youtube-dark",
+        "name": "YouTube Dark",
+        "type": "dark",
+        "path": "./theme.json"
+      }
+    ]
+  }
+}
