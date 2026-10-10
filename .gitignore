@@ -42,3 +42,6 @@ docs/.generated/
 
 # Caché local de la CLI de Supabase
 supabase/.temp/
+
+# Video promo de presentación (proyecto aislado, no versionar)
+video/
