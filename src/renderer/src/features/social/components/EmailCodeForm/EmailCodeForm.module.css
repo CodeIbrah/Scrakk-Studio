@@ -153,3 +153,37 @@
   opacity: 0.5;
   cursor: default;
 }
+
+/* Consentimiento legal (checkbox + enlaces) del signup. */
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-normal);
+  cursor: pointer;
+}
+
+.consent input {
+  margin: 1px 0 0;
+  accent-color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.consentLinks {
+  display: flex;
+  gap: 4px;
+  margin: -6px 0 0;
+  padding-left: 22px;
+  font-size: var(--text-xs);
+}
+
+.consentLinks a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.consentLinks a:hover {
+  text-decoration: underline;
+}

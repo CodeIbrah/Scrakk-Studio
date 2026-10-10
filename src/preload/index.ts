@@ -490,6 +490,7 @@ const api: WindowApi = {
     verifyCode: (req) => ipcRenderer.invoke(ACCOUNT_IPC.verifyCode, req),
     current: (accountId: string) => ipcRenderer.invoke(ACCOUNT_IPC.current, accountId),
     update: (accountId: string, req) => ipcRenderer.invoke(ACCOUNT_IPC.update, accountId, req),
+    acceptLegal: (req) => ipcRenderer.invoke(ACCOUNT_IPC.acceptLegal, req),
     listAccounts: () => ipcRenderer.invoke(ACCOUNT_IPC.listAccounts),
     setDefault: (accountId: string) => ipcRenderer.invoke(ACCOUNT_IPC.setDefault, accountId),
     removeAccount: (accountId: string) => ipcRenderer.invoke(ACCOUNT_IPC.removeAccount, accountId)

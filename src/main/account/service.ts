@@ -13,6 +13,7 @@
 
 import {
   ACCOUNT_RULES,
+  type AcceptLegalRequest,
   type AccountErrorCode,
   type AccountList,
   type AccountProfile,
@@ -21,6 +22,8 @@ import {
   type UpdateProfileRequest,
   type VerifyCodeRequest
 } from '@shared/account'
+import type { LegalConsent } from '@shared/legal'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { API_TIMEOUT_MS, CLI_API_BASE } from './config'
 import { BUILD_ID } from '../build'
 import { getClientFor, forgetClient } from '../supabaseClient'
@@ -109,6 +112,22 @@ function emptyProfile(id: string, email: string): AccountProfile {
   return { id, email, handle: null, displayName: null, avatarUrl: null, bio: null }
 }
 
+/**
+ * Registra la aceptación de términos en el servidor. La marca de tiempo la
+ * pone Postgres (`now()`), así la prueba no depende del reloj del cliente.
+ */
+async function writeLegalConsent(client: SupabaseClient, consent: LegalConsent): Promise<boolean> {
+  const { error } = await client.rpc('accept_legal', {
+    p_version: consent.version,
+    p_locale: consent.locale
+  })
+  if (error) {
+    console.warn('[account] no se pudo registrar la aceptación legal:', error.message)
+    return false
+  }
+  return true
+}
+
 export async function verifyCode(req: VerifyCodeRequest): Promise<AccountResult<AccountProfile>> {
   const email = req.email.trim().toLowerCase()
   const code = req.code.trim()
@@ -144,6 +163,8 @@ export async function verifyCode(req: VerifyCodeRequest): Promise<AccountResult<
 
   const profile = (await fetchProfile(userId)) ?? emptyProfile(userId, login.user?.email ?? email)
   updateProfileSnapshot(profile)
+  // Aceptación de términos capturada en el signup: se registra server-side.
+  if (req.consent) await writeLegalConsent(client, req.consent)
   return { ok: true, data: profile }
 }
 
@@ -357,6 +378,16 @@ export async function update(
   const normalized = normalizeProfile(req, { requireName: false })
   if (!normalized.ok) return fail(normalized.code, normalized.error)
   return applyProfile(accountId, normalized.value)
+}
+
+/** Registra (o renueva) la aceptación de términos de una cuenta ya iniciada. */
+export async function acceptLegal(req: AcceptLegalRequest): Promise<AccountResult<null>> {
+  const client = await getClientFor(req.accountId)
+  if (!client) return fail('session_expired', t('main.tu.sesion.expiro.vuelve.a'))
+  if (!(await writeLegalConsent(client, req.consent))) {
+    return fail('unknown', t('main.no.se.pudo.registrar.la.aceptacion'))
+  }
+  return { ok: true, data: null }
 }
 
 /** Cuentas guardadas + cuál es la default. */

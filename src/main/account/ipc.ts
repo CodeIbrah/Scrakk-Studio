@@ -12,6 +12,7 @@
 import { ipcMain } from 'electron'
 import {
   ACCOUNT_IPC,
+  type AcceptLegalRequest,
   type RequestCodeRequest,
   type UpdateProfileRequest,
   type VerifyCodeRequest
@@ -28,6 +29,9 @@ export function registerAccountIpc(): void {
   ipcMain.handle(ACCOUNT_IPC.current, (_event, accountId: string) => service.current(accountId))
   ipcMain.handle(ACCOUNT_IPC.update, (_event, accountId: string, req: UpdateProfileRequest) =>
     service.update(accountId, req)
+  )
+  ipcMain.handle(ACCOUNT_IPC.acceptLegal, (_event, req: AcceptLegalRequest) =>
+    service.acceptLegal(req)
   )
   ipcMain.handle(ACCOUNT_IPC.listAccounts, () => service.listAccounts())
   ipcMain.handle(ACCOUNT_IPC.setDefault, (_event, accountId: string) => service.setDefault(accountId))

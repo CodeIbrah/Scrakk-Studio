@@ -14,6 +14,8 @@
  * la API (OTP) y con Supabase (perfil) usando solo la publishable key.
  */
 
+import type { LegalConsent } from './legal'
+
 export const ACCOUNT_IPC = {
   /** Pide el código OTP para el email. */
   requestCode: 'account:request-code',
@@ -23,6 +25,8 @@ export const ACCOUNT_IPC = {
   current: 'account:current',
   /** Guarda el perfil de una cuenta. */
   update: 'account:update',
+  /** Registra (o renueva) la aceptación de los términos de una cuenta. */
+  acceptLegal: 'account:accept-legal',
   /** Cuentas guardadas (multi-cuenta). */
   listAccounts: 'account:list-accounts',
   /** Marca una cuenta como default (para paneles nuevos / remounts). */
@@ -54,6 +58,17 @@ export interface RequestCodeRequest {
 export interface VerifyCodeRequest {
   email: string
   code: string
+  /**
+   * Aceptación de los términos capturada en el signup. Si viene, el main la
+   * registra en el servidor (por cuenta) al iniciar sesión.
+   */
+  consent?: LegalConsent
+}
+
+/** Aceptación de términos de una cuenta ya iniciada (renovación). */
+export interface AcceptLegalRequest {
+  accountId: string
+  consent: LegalConsent
 }
 
 export interface UpdateProfileRequest {
@@ -107,6 +122,8 @@ export interface AccountApi {
   /** Perfil de una cuenta guardada (null si su sesión venció o no existe). */
   current: (accountId: string) => Promise<AccountResult<AccountProfile | null>>
   update: (accountId: string, req: UpdateProfileRequest) => Promise<AccountResult<AccountProfile>>
+  /** Registra (o renueva) la aceptación de términos de una cuenta. */
+  acceptLegal: (req: AcceptLegalRequest) => Promise<AccountResult<null>>
   /** Cuentas guardadas (multi-cuenta). */
   listAccounts: () => Promise<AccountResult<AccountList>>
   /** Marca una cuenta como default (la usan los paneles nuevos / al remontar). */

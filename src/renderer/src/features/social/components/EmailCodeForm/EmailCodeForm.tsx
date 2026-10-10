@@ -5,6 +5,8 @@
 import { useCallback, useState, type ChangeEvent, type FormEvent, type JSX } from 'react'
 import { ProductIcon } from '@services/productIcons/components'
 import { ACCOUNT_RULES } from '@shared/account'
+import { LEGAL_LINKS, LEGAL_VERSION, type LegalConsent } from '@shared/legal'
+import { getLocale } from '@shared/i18n'
 import CodeSlots, { type CodeSlotsStatus } from '../CodeSlots/CodeSlots'
 import styles from './EmailCodeForm.module.css'
 
@@ -13,7 +15,11 @@ interface EmailCodeFormProps {
   /** Pide el código (dispara el email por la API del CLI/Resend). */
   onRequestCode: (email: string) => Promise<{ ok: boolean; error?: string }>
   /** Verifica el código y abre sesión. */
-  onVerifyCode: (email: string, code: string) => Promise<{ ok: boolean; error?: string }>
+  onVerifyCode: (
+    email: string,
+    code: string,
+    consent?: LegalConsent
+  ) => Promise<{ ok: boolean; error?: string }>
 }
 
 /**
@@ -29,6 +35,7 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
   const [status, setStatus] = useState<CodeSlotsStatus>('idle')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [accepted, setAccepted] = useState(false)
 
   const emailValid = ACCOUNT_RULES.email.test(email.trim())
 
@@ -48,7 +55,10 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
       if (!ACCOUNT_RULES.code.test(candidate) || busy) return
       setBusy(true)
       setError(null)
-      const result = await onVerifyCode(email.trim(), candidate)
+      const consent: LegalConsent | undefined = accepted
+        ? { version: LEGAL_VERSION, locale: getLocale() }
+        : undefined
+      const result = await onVerifyCode(email.trim(), candidate, consent)
       setBusy(false)
       if (result.ok) {
         setStatus('success')
@@ -57,7 +67,7 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
         setStatus('error')
       }
     },
-    [busy, email, onVerifyCode]
+    [busy, email, accepted, onVerifyCode]
   )
 
   if (step === 'email') {
@@ -80,7 +90,7 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
             type="email"
             value={email}
             onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
-            placeholder="tu@ejemplo.com"
+            placeholder={t('social.email.placeholder')}
             autoComplete="email"
             spellCheck={false}
             autoFocus
@@ -89,7 +99,25 @@ export function EmailCodeForm({ onRequestCode, onVerifyCode }: EmailCodeFormProp
 
         {error ? <p className={styles.error}>{error}</p> : null}
 
-        <button type="submit" className={styles.primaryBtn} disabled={!emailValid || busy}>
+        <label className={styles.consent}>
+          <input
+            type="checkbox"
+            checked={accepted}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => setAccepted(event.target.checked)}
+          />
+          <span>{t('social.acepto.los.terminos')}</span>
+        </label>
+        <p className={styles.consentLinks}>
+          <a href={LEGAL_LINKS.terms} target="_blank" rel="noreferrer">
+            {t('social.terminos')}
+          </a>
+          <span aria-hidden="true"> · </span>
+          <a href={LEGAL_LINKS.privacy} target="_blank" rel="noreferrer">
+            {t('social.politica.de.privacidad')}
+          </a>
+        </p>
+
+        <button type="submit" className={styles.primaryBtn} disabled={!emailValid || busy || !accepted}>
           <ProductIcon id={busy ? 'refresh' : 'arrow-right'} size={14} />
           {busy ? t('social.enviando') : t('social.enviar.codigo')}
         </button>

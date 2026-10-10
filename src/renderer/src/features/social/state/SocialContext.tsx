@@ -19,6 +19,7 @@ import { notify } from '@services/notifications'
 import { setActivityBadge, clearActivityBadge } from '@features/activitybar/badges'
 import { getEditorFiles, subscribeToEditorFiles } from '@features/editor/editorBus'
 import type { AccountList, AccountProfile } from '@shared/account'
+import type { LegalConsent } from '@shared/legal'
 import type {
   DirectMessage,
   Friend,
@@ -147,7 +148,11 @@ interface SocialContextValue {
   view: SocialView
 
   requestCode: (email: string) => Promise<AccountActionResult>
-  verifyCode: (email: string, code: string) => Promise<AccountActionResult>
+  verifyCode: (
+    email: string,
+    code: string,
+    consent?: LegalConsent
+  ) => Promise<AccountActionResult>
   updateProfile: (patch: Partial<CreateProfileInput>) => Promise<AccountActionResult>
   updateActivity: (activity: PresenceActivity) => void
   setPresence: (presence: PresenceStatus) => void
@@ -658,8 +663,12 @@ export function SocialProvider({
   }, [])
 
   const verifyCode = useCallback(
-    async (email: string, code: string): Promise<AccountActionResult> => {
-      const result = await accountService.verifyCode({ email, code })
+    async (
+      email: string,
+      code: string,
+      consent?: LegalConsent
+    ): Promise<AccountActionResult> => {
+      const result = await accountService.verifyCode({ email, code, consent })
       if (!result.ok) return { ok: false, error: result.error }
       await loadAccounts()
       // Este panel pasa a la cuenta recién creada.
