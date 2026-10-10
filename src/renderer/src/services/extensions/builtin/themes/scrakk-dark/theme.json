@@ -72,7 +72,7 @@
         "comment.line",
         "comment.block"
       ],
-      "foreground": "#858585",
+      "foreground": "#6a6a6a",
       "fontStyle": "italic"
     },
     {
@@ -98,15 +98,20 @@
       "scope": [
         "keyword",
         "keyword.control",
-        "keyword.other",
-        "storage.type",
-        "storage.modifier"
+        "keyword.other"
       ],
       "foreground": "#7020F3"
     },
     {
+      "scope": [
+        "storage.type",
+        "storage.modifier"
+      ],
+      "foreground": "#7e36f4"
+    },
+    {
       "scope": "keyword.operator",
-      "foreground": "#ffffff"
+      "foreground": "#858585"
     },
     {
       "scope": [
@@ -122,11 +127,11 @@
         "support.class",
         "support.type"
       ],
-      "foreground": "#cca700"
+      "foreground": "#2dd4bf"
     },
     {
       "scope": "entity.name.tag",
-      "foreground": "#7020F3"
+      "foreground": "#f14c4c"
     },
     {
       "scope": "entity.other.attribute-name",
@@ -137,11 +142,11 @@
         "variable",
         "variable.other"
       ],
-      "foreground": "#ffffff"
+      "foreground": "#cccccc"
     },
     {
       "scope": "variable.parameter",
-      "foreground": "#ffffff"
+      "foreground": "#cca700"
     },
     {
       "scope": [
@@ -149,7 +154,7 @@
         "meta.object-literal.key",
         "support.type.property-name"
       ],
-      "foreground": "#ffffff"
+      "foreground": "#c084fc"
     },
     {
       "scope": [

@@ -61,11 +61,16 @@
       "scope": [
         "keyword",
         "keyword.control",
-        "keyword.other",
+        "keyword.other"
+      ],
+      "foreground": "#ff8f40"
+    },
+    {
+      "scope": [
         "storage.type",
         "storage.modifier"
       ],
-      "foreground": "#ff8f40"
+      "foreground": "#f29668"
     },
     {
       "scope": "keyword.operator",
@@ -89,7 +94,7 @@
     },
     {
       "scope": "entity.name.tag",
-      "foreground": "#59c2ff"
+      "foreground": "#39bae6"
     },
     {
       "scope": "entity.other.attribute-name",

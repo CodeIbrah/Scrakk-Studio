@@ -86,16 +86,21 @@
       "scope": [
         "keyword",
         "keyword.control",
-        "keyword.other",
-        "storage.type",
-        "storage.modifier"
+        "keyword.other"
       ],
       "foreground": "#c96442",
       "fontStyle": "bold"
     },
     {
+      "scope": [
+        "storage.type",
+        "storage.modifier"
+      ],
+      "foreground": "#d38064"
+    },
+    {
       "scope": "keyword.operator",
-      "foreground": "#1a1916"
+      "foreground": "#74716b"
     },
     {
       "scope": [
@@ -115,7 +120,7 @@
     },
     {
       "scope": "entity.name.tag",
-      "foreground": "#c96442"
+      "foreground": "#ce7455"
     },
     {
       "scope": "entity.other.attribute-name",
@@ -130,7 +135,7 @@
     },
     {
       "scope": "variable.parameter",
-      "foreground": "#74716b"
+      "foreground": "#a8443f"
     },
     {
       "scope": [
@@ -138,7 +143,7 @@
         "meta.object-literal.key",
         "support.type.property-name"
       ],
-      "foreground": "#1a1916"
+      "foreground": "#9c2a25"
     },
     {
       "scope": [

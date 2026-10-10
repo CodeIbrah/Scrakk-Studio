@@ -61,7 +61,7 @@
         "storage.type",
         "storage.modifier"
       ],
-      "foreground": "#8b4513"
+      "foreground": "#a0522d"
     },
     {
       "scope": [

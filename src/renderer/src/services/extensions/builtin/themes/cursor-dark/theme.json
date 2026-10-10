@@ -79,22 +79,28 @@
         "constant.language",
         "constant"
       ],
-      "foreground": "#dfa88f"
+      "foreground": "#c08532"
     },
     {
       "scope": [
         "keyword",
         "keyword.control",
-        "keyword.other",
-        "storage.type",
-        "storage.modifier"
+        "keyword.other"
       ],
       "foreground": "#f54e00",
       "fontStyle": "bold"
     },
     {
+      "scope": [
+        "storage.type",
+        "storage.modifier"
+      ],
+      "foreground": "#ff8a4c",
+      "fontStyle": "bold"
+    },
+    {
       "scope": "keyword.operator",
-      "foreground": "#f2f1ed"
+      "foreground": "#a6a496"
     },
     {
       "scope": [
@@ -129,7 +135,7 @@
     },
     {
       "scope": "variable.parameter",
-      "foreground": "#e6e5e0"
+      "foreground": "#dfa88f"
     },
     {
       "scope": [
@@ -137,7 +143,7 @@
         "meta.object-literal.key",
         "support.type.property-name"
       ],
-      "foreground": "#f2f1ed"
+      "foreground": "#e6e5e0"
     },
     {
       "scope": [

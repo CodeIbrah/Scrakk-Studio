@@ -60,24 +60,29 @@
         "string.quoted",
         "string.template"
       ],
-      "foreground": "#fdba74"
+      "foreground": "#34d399"
     },
     {
       "scope": "constant.numeric",
-      "foreground": "#f97316"
+      "foreground": "#fbbf24"
     },
     {
       "scope": [
         "constant.language",
         "constant"
       ],
-      "foreground": "#fb923c"
+      "foreground": "#fbbf24"
     },
     {
       "scope": [
         "keyword",
         "keyword.control",
-        "keyword.other",
+        "keyword.other"
+      ],
+      "foreground": "#fb923c"
+    },
+    {
+      "scope": [
         "storage.type",
         "storage.modifier"
       ],
@@ -85,14 +90,14 @@
     },
     {
       "scope": "keyword.operator",
-      "foreground": "#f97316"
+      "foreground": "#b8b8b8"
     },
     {
       "scope": [
         "entity.name.function",
         "support.function"
       ],
-      "foreground": "#ffa94d"
+      "foreground": "#f97316"
     },
     {
       "scope": [
@@ -105,11 +110,11 @@
     },
     {
       "scope": "entity.name.tag",
-      "foreground": "#ff8fa3"
+      "foreground": "#e5484d"
     },
     {
       "scope": "entity.other.attribute-name",
-      "foreground": "#fda4af"
+      "foreground": "#f97316"
     },
     {
       "scope": [
@@ -120,7 +125,7 @@
     },
     {
       "scope": "variable.parameter",
-      "foreground": "#ffd8a8"
+      "foreground": "#fbbf24"
     },
     {
       "scope": [
