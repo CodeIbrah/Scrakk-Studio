@@ -50,6 +50,7 @@ import {
   type WizardState
 } from './machine'
 import type { OnboardingStep } from '../types'
+import { ONBOARDING_ENABLED } from '../config'
 
 import { t } from '@core/i18n'
 /** Id del comando de la paleta que vuelve a abrir esta pantalla. */
@@ -98,6 +99,8 @@ export function OnboardingProvider({ children }: { children: ReactNode }): JSX.E
   // Comando global para reabrirla (paleta). Reabrir no borra nada: el paso 0
   // vuelve a mostrar lo ya aplicado como estado actual.
   useEffect(() => {
+    // Beta: la pantalla está desactivada, así que su comando tampoco existe.
+    if (!ONBOARDING_ENABLED) return
     return commandRegistry.register(
       {
         id: ONBOARDING_COMMAND_ID,

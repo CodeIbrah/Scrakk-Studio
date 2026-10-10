@@ -20,6 +20,7 @@
 
 export { OnboardingProvider, useOnboarding, ONBOARDING_COMMAND_ID } from './state/OnboardingContext'
 export { OnboardingWizard } from './components/OnboardingWizard'
+export { ONBOARDING_ENABLED } from './config'
 export {
   registerOnboardingStep,
   unregisterOnboardingStep,

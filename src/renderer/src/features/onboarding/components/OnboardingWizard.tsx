@@ -19,6 +19,7 @@ import type { JSX } from 'react'
 import { Modal } from '@ui'
 import { ProductIcon } from '@services/productIcons/components'
 import { useOnboarding } from '../state/OnboardingContext'
+import { ONBOARDING_ENABLED } from '../config'
 import type { StepContext } from '../types'
 import styles from './OnboardingWizard.module.css'
 
@@ -27,7 +28,8 @@ export function OnboardingWizard(): JSX.Element | null {
   const { visible, steps, current, progress, choices, next, back, goTo, finish, setChoice } =
     useOnboarding()
 
-  if (!visible || !current) return null
+  // Beta: la pantalla está desactivada (ver ../config).
+  if (!ONBOARDING_ENABLED || !visible || !current) return null
 
   const Step = current.component
   const stepProps: StepContext = {
