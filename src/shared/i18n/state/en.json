@@ -10212,6 +10212,14 @@
       "at": "2026-09-25T17:59:28.123Z",
       "approvedAt": "2026-09-25T17:59:30.393Z"
     },
+    "social.escribe.a": {
+      "src": "6e288f1c809dcefe",
+      "area": "social",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T16:18:18.363Z",
+      "approvedAt": "2026-10-10T16:18:18.363Z"
+    },
     "social.escribe.el.codigo": {
       "src": "c582295a1320a24f",
       "area": "social",

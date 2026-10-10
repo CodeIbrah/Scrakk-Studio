@@ -291,7 +291,9 @@ function SocialPanelInner(): JSX.Element {
         <div className={styles.composer}>
           <MessageComposer
             onSend={sendMessage}
-            placeholder={`Escribe a ${activePeer.displayName ?? activePeer.handle ?? ''}…`}
+            placeholder={t('social.escribe.a', {
+              name: activePeer.displayName ?? activePeer.handle ?? ''
+            })}
             replyTo={replyTo}
             replySenderName={replySender}
             onCancelReply={() => setReplyTo(null)}
