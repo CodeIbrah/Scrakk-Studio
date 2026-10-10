@@ -33,7 +33,7 @@ support or headlessly for scripting.
   **VSIX compatibility layer** that converts VS Code extensions (themes,
   languages and basic panels) to `.sef`.
 - **Themes** — 100+ official and community themes.
-- **Models** — 160+ providers.
+- **Models** — 160+ providers by [models.dev](https://models.dev).
 
 ## Development
 
