@@ -1,0 +1,18 @@
+{
+  "id": "claude-web-dark",
+  "name": "Claude Web Dark",
+  "version": "0.1.0",
+  "author": "Scrakk Studio",
+  "description": "Tema Claude Web Dark — builtin (contribution themes).",
+  "engine": ">=0.1.0",
+  "contributes": {
+    "themes": [
+      {
+        "id": "claude-web-dark",
+        "name": "Claude Web Dark",
+        "type": "dark",
+        "path": "./theme.json"
+      }
+    ]
+  }
+}
