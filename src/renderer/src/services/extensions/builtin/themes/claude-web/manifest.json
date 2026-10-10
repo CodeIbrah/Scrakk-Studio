@@ -1,0 +1,18 @@
+{
+  "id": "claude-web",
+  "name": "Claude Web",
+  "version": "0.1.0",
+  "author": "Scrakk Studio",
+  "description": "Tema Claude Web — builtin (contribution themes).",
+  "engine": ">=0.1.0",
+  "contributes": {
+    "themes": [
+      {
+        "id": "claude-web",
+        "name": "Claude Web",
+        "type": "light",
+        "path": "./theme.json"
+      }
+    ]
+  }
+}
