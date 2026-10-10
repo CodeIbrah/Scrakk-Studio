@@ -80,8 +80,16 @@ function cssVar(root: CSSStyleDeclaration, name: string): string | undefined {
 /**
  * Mapea un scope TextMate (VS Code) al slot del TokenType de Innerta.
  * Slots (idénticos al switch de SetInnertaTokenColor): 0 keyword, 1 string,
- * 2 constant(number), 3 comment, 4 function, 6 type, 7 operator→keyword,
- * 9 property, 10 class→type, 11 constant, 12 parameter, 13 tag, 14 attribute.
+ * 2 constant(number), 3 comment, 4 function, 5 variable, 6 type, 7 operator,
+ * 8 punctuation, 9 property, 10 class, 11 constant, 12 parameter, 13 tag,
+ * 14 attribute.
+ *
+ * El orden importa: el match es por substring y gana la PRIMERA regla, así que
+ * las reglas específicas van antes que las genéricas. En particular `operator`
+ * va ANTES de `keyword` (`keyword.operator` contiene "keyword" y, si keyword
+ * ganara, el color del operador pisaría el del keyword en el slot 0), y
+ * `variable`/`punctuation` van al final para que `variable.parameter` y
+ * `variable.other.property` conserven su slot propio (12/9).
  */
 export function scopeToSlot(scope: string): number | null {
   const rules: Array<[string[], number]> = [
@@ -95,12 +103,17 @@ export function scopeToSlot(scope: string): number | null {
     ],
     [['variable.parameter', 'parameter'], 12],
     [['constant.numeric', 'number'], 2],
-    [['constant'], 11],
-    [['storage.type', 'support.type', 'entity.name.type', 'keyword.type', 'type.builtin'], 6],
-    [['keyword'], 0],
+    [['constant', 'enummember'], 11],
+    [['storage', 'support.type', 'entity.name.type', 'keyword.type', 'type.builtin'], 6],
+    // Antes que `keyword`: `keyword.operator` es un operador, no una keyword.
     [['operator'], 7],
+    [['keyword'], 0],
     [['entity.name.tag', 'tag'], 13],
-    [['entity.other.attribute-name', 'attribute'], 14]
+    [['entity.other.attribute-name', 'attribute'], 14],
+    // Genéricos al final: solo caen acá `variable`/`punctuation` sin regla más
+    // específica (parámetro y propiedad ya tienen la suya arriba).
+    [['variable'], 5],
+    [['punctuation'], 8]
   ]
   const s = scope.toLowerCase()
   for (const [patterns, slot] of rules) {
