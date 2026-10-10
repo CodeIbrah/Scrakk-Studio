@@ -1,0 +1,18 @@
+{
+  "id": "discord",
+  "name": "Discord",
+  "version": "0.1.0",
+  "author": "Scrakk Studio",
+  "description": "Tema Discord — builtin (contribution themes).",
+  "engine": ">=0.1.0",
+  "contributes": {
+    "themes": [
+      {
+        "id": "discord",
+        "name": "Discord",
+        "type": "dark",
+        "path": "./theme.json"
+      }
+    ]
+  }
+}
