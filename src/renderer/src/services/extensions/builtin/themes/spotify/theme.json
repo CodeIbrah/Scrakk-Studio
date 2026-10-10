@@ -59,7 +59,7 @@
         "comment.line",
         "comment.block"
       ],
-      "foreground": "#7c7c7c",
+      "foreground": "#6f7377",
       "fontStyle": "italic"
     },
     {
@@ -68,18 +68,20 @@
         "string.quoted",
         "string.template"
       ],
-      "foreground": "#34db70"
+      "foreground": "#a3e635"
     },
     {
       "scope": "constant.numeric",
-      "foreground": "#ffa42b"
+      "foreground": "#f5d76e"
     },
     {
       "scope": [
         "constant.language",
-        "constant"
+        "constant",
+        "variable.other.constant",
+        "variable.other.enummember"
       ],
-      "foreground": "#ffa42b"
+      "foreground": "#ff9f68"
     },
     {
       "scope": [
@@ -92,15 +94,10 @@
     },
     {
       "scope": [
-        "storage.type",
-        "storage.modifier"
+        "keyword.operator",
+        "operator"
       ],
-      "foreground": "#46de7d",
-      "fontStyle": "bold"
-    },
-    {
-      "scope": "keyword.operator",
-      "foreground": "#b3b3b3"
+      "foreground": "#56cfe1"
     },
     {
       "scope": [
@@ -111,27 +108,35 @@
     },
     {
       "scope": [
-        "entity.name.class",
+        "support.type",
         "entity.name.type",
-        "support.class",
-        "support.type"
+        "storage.type",
+        "storage.modifier"
+      ],
+      "foreground": "#2dd4bf"
+    },
+    {
+      "scope": [
+        "entity.name.class",
+        "meta.class",
+        "type.name"
       ],
       "foreground": "#f3727f"
     },
     {
       "scope": "entity.name.tag",
-      "foreground": "#34db70"
+      "foreground": "#7ee787"
     },
     {
       "scope": "entity.other.attribute-name",
-      "foreground": "#539df5"
+      "foreground": "#79c0ff"
     },
     {
       "scope": [
         "variable",
         "variable.other"
       ],
-      "foreground": "#ffffff"
+      "foreground": "#b197fc"
     },
     {
       "scope": "variable.parameter",
@@ -143,7 +148,7 @@
         "meta.object-literal.key",
         "support.type.property-name"
       ],
-      "foreground": "#f4838e"
+      "foreground": "#d65db1"
     },
     {
       "scope": [
@@ -151,7 +156,7 @@
         "punctuation.definition",
         "punctuation.separator"
       ],
-      "foreground": "#b3b3b3"
+      "foreground": "#8b949e"
     },
     {
       "scope": "markup.heading",
