@@ -94,29 +94,24 @@
     {
       "scope": [
         "constant.language",
-        "constant"
+        "constant",
+        "variable.other.constant",
+        "variable.other.enummember"
       ],
-      "foreground": "#569cd6"
+      "foreground": "#4fc1ff"
+    },
+    {
+      "scope": [
+        "keyword.operator",
+        "operator"
+      ],
+      "foreground": "#c586c0"
     },
     {
       "scope": [
         "keyword",
+        "keyword.control",
         "keyword.other"
-      ],
-      "foreground": "#569cd6"
-    },
-    {
-      "scope": "keyword.control",
-      "foreground": "#c586c0"
-    },
-    {
-      "scope": "keyword.operator",
-      "foreground": "#d4d4d4"
-    },
-    {
-      "scope": [
-        "storage.type",
-        "storage.modifier"
       ],
       "foreground": "#569cd6"
     },
@@ -129,10 +124,18 @@
     },
     {
       "scope": [
-        "entity.name.class",
+        "support.type",
         "entity.name.type",
-        "support.class",
-        "support.type"
+        "storage.type",
+        "storage.modifier"
+      ],
+      "foreground": "#4ec9b0"
+    },
+    {
+      "scope": [
+        "entity.name.class",
+        "meta.class",
+        "type.name"
       ],
       "foreground": "#4ec9b0"
     },
@@ -157,14 +160,6 @@
     },
     {
       "scope": [
-        "variable.other.constant",
-        "variable.other.enummember",
-        "variable.other.enum-member"
-      ],
-      "foreground": "#4fc1ff"
-    },
-    {
-      "scope": [
         "variable.object.property",
         "meta.object-literal.key",
         "support.type.property-name"
@@ -177,7 +172,7 @@
         "punctuation.definition",
         "punctuation.separator"
       ],
-      "foreground": "#d4d4d4"
+      "foreground": "#808080"
     },
     {
       "scope": "markup.heading",
