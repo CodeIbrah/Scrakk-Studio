@@ -1896,6 +1896,14 @@
       "at": "2026-09-25T17:29:43.911Z",
       "approvedAt": "2026-09-25T17:32:07.886Z"
     },
+    "git.branch.placeholder": {
+      "src": "fae37b722d2b104d",
+      "area": "git",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:49:29.275Z",
+      "approvedAt": "2026-10-10T17:49:29.275Z"
+    },
     "git.cambios": {
       "src": "8544c53630607f75",
       "area": "git",
@@ -2263,6 +2271,14 @@
       "needsReview": false,
       "at": "2026-09-25T17:29:43.912Z",
       "approvedAt": "2026-09-25T17:32:07.886Z"
+    },
+    "git.host.placeholder": {
+      "src": "2f63fa98629c349b",
+      "area": "git",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:49:29.275Z",
+      "approvedAt": "2026-10-10T17:49:29.275Z"
     },
     "git.host.usuario.y.token.son": {
       "src": "83930c2e1d33e44a",
@@ -8509,6 +8525,14 @@
       "at": "2026-09-25T19:54:36.683Z",
       "approvedAt": "2026-09-25T19:54:36.800Z"
     },
+    "settings.descargando.porcentaje": {
+      "src": "c8202f509d621363",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:49:29.275Z",
+      "approvedAt": "2026-10-10T17:49:29.275Z"
+    },
     "settings.descargar.v": {
       "src": "bc4dc1e7223e4ea5",
       "area": "settings",
@@ -8684,6 +8708,14 @@
       "needsReview": false,
       "at": "2026-09-25T17:59:26.781Z",
       "approvedAt": "2026-09-25T17:59:30.392Z"
+    },
+    "settings.estas.al.dia": {
+      "src": "ee39750419bc9bc0",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:49:29.275Z",
+      "approvedAt": "2026-10-10T17:49:29.275Z"
     },
     "settings.explorador": {
       "src": "d5120059860db4c9",
@@ -8980,6 +9012,14 @@
       "needsReview": false,
       "at": "2026-10-10T17:39:47.681Z",
       "approvedAt": "2026-10-10T17:39:47.681Z"
+    },
+    "settings.lista.para.instalar": {
+      "src": "b6318380374b2c94",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:49:29.275Z",
+      "approvedAt": "2026-10-10T17:49:29.275Z"
     },
     "settings.lsp.semantic.tokens": {
       "src": "e3dd5b7634cd5997",
@@ -9299,6 +9339,14 @@
       "needsReview": false,
       "at": "2026-09-25T17:29:54.309Z",
       "approvedAt": "2026-09-25T17:32:07.887Z"
+    },
+    "settings.nueva.version": {
+      "src": "0d3a1c75251872dc",
+      "area": "settings",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:49:29.275Z",
+      "approvedAt": "2026-10-10T17:49:29.275Z"
     },
     "settings.nuevo.modo": {
       "src": "23b44fb64119576c",
@@ -10492,6 +10540,14 @@
       "at": "2026-09-25T17:59:28.123Z",
       "approvedAt": "2026-09-25T17:59:30.394Z"
     },
+    "social.n.cuentas": {
+      "src": "ac9a4c41a83b0f32",
+      "area": "social",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:49:29.275Z",
+      "approvedAt": "2026-10-10T17:49:29.275Z"
+    },
     "social.no.binario": {
       "src": "4d31b1c720a696af",
       "area": "social",
@@ -10963,6 +11019,14 @@
       "needsReview": false,
       "at": "2026-09-25T17:59:28.125Z",
       "approvedAt": "2026-09-25T17:59:30.394Z"
+    },
+    "social.username.placeholder": {
+      "src": "9250e222c4c71f0c",
+      "area": "social",
+      "machine": false,
+      "needsReview": false,
+      "at": "2026-10-10T17:49:29.275Z",
+      "approvedAt": "2026-10-10T17:49:29.275Z"
     },
     "social.usesocial.debe.usarse.dentro.de": {
       "src": "ba664b16221bc5c4",
