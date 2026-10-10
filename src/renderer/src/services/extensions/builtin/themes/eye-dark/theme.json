@@ -65,6 +65,10 @@
       "fontStyle": "bold"
     },
     {
+      "scope": "keyword.operator",
+      "foreground": "#e11d48"
+    },
+    {
       "scope": [
         "constant.numeric",
         "constant.language"
@@ -94,6 +98,10 @@
       "foreground": "#4ade80"
     },
     {
+      "scope": "entity.other.attribute-name",
+      "foreground": "#fbbf24"
+    },
+    {
       "scope": [
         "variable",
         "variable.other"
@@ -102,7 +110,15 @@
     },
     {
       "scope": "variable.parameter",
-      "foreground": "#fb923c"
+      "foreground": "#fbbf24"
+    },
+    {
+      "scope": [
+        "variable.object.property",
+        "meta.object-literal.key",
+        "support.type.property-name"
+      ],
+      "foreground": "#22d3ee"
     },
     {
       "scope": [
@@ -111,6 +127,25 @@
         "punctuation.separator"
       ],
       "foreground": "#a1a1aa"
+    },
+    {
+      "scope": [
+        "markup.heading"
+      ],
+      "foreground": "#e11d48",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": [
+        "markup.bold"
+      ],
+      "foreground": "#fafafa",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.italic",
+      "foreground": "#a1a1aa",
+      "fontStyle": "italic"
     }
   ]
 }

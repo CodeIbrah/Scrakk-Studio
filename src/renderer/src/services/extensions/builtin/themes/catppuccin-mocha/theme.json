@@ -40,56 +40,89 @@
       "foreground": "#a6e3a1"
     },
     {
-      "scope": "constant.numeric",
+      "scope": [
+        "constant.numeric",
+        "constant.language"
+      ],
       "foreground": "#fab387"
     },
     {
-      "scope": "constant.language",
-      "foreground": "#fab387"
-    },
-    {
-      "scope": "keyword",
+      "scope": [
+        "keyword",
+        "keyword.control"
+      ],
       "foreground": "#cba6f7"
     },
     {
-      "scope": "keyword.control",
-      "foreground": "#cba6f7"
+      "scope": "keyword.operator",
+      "foreground": "#89dceb"
     },
     {
-      "scope": "storage.type",
+      "scope": [
+        "storage.type",
+        "storage.modifier"
+      ],
       "foreground": "#f9e2af"
     },
     {
-      "scope": "entity.name.function",
+      "scope": [
+        "entity.name.function",
+        "support.function"
+      ],
       "foreground": "#89b4fa"
     },
     {
-      "scope": "entity.name.class",
-      "foreground": "#f9e2af"
-    },
-    {
-      "scope": "entity.name.type",
-      "foreground": "#f9e2af"
-    },
-    {
-      "scope": "variable",
-      "foreground": "#cdd6f4"
-    },
-    {
-      "scope": "support.function",
-      "foreground": "#89b4fa"
+      "scope": [
+        "entity.name.class",
+        "entity.name.type",
+        "support.class",
+        "support.type"
+      ],
+      "foreground": "#94e2d5"
     },
     {
       "scope": "entity.name.tag",
-      "foreground": "#cba6f7"
+      "foreground": "#f38ba8"
     },
     {
       "scope": "entity.other.attribute-name",
       "foreground": "#f9e2af"
     },
     {
+      "scope": [
+        "variable",
+        "variable.other"
+      ],
+      "foreground": "#cdd6f4"
+    },
+    {
+      "scope": "variable.parameter",
+      "foreground": "#eba0ac"
+    },
+    {
+      "scope": [
+        "variable.object.property",
+        "meta.object-literal.key",
+        "support.type.property-name"
+      ],
+      "foreground": "#89dceb"
+    },
+    {
       "scope": "punctuation",
-      "foreground": "#94e2d5"
+      "foreground": "#a6adc8"
+    },
+    {
+      "scope": [
+        "markup.heading",
+        "markup.bold"
+      ],
+      "foreground": "#cba6f7",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.italic",
+      "foreground": "#a6adc8",
+      "fontStyle": "italic"
     }
   ]
 }

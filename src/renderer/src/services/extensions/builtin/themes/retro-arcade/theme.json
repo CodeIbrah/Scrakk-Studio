@@ -31,7 +31,8 @@
   "tokenColors": [
     {
       "scope": "comment",
-      "foreground": "#5a5a8a"
+      "foreground": "#5a5a8a",
+      "fontStyle": "italic"
     },
     {
       "scope": "string",
@@ -51,7 +52,7 @@
     },
     {
       "scope": "entity.name.function",
-      "foreground": "#aaff00"
+      "foreground": "#00aaff"
     },
     {
       "scope": "entity.name.class",
@@ -59,7 +60,7 @@
     },
     {
       "scope": "variable",
-      "foreground": "#00ffff"
+      "foreground": "#aaff00"
     },
     {
       "scope": "entity.name.tag",
@@ -68,6 +69,73 @@
     {
       "scope": "punctuation",
       "foreground": "#aaff00"
+    },
+    {
+      "scope": "keyword.control",
+      "foreground": "#ff00ff"
+    },
+    {
+      "scope": "keyword.operator",
+      "foreground": "#ff2eff"
+    },
+    {
+      "scope": "storage.modifier",
+      "foreground": "#00aaff"
+    },
+    {
+      "scope": "support.function",
+      "foreground": "#00aaff"
+    },
+    {
+      "scope": "constant.language",
+      "foreground": "#ff1aff"
+    },
+    {
+      "scope": "support.class",
+      "foreground": "#ffff00"
+    },
+    {
+      "scope": "entity.name.type",
+      "foreground": "#ffff00"
+    },
+    {
+      "scope": "support.type",
+      "foreground": "#00ffff"
+    },
+    {
+      "scope": "entity.other.attribute-name",
+      "foreground": "#00aaff"
+    },
+    {
+      "scope": "variable.other",
+      "foreground": "#aaff00"
+    },
+    {
+      "scope": "variable.parameter",
+      "foreground": "#ff0055"
+    },
+    {
+      "scope": [
+        "variable.object.property",
+        "meta.object-literal.key",
+        "support.type.property-name"
+      ],
+      "foreground": "#00ff00"
+    },
+    {
+      "scope": "markup.heading",
+      "foreground": "#ff00ff",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.bold",
+      "foreground": "#5a5a8a",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.italic",
+      "foreground": "#00ffff",
+      "fontStyle": "italic"
     }
   ]
 }

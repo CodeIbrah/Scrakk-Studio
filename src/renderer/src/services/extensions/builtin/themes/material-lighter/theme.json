@@ -39,40 +39,91 @@
       "foreground": "#91b859"
     },
     {
-      "scope": "constant.numeric",
+      "scope": [
+        "constant.numeric",
+        "constant.language"
+      ],
       "foreground": "#f76d47"
     },
     {
-      "scope": "constant.language",
-      "foreground": "#f76d47"
-    },
-    {
-      "scope": "keyword",
+      "scope": [
+        "keyword",
+        "keyword.control"
+      ],
       "foreground": "#7c4dff"
     },
     {
-      "scope": "storage.type",
+      "scope": "keyword.operator",
+      "foreground": "#39adb5"
+    },
+    {
+      "scope": [
+        "storage.type",
+        "storage.modifier"
+      ],
       "foreground": "#7c4dff"
     },
     {
-      "scope": "entity.name.function",
+      "scope": [
+        "entity.name.function",
+        "support.function"
+      ],
       "foreground": "#6182b8"
     },
     {
-      "scope": "entity.name.class",
+      "scope": [
+        "entity.name.class",
+        "entity.name.type",
+        "support.class",
+        "support.type"
+      ],
       "foreground": "#ffb62c"
-    },
-    {
-      "scope": "variable",
-      "foreground": "#e53935"
     },
     {
       "scope": "entity.name.tag",
       "foreground": "#e53935"
     },
     {
-      "scope": "punctuation",
+      "scope": "entity.other.attribute-name",
+      "foreground": "#f76d47"
+    },
+    {
+      "scope": [
+        "variable",
+        "variable.other"
+      ],
+      "foreground": "#e53935"
+    },
+    {
+      "scope": "variable.parameter",
+      "foreground": "#f76d47"
+    },
+    {
+      "scope": [
+        "variable.object.property",
+        "meta.object-literal.key",
+        "support.type.property-name"
+      ],
       "foreground": "#39adb5"
+    },
+    {
+      "scope": "punctuation",
+      "foreground": "#78909c"
+    },
+    {
+      "scope": "markup.heading",
+      "foreground": "#7c4dff",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.bold",
+      "foreground": "#546e7a",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.italic",
+      "foreground": "#78909c",
+      "fontStyle": "italic"
     }
   ]
 }

@@ -39,40 +39,91 @@
       "foreground": "#718c00"
     },
     {
-      "scope": "constant.numeric",
+      "scope": [
+        "constant.numeric",
+        "constant.language"
+      ],
       "foreground": "#f5871f"
     },
     {
-      "scope": "constant.language",
-      "foreground": "#f5871f"
-    },
-    {
-      "scope": "keyword",
+      "scope": [
+        "keyword",
+        "keyword.control"
+      ],
       "foreground": "#8959a8"
     },
     {
-      "scope": "storage.type",
+      "scope": "keyword.operator",
+      "foreground": "#008ec4"
+    },
+    {
+      "scope": [
+        "storage.type",
+        "storage.modifier"
+      ],
       "foreground": "#8959a8"
     },
     {
-      "scope": "entity.name.function",
+      "scope": [
+        "entity.name.function",
+        "support.function"
+      ],
       "foreground": "#4271ae"
     },
     {
-      "scope": "entity.name.class",
+      "scope": [
+        "entity.name.class",
+        "entity.name.type",
+        "support.class",
+        "support.type"
+      ],
       "foreground": "#c99e00"
-    },
-    {
-      "scope": "variable",
-      "foreground": "#c82829"
     },
     {
       "scope": "entity.name.tag",
       "foreground": "#c82829"
     },
     {
+      "scope": "entity.other.attribute-name",
+      "foreground": "#f5871f"
+    },
+    {
+      "scope": [
+        "variable",
+        "variable.other"
+      ],
+      "foreground": "#c82829"
+    },
+    {
+      "scope": "variable.parameter",
+      "foreground": "#f5871f"
+    },
+    {
+      "scope": [
+        "variable.object.property",
+        "meta.object-literal.key",
+        "support.type.property-name"
+      ],
+      "foreground": "#00897b"
+    },
+    {
       "scope": "punctuation",
       "foreground": "#444444"
+    },
+    {
+      "scope": "markup.heading",
+      "foreground": "#008ec4",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.bold",
+      "foreground": "#444444",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.italic",
+      "foreground": "#777777",
+      "fontStyle": "italic"
     }
   ]
 }

@@ -89,6 +89,57 @@
     {
       "scope": "punctuation",
       "foreground": "#ffffff"
+    },
+    {
+      "scope": "keyword.operator",
+      "foreground": "#fe4450"
+    },
+    {
+      "scope": "storage.modifier",
+      "foreground": "#ff7edb"
+    },
+    {
+      "scope": "support.type",
+      "foreground": "#36f9f6"
+    },
+    {
+      "scope": "support.class",
+      "foreground": "#36f9f6"
+    },
+    {
+      "scope": "variable.other",
+      "foreground": "#bbbbbb"
+    },
+    {
+      "scope": "variable.parameter",
+      "foreground": "#f97e72"
+    },
+    {
+      "scope": "variable.object.property",
+      "foreground": "#848bbd"
+    },
+    {
+      "scope": "meta.object-literal.key",
+      "foreground": "#848bbd"
+    },
+    {
+      "scope": "support.type.property-name",
+      "foreground": "#848bbd"
+    },
+    {
+      "scope": "markup.heading",
+      "foreground": "#fede5d",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.bold",
+      "foreground": "#fe4450",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.italic",
+      "foreground": "#72f1b8",
+      "fontStyle": "italic"
     }
   ]
 }

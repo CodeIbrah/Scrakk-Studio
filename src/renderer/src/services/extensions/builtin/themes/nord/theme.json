@@ -31,7 +31,8 @@
   "tokenColors": [
     {
       "scope": "comment",
-      "foreground": "#616e88"
+      "foreground": "#616e88",
+      "fontStyle": "italic"
     },
     {
       "scope": "string",
@@ -51,7 +52,7 @@
     },
     {
       "scope": "keyword.control",
-      "foreground": "#81a1c1"
+      "foreground": "#b48ead"
     },
     {
       "scope": "keyword.operator",
@@ -63,47 +64,58 @@
     },
     {
       "scope": "storage.modifier",
-      "foreground": "#81a1c1"
+      "foreground": "#d08770"
     },
     {
       "scope": "entity.name.function",
       "foreground": "#88c0d0"
     },
     {
-      "scope": "entity.name.class",
-      "foreground": "#8fbcbb"
-    },
-    {
-      "scope": "entity.name.type",
-      "foreground": "#8fbcbb"
-    },
-    {
-      "scope": "variable",
-      "foreground": "#eceff4"
-    },
-    {
-      "scope": "variable.parameter",
-      "foreground": "#eceff4"
-    },
-    {
       "scope": "support.function",
       "foreground": "#88c0d0"
     },
     {
-      "scope": "support.class",
+      "scope": "entity.name.class, entity.name.type, support.class, support.type",
       "foreground": "#8fbcbb"
     },
     {
       "scope": "entity.name.tag",
-      "foreground": "#81a1c1"
+      "foreground": "#bf616a"
     },
     {
       "scope": "entity.other.attribute-name",
       "foreground": "#8fbcbb"
     },
     {
-      "scope": "punctuation",
+      "scope": "variable, variable.other",
       "foreground": "#eceff4"
+    },
+    {
+      "scope": "variable.parameter",
+      "foreground": "#d8dee9"
+    },
+    {
+      "scope": "variable.object.property, meta.object-literal.key, support.type.property-name",
+      "foreground": "#d08770"
+    },
+    {
+      "scope": "punctuation",
+      "foreground": "#d8dee9"
+    },
+    {
+      "scope": "markup.heading",
+      "foreground": "#88c0d0",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.bold",
+      "foreground": "#8fbcbb",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.italic",
+      "foreground": "#a3be8c",
+      "fontStyle": "italic"
     }
   ]
 }

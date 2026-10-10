@@ -31,7 +31,8 @@
   "tokenColors": [
     {
       "scope": "comment",
-      "foreground": "#6272a4"
+      "foreground": "#6272a4",
+      "fontStyle": "italic"
     },
     {
       "scope": "string",
@@ -64,7 +65,7 @@
     },
     {
       "scope": "storage.modifier",
-      "foreground": "#ff79c6"
+      "foreground": "#bd93f9"
     },
     {
       "scope": "entity.name.function",
@@ -76,7 +77,7 @@
     },
     {
       "scope": "entity.name.type",
-      "foreground": "#8be9fd"
+      "foreground": "#bd93f9"
     },
     {
       "scope": "variable",
@@ -106,6 +107,41 @@
     {
       "scope": "punctuation",
       "foreground": "#f8f8f2"
+    },
+    {
+      "scope": "support.type",
+      "foreground": "#ffb86c"
+    },
+    {
+      "scope": "variable.other",
+      "foreground": "#f8f8f2"
+    },
+    {
+      "scope": "variable.object.property",
+      "foreground": "#bfbfbf"
+    },
+    {
+      "scope": "meta.object-literal.key",
+      "foreground": "#bfbfbf"
+    },
+    {
+      "scope": "support.type.property-name",
+      "foreground": "#bfbfbf"
+    },
+    {
+      "scope": "markup.heading",
+      "foreground": "#ff5555",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.bold",
+      "foreground": "#ffb86c",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.italic",
+      "foreground": "#f1fa8c",
+      "fontStyle": "italic"
     }
   ]
 }

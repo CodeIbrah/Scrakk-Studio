@@ -31,7 +31,8 @@
   "tokenColors": [
     {
       "scope": "comment",
-      "foreground": "#457b9d"
+      "foreground": "#457b9d",
+      "fontStyle": "italic"
     },
     {
       "scope": "string",
@@ -42,12 +43,28 @@
       "foreground": "#f4a261"
     },
     {
+      "scope": "constant.language",
+      "foreground": "#f4a261"
+    },
+    {
       "scope": "keyword",
       "foreground": "#a8dadc"
     },
     {
+      "scope": "keyword.control",
+      "foreground": "#a8dadc"
+    },
+    {
+      "scope": "keyword.operator",
+      "foreground": "#e9515c"
+    },
+    {
       "scope": "storage.type",
-      "foreground": "#1d3557"
+      "foreground": "#b1dee0"
+    },
+    {
+      "scope": "storage.modifier",
+      "foreground": "#a8dadc"
     },
     {
       "scope": "entity.name.function",
@@ -55,19 +72,74 @@
     },
     {
       "scope": "entity.name.class",
-      "foreground": "#f4a261"
+      "foreground": "#e63946"
+    },
+    {
+      "scope": "entity.name.type",
+      "foreground": "#e63946"
     },
     {
       "scope": "variable",
       "foreground": "#f1faee"
     },
     {
+      "scope": "variable.parameter",
+      "foreground": "#f4a261"
+    },
+    {
+      "scope": "support.function",
+      "foreground": "#e63946"
+    },
+    {
+      "scope": "support.class",
+      "foreground": "#b1dee0"
+    },
+    {
       "scope": "entity.name.tag",
-      "foreground": "#a8dadc"
+      "foreground": "#e9515c"
+    },
+    {
+      "scope": "entity.other.attribute-name",
+      "foreground": "#f1faee"
     },
     {
       "scope": "punctuation",
-      "foreground": "#a8dadc"
+      "foreground": "#f1faee"
+    },
+    {
+      "scope": "support.type",
+      "foreground": "#b1dee0"
+    },
+    {
+      "scope": "variable.other",
+      "foreground": "#f1faee"
+    },
+    {
+      "scope": "variable.object.property",
+      "foreground": "#457b9d"
+    },
+    {
+      "scope": "meta.object-literal.key",
+      "foreground": "#457b9d"
+    },
+    {
+      "scope": "support.type.property-name",
+      "foreground": "#457b9d"
+    },
+    {
+      "scope": "markup.heading",
+      "foreground": "#a8dadc",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.bold",
+      "foreground": "#f4a261",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.italic",
+      "foreground": "#2a9d8f",
+      "fontStyle": "italic"
     }
   ]
 }

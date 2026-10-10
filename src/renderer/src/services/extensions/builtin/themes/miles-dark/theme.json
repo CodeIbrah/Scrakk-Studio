@@ -91,6 +91,57 @@
         "entity.other.attribute-name"
       ],
       "foreground": "#8fa3b8"
+    },
+    {
+      "scope": "keyword.operator",
+      "foreground": "#f03a41"
+    },
+    {
+      "scope": "entity.name.tag",
+      "foreground": "#e8232a"
+    },
+    {
+      "scope": "support.class",
+      "foreground": "#ffd166"
+    },
+    {
+      "scope": "variable",
+      "foreground": "#d5e2ef"
+    },
+    {
+      "scope": "variable.other",
+      "foreground": "#d5e2ef"
+    },
+    {
+      "scope": "variable.parameter",
+      "foreground": "#fbbf24"
+    },
+    {
+      "scope": "punctuation",
+      "foreground": "#7488a3"
+    },
+    {
+      "scope": [
+        "variable.object.property",
+        "meta.object-literal.key",
+        "support.type.property-name"
+      ],
+      "foreground": "#4ade80"
+    },
+    {
+      "scope": "markup.heading",
+      "foreground": "#e8232a",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.bold",
+      "foreground": "#fbbf24",
+      "fontStyle": "bold"
+    },
+    {
+      "scope": "markup.italic",
+      "foreground": "#c084fc",
+      "fontStyle": "italic"
     }
   ]
 }
