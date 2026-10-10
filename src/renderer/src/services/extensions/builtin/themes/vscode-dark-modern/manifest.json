@@ -1,0 +1,18 @@
+{
+  "id": "vscode-dark-modern",
+  "name": "VS Code Dark Modern",
+  "version": "0.1.0",
+  "author": "Scrakk Studio",
+  "description": "Tema VS Code Dark Modern — builtin (contribution themes).",
+  "engine": ">=0.1.0",
+  "contributes": {
+    "themes": [
+      {
+        "id": "vscode-dark-modern",
+        "name": "VS Code Dark Modern",
+        "type": "dark",
+        "path": "./theme.json"
+      }
+    ]
+  }
+}
