@@ -17,6 +17,18 @@ published are not edited. The file goes per version:
 
 ## 0.1.3 — TBD
 
+### Account & legal
+- **Terms are accepted per account and recorded on the server**: the social
+  sign-in now requires ticking the terms + privacy checkbox. The consent
+  (version + language) travels to the main process and is written to Supabase
+  through the `accept_legal` RPC, which stamps the acceptance with the **server
+  clock** — proof per account, without depending on the client's clock. A
+  **Legal** section in Settings links the documents and shows the current
+  version. The documents live at `scrakk.art/terms` and `scrakk.art/privacy`.
+- **The first-run setup wizard is hidden while in beta**: gated behind
+  `ONBOARDING_ENABLED = false`, so it neither paints nor registers its palette
+  command. Nothing is deleted; flipping the flag brings it back.
+
 ### Tabs (UI)
 - **The tab bar can move into a side panel**: the center's horizontal strip now
   carries a dock button on its right (the same `StripAction` API the bottom slot
